@@ -1,3 +1,6 @@
+body{
+    background-color: #FFC909;
+}
 /*estilos login*/
 .form {
     background-color: #fff;
@@ -6,6 +9,11 @@
     max-width: 350px;
     border-radius: 0.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    margin:10px;   
   }
   
   .form-title {
@@ -62,4 +70,32 @@
   
   .signup-link a {
     text-decoration: underline;
+  }
+  .img-container{
+    display:inline-flexbox
+  }
+  .img6{
+    position: absolute;
+    top:100px ;
+    left:250px ;
+    margin-left: 700px;
+    padding-bottom: 50px;
+  }
+  .img7{
+    margin-top: 15px;
+  
+  }
+  .img5{
+    margin-left: 900px;
+    position: absolute;
+    top:450px ;
+    left:150px ;
+    
+  }
+  .img4{
+    margin-right: 750px;
+    
+    
+    
+    
   }
