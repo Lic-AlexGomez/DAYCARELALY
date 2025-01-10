@@ -41,13 +41,13 @@ const Login = () => {
                 <p className="form-title">Sign in to your account</p>
                 <div className="input-container">
                     <p className="Email">Email</p>
-                    <input type="email" placeholder="Enter email" />
+                    <input type="email" name="email" placeholder="Enter email" value={dataLogin.email} onChange={handleChangeLogin}/>
                     <span>
                     </span>
                 </div>
                 <div className="input-container">
                     <p className="Password">Password</p>
-                    <input type="password" placeholder="Enter password" />
+                    <input type="password" name="password" placeholder="Enter password" value={dataLogin.password} onChange={handleChangeLogin} />
                 </div>
                 <button type="submit" className="submit">
                     Sign in
