@@ -1,21 +1,52 @@
-import React from "react";
+import React, {  useContext, useState } from "react";
+import { Context } from "../store/appContext";
+import { useNavigate,Link } from "react-router-dom";
+import { Navbar } from "../component/navbar";
 import image4 from "../../img/image-4.png"
 import image5 from "../../img/image-5.png";
 import image6 from "../../img/image-6.png";
 import image7 from "../../img/image-7.png"
-import { Link } from "react-router-dom";
+
 
 const Login = () => {
+    const { store, actions } = useContext(Context);
+    const navigate = useNavigate();
+    const [dataLogin ,setDataLogin] = useState({
+        "email":"",
+        "password":""
+    })
+
+    const handleChangeLogin = (e)=>{
+        const{name,value} = e.target
+        setDataLogin(prevData =>({
+        ...prevData,[name]:value
+
+        }))
+    }
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const result = await actions.login( dataLogin.email, dataLogin.password);
+            if (result ) {
+                navigate(``);
+            }
+        } catch (error) {
+            console.error("Error", error);
+        }
+    };
     return (
         <>
-            <form className="form">
+            <form className="form" onSubmit={handleLogin}>
                 <p className="form-title">Sign in to your account</p>
                 <div className="input-container">
+                    <p className="Email">Email</p>
                     <input type="email" placeholder="Enter email" />
                     <span>
                     </span>
                 </div>
                 <div className="input-container">
+                    <p className="Password">Password</p>
                     <input type="password" placeholder="Enter password" />
                 </div>
                 <button type="submit" className="submit">
