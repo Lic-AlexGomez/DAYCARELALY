@@ -1,0 +1,226 @@
+
+.headerWrapper {
+    width: 100%;
+    background-color: #9C29B2; 
+    color: white;
+  }
+  
+
+  .headerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px 20px;
+  }
+  
+
+  .topRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 0;
+  }
+  
+  .logoContainer {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .logo {
+    width: 120px;
+    height: auto;
+  }
+  
+  .searchContainer {
+    flex: 5;
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 8px 15px;
+    border-radius: 20px 0 0 20px;
+    border: none;
+  }
+  
+  .searchButton {
+    padding: 8.2px 15px;
+    margin-bottom: 20px;
+    background-color: #ffc107; /* Yellow */
+    color: #800080; /* Purple */
+    border: none;
+    border-radius: 0 20px 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .socialIcons {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .icon {
+    color: white;
+    font-size: 32px !important;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    width: 38px !important;
+  }
+  
+  .icon:hover {
+    color: #ffc107;
+  }
+  
+  .cartContainer {
+    position: relative;
+  }
+  
+  .cartIcon {
+    font-size: 20px;
+  }
+  
+  .cartCount {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: #ffc107;
+    color: #800080;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+  }
+  
+  .authButtons {
+    display: flex;
+    gap: 10px;
+  }
+  
+ .loginBtn {
+    /* background: transparent; */
+    /* border: 2px solid white;
+    color: white; */
+    background-color: #ffc107;
+    color: #800080;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px;
+  }
+  
+  /* .loginBtn:hover {
+    background-color: #ffc107;
+    color: #800080;
+  } */
+  
+  .joinBtn,.loginBtn {
+    width: 150px;
+    background-color: #ffc107;
+    color: #800080;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .joinBtn:hover,.loginBtn:hover {
+    background-color: white;
+    color: #800080;
+  }
+  
+  /* Bottom Row: Navigation Links */
+  .bottomRow {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .navLinks {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .navLink {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    position: relative;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .navLink:hover {
+    color: #ffc107;
+  }
+  
+  /* Dropdown Menu */
+  .dropdownMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    color: #800080;
+    list-style: none;
+    border-radius: 5px;
+    padding: 10px 0;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .dropdownItem {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .dropdownItem:hover {
+    background-color: #ffc107;
+    color: white;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .topRow,
+    .bottomRow {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .searchContainer {
+      width: 90%;
+    }
+  
+    .navLinks {
+      flex-direction: column;
+      gap: 15px;
+    }
+  }
+  /* WhatsApp Specific */
+  .whatsapp-icon .fab.fa-whatsapp {
+    font-size: 24px;
+    transition: color 0.3s ease;
+  }
+  
+  .whatsapp-icon .fab.fa-whatsapp:hover {
+    color: #22c35e;
+  }
+  .underNav{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   width: 100%;
+    color: white;
+   
+  }
