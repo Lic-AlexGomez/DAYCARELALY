@@ -97,7 +97,7 @@ export const Navbar = () => {
         <div className="bottomRow d-flex justify-content-between align-items-center">
           
           <ul className="navLinks">
-            <li className="navLink">Home</li>
+            <li className="navLink"><Link className="navLink" to="/home">Home</Link></li>
             <li
               className="navLink dropdown"
               onMouseEnter={() => setDropdownOpen(true)}
@@ -121,7 +121,7 @@ export const Navbar = () => {
 
           </ul>
           <div className="authButtons me-5  col-3">
-		  	<Link to="/login" className=" ">
+		  	<Link to="/login">
           	  <button className="loginBtn" >Log In</button>
 			</Link>
 			<Link to="/signup" className="">
