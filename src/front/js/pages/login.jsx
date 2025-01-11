@@ -62,7 +62,7 @@ const Login = () => {
                 </p>
 
             </form>
-            <div className="img-container">
+            {/* <div className="img-container">
                 <div className="img7">
                     <img src={image7} alt="osito " />
                 </div>
@@ -77,7 +77,7 @@ const Login = () => {
                 <div className="img4">
                     <img src={image4} alt=" niña " />
                 </div>
-            </div>
+            </div> */}
 
 
 
