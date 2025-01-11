@@ -46,7 +46,8 @@ const signup = () => {
             <div className="container">
                 <div className="row">
                     <div className="col-md-6 offset-md-3">
-                        <h1>Sign Up</h1>
+                        <h1 className="text-center">Create a new account</h1>
+                        <h6>It’s quick and easy.</h6>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="username" className="form-label">
