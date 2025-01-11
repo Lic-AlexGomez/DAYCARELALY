@@ -14,8 +14,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 					initial: "white"
 				}
 			]
+			,
+				user: null, 
+				message: null
 		},
 		actions: {
+			signUp: async (username, email, password) => {
+					let role = "user";
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "api/signup", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ username, email, password , role}),
+					});
+
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(errorData.error || "Sign Up Failed");
+					}
+
+					const data = await response.json();
+					setStore({ user: data }); 
+					return { success: true, data }; 
+				} catch (error) {
+					console.error("Sign Up Error:", error.message);
+					return { success: false, error: error.message }; 
+				}
+			},
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
