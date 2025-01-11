@@ -173,3 +173,114 @@ def create_event():
     db.session.commit()
     return jsonify(new_event.serialize()), 201
 
+# @api.route("/private", methods=["GET"])
+# @jwt_required()
+# def protected():
+#     current_user = get_jwt_identity()
+
+#     if current_user is None:
+#         return jsonify({"msg": "Missing Authorization Header"}), 401
+#     return jsonify(current_user), 200
+
+# @api.route("/admin", methods=["GET"])
+# @jwt_required()
+# def protected_admin():
+#     current_user = get_jwt_identity()
+
+#     if current_user is None:
+#         return jsonify({"msg": "Missing Authorization Header"}), 401
+#     return jsonify(current_user), 200
+
+
+@api.route('/children', methods=['GET'])
+def get_children():
+    children = Child.query.all()
+    children = list(map(lambda x: x.serialize(), children))
+    return jsonify(children), 200
+
+    
+@api.route('/children/<int:id>', methods=['GET'])
+def get_child(id):
+    child = Child.query.get(id)
+    if not child:
+        return jsonify({"error": "Child not found"}), 404
+    return jsonify(child.serialize()), 200
+
+
+@api.route('/children', methods=['POST'])
+def create_child():
+    data = request.json
+    new_child = Child(
+        parent_id=data['parent_id'],
+        full_name=data['full_name'],
+        age=data['age'],
+        allergies=data.get('allergies', ''),
+        medical_conditions=data.get('medical_conditions', '')
+    )
+    db.session.add(new_child)
+    db.session.commit()
+    return jsonify(new_child.serialize()), 201
+
+
+@api.route('/enrollments', methods=['GET'])
+def get_enrollments():
+    enrollments = Enrollment.query.all()
+    enrollments = list(map(lambda x: x.serialize(), enrollments))
+    return jsonify(enrollments), 200
+
+
+@api.route('/enrollments/<int:id>', methods=['GET'])
+def get_enrollment(id):
+    enrollment = Enrollment.query.get(id)
+    if not enrollment:
+        return jsonify({"error": "Enrollment not found"}), 404
+    return jsonify(enrollment.serialize()), 200
+
+
+@api.route('/enrollments', methods=['POST'])
+def create_enrollment():
+    data = request.json
+    new_enrollment = Enrollment(
+        child_id=data['child_id'],
+        class_id=data['class_id']
+    )
+    db.session.add(new_enrollment)
+    db.session.commit()
+    return jsonify(new_enrollment.serialize()), 201
+
+
+@api.route('/programs', methods=['GET'])
+def get_programs():
+    programs = Program.query.all()
+    programs = list(map(lambda x: x.serialize(), programs))
+    return jsonify(programs), 200
+
+
+@api.route('/programs/<int:id>', methods=['GET'])
+def get_program(id):
+    program = Program.query.get(id)
+    if not program:
+        return jsonify({"error": "Program not found"}), 404
+    return jsonify(program.serialize()), 200
+
+
+@api.route('/programs', methods=['POST'])
+def create_program():
+    data = request.json
+    new_program = Program(
+        name=data['name'],
+        description=data.get('description', ''),
+        price=data['price']
+    )
+    db.session.add(new_program)
+    db.session.commit()
+    return jsonify(new_program.serialize()), 201
+
+
+@api.route('/subscriptions', methods=['GET'])
+def get_subscriptions():
+    subscriptions = Subscription.query.all()
+    subscriptions = list(map(lambda x: x.serialize(), subscriptions))
+    return jsonify(subscriptions), 200
+
+    
