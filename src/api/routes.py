@@ -30,17 +30,22 @@ def signup():
     if not data or 'username' not in data or 'email' not in data or 'password' not in data:
         return jsonify({"error": "Invalid payload"}), 400
 
+   
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({"error": "Email already registered"}), 409
+
     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
 
     new_user = User(
         username=data['username'],
         email=data['email'],
         password=hashed_password,
-        role=data.get('role', 'user')  # Default role is 'user'
+        role=data.get('role', 'user') 
     )
     db.session.add(new_user)
     db.session.commit()
     return jsonify(new_user.serialize()), 201
+
 
 
 @api.route('/users', methods=['GET'])
