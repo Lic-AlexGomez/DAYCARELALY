@@ -191,6 +191,13 @@ def create_event():
 #         return jsonify({"msg": "Missing Authorization Header"}), 401
 #     return jsonify(current_user), 200
 
+@api.route('/progress_reports', methods=['GET'])
+def get_progress_reports():
+    progress_reports = ProgressReport.query.all()
+    progress_reports = list(map(lambda x: x.serialize(), progress_reports))
+    return jsonify(progress_reports), 200
+
+        
 
 @api.route('/children', methods=['GET'])
 def get_children():
@@ -283,4 +290,3 @@ def get_subscriptions():
     subscriptions = list(map(lambda x: x.serialize(), subscriptions))
     return jsonify(subscriptions), 200
 
-    
