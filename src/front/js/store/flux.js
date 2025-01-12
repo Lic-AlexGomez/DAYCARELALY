@@ -16,9 +16,39 @@ const getState = ({ getStore, getActions, setStore }) => {
 			]
 			,
 				user: null, 
-				message: null
+				message: null,
+				uploadedFileUrl: null,
+				error: null,
 		},
 		actions: {
+			uploadToCloudinary: async (file) => {
+                const BACKEND_URL = process.env.BACKEND_URL ; 
+                const store = getStore();
+
+                try {
+                    const formData = new FormData();
+                    formData.append("file", file); 
+
+                    const response = await fetch(`${BACKEND_URL}/api/upload`, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || "Failed to upload file");
+                    }
+
+                    const data = await response.json();
+                    setStore({ uploadedFileUrl: data.url, error: null }); 
+
+                    return { success: true, url: data.url };
+                } catch (error) {
+                    console.error("Upload Error:", error.message);
+                    setStore({ error: error.message });
+                    return { success: false, error: error.message };
+                }
+            },
 		
 			login: async (email,password) => {
 				try{
