@@ -23,7 +23,7 @@ class User(db.Model):
 
 class Parent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     full_name = db.Column(db.String(120), nullable=False)
     phone_number = db.Column(db.String(15), nullable=False)
 
@@ -40,7 +40,7 @@ class Parent(db.Model):
 
 class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     full_name = db.Column(db.String(120), nullable=False)
     specialization = db.Column(db.String(120), nullable=False)
 
@@ -74,7 +74,7 @@ class Child(db.Model):
 
 class Class(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=True)
     name = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text, nullable=True)
     capacity = db.Column(db.Integer, nullable=False)

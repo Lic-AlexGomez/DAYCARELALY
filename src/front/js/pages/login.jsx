@@ -1,4 +1,4 @@
-import React, {  useContext, useState } from "react";
+import React, {  useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate,Link } from "react-router-dom";
 import { Navbar } from "../component/navbar";
@@ -23,7 +23,7 @@ const Login = () => {
 
         }))
     }
-
+   
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
