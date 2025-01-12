@@ -29,7 +29,7 @@ const Login = () => {
         try {
             const result = await actions.login( dataLogin.email, dataLogin.password);
             if (result ) {
-                navigate(``);
+                navigate(`/`);
             }
         } catch (error) {
             console.error("Error", error);
@@ -55,7 +55,7 @@ const Login = () => {
 
                 <p className="signup-link">
                     No account?
-                    <Link to={""}> Sign up</Link>
+                    <Link to={"/signup"}> Sign up</Link>
                 </p>
                 <p className="signup-link">
                     <Link to={""}> forgot password?</Link>
