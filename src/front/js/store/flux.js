@@ -19,6 +19,44 @@ const getState = ({ getStore, getActions, setStore }) => {
 				message: null
 		},
 		actions: {
+			login: async (email,password) => {
+				try{
+					// fetching data from the backend
+					const response = await fetch(process.env.BACKEND_URL + "/api/login",{
+                         method: "POST",
+						 headers: {
+							"Content-Type": "application/json"
+						 },
+						 body: JSON.stringify({
+							email: email,
+							password: password
+						 })
+						
+					});
+
+                    if (!response.ok) {
+						const errorData = await response.json(); 
+						if (response.status === 401) {
+						  alert('Bad email or password');
+						} else if (response.status === 400) {
+						  alert('Email and password are required.');
+						} else {
+						  alert('Unknow error. Please, try again.');
+						}
+						throw new Error(errorData.message || 'Failed to login'); 
+					  }
+					const data = await response.json()
+
+					localStorage.setItem("token",data.token)
+					localStorage.setItem("user",JSON.stringify(data.user))
+                    setStore({user:data.user})
+					
+					return data;
+				}catch(error){
+					console.log("Error loading message from backend", error)
+				}
+			},
+
 			signUp: async (username, email, password) => {
 					let role = "user";
 				try {
