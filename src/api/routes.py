@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Parent, Teacher, Child, Class, Enrollment, Program, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification
+from api.models import db, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
@@ -333,4 +333,30 @@ def get_subscriptions():
     subscriptions = Subscription.query.all()
     subscriptions = list(map(lambda x: x.serialize(), subscriptions))
     return jsonify(subscriptions), 200
+
+
+@api.route('/contacts', methods=['GET'])
+def get_contacts():
+    contacts = Contact.query.all()
+    contacts = list(map(lambda x: x.serialize(), contacts))
+    return jsonify(contacts), 200
+
+@api.route('/contacts/<int:id>', methods=['GET'])
+def get_contact(id):
+    contact = Contact.query.get(id)
+    if not contact:
+        return jsonify({"error": "Contact not found"}), 404
+    return jsonify(contact.serialize()), 200
+
+@api.route('/contacts', methods=['POST'])
+def create_contact():
+    data = request.json
+    new_contact = Contact(
+        name=data['name'],
+        email=data['email'],
+        message=data['message']
+    )
+    db.session.add(new_contact)
+    db.session.commit()
+    return jsonify(new_contact.serialize()), 201
 
