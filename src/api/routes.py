@@ -119,6 +119,45 @@ def create_parent():
     return jsonify(new_parent.serialize()), 201
 
 
+@api.route('/teachers', methods=['GET'])
+def get_teachers():
+    teachers = Teacher.query.all()
+    teachers = list(map(lambda x: x.serialize(), teachers))
+    return jsonify(teachers), 200
+
+@api.route('/teachers/<int:id>', methods=['GET'])
+def get_teacher(id):
+    teacher = Teacher.query.get(id)
+    if not teacher:
+        return jsonify({"error": "Teacher not found"}), 404
+    return jsonify(teacher.serialize()), 200
+
+
+@api.route('/teacher', methods=['POST'])
+def create_teacher():
+    data = request.json
+    print(data)
+    if not data or 'user_id' not in data or 'full_name' not in data or 'specialization' not in data:
+        return jsonify({"error": "Invalid payload"}), 400
+
+    user_id = data.get('user_id')
+    if not user_id:
+        return jsonify({"error": "User ID is required"}), 400
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    new_teacher = Teacher(
+        user_id=data['user_id'],
+        full_name=data['full_name'],
+        specialization=data['specialization']
+    )
+    db.session.add(new_teacher)
+    db.session.commit()
+    return jsonify(new_teacher.serialize()), 201
+
+
 @api.route('/classes', methods=['GET'])
 def get_classes():
     classes = Class.query.all()
