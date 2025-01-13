@@ -79,8 +79,9 @@ class Class(db.Model):
     description = db.Column(db.Text, nullable=True)
     capacity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    age = db.Column(db.Integer, nullable=False)
+    age = db.Column(db.String(20), nullable=False)
     time = db.Column(db.String(50), nullable=False)
+
 
     def __repr__(self):
         return f'<Class {self.name}>'
