@@ -1,3 +1,4 @@
+import cloudinary
 from flask import Flask, request, jsonify, Blueprint
 from api.models import db, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification
 from api.utils import APIException
@@ -360,3 +361,19 @@ def create_contact():
     db.session.commit()
     return jsonify(new_contact.serialize()), 201
 
+@api.route('/upload', methods=['POST'])
+def upload_file():
+    try:
+        # Obtén el archivo desde la solicitud
+        file_to_upload = request.files['file']
+
+        # Sube el archivo a Cloudinary
+        upload_result = cloudinary.uploader.upload(file_to_upload)
+
+        # Devuelve la URL del archivo cargado
+        return jsonify({
+            "message": "File uploaded successfully",
+            "url": upload_result['secure_url']
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

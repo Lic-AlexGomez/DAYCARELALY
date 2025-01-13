@@ -1,4 +1,5 @@
 {
+
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "workbench.editorAssociations": {   
@@ -10,4 +11,5 @@
     "[javascript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
     }
+
 }
