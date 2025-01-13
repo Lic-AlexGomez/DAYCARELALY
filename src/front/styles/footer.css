@@ -1,0 +1,153 @@
+.footer {
+    background-color:  #171717;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .about-container{
+    color: #ffffff;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px;
+  }
+  .description-about{
+    width: 250px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:15px;
+    color:#737373
+  }
+  .socialmedia-container{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    gap: 10px;
+  }
+  .twitter{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #585454;
+  }
+  .facebook{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #585454;
+    
+  }
+  .instagram{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #585454;
+  }
+  .linkedin{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #585454;
+  }
+  .services-container{
+    color: #ffffff;
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px;
+  }
+  .list-services{
+    list-style-type: none;
+    padding-left: 0; 
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:15px;
+    color:#737373
+
+  }
+  .links-container{
+    color: #ffffff;
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px;
+  }
+  .reachus-container{
+    color: #ffffff;
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px;
+  }
+  .list-reach{
+    width: 300px;
+    list-style-type: none;
+    margin-top: 10px;              /* Elimina el margin por defecto del <ul> */
+    text-align: left; 
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+
+  .newsletter-container{
+    color: #ffffff;
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px;
+  }
+  .button-newsletter{
+    border-top-right-radius: 7px;  
+    border-bottom-right-radius: 7px;
+    background-color: #F39C12;
+    color:white
+
+  }
+  .p-newsletter{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:15px;
+    color:#737373
+  }
+  .input-newsletter{
+    background-color: #1E1E1E;
+  }
+  
+  .info-container {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #737373;
+  }
+  a, .react-router-link {
+    text-decoration: none; 
+    color:#737373 
+  }
+  
+  /*imagenes*/
+  .img-facebook{
+    max-width: 100%;
+    max-height: 100%;
+    padding: 5px;
+  }
+  .img-twitter{
+    max-width: 100%;
+    max-height: 100%;
+    padding: 5px;
+  }
+  .img-instagram{
+    max-width: 100%;
+    max-height: 100%;
+    padding: 5px;
+  }
+  .img-linkedin{
+    max-width: 100%;
+    max-height: 100%;
+    padding: 5px;
+  }
+  .img-arcoiris{
+    width: 70px;
+    height: 60px;
+    margin-left: 15px;
+  }
+  
+  
+    
