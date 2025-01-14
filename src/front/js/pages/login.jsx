@@ -39,7 +39,7 @@ const Login = () => {
     return (
         <>
             <form className="form" onSubmit={handleLogin}>
-                <p className="form-title">Sign in to your account</p>
+                <p className="form-title text-blue-500">Sign in to your account</p>
                 <div className="input-container">
                     <p className="Email">email</p>
                     <input type="email" name="email" placeholder="Enter email" value={dataLogin.email} onChange={handleChangeLogin} />

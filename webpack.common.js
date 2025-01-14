@@ -4,45 +4,65 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 module.exports = {
-  entry: [
-    './src/front/js/index.js'
-  ],
+  entry: './src/front/js/index.js', // Entry point for the application
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'public'),
-    publicPath: '/'
+    path: path.resolve(__dirname, 'public'), // Output directory
+    publicPath: '/' // Adjust for deployment if needed
   },
   module: {
     rules: [
-        {
-          test: /\.(js|jsx)$/,
-          exclude: /node_modules/,
-          use: ['babel-loader']
-        },
-        {
-          test: /\.(css|scss)$/, use: [{
-              loader: "style-loader" // creates style nodes from JS strings
-          }, {
-              loader: "css-loader" // translates CSS into CommonJS
-          }]
-        }, //css only files
-        {
-          test: /\.(png|svg|jpg|gif|jpeg|webp)$/, use: {
-            loader: 'file-loader',
-            options: { name: '[name].[ext]' }
+      // JavaScript and JSX files
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader']
+      },
+      // CSS and SCSS files
+      {
+        test: /\.(css|scss)$/,
+        use: [
+          'style-loader', // Injects styles into DOM
+          'css-loader', // Resolves CSS imports
+          'postcss-loader' // Processes CSS with PostCSS plugins
+        ]
+      },
+      // Image files
+      {
+        test: /\.(png|jpg|jpeg|gif|webp)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]', // Keeps original file name and extension
+            outputPath: 'assets/images' // Puts images in a subdirectory
           }
-        }, //for images
-        { test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/, use: ['file-loader'] } //for fonts
+        }
+      },
+      // Font files
+      {
+        test: /\.(woff|woff2|ttf|eot)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'assets/fonts' // Puts fonts in a subdirectory
+          }
+        }
+      }
     ]
   },
   resolve: {
-    extensions: ['*', '.js']
+    extensions: ['.js', '.jsx'] // Simplified extensions
   },
   plugins: [
     new HtmlWebpackPlugin({
-        favicon: '4geeks.ico',
-        template: 'template.html'
+      favicon: '4geeks.ico', // Favicon for the application
+      template: 'template.html' // Template HTML file
     }),
-    new Dotenv({ safe: true, systemvars: true })
-  ]
+    new Dotenv({
+      safe: true, // Ensures the presence of .env variables
+      systemvars: true // Allows usage of system environment variables
+    })
+  ],
+  devtool: 'source-map', // Useful for debugging in development
 };

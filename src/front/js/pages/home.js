@@ -8,7 +8,7 @@ import Hero from "../component/hero.jsx";
 export const Home = () => {
 
 	return (
-		<div className="text-center">
+		<div className="text-center ">
 			<Hero />
 			<Classes />
 			{/* <FileUploader /> */}
