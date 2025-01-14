@@ -1,6 +1,4 @@
-body{
-    background-color: #FFC909;
-}
+
 /*estilos login*/
 .form {
     
@@ -13,8 +11,8 @@ body{
     flex-direction: column;
     align-items: center;
     margin: 40px auto;
-    border: 1px solid #0000001c; 
-      
+    border: 1px solid #0000001c;  
+    margin-top: 107px; 
   }
   
   .form-title {

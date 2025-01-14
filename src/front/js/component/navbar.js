@@ -17,7 +17,7 @@
 // 		</nav>
 // 	);
 // };
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Search } from "lucide-react";
 import "../../styles/Navbar.css";
 import imagen from "../../img/lgo.png";
@@ -27,8 +27,17 @@ import whatsapp from "../../img/Whatsapp.png";
 import underNav from "../../img/underNav.png";
 import { Link } from "react-router-dom";
 
+
 export const Navbar = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+useEffect (() => {
+ 
+    const header = document.querySelector(".underNav");
+    
+      header.classList.add("position-absolute");
+  
+}
+, []);
 
   return (
 	<>	<div className="headerWrapper container-fluid">
@@ -132,7 +141,7 @@ export const Navbar = () => {
       </header>
 	  
     </div>
-	<img src={underNav} alt="Under Navigation" className="underNav" />
+	<img src={underNav} alt="Under Navigation" className="underNav " />
 	</>
     
   );

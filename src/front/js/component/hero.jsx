@@ -12,7 +12,7 @@ const Hero = () => {
   <div className="home-container d-flex justify-content-space-between align-items-start">
               <section className="hero  flex-row justify-content-center align-items-start">  
                    <div className="hero-content ">
-                   <div class="styled-text">
+                   <div className="styled-text">
                       Welcome to Alex <br />
                       Rainbow Slime CO.
                     </div>
