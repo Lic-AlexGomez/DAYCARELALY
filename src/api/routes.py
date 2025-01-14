@@ -1,6 +1,6 @@
 import cloudinary
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification
+from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
@@ -382,7 +382,7 @@ def upload_file():
 @api.route('/newsletter', methods=['POST'])
 def create_newsletter():
     data = request.json
-    new_subscription = Subscription(
+    new_subscription = Newsletter(
         email=data['email']
     )
     db.session.add(new_subscription)
