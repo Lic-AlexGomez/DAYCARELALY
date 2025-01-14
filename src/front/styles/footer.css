@@ -1,15 +1,16 @@
 .footer {
     background-color:  #171717;
-    padding: 20px;
+    padding: 25px;
     text-align: center;
     position: relative;
   }
   
   .footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 23px;
   }
   .about-container{
     color: #ffffff;
@@ -75,10 +76,10 @@
     font-size: 15px;
   }
   .reachus-container{
-    color: #ffffff;
-    text-align: center;
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 15px;
+    
+    color: #ffffff; text-align: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 15px; 
   }
   .list-reach{
     width: 300px;
@@ -91,26 +92,37 @@
 
 
   .newsletter-container{
+    
     color: #ffffff;
     text-align: center;
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Trebuchet MS', 'Lucida Sansnicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 15px;
+    border-radius: 10px;
+    padding: 12px;
+    width: 319px;
+    background: black;   
   }
   .button-newsletter{
-    border-top-right-radius: 7px;  
-    border-bottom-right-radius: 7px;
-    background-color: #F39C12;
-    color:white
+    border: none; 
+    border-top-right-radius: 7px; 
+    border-bottom-right-radius: 7px; 
+    background-color: #F39C12; 
+    color: white;
+    padding: 7.25px 16px;
 
   }
   .p-newsletter{
-    font-family: Arial, Helvetica, sans-serif;
-    font-size:15px;
-    color:#737373
+    
+    font-family: Arial, Helvetica, sans-serif; 
+    font-size: 15px; 
+    color: #737373; 
+    text-align: start;
   }
   .input-newsletter{
     background-color: #1E1E1E;
-    border: none
+    border: none;
+    padding: 8.5px 7px;
+    border-top-left-radius: 6px; border-bottom-left-radius: 6px;
   }
   
   .info-container {
@@ -149,6 +161,8 @@
     height: 60px;
     margin-left: 15px;
   }
-  
+  hr{
+    border: 1px solid #737373 ;
+  }
   
     

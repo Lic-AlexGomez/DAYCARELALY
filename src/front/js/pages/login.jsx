@@ -1,6 +1,7 @@
 import React, {  useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate,Link } from "react-router-dom";
+import "../../styles/login.css";
 import { Navbar } from "../component/navbar";
 import image4 from "../../img/image-4.png"
 import image5 from "../../img/image-5.png";

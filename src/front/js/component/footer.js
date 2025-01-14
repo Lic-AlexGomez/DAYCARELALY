@@ -62,7 +62,7 @@ export const Footer = () => (
 				<ul className="list-reach">
 					<li><img className="img-phone" src={phone} alt="arcoiris " /> +1012 3456 789</li>
 					<li><img className="img-gmail" src={email} alt="arcoiris " /> demo@gmail.com</li>
-					<li><img className="img-location" src={location} alt="arcoiris " /> 132 Dartmouth Street Boston, Massachusetts 02156 United States </li>
+					<li><img className="img-location" src={location} alt="arcoiris " /> <p>  132 Dartmouth Street Boston,<br/> Massachusetts 02156 United States </p> </li>
 				</ul>
 			</div>
 			<div className="newsletter-container">
@@ -76,6 +76,7 @@ export const Footer = () => (
 			</div>
 
 		</div>
+		<hr></hr>
 		<div className="info-container">
 			<p>© 2025 Daycare. Todos los derechos reservados.</p>
 		</div>
