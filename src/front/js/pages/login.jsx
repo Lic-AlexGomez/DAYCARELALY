@@ -1,6 +1,6 @@
-import React, {  useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../../styles/login.css";
 import { Navbar } from "../component/navbar";
 import image4 from "../../img/image-4.png"
@@ -12,24 +12,24 @@ import image7 from "../../img/image-7.png"
 const Login = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
-    const [dataLogin ,setDataLogin] = useState({
-        "email":"",
-        "password":""
+    const [dataLogin, setDataLogin] = useState({
+        "email": "",
+        "password": ""
     })
 
-    const handleChangeLogin = (e)=>{
-        const{name,value} = e.target
-        setDataLogin(prevData =>({
-        ...prevData,[name]:value
+    const handleChangeLogin = (e) => {
+        const { name, value } = e.target
+        setDataLogin(prevData => ({
+            ...prevData, [name]: value
 
         }))
     }
-   
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const result = await actions.login( dataLogin.email, dataLogin.password);
-            if (result ) {
+            const result = await actions.login(dataLogin.email, dataLogin.password);
+            if (result) {
                 navigate(`/`);
             }
         } catch (error) {
@@ -42,7 +42,7 @@ const Login = () => {
                 <p className="form-title">Sign in to your account</p>
                 <div className="input-container">
                     <p className="Email">Email</p>
-                    <input type="email" name="email" placeholder="Enter email" value={dataLogin.email} onChange={handleChangeLogin}/>
+                    <input type="email" name="email" placeholder="Enter email" value={dataLogin.email} onChange={handleChangeLogin} />
                     <span>
                     </span>
                 </div>
