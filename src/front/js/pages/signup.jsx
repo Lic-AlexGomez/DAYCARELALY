@@ -43,7 +43,7 @@ const signup = () => {
             }
         }
         return (
-            <div className="container">
+            <div className="container my-5">
                 <div className="row">
                     <div className="col-md-6 offset-md-3">
                         <h1 className="text-center">Create a new account</h1>
