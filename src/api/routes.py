@@ -377,3 +377,15 @@ def upload_file():
         }), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+        # newsletter Subscription
+@api.route('/newsletter', methods=['POST'])
+def create_newsletter():
+    data = request.json
+    new_subscription = Subscription(
+        email=data['email']
+    )
+    db.session.add(new_subscription)
+    db.session.commit()
+    return jsonify(new_subscription.serialize()), 201
+

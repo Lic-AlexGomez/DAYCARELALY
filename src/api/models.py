@@ -127,7 +127,8 @@ class Program(db.Model):
             "id": self.id,
             "description": self.description,
         }
-
+    
+    
 class Subscription(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
@@ -224,6 +225,8 @@ class Task(db.Model):
             "due_date": self.due_date,
             "status": self.status,
         }
+
+
 
 class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -356,4 +359,16 @@ class Contact(db.Model):
             "subject": self.subject,
             "phone_number": self.phone_number,
             "message": self.message,
+        }
+class Newsletter(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), nullable=False)
+
+    def __repr__(self):
+        return f'<Newsletter {self.email}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "email": self.email,
         }
