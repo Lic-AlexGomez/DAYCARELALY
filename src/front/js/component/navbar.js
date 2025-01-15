@@ -126,7 +126,7 @@ useEffect (() => {
             <li className="navLink">Programs</li>
             <li className="navLink">Events</li>
             <li className="navLink">About</li>
-            <li className="navLink">Contact Us</li>
+            <li className="navLink"><Link className="navLink" to="/contactus">Contact Us</Link></li>
 
           </ul>
           <div className="authButtons me-5  col-3">
