@@ -1,0 +1,33 @@
+.contact-section {
+    background-color: #ffeccb;
+    text-align: center;
+    padding: 50px 20px;
+    font-family: "Arial", sans-serif;
+  }
+  
+  .contact-title {
+    color: #7d2c83; /* Morado oscuro */
+    font-weight: bold;
+  }
+  
+  .form-control {
+    border-radius: 10px;
+  }
+  
+  .btn-submit {
+    background-color: #ff9000; /* Naranja del botón */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+  }
+  
+  .btn-submit:hover {
+    background-color: #ff7a00; /* Hover del botón */
+  }
+  
+  .bottom-stars {
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+  }

@@ -129,7 +129,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
-			}
+			},
+
+
+
+			
+			contactUs: async (name, email, subject, phone_number, message) => {
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/contactus", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ name, email, subject, phone_number, message }),
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(errorData.error || "Failed to send message");
+					}
+			
+					const data = await response.json();
+					return { success: true, data };
+				} catch (error) {
+					console.error("Contact Us Error:", error.message);
+					return { success: false, error: error.message };
+				}
+			},
 		}
 	};
 };

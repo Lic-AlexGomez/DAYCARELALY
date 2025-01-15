@@ -1,6 +1,6 @@
 import cloudinary
 from flask import Flask, request, jsonify, Blueprint
-from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification
+from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification,Contactus
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
@@ -389,3 +389,29 @@ def create_newsletter():
     db.session.commit()
     return jsonify(new_subscription.serialize()), 201
 
+@api.route('/contactus', methods=['GET'])
+def get_contactus():
+    contactus = Contactus.query.all()
+    contactus = list(map(lambda x: x.serialize(), contactus))
+    return jsonify(contactus), 200
+
+@api.route('/contactus/<int:id>', methods=['GET'])
+def get_contactu(id):
+    contactus = Contactus.query.get(id)
+    if not contactus:
+        return jsonify({"error": "Contact not found"}), 404
+    return jsonify(contactus.serialize()), 200
+
+@api.route('/contactus', methods=['POST'])
+def create_contactus():
+    data = request.json
+    new_contactus = Contactus(
+        name=data['name'],
+        email=data['email'],
+        subject= data.get('subject', ''),
+        phone_number=data.get('phone_number', ''),
+        message=data['message']
+    )
+    db.session.add(new_contactus)
+    db.session.commit()
+    return jsonify(new_contactus.serialize()), 201

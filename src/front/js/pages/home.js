@@ -4,6 +4,7 @@ import Classes from "../component/Classes.jsx";
 import "../../styles/home.css";
 import "../../styles/Hero.css";
 import Hero from "../component/hero.jsx";
+import Contactus from "../pages/Contactus.jsx";
 
 export const Home = () => {
 
@@ -12,6 +13,7 @@ export const Home = () => {
 			<Hero />
 			<Classes />
 			{/* <FileUploader /> */}
+			<Contactus />
 		</div>
 	);
 };
