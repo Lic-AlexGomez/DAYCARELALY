@@ -1,0 +1,22 @@
+.contactus-container{
+   margin-top: 50px;
+   margin-bottom: 50px;
+   height: 700px;
+   width: 1000px;
+   background-color: #FFC909;
+   border-radius: 10px;
+}
+.contactInfo{
+   width: 450px;
+   height: 680px;
+   background-color: #9C29B2;
+   margin: 10px;
+   border-radius:10px;
+}
+.paragraphinfo{
+   color: #C9C9C9;
+}
+.contactus{
+   margin-top:100px;
+  text-align: center;
+}
