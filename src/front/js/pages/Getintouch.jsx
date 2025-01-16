@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
-import "../../styles/Contactus.css";
+import "../../styles/Getintouch.css";
 
-const ContactUs = () => {
+const Getintouch = () => {
     const { actions, store } = useContext(Context);
     const [formData, setFormData] = useState({
         name: "",
@@ -30,7 +30,7 @@ const ContactUs = () => {
             return;
         }
 
-        const { success, error } = await actions.contactUs(
+        const { success, error } = await actions.getinTouch(
             formData.name,
             formData.email,
             formData.subject,
@@ -129,4 +129,4 @@ const ContactUs = () => {
     );
 };
 
-export default ContactUs;
+export default Getintouch;

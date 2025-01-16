@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 566ab2aef2d5
+Revision ID: 89293bad7d97
 Revises: 
-Create Date: 2025-01-14 02:02:08.860269
+Create Date: 2025-01-16 01:27:11.348575
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '566ab2aef2d5'
+revision = '89293bad7d97'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -41,6 +41,15 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('start_time', sa.DateTime(), nullable=False),
     sa.Column('end_time', sa.DateTime(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('getintouch',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=120), nullable=False),
+    sa.Column('email', sa.String(length=120), nullable=False),
+    sa.Column('subject', sa.String(length=120), nullable=False),
+    sa.Column('phone_number', sa.String(length=15), nullable=False),
+    sa.Column('message', sa.Text(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('newsletter',
@@ -215,6 +224,7 @@ def downgrade():
     op.drop_table('user')
     op.drop_table('program')
     op.drop_table('newsletter')
+    op.drop_table('getintouch')
     op.drop_table('event')
     op.drop_table('course')
     op.drop_table('contact')

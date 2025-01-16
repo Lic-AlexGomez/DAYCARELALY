@@ -373,7 +373,7 @@ class Newsletter(db.Model):
             "email": self.email,
         }
     
-class Contactus(db.Model):
+class Getintouch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), nullable=False)
@@ -382,7 +382,7 @@ class Contactus(db.Model):
     message = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
-        return f'<Contactus {self.name}>'
+        return f'<Getintouch {self.name}>'
 
     def serialize(self):
         return {
