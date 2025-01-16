@@ -1,10 +1,14 @@
+body{
+   background-color: #ffc107;
+}
 .contactus-container{
    margin-top: 50px;
    margin-bottom: 50px;
    height: 700px;
-   width: 1000px;
-   background-color: #FFC909;
+   width: 1200px;
+   background-color: #ffffff;
    border-radius: 10px;
+   
 }
 .contactInfo{
    width: 450px;
@@ -19,4 +23,47 @@
 .contactus{
    margin-top:100px;
   text-align: center;
+}
+.anyquestion{
+   color: #717171;
+}
+
+.twitter-form,.facebook-form,.instagram-form{
+   width: 30px;         
+  height: 30px;         
+  background-color: #000000;  
+  border-radius: 50%;  
+  margin-left: 25px; 
+  margin-top: 250px; 
+}
+
+
+.inputFirstName,.inputLastName,.inputEmail,.inputPhone{
+   border-bottom: 1px solid #8D8D8D;
+
+   
+}
+
+.labelFirstName,.labelLastName,.labelEmail,.labelPhone,.message{
+   color: #8D8D8D;
+}
+.button-container{
+   display: flex;       
+  
+}
+.sendButton{
+   background-color: #9C29B2;
+   color:white;
+   width:200px;
+   height: 50px;
+   border-radius: 5px;
+   margin-top: 40px;
+   margin-left:auto;
+   margin-right: 20px;
+}
+.img-avion{
+   width: 300px;
+   height: 200px;
+   margin-left: 200px;
+
 }

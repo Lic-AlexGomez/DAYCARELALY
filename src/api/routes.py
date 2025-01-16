@@ -353,8 +353,11 @@ def get_contact(id):
 def create_contact():
     data = request.json
     new_contact = Contact(
-        name=data['name'],
+        first_name=data['first_name'],
+        last_name=data['last_name'],
         email=data['email'],
+        subject= data.get('subject', ''),
+        phone_number=data.get('phone_number', ''),
         message=data['message']
     )
     db.session.add(new_contact)
