@@ -153,6 +153,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
+			
 
 
 			// Use getActions to call a function within a fuction
@@ -185,6 +186,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return { success: false, error: error.message };
 				}
 			},
+			contactUs: async (first_name,last_name, email, subject, phone_number, message) => {
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/contacts", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ first_name,last_name, email, subject, phone_number, message }),
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(errorData.error || "Failed to send message");
+					}
+			
+					const data = await response.json();
+					return { success: true, data };
+				} catch (error) {
+					console.error("Contact Us touch Error:", error.message);
+					return { success: false, error: error.message };
+				}
+			},
+			
 		}
 	};
 };
