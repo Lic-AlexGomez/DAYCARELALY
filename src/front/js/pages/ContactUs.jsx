@@ -12,8 +12,6 @@ import instagram from "../../img/mdi_instagram.png";
 
 const ContactUs = () => {
   const { actions, store } = useContext(Context);
-  
-
   const [dataContactUs, setDataContactUs] = useState({
     first_name: "",
     last_name: "",
@@ -106,7 +104,7 @@ const ContactUs = () => {
 
   return (
     <div className="container-form">
-      <h1 className="contactus tw-text-4xl tw-font-bold">Contact Us</h1>
+      <h1 className="contactus tw-text-4xl tw-font-bold ">Contact Us</h1>
       <p className="anyquestion tw-mx-auto tw-w-70 tw-flex tw-justify-center">
         Any question or remarks? Just write us a message!
       </p>
@@ -194,7 +192,7 @@ const ContactUs = () => {
                   />
                 </div>
               </div>
-              <div className="tw-flex tw-justify-center tw-space-x-24 ">
+              <div className="tw-flex  tw-space-x-24 ">
                 <div className="email tw-mt-10 tw-space-y-2 tw-flex-1 ">
                   <label className="labelEmail tw-block">email</label>
                   <input
