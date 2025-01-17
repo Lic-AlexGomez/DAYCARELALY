@@ -1,9 +1,10 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
 const Aday = () => {
   return (
+    <>
     <section className="daily-activities">
-                <h2>A Day at Kiddy Rainbow</h2>
+                <h2>A Day at daycare Rainbow</h2>
                 <div className="timeline">
                     <div className="timeline-item">
                         <div className="timeline-content">
@@ -35,8 +36,44 @@ const Aday = () => {
                             <p>Nutritious lunch followed by nap or quiet time.</p>
                         </div>
                     </div>
+                    
+                    <div className="timeline-item">
+                        <div className="timeline-content">
+                            <h3>2:00 PM - Art & Crafts</h3>
+                            <p>Children explore their creativity through art projects.</p>
+                        </div>
+                    </div>
+                    <div className="timeline-item">
+                        <div className="timeline-content">
+                            <h3>3:00 PM - Story Time</h3>
+                            <p>Reading and storytelling to encourage literacy skills.</p>
+                        </div>
+                    </div>
+                    <div className="timeline-item">
+                        <div className="timeline-content">
+                            <h3>4:00 PM - Snack Time</h3>
+                            <p>Another healthy snack to keep children satisfied.</p>
+                        </div>
+                    </div>
+                    <div className="timeline-item">
+                        <div className="timeline-content">
+                            <h3>4:30 PM - Free Play</h3>
+                            <p>Children engage in free play activities before pick-up.</p>
+                        </div>
+                    </div>
+                    <div className="timeline-item">
+                        <div className="timeline-content">
+                            <h3>6:00 PM - Goodbye!</h3>
+                            <p>Parents pick up their children and say goodbye for the day.</p>
+                        </div>
+                       
                 </div>
+                </div>
+                
             </section>
+    </>
+    
+           
   )
 }
 
