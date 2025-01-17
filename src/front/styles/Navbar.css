@@ -51,7 +51,7 @@
   
   .searchButton {
     padding: 8.2px 15px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     background-color: #ffc107; /* Yellow */
     color: #800080; /* Purple */
     border: none;

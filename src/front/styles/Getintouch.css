@@ -1,33 +1,124 @@
-.contact-section {
-    background-color: #ffeccb;
-    text-align: center;
-    padding: 50px 20px;
-    font-family: "Arial", sans-serif;
-  }
-  
-  .contact-title {
-    color: #7d2c83; /* Morado oscuro */
-    font-weight: bold;
-  }
-  
-  .form-control {
-    border-radius: 10px;
-  }
-  
-  .btn-submit {
-    background-color: #ff9000; /* Naranja del botón */
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px 20px;
-  }
-  
-  .btn-submit:hover {
-    background-color: #ff7a00; /* Hover del botón */
-  }
-  
-  .bottom-stars {
-    position: absolute;
-    bottom: 10%;
-    right: 10%;
-  }
+.contact-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 1rem;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 80%;
+  /* background-color: #ffe5cc; */
+  /* background-image: url("/bgGetinT.png"); */
+  padding: 5.5rem;
+  /* border-radius: 1rem; */
+  position: relative;
+  background-size: cover;
+}
+
+.get-in-touch {
+  text-align: center;
+  color: #ffd700;
+
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.main-title {
+  text-align: center;
+  color: #6b2c91;
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.375rem;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.375rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  resize: none;
+  min-height: 150px;
+  margin-bottom: 4rem;
+}
+
+.submit-button {
+  display: block;
+  margin: 0 auto;
+  padding: 0.75rem 8rem;
+  background-color: #f7941d;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #e88a1b;
+}
+
+.star {
+  position: absolute;
+  color: #ffd700;
+  /* font-size: 1rem; */
+}
+
+.star-1 {
+  top: 2.5rem;
+  left: 10.3rem;
+  font-size: 2.3rem;
+  line-height: 2rem;
+}
+.star-2 {
+  top: 4.5rem;
+  left: 13rem;
+  font-size: 3rem;
+  line-height: 2rem;
+}
+.star-3 {
+  top: 6.5rem;
+  left: 10rem;
+  font-size: 3.5rem;
+  line-height: 2rem;
+}
+.star-4 {
+  bottom: 6rem;
+  right: 6rem;
+  font-size: 2.3rem;
+  line-height: 2rem;
+}
+.star-5 {
+  bottom: 4.5rem;
+  right: 8rem;
+  font-size: 3.8rem;
+  line-height: 2rem;
+}
+.star-6 {
+  bottom: 8rem;
+  right: 8.5rem;
+  font-size: 2.5rem;
+  line-height: 2rem;
+}
+

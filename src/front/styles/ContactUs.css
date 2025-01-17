@@ -1,6 +1,14 @@
-body{
-   background-color: #ffc107;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #9c29b2;
+  --secondary: #ffc909;
+  --background: #FFF5E9;
 }
+
+
 .contactus-container{
    margin-top: 50px;
    margin-bottom: 50px;
