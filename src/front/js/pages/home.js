@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useEffect} from "react";
 import { FileUploader } from "../component/uploadToCloudinary.jsx";
 import Classes from "../component/Classes.jsx";
 import "../../styles/home.css";
@@ -7,7 +7,10 @@ import Hero from "../component/hero.jsx";
 import Getintouch from "../pages/Getintouch.jsx";
 
 export const Home = () => {
-
+useEffect(() => {
+	const body = document.querySelector("body");
+	body.style.background = "white";	
+}, []);
 	return (
 		<div className="text-center ">
 			<Hero />

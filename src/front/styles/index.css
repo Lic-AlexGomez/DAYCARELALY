@@ -1,4 +1,4 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 root{
@@ -6,16 +6,12 @@ root{
   --secondary: #9C29B2;
 
 }
-
-
-
-
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
 :root {
-  --primary: #3b82f6;
+  --primary: #3b82f6; 
   --primary-hover: #2563eb;
 }
 
@@ -51,4 +47,4 @@ body {
 .tab-active {
   @apply tw-border-b-2 tw-border-blue-500;
 }
-
+ */
