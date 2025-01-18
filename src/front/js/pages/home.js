@@ -5,6 +5,7 @@ import "../../styles/home.css";
 import "../../styles/Hero.css";
 import Hero from "../component/hero.jsx";
 import Getintouch from "../pages/Getintouch.jsx";
+import Aday from "../component/Aday.jsx";
 
 export const Home = () => {
 useEffect(() => {
@@ -14,6 +15,7 @@ useEffect(() => {
 	return (
 		<div className="text-center ">
 			<Hero />
+			<Aday/>
 			<Classes />
 			{/* <FileUploader /> */}
 			<Getintouch />

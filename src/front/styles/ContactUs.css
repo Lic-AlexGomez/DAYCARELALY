@@ -7,7 +7,14 @@
   --secondary: #ffc909;
   --background: #FFF5E9;
 }
-
+.container-form{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   height: 100vh;
+   background-color: #ffc909;
+}
 
 .contactus-container{
    margin-top: 50px;
@@ -16,6 +23,8 @@
    width: 1200px;
    background-color: #ffffff;
    border-radius: 10px;
+   border: 2px solid black;
+   
    
 }
 .contactInfo{
@@ -24,6 +33,7 @@
    background-color: #9C29B2;
    margin: 10px;
    border-radius:10px;
+   padding-left: 1rem;
 }
 .paragraphinfo{
    color: #C9C9C9;
