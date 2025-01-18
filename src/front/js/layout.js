@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 
@@ -11,39 +11,79 @@ import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import Login from "./pages/login.jsx";
-import {Signup} from "./pages/signup.jsx";
+import { Signup } from "./pages/signup.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
-import { AdminDashboard } from "./pages/dashboard.jsx";
+
+// Componentes del Admin Dashboard
+import Sidebar from "./component/admin/Sidebar";
+import Header from "./component/admin/Header";
+import DashboardOverview from "./component/admin/DashboardOverview";
 
 
-//create your first component
+const LayoutContent = () => {
+    const location = useLocation(); 
+    const adminRoutes = location.pathname.startsWith("/admin-dashboard");
+
+    return (
+        <ScrollToTop>
+            <Routes>
+              
+                <Route
+                    path="/*"
+                    element={
+                        <>
+                            {!adminRoutes && <Navbar />}
+                            <Routes>
+                                <Route element={<Home />} path="/" />
+                                <Route element={<Home />} path="/home" />
+                                <Route element={<Demo />} path="/demo" />
+                                <Route element={<Single />} path="/single/:theid" />
+                                <Route element={<Login />} path="/login" />
+                                <Route element={<Signup />} path="/signup" />
+                                <Route element={<ContactUs />} path="/contactus" />
+                                <Route element={<h1>Not found!</h1>} path="*" />
+                            </Routes>
+                            {!adminRoutes && <Footer />}
+                        </>
+                    }
+                />
+
+              
+                <Route
+                    path="/admin-dashboard/*"
+                    element={
+                        <div className="tw-flex tw-h-screen tw-overflow-hidden">
+                            <Sidebar />
+                            <div className="tw-flex-1 tw-overflow-auto">
+                                <Header />
+                                <main className="tw-p-6">
+                                    <Routes>
+                                        <Route
+                                            exact
+                                            path="/admin-dashboard"
+                                            element={<DashboardOverview />}
+                                        />
+                                       
+                                    </Routes>
+                                </main>
+                            </div>
+                        </div>
+                    }
+                />
+            </Routes>
+        </ScrollToTop>
+    );
+};
+
 const Layout = () => {
-    //the basename is used when your project is published in a subdirectory and not in the root of the domain
-    // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
     const basename = process.env.BASENAME || "";
 
-    if(!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />;
 
     return (
         <div>
             <BrowserRouter basename={basename}>
-                <ScrollToTop>
-                    <Navbar />
-                    <Routes>
-                        <Route element={<Home />} path="/" />
-                        <Route element={<Home />} path="/home" />
-                        <Route element={<Demo />} path="/demo" />
-                        <Route element={<Single />} path="/single/:theid" />
-                        <Route element={<Login  />} path="/login" />
-                        <Route element={<Signup />} path="/signup" />
-                        <Route element={<ContactUs />} path="/contactus" />
-                        {/* admin,teacher,parent dashboard */}
-                        <Route element={<AdminDashboard/>} path="/dashboard-admin"/>
-                        
-                        <Route element={<h1>Not found!</h1>} />
-                    </Routes>
-                    <Footer />
-                </ScrollToTop>
+                <LayoutContent />
             </BrowserRouter>
         </div>
     );
