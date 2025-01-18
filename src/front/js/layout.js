@@ -13,6 +13,8 @@ import { Footer } from "./component/footer";
 import Login from "./pages/login.jsx";
 import {Signup} from "./pages/signup.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
+import { AdminDashboard } from "./pages/dashboard.jsx";
+
 
 //create your first component
 const Layout = () => {
@@ -35,6 +37,9 @@ const Layout = () => {
                         <Route element={<Login  />} path="/login" />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<ContactUs />} path="/contactus" />
+                        {/* admin,teacher,parent dashboard */}
+                        <Route element={<AdminDashboard/>} path="/dashboard-admin"/>
+                        
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />
