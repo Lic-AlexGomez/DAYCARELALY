@@ -34,7 +34,7 @@ const Events = () => {
             <h1 className="tw-mt-10 tw-text-center tw-text-3xl tw-font-black">Upcoming Events</h1>
             {allEvents.map((eventItem) => (
                 <div key={eventItem.id} className="cardEvents tw-mx-auto tw-relative">
-                    <div className="image-container tw-absolute  tw-bottom-0 ">
+                    <div className="image-container-events tw-absolute  tw-bottom-0 ">
                         <img className="tw-ml-1" src={eventItem.image} alt="" />
                     </div>,
 
