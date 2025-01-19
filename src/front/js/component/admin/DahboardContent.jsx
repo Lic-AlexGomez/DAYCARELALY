@@ -54,6 +54,8 @@ const DashboardContent = () => {
       )}
 
       {/* Add content for other tabs here */}
+
+      
     </div>
   );
 };

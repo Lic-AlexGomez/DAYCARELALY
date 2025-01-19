@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Plus, Edit, Trash } from 'lucide-react';
 
 const ScheduleManagement = () => {
   const [schedules, setSchedules] = useState([
@@ -19,16 +20,20 @@ const ScheduleManagement = () => {
     setNewSchedule({ day: '', startTime: '', endTime: '', activity: '' });
   };
 
+  const handleDeleteSchedule = (id) => {
+    setSchedules(schedules.filter(schedule => schedule.id !== id));
+  };
+
   return (
     <div>
-      <h2 className="tw-text-2xl tw-font-bold tw-mb-4">Gestión de Horarios</h2>
-      <form onSubmit={handleAddSchedule} className="tw-mb-4">
-        <div className="tw-flex tw-gap-2">
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Horarios</h2>
+      <div className="tw-mb-6">
+        <form onSubmit={handleAddSchedule} className="tw-flex tw-space-x-4">
           <select
             name="day"
             value={newSchedule.day}
             onChange={handleInputChange}
-            className="tw-border tw-rounded tw-px-2 tw-py-1"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           >
             <option value="">Seleccionar día</option>
@@ -43,7 +48,7 @@ const ScheduleManagement = () => {
             name="startTime"
             value={newSchedule.startTime}
             onChange={handleInputChange}
-            className="tw-border tw-rounded tw-px-2 tw-py-1"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
           <input
@@ -51,7 +56,7 @@ const ScheduleManagement = () => {
             name="endTime"
             value={newSchedule.endTime}
             onChange={handleInputChange}
-            className="tw-border tw-rounded tw-px-2 tw-py-1"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
           <input
@@ -60,30 +65,40 @@ const ScheduleManagement = () => {
             value={newSchedule.activity}
             onChange={handleInputChange}
             placeholder="Actividad"
-            className="tw-border tw-rounded tw-px-2 tw-py-1"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
-          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded">
+          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
+            <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
             Agregar Horario
           </button>
-        </div>
-      </form>
-      <table className="tw-w-full tw-border-collapse tw-border tw-border-gray-300">
-        <thead>
-          <tr className="tw-bg-gray-100">
-            <th className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">Día</th>
-            <th className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">Hora de Inicio</th>
-            <th className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">Hora de Fin</th>
-            <th className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">Actividad</th>
+        </form>
+      </div>
+      <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
+        <thead className="tw-bg-gray-100">
+          <tr>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Día</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Hora de Inicio</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Hora de Fin</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actividad</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="tw-divide-y tw-divide-gray-200">
           {schedules.map((schedule) => (
             <tr key={schedule.id}>
-              <td className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">{schedule.day}</td>
-              <td className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">{schedule.startTime}</td>
-              <td className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">{schedule.endTime}</td>
-              <td className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">{schedule.activity}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.day}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.startTime}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.endTime}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.activity}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">
+                  <Edit className="tw-w-5 tw-h-5" />
+                </button>
+                <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteSchedule(schedule.id)}>
+                  <Trash className="tw-w-5 tw-h-5" />
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -93,3 +108,4 @@ const ScheduleManagement = () => {
 };
 
 export default ScheduleManagement;
+
