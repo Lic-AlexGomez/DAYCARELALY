@@ -18,60 +18,81 @@ import ContactUs from "./pages/ContactUs.jsx";
 import Sidebar from "./component/admin/Sidebar";
 import Header from "./component/admin/Header";
 import DashboardOverview from "./component/admin/DashboardOverview";
+import ClientsView from "./component/admin/ClientsView";
+import ScheduleManagement from "./component/admin/ScheduleManagement";
+import ClassesView from "./component/admin/ClassesView";
+import EnrollmentsView from "./component/admin/EnrollmentsView";
+import ReportsView from "./component/admin/ReportsView";
+import BlogView from "./component/admin/BlogView";
+import InventoryView from "./component/admin/InventoryView";
+import EmailsView from "./component/admin/EmailsView";
+import NotificationsView from "./component/admin/NotificationsView";
+import ArchiveView from "./component/admin/ArchiveView";
+import ScheduleView from "./component/admin/ScheduleView";
+import TasksView from "./component/admin/TasksView";
+import ActivitiesView from "./component/admin/ActivitiesView";
+import VideosView from "./component/admin/VideosView";
+import InactiveAccountsView from "./component/admin/InactiveAccountsView";
+import ApprovalsView from "./component/admin/ApprovalsView";
+import MaintenanceView from "./component/admin/MaintenanceView";
+import SettingsView from "./component/admin/SettingsView";
 
+const AdminDashboard = () => (
+    <div className="tw-flex tw-h-screen tw-overflow-hidden">
+        <Sidebar />
+        <div className="tw-flex-1 tw-overflow-auto">
+            <Header />
+            <main className="tw-p-6 tw-mt-2">
+                <Routes>
+                    <Route path="/" element={<DashboardOverview />} />
+                    {/* Otras rutas del dashboard */}
+                    
+                    <Route path="/clients" element={<ClientsView />} />
+                     <Route path="/schedule-management" element={<ScheduleManagement />} />
+                    <Route path="/classes" element={<ClassesView />} />
+                    <Route path="/enrollments" element={<EnrollmentsView />} />
+                    <Route path="/reports" element={<ReportsView />} />
+                    <Route path="/blog" element={<BlogView />} />
+                    <Route path="/inventory" element={<InventoryView />} />
+                    <Route path="/emails" element={<EmailsView />} />
+                    <Route path="/notifications" element={<NotificationsView />} />
+                    <Route path="/archive" element={<ArchiveView />} />
+                    <Route path="/schedule" element={<ScheduleView />} />
+                    <Route path="/tasks" element={<TasksView />} />
+                    <Route path="/activities" element={<ActivitiesView />} />
+                    <Route path="/videos" element={<VideosView />} />
+                    <Route path="/inactive-accounts" element={<InactiveAccountsView />} />
+                    <Route path="/approvals" element={<ApprovalsView />} />
+                    <Route path="/maintenance" element={<MaintenanceView />} />
+                    <Route path="/settings" element={<SettingsView />} />
+                   
+                </Routes>
+            </main>
+        </div>
+    </div>
+);
 
-const LayoutContent = () => {
-    const location = useLocation(); 
-    const adminRoutes = location.pathname.startsWith("/admin-dashboard");
+const MainRoutes = () => {
+    const location = useLocation();
+    const isAdminRoute = location.pathname.startsWith("/admin-dashboard");
 
     return (
-        <ScrollToTop>
+        <>
+            {!isAdminRoute && <Navbar />}
             <Routes>
-              
-                <Route
-                    path="/*"
-                    element={
-                        <>
-                            {!adminRoutes && <Navbar />}
-                            <Routes>
-                                <Route element={<Home />} path="/" />
-                                <Route element={<Home />} path="/home" />
-                                <Route element={<Demo />} path="/demo" />
-                                <Route element={<Single />} path="/single/:theid" />
-                                <Route element={<Login />} path="/login" />
-                                <Route element={<Signup />} path="/signup" />
-                                <Route element={<ContactUs />} path="/contactus" />
-                                <Route element={<h1>Not found!</h1>} path="*" />
-                            </Routes>
-                            {!adminRoutes && <Footer />}
-                        </>
-                    }
-                />
-
-              
-                <Route
-                    path="/admin-dashboard/*"
-                    element={
-                        <div className="tw-flex tw-h-screen tw-overflow-hidden">
-                            <Sidebar />
-                            <div className="tw-flex-1 tw-overflow-auto">
-                                <Header />
-                                <main className="tw-p-6">
-                                    <Routes>
-                                        <Route
-                                            exact
-                                            path="/admin-dashboard"
-                                            element={<DashboardOverview />}
-                                        />
-                                       
-                                    </Routes>
-                                </main>
-                            </div>
-                        </div>
-                    }
-                />
+                {/* Rutas principales */}
+                <Route path="/" element={<Home />} />
+                <Route path="/home" element={<Home />} />
+                <Route path="/demo" element={<Demo />} />
+                <Route path="/single/:theid" element={<Single />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/contactus" element={<ContactUs />} />
+                <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
+                <Route path="*" element={<h1>Not found!</h1>} />
             </Routes>
-        </ScrollToTop>
+            {!isAdminRoute && <Footer />}
+        </>
     );
 };
 
@@ -81,11 +102,10 @@ const Layout = () => {
     if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />;
 
     return (
-        <div>
-            <BrowserRouter basename={basename}>
-                <LayoutContent />
-            </BrowserRouter>
-        </div>
+        <BrowserRouter basename={basename}>
+            <ScrollToTop />
+            <MainRoutes />
+        </BrowserRouter>
     );
 };
 
