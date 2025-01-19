@@ -13,6 +13,7 @@ import { Footer } from "./component/footer";
 import Login from "./pages/login.jsx";
 import { Signup } from "./pages/signup.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
+import Events from "./pages/Events.jsx";
 
 // Componentes del Admin Dashboard
 import Sidebar from "./component/admin/Sidebar";
@@ -92,6 +93,7 @@ const MainRoutes = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/contactus" element={<ContactUs />} />
+                <Route path="/events" element={<Events />} />
                 <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
                 <Route path="*" element={<h1>Not found!</h1>} />
             </Routes>
