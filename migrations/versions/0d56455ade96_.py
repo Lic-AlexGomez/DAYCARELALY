@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: ae0c10dbe036
+Revision ID: 0d56455ade96
 Revises: 
-Create Date: 2025-01-16 18:24:27.837486
+Create Date: 2025-01-19 02:28:01.995976
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ae0c10dbe036'
+revision = '0d56455ade96'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,6 +21,7 @@ def upgrade():
     op.create_table('contact',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(length=120), nullable=False),
+    sa.Column('last_name', sa.String(length=120), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('subject', sa.String(length=120), nullable=False),
     sa.Column('phone_number', sa.String(length=15), nullable=False),
@@ -55,11 +56,6 @@ def upgrade():
     op.create_table('newsletter',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('program',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('description', sa.Text(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -133,6 +129,18 @@ def upgrade():
     sa.Column('amount', sa.Integer(), nullable=False),
     sa.Column('date', sa.Date(), nullable=False),
     sa.ForeignKeyConstraint(['parent_id'], ['parent.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('program',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('teacher_id', sa.Integer(), nullable=True),
+    sa.Column('name', sa.String(length=120), nullable=False),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('capacity', sa.Integer(), nullable=False),
+    sa.Column('price', sa.Integer(), nullable=False),
+    sa.Column('age', sa.String(length=20), nullable=False),
+    sa.Column('time', sa.String(length=50), nullable=False),
+    sa.ForeignKeyConstraint(['teacher_id'], ['teacher.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('subscription',
@@ -214,6 +222,7 @@ def downgrade():
     op.drop_table('attendance')
     op.drop_table('task')
     op.drop_table('subscription')
+    op.drop_table('program')
     op.drop_table('payment')
     op.drop_table('class')
     op.drop_table('child')
@@ -222,7 +231,6 @@ def downgrade():
     op.drop_table('notification')
     op.drop_table('message')
     op.drop_table('user')
-    op.drop_table('program')
     op.drop_table('newsletter')
     op.drop_table('getintouch')
     op.drop_table('event')

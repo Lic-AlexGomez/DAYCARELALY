@@ -117,15 +117,28 @@ class Enrollment(db.Model):
 
 class Program(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.Text, nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=True)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    capacity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    age = db.Column(db.String(20), nullable=False)
+    time = db.Column(db.String(50), nullable=False)
+
 
     def __repr__(self):
-        return f'<Program {self.id}>'
+        return f'<Program {self.name}>'
 
     def serialize(self):
         return {
             "id": self.id,
+            "teacher_id": self.teacher_id,
+            "name": self.name,
             "description": self.description,
+            "capacity": self.capacity,
+            "price": self.price,
+            "age": self.age,
+            "time": self.time,
         }
     
     
@@ -395,3 +408,5 @@ class Getintouch(db.Model):
             "phone_number": self.phone_number,
             "message": self.message,
         }
+    
+    

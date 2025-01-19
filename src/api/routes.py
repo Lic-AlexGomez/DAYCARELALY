@@ -319,15 +319,21 @@ def get_program(id):
 @api.route('/programs', methods=['POST'])
 def create_program():
     data = request.json
+    required_fields = ['name', 'capacity', 'price', 'age', 'time']
+    for field in required_fields:
+        if field not in data or data[field] is None:
+            return jsonify({"error": f"'{field}' is required"}), 400
     new_program = Program(
         name=data['name'],
         description=data.get('description', ''),
-        price=data['price']
+        capacity=data['capacity'],
+        price=data['price'],
+        age=data['age'],
+        time=data['time']
     )
     db.session.add(new_program)
     db.session.commit()
     return jsonify(new_program.serialize()), 201
-
 
 @api.route('/subscriptions', methods=['GET'])
 def get_subscriptions():
