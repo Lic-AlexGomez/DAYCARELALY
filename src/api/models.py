@@ -258,8 +258,6 @@ def get_child(id):
         return jsonify({"error": "Child not found"}), 404
     return jsonify(child.serialize()), 200
 
-
-<<<<<<< HEAD
     def __repr__(self):
         return f'<Class {self.name}>'
 
@@ -415,21 +413,6 @@ class Task(db.Model):
             "due_date": self.due_date,
             "status": self.status,
         }
-=======
-@api.route('/children', methods=['POST'])
-def create_child():
-    data = request.json
-    new_child = Child(
-        parent_id=data['parent_id'],
-        full_name=data['full_name'],
-        age=data['age'],
-        allergies=data.get('allergies', ''),
-        medical_conditions=data.get('medical_conditions', '')
-    )
-    db.session.add(new_child)
-    db.session.commit()
-    return jsonify(new_child.serialize()), 201
->>>>>>> 4d3fa9e087e88e2b14e97e5b136f19a957afe17e
 
 
 @api.route('/enrollments', methods=['GET'])
