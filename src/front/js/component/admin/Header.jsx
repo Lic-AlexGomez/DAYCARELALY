@@ -9,7 +9,7 @@ const Header = () => {
         type="button"
       >
         <span className="tw-relative tw-flex tw-shrink-0 tw-overflow-hidden tw-rounded-full tw-h-8 tw-w-8">
-          <img className="tw-aspect-square tw-h-full tw-w-full" alt="@username" src="/placeholder.svg" />
+          {/* <img className="tw-aspect-square tw-h-full tw-w-full" alt="@username" src="/placeholder.svg" /> */}
         </span>
       </button>
     </header>
