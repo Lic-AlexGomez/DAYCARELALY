@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Plus, Edit, Trash } from 'lucide-react';
 
 const ClassesView = () => {
   const [classes, setClasses] = useState([
@@ -19,18 +20,22 @@ const ClassesView = () => {
     setNewClass({ name: '', teacher: '', capacity: '', schedule: '' });
   };
 
+  const handleDeleteClass = (id) => {
+    setClasses(classes.filter(classItem => classItem.id !== id));
+  };
+
   return (
     <div>
-      <h2 className="tw-text-2xl tw-font-bold tw-mb-4">Gestión de Clases</h2>
-      <form onSubmit={handleAddClass} className="tw-mb-4">
-        <div className="tw-flex tw-gap-2">
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Clases</h2>
+      <div className="tw-mb-6">
+        <form onSubmit={handleAddClass} className="tw-flex tw-space-x-4">
           <input
             type="text"
             name="name"
             value={newClass.name}
             onChange={handleInputChange}
             placeholder="Nombre de la clase"
-            className="tw-border tw-rounded tw-px-2 tw-py-1"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
           <input
@@ -39,7 +44,7 @@ const ClassesView = () => {
             value={newClass.teacher}
             onChange={handleInputChange}
             placeholder="Profesor"
-            className="tw-border tw-rounded tw-px-2 tw-py-1"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
           <input
@@ -48,7 +53,7 @@ const ClassesView = () => {
             value={newClass.capacity}
             onChange={handleInputChange}
             placeholder="Capacidad"
-            className="tw-border tw-rounded tw-px-2 tw-py-1"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
           <input
@@ -57,30 +62,40 @@ const ClassesView = () => {
             value={newClass.schedule}
             onChange={handleInputChange}
             placeholder="Horario"
-            className="tw-border tw-rounded tw-px-2 tw-py-1"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
-          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded">
+          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
+            <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
             Agregar Clase
           </button>
-        </div>
-      </form>
-      <table className="tw-w-full tw-border-collapse tw-border tw-border-gray-300">
-        <thead>
-          <tr className="tw-bg-gray-100">
-            <th className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">Nombre</th>
-            <th className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">Profesor</th>
-            <th className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">Capacidad</th>
-            <th className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">Horario</th>
+        </form>
+      </div>
+      <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
+        <thead className="tw-bg-gray-100">
+          <tr>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Nombre</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Profesor</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacidad</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Horario</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="tw-divide-y tw-divide-gray-200">
           {classes.map((classItem) => (
             <tr key={classItem.id}>
-              <td className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">{classItem.name}</td>
-              <td className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">{classItem.teacher}</td>
-              <td className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">{classItem.capacity}</td>
-              <td className="tw-border tw-border-gray-300 tw-px-4 tw-py-2">{classItem.schedule}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.teacher}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.capacity}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.schedule}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">
+                  <Edit className="tw-w-5 tw-h-5" />
+                </button>
+                <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteClass(classItem.id)}>
+                  <Trash className="tw-w-5 tw-h-5" />
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -90,3 +105,4 @@ const ClassesView = () => {
 };
 
 export default ClassesView;
+

@@ -36,6 +36,7 @@ import InactiveAccountsView from "./component/admin/InactiveAccountsView";
 import ApprovalsView from "./component/admin/ApprovalsView";
 import MaintenanceView from "./component/admin/MaintenanceView";
 import SettingsView from "./component/admin/SettingsView";
+import DashboardContent from "./component/admin/DahboardContent.jsx";
 
 const AdminDashboard = () => (
     <div className="tw-flex tw-h-screen tw-overflow-hidden">
@@ -44,6 +45,7 @@ const AdminDashboard = () => (
             <Header />
             <main className="tw-p-6 tw-mt-2">
                 <Routes>
+                    {/* <Route path="/" element={<DashboardContent />} /> */}
                     <Route path="/" element={<DashboardOverview />} />
                     {/* Otras rutas del dashboard */}
                     
@@ -65,6 +67,8 @@ const AdminDashboard = () => (
                     <Route path="/approvals" element={<ApprovalsView />} />
                     <Route path="/maintenance" element={<MaintenanceView />} />
                     <Route path="/settings" element={<SettingsView />} />
+                    <Route path="/dashboard-content" element={<DashboardContent/>} />
+                    <Route path="*" element={<h1>Not found!</h1>} />
                    
                 </Routes>
             </main>

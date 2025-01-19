@@ -136,6 +136,9 @@ useEffect (() => {
 			<Link to="/signup" className="">
            	 <button className="joinBtn ">Join Now</button>
 			</Link>
+      <Link to="/admin-dashboard" className="">
+           	 <button className="joinBtn ">Dashboard</button>
+			</Link>
           </div>
         </div>
       </header>
