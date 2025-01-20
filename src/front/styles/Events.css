@@ -1,20 +1,28 @@
 
 .cardEvents{
-    width: 400px;
-    height: 350px;
+    width: 360px;
+    height: 340px;
     background-color: #FFF;
     border-radius: 10px;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 .image-container-events{
-    height: 350px;
+    height: 340px;
     width: 150px;
     border-radius: 10px;
     background-color:#9C29B2 ;
 
 }
 .infoContainer{
+    width: 50px;
+    margin-right: 20px;
+    
+}
+.date-events{
+    width: 150px;
+}
+.title-events{
     width: 150px;
 }
 .descriptionEvent{
