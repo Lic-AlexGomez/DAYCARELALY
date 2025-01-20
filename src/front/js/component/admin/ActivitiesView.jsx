@@ -3,12 +3,12 @@ import { Plus, Edit, Trash } from 'lucide-react';
 
 const ActivitiesView = () => {
   const [activities, setActivities] = useState([
-    { id: 1, name: 'Pintura con Dedos', description: 'Actividad creativa para desarrollar habilidades motoras finas', ageGroup: '2-3 años', duration: 30 },
-    { id: 2, name: 'Cuentacuentos Interactivo', description: 'Lectura de cuentos con participación de los niños', ageGroup: '4-5 años', duration: 45 },
-    { id: 3, name: 'Juegos de Construcción', description: 'Construcción con bloques para desarrollar habilidades espaciales', ageGroup: '3-4 años', duration: 60 },
+    { id: 1, name: 'Pintura con Dedos', description: 'Actividad creativa para desarrollar habilidades motoras finas', ageGroup: '2-3 años', duration: 30, capacity: 15 , enrolled: 10 },
+    { id: 2, name: 'Cuentacuentos Interactivo', description: 'Lectura de cuentos con participación de los niños', ageGroup: '4-5 años', duration: 45 , capacity: 20 , enrolled: 15 },
+    { id: 3, name: 'Juegos de Construcción', description: 'Construcción con bloques para desarrollar habilidades espaciales', ageGroup: '3-4 años', duration: 60 , capacity: 25 , enrolled: 20 },
   ]);
 
-  const [newActivity, setNewActivity] = useState({ name: '', description: '', ageGroup: '', duration: '' });
+  const [newActivity, setNewActivity] = useState({ name: '', description: '', ageGroup: '', duration: '', capacity: '' });
 
   const handleInputChange = (e) => {
     setNewActivity({ ...newActivity, [e.target.name]: e.target.value });
@@ -17,7 +17,7 @@ const ActivitiesView = () => {
   const handleAddActivity = (e) => {
     e.preventDefault();
     setActivities([...activities, { id: activities.length + 1, ...newActivity, duration: parseInt(newActivity.duration) }]);
-    setNewActivity({ name: '', description: '', ageGroup: '', duration: '' });
+    setNewActivity({ name: '', description: '', ageGroup: '', duration:  '', capacity: '' });
   };
 
   const handleDeleteActivity = (id) => {
@@ -85,6 +85,8 @@ const ActivitiesView = () => {
             <div className="tw-flex tw-justify-between tw-text-sm tw-text-gray-500">
               <span>Edad: {activity.ageGroup}</span>
               <span>Duración: {activity.duration} minutos</span>
+              <span>Capacidad: {activity.enrolled}/{activity.capacity}</span>
+              <span>Inscritos: {activity.enrolled}</span>
             </div>
           </div>
         ))}

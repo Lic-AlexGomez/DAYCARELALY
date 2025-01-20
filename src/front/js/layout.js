@@ -11,7 +11,8 @@ import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import Login from "./pages/login.jsx";
-import { Signup } from "./pages/signup.jsx";
+
+
 import ContactUs from "./pages/ContactUs.jsx";
 import Events from "./pages/Events.jsx";
 import Programs from "./pages/Programs.jsx";
@@ -39,6 +40,10 @@ import ApprovalsView from "./component/admin/ApprovalsView";
 import MaintenanceView from "./component/admin/MaintenanceView";
 import SettingsView from "./component/admin/SettingsView";
 import DashboardContent from "./component/admin/DahboardContent.jsx";
+import { SignupCommon } from "./pages/SignupCommon.jsx";
+import { StaffSignup } from "./pages/StaffSignup.jsx";
+import ProfileView from "./component/admin/ProfileView.jsx";
+
 
 
 const AdminDashboard = () => (
@@ -51,9 +56,9 @@ const AdminDashboard = () => (
                     {/* <Route path="/" element={<DashboardContent />} /> */}
                     <Route path="/" element={<DashboardOverview />} />
                     {/* Otras rutas del dashboard */}
-                    
+
                     <Route path="/clients" element={<ClientsView />} />
-                     <Route path="/schedule-management" element={<ScheduleManagement />} />
+                    <Route path="/schedule-management" element={<ScheduleManagement />} />
                     <Route path="/classes" element={<ClassesView />} />
                     <Route path="/enrollments" element={<EnrollmentsView />} />
                     <Route path="/reports" element={<ReportsView />} />
@@ -70,9 +75,11 @@ const AdminDashboard = () => (
                     <Route path="/approvals" element={<ApprovalsView />} />
                     <Route path="/maintenance" element={<MaintenanceView />} />
                     <Route path="/settings" element={<SettingsView />} />
-                    <Route path="/dashboard-content" element={<DashboardContent/>} />
+                    <Route path="/staff-signup" element={<StaffSignup/>} />
+                    <Route path="/profile" element={<ProfileView/>} />
+                    <Route path="/dashboard-content" element={<DashboardContent />} />
                     <Route path="*" element={<h1>Not found!</h1>} />
-                   
+
                 </Routes>
             </main>
         </div>
@@ -93,7 +100,7 @@ const MainRoutes = () => {
                 <Route path="/demo" element={<Demo />} />
                 <Route path="/single/:theid" element={<Single />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/signup" element={<SignupCommon/>} />
                 <Route path="/contactus" element={<ContactUs />} />
                 <Route path="/events" element={<Events />} />
                 <Route path="/admin-dashboard/*" element={<AdminDashboard />} />

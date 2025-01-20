@@ -3,8 +3,8 @@ import { Plus, Edit, Trash } from 'lucide-react';
 
 const BlogView = () => {
   const [posts, setPosts] = useState([
-    { id: 1, title: 'Bienvenidos a nuestro blog', content: 'Este es nuestro primer post...', date: '2023-05-15' },
-    { id: 2, title: 'Actividades de verano', content: 'Este verano tendremos...', date: '2023-05-20' },
+    { id: 1, Author:"Maria Cortez", title: 'Bienvenidos a nuestro blog', content: 'Este es nuestro primer post...', date: '2023-05-15' },
+    { id: 2, Author: "Jose Gutierre", title: 'Actividades de verano', content: 'Este verano tendremos...', date: '2023-05-20' },
   ]);
 
   const [newPost, setNewPost] = useState({ title: '', content: '' });
@@ -58,7 +58,9 @@ const BlogView = () => {
             <p className="tw-text-gray-600 tw-mb-4">{post.content}</p>
             <div className="tw-flex tw-justify-between tw-items-center">
               <span className="tw-text-sm tw-text-gray-500">{post.date}</span>
-              <div>
+              <div className="tw-flex tw-items-center">
+                <span className="tw-mr-3">Autor: {post.Author}</span>
+                </div>              <div>
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">
                   <Edit className="tw-w-5 tw-h-5" />
                 </button>

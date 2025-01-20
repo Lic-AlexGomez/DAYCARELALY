@@ -3,12 +3,12 @@ import { Plus, Edit, Trash } from 'lucide-react';
 
 const InventoryView = () => {
   const [items, setItems] = useState([
-    { id: 1, name: 'Lápices de colores', quantity: 100, category: 'Útiles escolares' },
-    { id: 2, name: 'Pelotas de juego', quantity: 20, category: 'Juguetes' },
-    { id: 3, name: 'Libros infantiles', quantity: 50, category: 'Material educativo' },
+    { id: 1, name: 'Lápices de colores', quantity: 100, category: 'Útiles escolares', lastupdated: '2025-10-01' },
+    { id: 2, name: 'Pelotas de juego', quantity: 20, category: 'Juguetes', lastupdated: '2025-09-15' },
+    { id: 3, name: 'Libros infantiles', quantity: 50, category: 'Material educativo', lastupdated: '2025-10-05' },
   ]);
 
-  const [newItem, setNewItem] = useState({ name: '', quantity: '', category: '' });
+  const [newItem, setNewItem] = useState({ name: '', quantity: '', category: '', lastupdated: '' });
 
   const handleInputChange = (e) => {
     setNewItem({ ...newItem, [e.target.name]: e.target.value });
@@ -17,7 +17,7 @@ const InventoryView = () => {
   const handleAddItem = (e) => {
     e.preventDefault();
     setItems([...items, { id: items.length + 1, ...newItem, quantity: parseInt(newItem.quantity) }]);
-    setNewItem({ name: '', quantity: '', category: '' });
+    setNewItem({ name: '', quantity: '', category: '' , lastupdated: '' });
   };
 
   const handleDeleteItem = (id) => {
@@ -67,6 +67,7 @@ const InventoryView = () => {
           <tr>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Nombre</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Cantidad</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Última Actualización</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Categoría</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
           </tr>
@@ -76,6 +77,7 @@ const InventoryView = () => {
             <tr key={item.id}>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{item.name}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{item.quantity}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{item.lastupdated}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{item.category}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">

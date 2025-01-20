@@ -3,10 +3,10 @@ import { Plus, Search, Edit, Trash } from 'lucide-react';
 
 const ClientsView = () => {
   const [clients, setClients] = useState([
-    { id: 1, name: 'Juan Pérez', email: 'juan@example.com', phone: '123-456-7890' },
-    { id: 2, name: 'María García', email: 'maria@example.com', phone: '098-765-4321' },
-    { id: 3, name: 'Carlos Rodríguez', email: 'carlos@example.com', phone: '555-555-5555' },
-  ]);
+    { id: 1, name: "Juan Pérez", email: "juan@example.com", phone: "123-456-7890", status: "Activo" },
+    { id: 2, name: "María García", email: "maria@example.com", phone: "098-765-4321", status: "Inactivo" },
+    { id: 3, name: "Carlos Rodríguez", email: "carlos@example.com", phone: "555-555-5555", status: "Activo" },
+  ])
 
   const [newClient, setNewClient] = useState({ name: '', email: '', phone: '' });
   const [searchTerm, setSearchTerm] = useState('');
@@ -88,6 +88,7 @@ const ClientsView = () => {
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Nombre</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Email</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Teléfono</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Estado</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
           </tr>
         </thead>
@@ -98,6 +99,13 @@ const ClientsView = () => {
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{client.name}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{client.email}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{client.phone}</td>
+              <td className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+              {client.status === "Activo" ? (
+                <span className="tw-inline-flex tw-items-center tw-justify-center tw-py-1 tw-px-2 tw-rounded-full tw-text-xs tw-font-semibold tw-bg-green-100 tw-text-green-800">Activo</span>
+              ) : (
+                <span className="tw-inline-flex tw-items-center tw-justify-center tw-py-1 tw-px-2 tw-rounded-full tw-text-xs tw-font-semibold tw-bg-red-100 tw-text-red-800">Inactivo</span>
+              )}
+              </td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">
                   <Edit className="tw-w-5 tw-h-5" />

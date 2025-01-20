@@ -1,35 +1,83 @@
-import React, { useState } from 'react';
-import { Plus, Edit, Trash } from 'lucide-react';
+import React, { useState } from "react"
+import { Calendar, momentLocalizer } from "react-big-calendar"
+import moment from "moment"
+import { Plus, Trash } from "lucide-react"
+import "react-big-calendar/lib/css/react-big-calendar.css"
 
-const ScheduleView = () => {
+const localizer = momentLocalizer(moment)
+
+const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
+
+const SchedulePage = () => {
   const [events, setEvents] = useState([
-    { id: 1, title: 'Clase de Arte', start: '09:00', end: '10:30', day: 'Lunes' },
-    { id: 2, title: 'Hora del Cuento', start: '11:00', end: '12:00', day: 'Martes' },
-    { id: 3, title: 'Juegos al Aire Libre', start: '14:00', end: '15:30', day: 'Miércoles' },
-  ]);
+    {
+      id: 1,
+      title: "Clase de Arte",
+      start: new Date(2025, 0, 20, 9, 0),
+      end: new Date(2025, 0, 20, 10, 30),
+      day: "Lunes",
+    },
+    {
+      id: 2,
+      title: "Hora del Cuento",
+      start: new Date(2025, 0, 4, 11, 0),
+      end: new Date(2025, 0, 4, 12, 0),
+      day: "Martes",
+    },
+    {
+      id: 3,
+      title: "Juegos al Aire Libre",
+      start: new Date(2025, 0, 5, 14, 0),
+      end: new Date(2025, 0, 5, 15, 30),
+      day: "Miércoles",
+    },
+  ])
 
-  const [newEvent, setNewEvent] = useState({ title: '', start: '', end: '', day: '' });
+  const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "", day: "" })
+  const [selectedEvent, setSelectedEvent] = useState(null)
+  const [view, setView] = useState("calendar") // 'calendar' or 'weekly'
 
   const handleInputChange = (e) => {
-    setNewEvent({ ...newEvent, [e.target.name]: e.target.value });
-  };
+    setNewEvent({ ...newEvent, [e.target.name]: e.target.value })
+  }
 
   const handleAddEvent = (e) => {
-    e.preventDefault();
-    setEvents([...events, { id: events.length + 1, ...newEvent }]);
-    setNewEvent({ title: '', start: '', end: '', day: '' });
-  };
+    e.preventDefault()
+    const startDate = moment(newEvent.start, "HH:mm").toDate()
+    const endDate = moment(newEvent.end, "HH:mm").toDate()
+    const newEventWithDates = {
+      id: events.length + 1,
+      ...newEvent,
+      start: startDate,
+      end: endDate,
+    }
+    setEvents([...events, newEventWithDates])
+    setNewEvent({ title: "", start: "", end: "", day: "" })
+  }
 
   const handleDeleteEvent = (id) => {
-    setEvents(events.filter(event => event.id !== id));
-  };
+    setEvents(events.filter((event) => event.id !== id))
+    setSelectedEvent(null)
+  }
 
-  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+  const handleSelectEvent = (event) => {
+    setSelectedEvent(event)
+  }
 
   return (
-    <div>
-      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Programación</h2>
-      <div className="tw-mb-6">
+    <div className="tw-p-6">
+      <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
+        <h1 className="tw-text-2xl tw-font-bold">Programación</h1>
+        <button
+          onClick={() => setView(view === "calendar" ? "weekly" : "calendar")}
+          className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md"
+        >
+          {view === "calendar" ? "Ver Vista Semanal" : "Ver Calendario"}
+        </button>
+      </div>
+
+      <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6 tw-mb-6">
+        <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Agregar Nuevo Evento</h2>
         <form onSubmit={handleAddEvent} className="tw-flex tw-space-x-4">
           <input
             type="text"
@@ -64,42 +112,93 @@ const ScheduleView = () => {
             required
           >
             <option value="">Seleccionar día</option>
-            {days.map(day => (
-              <option key={day} value={day}>{day}</option>
+            {days.map((day) => (
+              <option key={day} value={day}>
+                {day}
+              </option>
             ))}
           </select>
-          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
+          <button
+            type="submit"
+            className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
+          >
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
             Agregar Evento
           </button>
         </form>
       </div>
-      <div className="tw-grid tw-grid-cols-5 tw-gap-4">
-        {days.map(day => (
-          <div key={day} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-            <h3 className="tw-text-lg tw-font-semibold tw-mb-4">{day}</h3>
-            {events
-              .filter(event => event.day === day)
-              .sort((a, b) => a.start.localeCompare(b.start))
-              .map(event => (
-                <div key={event.id} className="tw-mb-2 tw-p-2 tw-bg-gray-100 tw-rounded">
-                  <div className="tw-flex tw-justify-between tw-items-center">
-                    <span className="tw-font-medium">{event.title}</span>
-                    <button onClick={() => handleDeleteEvent(event.id)} className="tw-text-red-500">
-                      <Trash className="tw-w-4 tw-h-4" />
-                    </button>
-                  </div>
-                  <div className="tw-text-sm tw-text-gray-600">
-                    {event.start} - {event.end}
-                  </div>
-                </div>
-              ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
 
-export default ScheduleView;
+      {view === "calendar" ? (
+        <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6">
+          <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Calendario de Actividades</h2>
+          <div style={{ height: "500px" }}>
+            <Calendar
+              localizer={localizer}
+              events={events}
+              startAccessor="start"
+              endAccessor="end"
+              onSelectEvent={handleSelectEvent}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6">
+          <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Horario Semanal</h2>
+          <div className="tw-grid tw-grid-cols-5 tw-gap-4">
+            {days.map((day) => (
+              <div key={day} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
+                <h3 className="tw-text-lg tw-font-semibold tw-mb-4">{day}</h3>
+                {events
+                  .filter((event) => event.day === day)
+                  .sort((a, b) => a.start - b.start)
+                  .map((event) => (
+                    <div key={event.id} className="tw-mb-2 tw-p-2 tw-bg-gray-100 tw-rounded">
+                      <div className="tw-flex tw-justify-between tw-items-center">
+                        <span className="tw-font-medium">{event.title}</span>
+                        <button onClick={() => handleDeleteEvent(event.id)} className="tw-text-red-500">
+                          <Trash className="tw-w-4 tw-h-4" />
+                        </button>
+                      </div>
+                      <div className="tw-text-sm tw-text-gray-600">
+                        {moment(event.start).format("HH:mm")} - {moment(event.end).format("HH:mm")}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {selectedEvent && (
+        <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6 tw-mt-6">
+          <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Detalles del Evento</h2>
+          <p>
+            <strong>Título:</strong> {selectedEvent.title}
+          </p>
+          <p>
+            <strong>Día:</strong> {selectedEvent.day}
+          </p>
+          <p>
+            <strong>Inicio:</strong> {moment(selectedEvent.start).format("LLLL")}
+          </p>
+          <p>
+            <strong>Fin:</strong> {moment(selectedEvent.end).format("LLLL")}
+          </p>
+          <div className="tw-mt-4">
+            <button className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-mr-2">Editar</button>
+            <button
+              onClick={() => handleDeleteEvent(selectedEvent.id)}
+              className="tw-bg-red-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default SchedulePage
 

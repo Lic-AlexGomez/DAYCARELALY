@@ -3,9 +3,9 @@ import { CheckCircle, XCircle } from 'lucide-react';
 
 const ApprovalsView = () => {
   const [approvals, setApprovals] = useState([
-    { id: 1, type: 'Inscripción', name: 'Ana Martínez', details: 'Solicitud de inscripción para el programa de verano', status: 'pending' },
-    { id: 2, type: 'Cambio de Horario', name: 'Luis Sánchez', details: 'Solicitud de cambio de horario de tarde a mañana', status: 'pending' },
-    { id: 3, type: 'Actividad Especial', name: 'Sofía Rodríguez', details: 'Propuesta de actividad de pintura al aire libre', status: 'pending' },
+    { id: 1, type: 'Inscripción', name: 'Ana Martínez', details: 'Solicitud de inscripción para el programa de verano', status: 'pending',date: '2025-10-01' },
+    { id: 2, type: 'Cambio de Horario', name: 'Luis Sánchez', details: 'Solicitud de cambio de horario de tarde a mañana', status: 'pending', date: '2025-10-01' },
+    { id: 3, type: 'Actividad Especial', name: 'Sofía Rodríguez', details: 'Propuesta de actividad de pintura al aire libre', status: 'pending', date: '2025-10-01' },
   ]);
 
   const handleApprove = (id) => {
@@ -31,6 +31,7 @@ const ApprovalsView = () => {
                 <h3 className="tw-text-lg tw-font-semibold tw-mb-2">{approval.type}</h3>
                 <p className="tw-text-gray-600 tw-mb-1">Solicitante: {approval.name}</p>
                 <p className="tw-text-gray-600 tw-mb-4">{approval.details}</p>
+                <div className="tw-text-gray-500 tw-text-sm">Fecha de solicitud: {approval.date}</div>
               </div>
               <div className="tw-flex tw-space-x-2">
                 {approval.status === 'pending' && (
