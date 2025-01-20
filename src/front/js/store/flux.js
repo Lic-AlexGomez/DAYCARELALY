@@ -20,6 +20,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			uploadedFileUrl: null,
 			error: null,
 			classes: [],
+			programs: [],
 		},
 		actions: {
 			signUp: async (username, email, password) => {
