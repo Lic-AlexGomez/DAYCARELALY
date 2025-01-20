@@ -21,6 +21,7 @@ const menuItems = [
   { icon: UserX, label: 'Cuentas Inactivas', path: '/admin-dashboard/inactive-accounts' },
   { icon: CircleCheckBig, label: 'Aprobaciones', path: '/admin-dashboard/approvals' },
   { icon: PenTool, label: 'Mantenimiento', path: '/admin-dashboard/maintenance' },
+  { icon: Users, label: 'Registro Staff', path: '/admin-dashboard/staff-signup'},
   { icon: Settings, label: 'Configuración', path: '/admin-dashboard/settings' },
 ];
 
