@@ -14,6 +14,7 @@ import Login from "./pages/login.jsx";
 import { Signup } from "./pages/signup.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
 import Events from "./pages/Events.jsx";
+import Programs from "./pages/Programs.jsx";
 
 // Componentes del Admin Dashboard
 import Sidebar from "./component/admin/Sidebar";
@@ -38,6 +39,7 @@ import ApprovalsView from "./component/admin/ApprovalsView";
 import MaintenanceView from "./component/admin/MaintenanceView";
 import SettingsView from "./component/admin/SettingsView";
 import DashboardContent from "./component/admin/DahboardContent.jsx";
+
 
 const AdminDashboard = () => (
     <div className="tw-flex tw-h-screen tw-overflow-hidden">
@@ -96,6 +98,7 @@ const MainRoutes = () => {
                 <Route path="/events" element={<Events />} />
                 <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
                 <Route path="*" element={<h1>Not found!</h1>} />
+                <Route path="/programs" element={<Programs />} />
             </Routes>
             {!isAdminRoute && <Footer />}
         </>
