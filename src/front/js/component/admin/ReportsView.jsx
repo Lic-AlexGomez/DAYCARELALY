@@ -17,11 +17,12 @@ const ReportsView = () => {
     { name: 'May', ingresos: 1890, gastos: 4800 },
     { name: 'Jun', ingresos: 2390, gastos: 3800 },
   ];
+  
 
   return (
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Informes</h2>
-      <div className="tw-grid tw-grid-cols-1 tw-md:grid-cols-2 tw-lg:grid-cols-3 tw-gap-6 tw-mb-8">
+      <div className="tw-grid tw-grid-cols-3 tw-md:grid-cols-2 tw-lg:grid-cols-3 tw-gap-6 tw-mb-8">
         {reports.map((report) => (
           <div key={report.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
             <h3 className="tw-text-lg tw-font-semibold tw-mb-2">{report.name}</h3>

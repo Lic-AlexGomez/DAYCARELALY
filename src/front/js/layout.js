@@ -49,9 +49,9 @@ const AdminDashboard = () => (
                     {/* <Route path="/" element={<DashboardContent />} /> */}
                     <Route path="/" element={<DashboardOverview />} />
                     {/* Otras rutas del dashboard */}
-                    
+
                     <Route path="/clients" element={<ClientsView />} />
-                     <Route path="/schedule-management" element={<ScheduleManagement />} />
+                    <Route path="/schedule-management" element={<ScheduleManagement />} />
                     <Route path="/classes" element={<ClassesView />} />
                     <Route path="/enrollments" element={<EnrollmentsView />} />
                     <Route path="/reports" element={<ReportsView />} />
@@ -68,9 +68,9 @@ const AdminDashboard = () => (
                     <Route path="/approvals" element={<ApprovalsView />} />
                     <Route path="/maintenance" element={<MaintenanceView />} />
                     <Route path="/settings" element={<SettingsView />} />
-                    <Route path="/dashboard-content" element={<DashboardContent/>} />
+                    <Route path="/dashboard-content" element={<DashboardContent />} />
                     <Route path="*" element={<h1>Not found!</h1>} />
-                   
+
                 </Routes>
             </main>
         </div>

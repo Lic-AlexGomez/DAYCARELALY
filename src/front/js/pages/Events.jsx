@@ -30,7 +30,7 @@ const Events = () => {
         },
     ]
     return (
-        <>
+        <div className="tw-bg-primary tw-p-20">
             <h1 className="tw-mt-10 tw-text-center tw-text-3xl tw-font-black">Upcoming Events</h1>
             {allEvents.map((eventItem) => (
                 <div key={eventItem.id} className="cardEvents tw-mx-auto tw-relative">
@@ -55,7 +55,7 @@ const Events = () => {
                     </div>
                 </div>  
             ))}
-        </>
+        </div>
     )
 }
 
