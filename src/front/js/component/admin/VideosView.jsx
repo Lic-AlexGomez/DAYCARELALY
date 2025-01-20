@@ -3,9 +3,9 @@ import { Plus, Play, Trash } from 'lucide-react';
 
 const VideosView = () => {
   const [videos, setVideos] = useState([
-    { id: 1, title: 'Introducción a la guardería', url: 'https://example.com/video1.mp4', thumbnail: '/placeholder.svg?height=120&width=200' },
-    { id: 2, title: 'Tour por las instalaciones', url: 'https://example.com/video2.mp4', thumbnail: '/placeholder.svg?height=120&width=200' },
-    { id: 3, title: 'Actividades diarias', url: 'https://example.com/video3.mp4', thumbnail: '/placeholder.svg?height=120&width=200' },
+    { id: 1, title: 'Introducción a la guardería', url: 'https://example.com/video1.mp4', thumbnail: '/placeholder.svg?height=120&width=200', lastUpload : '2025-10-01' },
+    { id: 2, title: 'Tour por las instalaciones', url: 'https://example.com/video2.mp4', thumbnail: '/placeholder.svg?height=120&width=200', lastUpload : '2025-10-01'},
+    { id: 3, title: 'Actividades diarias', url: 'https://example.com/video3.mp4', thumbnail: '/placeholder.svg?height=120&width=200', lastUpload : '2025-10-01'},
   ]);
 
   const [newVideo, setNewVideo] = useState({ title: '', url: '' });
@@ -64,6 +64,7 @@ const VideosView = () => {
             </div>
             <div className="tw-p-4">
               <h3 className="tw-text-lg tw-font-semibold tw-mb-2">{video.title}</h3>
+              <small className="tw-text-gray-500 tw-mb-4">Última actualización: {video.lastUpload}</small>
               <div className="tw-flex tw-justify-between tw-items-center">
                 <a href={video.url} target="_blank" rel="noopener noreferrer" className="tw-text-blue-500 hover:tw-underline">Ver video</a>
                 <button onClick={() => handleDeleteVideo(video.id)} className="tw-text-red-500">

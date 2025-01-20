@@ -26,7 +26,7 @@ const menuItems = [
 
 const Sidebar = () => {
   return (
-    <nav className="tw-w-64 tw-bg-gray-100 tw-p-4 tw-space-y-2 tw-overflow-y-auto tw-dark:tw-bg-gray-800">
+    <nav className="tw-w-64 tw-bg-gray-100 tw-p-4 tw-space-y-1 tw-overflow-y-auto tw-dark:tw-bg-gray-800">
       {menuItems.map((item, index) => (
         <Link
           key={index}

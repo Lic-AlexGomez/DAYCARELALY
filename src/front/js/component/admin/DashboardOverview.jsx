@@ -11,8 +11,8 @@ const tabs = [
 ];
 
 const stats = [
-  { title: 'Total Clientes', value: '1,234', icon: Users, color: 'tw-bg-blue-500' , link: '/admin-dashboard/clients', linkText: 'Gestionar Clientes' },
-  { title: 'Clases Activas', value: '25', icon: BookOpen, color: 'tw-bg-green-500' , link: '/admin-dashboard/classes', linkText: 'Ver Clases' },
+  { title: 'Total de Clientes', value: '1,234', icon: Users, color: 'tw-bg-blue-500' , link: '/admin-dashboard/clients', linkText: 'Gestionar Clientes' },
+  { title: 'Total Clases Activas', value: '25', icon: BookOpen, color: 'tw-bg-green-500' , link: '/admin-dashboard/classes', linkText: 'Ver Clases' },
   { title: 'Nuevas Inscripciones', value: '15', icon: FileText, color: 'tw-bg-yellow-500', link: '/admin-dashboard/enrollments', linkText: 'Ver Inscripciones' },
   { title: 'Ingresos Mensuales', value: '$45,231', icon: DollarSign, color: 'tw-bg-purple-500', link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
   { title: 'Tasa de Crecimiento', value: '8.5%', icon: TrendingUp, color: 'tw-bg-red-500' , link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
@@ -51,12 +51,16 @@ const OverviewTab = () => (<>
           </div>
         </div>
         
-        <Link to={stat.link} className="tw-inline-flex tw-items-center tw-justify-center tw-gap-2 tw-whitespace-nowrap tw-rounded-md tw-text-sm tw-font-medium tw-ring-offset-background tw-transition-colors focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ring focus-visible:tw-ring-offset-2 tw-disabled:tw-pointer-events-none tw-disabled:tw-opacity-50 [&_svg]:tw-pointer-events-none [&_svg]:tw-size-4 [&_svg]:tw-shrink-0 tw-bg-primary tw-text-primary-foreground hover:tw-bg-primary/90 tw-h-10 tw-px-4 tw-py-2 tw-mt-2">
+        <div to={stat.link} className="` tw-text-sm tw-text-gray-500 tw-flex tw-items-center tw-justify-center tw-my-5 tw-rounded tw-bg-gray-100 tw-text-center tw-py-2 hover:tw-text-black hover:tw-bg-cyan-500  ">
+        <Link to={stat.link} className="">
+
         {stat.linkText}
+
         </Link>
+        </div>
                      
       
-      </div>
+      </div> 
     ))}
   </div>
   <div className="tw-mb-8 tw-p-6 tw-bg-white tw-rounded-lg tw-shadow-md">
