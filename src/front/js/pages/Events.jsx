@@ -6,6 +6,7 @@ import santa from "../../img/santa.png";
 import microscopio from "../../img/microscopio.png";
 import primavera from "../../img/primavera.png";
 import '../../styles/Events.css';
+import { Link } from "react-router-dom";
 
 const Events = () => {
   const allEvents = [
@@ -131,7 +132,7 @@ const Events = () => {
                           </>
                         ) : (
                           <>
-                            <button className="buttonMoreInfo tw-text-xs">More Info</button>
+                            <button className="buttonMoreInfo tw-text-xs"><Link to="/moreinfo">More Info</Link></button>
                             <button className="buttonConfirmAttendance tw-text-xs">Confirm Attendance</button>
                           </>
                         )}
