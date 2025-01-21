@@ -1,15 +1,18 @@
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+
 import { Bell, User, LogOut, Settings, UserCircle, ChevronDown } from "lucide-react"
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-
+  
+  const navigate = useNavigate()
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen)
-
+  
   const handleLogout = () => {
-    // Add logout logic here
-    console.log("Logging out...")
+   
+    navigate("/login")
   }
 
   const handleSettings = () => {

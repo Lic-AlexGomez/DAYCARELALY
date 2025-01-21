@@ -1,7 +1,8 @@
 import React from "react"
-import { Bell, User } from "lucide-react"
+import { Bell, User, LogOut } from "lucide-react"
+import { Link } from "react-router-dom"
 
-const TeacherHeader = () => {
+const TeacherHeader = ({ user, onLogout }) => {
   return (
     <header className="tw-bg-white tw-border-b tw-border-gray-200">
       <div className="tw-container tw-mx-auto tw-px-6 tw-py-3">
@@ -11,10 +12,18 @@ const TeacherHeader = () => {
             <button className="tw-text-gray-500 hover:tw-text-gray-700">
               <Bell className="tw-w-6 tw-h-6" />
             </button>
-            <div className="tw-flex tw-items-center tw-space-x-2">
-              <User className="tw-w-6 tw-h-6 tw-text-gray-700" />
-              <span className="tw-text-gray-700">Prof. García</span>
-            </div>
+            <Link
+              to="/teacher-dashboard/profile"
+              className="tw-flex tw-items-center tw-text-gray-700 hover:tw-text-gray-900"
+            >
+              <User className="tw-w-6 tw-h-6 tw-mr-2" />
+              Juan Lopez
+              {/* <span>{user.name}</span> */}
+            </Link>
+            <button onClick={onLogout} className="tw-flex tw-items-center tw-text-gray-700 hover:tw-text-gray-900">
+              <LogOut className="tw-w-6 tw-h-6 tw-mr-2" />
+              <span>Logout</span>
+            </button>
           </div>
         </div>
       </div>
