@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { BookOpen } from 'lucide-react';
 import book from "../../img/books.png";
@@ -7,95 +7,97 @@ import dancing from "../../img/dancing.jpg";
 import Scientists from "../../img/LittleScientist.jpg";
 import kids4C from "../../img/kids4C.png";
 
+const defaultPrograms = [
+    {
+        id: 1,
+        name: "Little Explorers ",
+        price: "25",
+        description: "A hands-on program featuring activities like building with blocks, painting, sensory games (sand, water), and group play.",
+        age: "3-5 Years",
+        time: "8-10 am",
+        capacity: "15 Kids",
+        image: littleexplorers,
+    },
+    {
+        id: 2,
+        name: "Learning with Rhythm",
+        price: "25",
+        description: "Musical activities such as singing, playing basic instruments (maracas, tambourines), and learning rhythms through body games.",
+        age: "3-4 Years",
+        time: "9-11 am",
+        capacity: "15 Kids",
+        image: dancing,
+    },
+    {
+        id: 3,
+        name: "Little Scientists",
+        price: "35",
+        description: "Stimulate curiosity and critical thinking through basic science experiments and activities through playing with different elements.",
+        age: "3-5 Years",
+        time: "8-10 am",
+        capacity: "10 Kids",
+        image: Scientists,
+    },
+    {
+        id: 4,
+        name: "Creative Minds",
+        price: "30",
+        description: "Exploring creative thinking and hands-on activities in arts, crafts, and problem-solving.",
+        age: "4-5 Years",
+        time: "10-12 am",
+        capacity: "12 Kids",
+        image: book,
+    },
+    {
+        id: 5,
+        name: "Nature Explorers",
+        price: "28",
+        description: "An outdoor program focused on exploring nature, identifying plants and animals, and engaging in outdoor play and learning.",
+        age: "4-6 Years",
+        time: "9-11 am",
+        capacity: "12 Kids",
+        image: littleexplorers, 
+    },
+    {
+        id: 6,
+        name: "Artistic Adventures",
+        price: "30",
+        description: "A creative program where kids learn to express themselves through painting, sculpture, and crafts.",
+        age: "3-5 Years",
+        time: "8-10 am",
+        capacity: "15 Kids",
+        image: dancing, 
+    },
+    {
+        id: 7,
+        name: "Tech Tots",
+        price: "35",
+        description: "Introduce young minds to basic technology concepts using age-appropriate tools and games.",
+        age: "5-6 Years",
+        time: "10-12 am",
+        capacity: "10 Kids",
+        image: Scientists,
+    },
+    {
+        id: 8,
+        name: "Mini Chefs",
+        price: "30",
+        description: "A fun and educational program where kids learn basic cooking skills and food safety.",
+        age: "4-6 Years",
+        time: "11 am - 1 pm",
+        capacity: "10 Kids",
+        image: kids4C, 
+    }
+];
+
 export const Programs = () => {
     const { store, actions } = useContext(Context);
-    const [currentIndex, setCurrentIndex] = useState(0); 
-    const [visiblePrograms, setVisiblePrograms] = useState(3); 
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [visiblePrograms, setVisiblePrograms] = useState(3);
 
-    const allPrograms = [
-        {
-            id: 1,
-            title: "Little Explorers ",
-            price: "25",
-            description: "A hands-on program featuring activities like building with blocks, painting, sensory games (sand, water), and group play.",
-            age: "3-5 Years",
-            time: "8-10 am",
-            capacity: "15 Kids",
-            image: littleexplorers,
-        },
-        {
-            id: 2,
-            title: "Learning with Rhythm",
-            price: "25",
-            description: "Musical activities such as singing, playing basic instruments (maracas, tambourines), and learning rhythms through body games.",
-            age: "3-4 Years",
-            time: "9-11 am",
-            capacity: "15 Kids",
-            image: dancing,
-        },
-        {
-            id: 3,
-            title: "Little Scientists",
-            price: "35",
-            description: "Stimulate curiosity and critical thinking through basic science experiments and activities through playing with different elements.",
-            age: "3-5 Years",
-            time: "8-10 am",
-            capacity: "10 Kids",
-            image: Scientists,
-        },
-        {
-            id: 4,
-            title: "Creative Minds",
-            price: "30",
-            description: "Exploring creative thinking and hands-on activities in arts, crafts, and problem-solving.",
-            age: "4-5 Years",
-            time: "10-12 am",
-            capacity: "12 Kids",
-            image: book,
-        },
-        {
-            id: 5,
-            title: "Nature Explorers",
-            price: "28",
-            description: "An outdoor program focused on exploring nature, identifying plants and animals, and engaging in outdoor play and learning.",
-            age: "4-6 Years",
-            time: "9-11 am",
-            capacity: "12 Kids",
-            image: littleexplorers, 
-        },
-        {
-            id: 6,
-            title: "Artistic Adventures",
-            price: "30",
-            description: "A creative program where kids learn to express themselves through painting, sculpture, and crafts.",
-            age: "3-5 Years",
-            time: "8-10 am",
-            capacity: "15 Kids",
-            image: dancing, 
-        },
-        {
-            id: 7,
-            title: "Tech Tots",
-            price: "35",
-            description: "Introduce young minds to basic technology concepts using age-appropriate tools and games.",
-            age: "5-6 Years",
-            time: "10-12 am",
-            capacity: "10 Kids",
-            image: Scientists,
-        },
-        {
-            id: 8,
-            title: "Mini Chefs",
-            price: "30",
-            description: "A fun and educational program where kids learn basic cooking skills and food safety.",
-            age: "4-6 Years",
-            time: "11 am - 1 pm",
-            capacity: "10 Kids",
-            image: kids4C, 
-        }
-    ];
+    const allPrograms = [...defaultPrograms, ...(store.programs || [])];
 
-    const programsPerPage = 3; 
+    const programsPerPage = 3;
 
     const goToNext = () => {
         if (currentIndex < Math.ceil(allPrograms.length / programsPerPage) - 1) {
@@ -113,8 +115,12 @@ export const Programs = () => {
     const endIndex = startIndex + programsPerPage;
 
     const handleShowMore = () => {
-        setVisiblePrograms((prev) => prev + 3); 
+        setVisiblePrograms((prev) => prev + 3);
     };
+
+    useEffect(() => {
+        actions.getPrograms(); 
+    }, [actions]);
 
     return (
         <div className="tw-container tw-mx-auto tw-px-4 tw-text-center tw-mb-12">
@@ -134,6 +140,8 @@ export const Programs = () => {
             {/* Descripción debajo del título */}
             <h3 className="tw-text-lg tw-mt-4 tw-text-[#555] tw-italic tw-opacity-90">
                 "Discover the programs designed to enhance your child's development and learning"
+                <br />
+                <br />
             </h3>
 
             {/* Carousel de Programas */}
@@ -155,27 +163,22 @@ export const Programs = () => {
                             key={programItem.id}
                             className="tw-bg-white tw-rounded-3xl tw-overflow-hidden tw-shadow-lg tw-border tw-border-[#9C29B2]"
                         >
-                            {/* Imagen del Programa */}
                             <div className="tw-aspect-w-16 tw-aspect-h-9">
                                 <img
                                     src={programItem.image || kids4C}
-                                    alt={programItem.title}
+                                    alt={programItem.name}
                                     className="tw-w-full tw-h-full tw-object-cover"
                                 />
                             </div>
-
-                            {/* Contenido del Programa */}
                             <div className="tw-p-6">
                                 <h3
                                     className="tw-text-2xl tw-font-extrabold tw-text-transparent tw-bg-clip-text tw-bg-gradient-to-r tw-from-[#9C29B2] tw-to-[#FFC909] tw-mb-3"
                                     style={{ fontFamily: "'Fredoka', sans-serif" }}
                                 >
-                                    {programItem.title}
+                                    {programItem.name}
                                 </h3>
-
-                                {/* Descripción */}
                                 <p className="tw-text-sm tw-mb-4 tw-text-[#555] tw-opacity-90 tw-text-left">
-                                    <span className="tw-font-bold tw-text-[#9C29B2]">Description:</span>{' '}
+                                    <span className="tw-font-bold tw-text-[#9C29B2]">Description:</span>{" "}
                                     {programItem.description}
                                 </p>
 
@@ -201,7 +204,6 @@ export const Programs = () => {
                                     </div>
                                 </div>
 
-                                {/* Botón */}
                                 <button className="tw-w-full tw-py-2 tw-border tw-border-[#FFC909] tw-rounded-full tw-bg-[#FFC909] tw-text-[#9C29B2] tw-font-bold hover:tw-bg-[#FFE57A] tw-transition-colors">
                                     Read more
                                 </button>
