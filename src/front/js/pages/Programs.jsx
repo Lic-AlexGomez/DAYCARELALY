@@ -103,13 +103,13 @@ export const Programs = () => {
                                 </p>
 
                                 {/* Etiquetas */}
-                                <div className="tw-flex tw-justify-between tw-items-center tw-mb-4">
+                                <div className="tw-flex tw-justify-between tw-items-center tw-gap-4 tw-my-5">
                                     {/* Etiqueta de Edad */}
                                     <div className="tw-flex tw-items-center tw-bg-gradient-to-r tw-from-[#FFC909] tw-to-[#FFE57A] tw-px-3 tw-py-2 tw-rounded-lg tw-shadow-md">
                                         <span className="tw-text-[#9C29B2] tw-font-bold tw-mr-2">
                                             <i className="fas fa-baby tw-mr-1"></i> Age:
                                         </span>
-                                        <span className="tw-text-sm tw-text-[#555]">{programItem.age}</span>
+                                        <span className="tw-text-sm tw-text-[#555] tw-font-bold">{programItem.age}</span>
                                     </div>
 
                                     {/* Etiqueta de Tiempo */}
@@ -117,7 +117,7 @@ export const Programs = () => {
                                         <span className="tw-text-[#9C29B2] tw-font-bold tw-mr-2">
                                             <i className="fas fa-clock tw-mr-1"></i> Time:
                                         </span>
-                                        <span className="tw-text-sm tw-text-[#555]">{programItem.time}</span>
+                                        <span className="tw-text-sm tw-text-[#555] tw-font-bold">{programItem.time}</span>
                                     </div>
 
                                     {/* Etiqueta de Capacidad */}
@@ -125,7 +125,7 @@ export const Programs = () => {
                                         <span className="tw-text-[#9C29B2] tw-font-bold tw-mr-2">
                                             <i className="fas fa-users tw-mr-1"></i> Capacity:
                                         </span>
-                                        <span className="tw-text-sm tw-text-[#555]">{programItem.capacity}</span>
+                                        <span className="tw-text-sm tw-text-[#555] tw-font-bold">{programItem.capacity}</span>
                                     </div>
                                 </div>
 

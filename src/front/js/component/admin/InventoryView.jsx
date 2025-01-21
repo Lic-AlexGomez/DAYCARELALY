@@ -56,6 +56,15 @@ const InventoryView = () => {
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
+          <input 
+            type="date"
+            name="lastupdated"
+            value={newItem.lastupdated}
+            onChange={handleInputChange}
+            className="tw-w-40 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+            required
+          />
+
           <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
             Agregar Artículo
