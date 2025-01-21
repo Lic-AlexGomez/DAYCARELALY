@@ -3,7 +3,7 @@ import { Save } from "lucide-react"
 
 const SettingsPage = () => {
   const [settings, setSettings] = useState({
-    daycareName: "Kiddy Rainbow Slime Co.",
+    daycareName: "DaycareRainbow Slime Co.",
     email: "info@kiddyrainbowslime.com",
     phone: "(123) 456-7890",
     address: "123 Rainbow Lane, Colorful City, 12345",

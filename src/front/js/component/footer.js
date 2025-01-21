@@ -105,7 +105,7 @@ export const Footer = () => {
 			</div>
 			<hr></hr>
 			<div className="info-container">
-				<p>© 2025 Daycare. Todos los derechos reservados.</p>
+				<p>© 2025 Daycare . Todos los derechos reservados.</p>
 			</div>
 		</footer>
 	);

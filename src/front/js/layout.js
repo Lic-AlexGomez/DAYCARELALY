@@ -53,6 +53,19 @@ import TeacherSchedule from "./component/teacher/TeacherSchedule"
 import TeacherSettings from "./component/teacher/TeacherSettings"
 import TeacherSidebar from "./component/teacher/TeacherSidebar.jsx"
 import TeacherHeader from "./component/teacher/TeacherHeader.jsx"
+import TeacherProfile from "./component/teacher/TeacherProfile.jsx"
+
+// Componentes del Parent Dashboard
+
+import ParentOverview from "./component/parent/ParentOverview"
+import ParentChildren from "./component/parent/ParentChildren"
+import ParentSchedule from "./component/parent/ParentSchedule"
+import ParentActivities from "./component/parent/ParentActivities"
+import ParentPayments from "./component/parent/ParentPayments"
+import ParentSettings from "./component/parent/ParentSettings"
+import ParentSidebar from "./component/parent/ParentSidebar.jsx"
+import ParentHeader from "./component/parent/ParentHeader.jsx"
+
 
 const AdminDashboard = () => (
   <div className="tw-flex tw-h-screen tw-overflow-hidden">
@@ -103,6 +116,27 @@ const TeacherDashboardRoutes = () => (
     <Route path="/assignments" element={<TeacherAssignments />} />
     <Route path="/schedule" element={<TeacherSchedule />} />
     <Route path="/settings" element={<TeacherSettings />} />
+    <Route path="/profile" element={<TeacherProfile />} />
+    <Route path="*" element={<h1>Not found!</h1>} />
+  </Routes>
+  </main>
+  </div>
+</div>
+)
+  
+const ParentDashboardRoutes = () => (
+  <div className="tw-flex tw-h-screen tw-overflow-hidden">
+    <ParentSidebar/>
+    <div className="tw-flex-1 tw-overflow-auto">
+    <ParentHeader/>
+    <main className="tw-p-6 tw-mt-2">
+  <Routes>
+    <Route path="/" element={<ParentOverview/>} />
+    <Route path="/children" element={<ParentChildren />} />
+    <Route path="/schedule" element={<ParentSchedule />} />
+    <Route path="/activities" element={<ParentActivities />} />
+    <Route path="/payments" element={<ParentPayments />} />
+    <Route path="/settings" element={<ParentSettings />} />
     <Route path="*" element={<h1>Not found!</h1>} />
   </Routes>
   </main>
@@ -114,10 +148,11 @@ const MainRoutes = () => {
   const location = useLocation()
   const isAdminRoute = location.pathname.startsWith("/admin-dashboard")
   const isTeacherRoute = location.pathname.startsWith("/teacher-dashboard")
+  const isParentRoute = location.pathname.startsWith("/parent-dashboard")
 
   return (
     <>
-      {!isAdminRoute && !isTeacherRoute && <Navbar />}
+       {!isAdminRoute && !isTeacherRoute && !isParentRoute && <Navbar />}
       <Routes>
         {/* Rutas principales */}
         <Route path="/" element={<Home />} />
@@ -130,10 +165,11 @@ const MainRoutes = () => {
         <Route path="/events" element={<Events />} />
         <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
         <Route path="/teacher-dashboard/*" element={<TeacherDashboardRoutes />} />
+        <Route path="/parent-dashboard/*" element={<ParentDashboardRoutes />} />
         <Route path="/programs" element={<Programs />} />
         <Route path="*" element={<h1>Not found!</h1>} />
       </Routes>
-      {!isAdminRoute && !isTeacherRoute && <Footer />}
+      {!isAdminRoute && !isTeacherRoute && !isParentRoute && <Footer />}
     </>
   )
 }

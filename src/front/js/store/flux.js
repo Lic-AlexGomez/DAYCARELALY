@@ -209,7 +209,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return { success: false, error: error.message };
 				}
 			},
-			
+			getPrograms: async () => {
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/programs");
+					if (response.ok) {
+						const data = await response.json();
+						setStore({ programs: data });
+					} else {
+						console.error("Error fetching programs:", response.status);
+					}
+				} catch (error) {
+					console.error("Error fetching programs:", error);
+				}
+			}
 		}
 	};
 };

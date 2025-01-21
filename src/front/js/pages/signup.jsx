@@ -90,9 +90,8 @@ const SelectItem = ({ className, children, onClick, ...props }) => (
 
 const Alert = ({ variant, className, children, ...props }) => (
   <div
-    className={`tw-p-4 tw-rounded-lg tw-flex tw-items-center tw-border-2 ${
-      variant === 'destructive' ? 'tw-bg-red-100 tw-text-red-700 tw-border-red-300' : 'tw-bg-[#FFC909] tw-text-[#9C29B2] tw-border-[#9C29B2]'
-    } ${className}`}
+    className={`tw-p-4 tw-rounded-lg tw-flex tw-items-center tw-border-2 ${variant === 'destructive' ? 'tw-bg-red-100 tw-text-red-700 tw-border-red-300' : 'tw-bg-[#FFC909] tw-text-[#9C29B2] tw-border-[#9C29B2]'
+      } ${className}`}
     {...props}
   >
     {children}
@@ -125,11 +124,10 @@ const TabsList = ({ className, children, ...props }) => (
 
 const TabsTrigger = ({ className, children, isActive, ...props }) => (
   <button
-    className={`tw-px-6 tw-py-3 tw-text-lg tw-font-medium tw-rounded-t-lg tw-transition-all tw-duration-300 ${
-      isActive
+    className={`tw-px-6 tw-py-3 tw-text-lg tw-font-medium tw-rounded-t-lg tw-transition-all tw-duration-300 ${isActive
         ? 'tw-bg-[#FFC909] tw-text-[#9C29B2]'
         : 'tw-bg-[#9C29B2] tw-bg-opacity-10 tw-text-[#9C29B2] hover:tw-bg-[#FFC909] hover:tw-bg-opacity-50'
-    } ${className}`}
+      } ${className}`}
     {...props}
   >
     {children}
@@ -223,7 +221,7 @@ export const Signup = () => {
       setSignupError('');
       try {
         const profilePictureUrl = formData.profilePicture ? await actions.uploadToCloudinary(formData.profilePicture) : null;
-        
+
         let additionalData = {};
         if (formData.role === 'parent') {
           const birthCertificateUrl = await actions.uploadToCloudinary(formData.birthCertificate);
@@ -430,14 +428,14 @@ export const Signup = () => {
         );
       default:
         return null;
-    }  
+    }
   };
 
   return (
     <div className="tw-mt-3 tw-flex tw-items-center tw-justify-center tw-min-h-screen tw-bg-gradient-to-b tw-from-[#FFC909] tw-to-[#a16bac] tw-px-4">
       <Card className="tw-my-14 tw-w-full tw-max-w-2xl tw-bg-white tw-bg-opacity-90">
         <CardHeader>
-          <CardTitle className=" tw-text-3xl tw-font-bold tw-text-center tw-text-[#9C29B2]">Welcome to Colorful Kids Daycare!</CardTitle>
+          <CardTitle className=" tw-text-3xl tw-font-bold tw-text-center tw-text-[#9C29B2]">Welcome to Colorful Kids Daycare !</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="tw-space-y-6">
@@ -573,7 +571,7 @@ export const Signup = () => {
               </Alert>
             )}
             <Button type="submit" className="tw-w-full" disabled={isLoading}>
-              {isLoading ? 'Signing you up...' : 'Join Colorful Kids Daycare!'}
+              {isLoading ? 'Signing you up...' : 'Join Colorful Kids Daycare !'}
             </Button>
           </form>
         </CardContent>
