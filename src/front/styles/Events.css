@@ -28,7 +28,7 @@
 .descriptionEvent{
     width: 200px;
 }
-.buttonMoreInfo,.buttonConfirmAttendance{
+.buttonMoreInfo,.buttonConfirmAttendance,.buttonViewEvent,.buttonEventPhotos{
     background-color: #9C29B2;
     color: white;
     border-radius: 20px;
