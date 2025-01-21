@@ -1,0 +1,37 @@
+.info-events{
+    width: 35rem;
+    height:30rem;
+    background-color: #fff;
+    border-radius: 10px;
+    
+}
+.title-info-events{
+    font-family:monospace;
+    font-size: 2rem;
+
+    font-weight:bold;
+}
+.subtitle-info-events{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size:1 rem;
+    font-weight: 700;
+}
+.description1-info-events{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size:small;
+    font-weight: 700;
+    margin-left:1rem ;
+}
+.eventDetails-info-events,.startTime-info-events,.location-info-events,.description2-info-events{ 
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size:small;
+    font-weight: 700;
+    margin-left:1rem ;
+}
+.confirmAttendance-events{
+    font-size: 2rem;
+    width: 30rem;
+    border-radius: 20px;
+    background-color:#9C29B2 ;
+    margin-top: 70px;
+}
