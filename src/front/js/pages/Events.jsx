@@ -65,7 +65,7 @@ const Events = () => {
       id: 2,
       date: "February 25 , 2024",
       title: "Puppet Theater",
-      description: "Immerse yourself in a unique experience for the whole family, in which the most incredible stories are told by fantastic beings, controlled by invisible hands but full of magic. This event will take you to a universe full of charming characters.",
+      description: "Immerse yourself in a unique experience for the whole family, in which the most incredible stories are told by fantastic beings, controlled by invisible hands but full of magic.",
       image: microscopio
     },
     {
@@ -86,7 +86,7 @@ const Events = () => {
       id: 2,
       date: "February 25 , 2024",
       title: "Puppet Theater",
-      description: "Immerse yourself in a unique experience for the whole family, in which the most incredible stories are told by fantastic beings, controlled by invisible hands but full of magic. This event will take you to a universe full of charming characters.",
+      description: "Immerse yourself in a unique experience for the whole family, in which the most incredible stories are told by fantastic beings, controlled by invisible hands but full of magic.",
       image: microscopio
     },
     {
