@@ -1,10 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 const Aday = () => {
-  return (
-    <>
-    <section className="daily-activities">
-                <h2>A Day at daycare Rainbow</h2>
+    return (
+        <>
+            <section className="daily-activities">
+                <h2>A Day at Daycare  Rainbow</h2>
                 <div className="timeline">
                     <div className="timeline-item">
                         <div className="timeline-content">
@@ -36,7 +36,7 @@ const Aday = () => {
                             <p>Nutritious lunch followed by nap or quiet time.</p>
                         </div>
                     </div>
-                    
+
                     <div className="timeline-item">
                         <div className="timeline-content">
                             <h3>2:00 PM - Art & Crafts</h3>
@@ -66,15 +66,15 @@ const Aday = () => {
                             <h3>6:00 PM - Goodbye!</h3>
                             <p>Parents pick up their children and say goodbye for the day.</p>
                         </div>
-                       
+
+                    </div>
                 </div>
-                </div>
-                
+
             </section>
-    </>
-    
-           
-  )
+        </>
+
+
+    )
 }
 
 export default Aday

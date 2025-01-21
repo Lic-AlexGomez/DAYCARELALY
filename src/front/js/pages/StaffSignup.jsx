@@ -96,11 +96,10 @@ const SelectItem = ({ className, children, onClick, ...props }) => (
 
 const Alert = ({ variant, className, children, ...props }) => (
   <div
-    className={`tw-p-4 tw-rounded-lg tw-flex tw-items-center tw-border-2 ${
-      variant === "destructive"
+    className={`tw-p-4 tw-rounded-lg tw-flex tw-items-center tw-border-2 ${variant === "destructive"
         ? "tw-bg-red-100 tw-text-red-700 tw-border-red-300"
         : "tw-bg-[#FFC909] tw-text-[#9C29B2] tw-border-[#9C29B2]"
-    } ${className}`}
+      } ${className}`}
     {...props}
   >
     {children}
@@ -343,7 +342,7 @@ export const StaffSignup = () => {
     <div className="tw-mt-3 tw-flex tw-items-center tw-justify-center tw-min-h-screen tw-bg-gradient-to-b tw-from-[#FFC909] tw-to-[#a16bac] tw-px-4">
       <Card className="tw-my-14 tw-w-full tw-max-w-2xl tw-bg-white tw-bg-opacity-90">
         <CardHeader>
-          <CardTitle>Join Colorful Kids Daycare Staff!</CardTitle>
+          <CardTitle>Join Colorful Kids Daycare  Staff!</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="tw-space-y-6">
