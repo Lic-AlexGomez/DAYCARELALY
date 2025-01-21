@@ -1,0 +1,27 @@
+.formConfirmAttendance{
+    width: 30rem;
+    height: 45rem;
+    background-color:#9C29B2;
+    border-radius: 10px;
+   
+}
+.FullName{
+    color: #FFC909;
+}
+.input-fullName {
+    background: transparent; 
+    border: 1px solid #ffffff; 
+    padding: 8px 12px;
+    outline: none; 
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: white; /* Color blanco para el placeholder */
+}
+ .buttonConfirmAttendance{
+    width: 20rem;
+    height: 3rem;
+    background-color: #FFC909;
+    border-radius: 5px;
+    color:black
+ } 

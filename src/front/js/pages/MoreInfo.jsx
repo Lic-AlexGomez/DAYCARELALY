@@ -1,7 +1,7 @@
 import React from "react"
 import '../../styles/moreInfoEvents.css'
 import imgEvents4 from "../../img/imgEvents4.png";
-
+import {Link} from 'react-router-dom'
 
 
 
@@ -40,7 +40,7 @@ const MoreInfo = () => {
 
           <div className="tw-flex tw-justify-center tw-items-center tw-mt-6">
             <button className="confirmAttendance-events  tw-text-white tw-px-12 tw-py-2 ">
-              Confirm Attendance
+             <Link to="/confirmattendance">Confirm Attendance</Link> 
             </button>
           </div>
         </div>

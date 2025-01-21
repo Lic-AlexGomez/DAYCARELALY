@@ -133,7 +133,7 @@ const Events = () => {
                         ) : (
                           <>
                             <button className="buttonMoreInfo tw-text-xs"><Link to="/moreinfo">More Info</Link></button>
-                            <button className="buttonConfirmAttendance tw-text-xs">Confirm Attendance</button>
+                            <button className="buttonConfirmAttendance tw-text-xs"><Link to="/confirmattendance">Confirm Attendance</Link></button>
                           </>
                         )}
                       </div>
