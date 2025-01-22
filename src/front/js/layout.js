@@ -16,6 +16,7 @@ import ContactUs from "./pages/ContactUs.jsx"
 import Events from "./pages/Events.jsx"
 import Programs from "./pages/Programs.jsx"
 import MoreInfo from "./pages/MoreInfo.jsx"
+import ConfirmAttendance from "./pages/ConfirmAttendance.jsx"
 
 // Componentes del Admin Dashboard
 import Sidebar from "./component/admin/Sidebar"
@@ -66,6 +67,7 @@ import ParentPayments from "./component/parent/ParentPayments"
 import ParentSettings from "./component/parent/ParentSettings"
 import ParentSidebar from "./component/parent/ParentSidebar.jsx"
 import ParentHeader from "./component/parent/ParentHeader.jsx"
+
 
 
 
@@ -166,6 +168,7 @@ const MainRoutes = () => {
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/events" element={<Events />} />
         <Route path="/moreinfo" element={<MoreInfo />} />
+        <Route path="/confirmattendance" element={<ConfirmAttendance />} />
         <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
         <Route path="/teacher-dashboard/*" element={<TeacherDashboardRoutes />} />
         <Route path="/parent-dashboard/*" element={<ParentDashboardRoutes />} />
