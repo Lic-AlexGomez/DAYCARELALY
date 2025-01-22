@@ -14,11 +14,12 @@
    flex-direction: column;
    height: 100vh;
    background-color: #ffc909;
+   padding-bottom: 20px;
 }
 
 .contactus-container{
-   margin-top: 50px;
-   margin-bottom: 50px;
+   margin-top: 30px;
+   margin-bottom: 100px;
    height: 700px;
    width: 1200px;
    background-color: #ffffff;
