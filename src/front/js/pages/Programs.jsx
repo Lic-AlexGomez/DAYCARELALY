@@ -6,10 +6,11 @@ import littleexplorers from "../../img/little-explorers.jpg";
 import dancing from "../../img/dancing.jpg";
 import Scientists from "../../img/LittleScientist.jpg";
 import kids4C from "../../img/kids4C.png";
+import { useNavigate } from 'react-router-dom';
 
-const defaultPrograms = [
+export const defaultPrograms = [
     {
-        id: 1,
+        id: 111111111,
         name: "Little Explorers ",
         price: "25",
         description: "A hands-on program featuring activities like building with blocks, painting, sensory games (sand, water), and group play.",
@@ -19,7 +20,7 @@ const defaultPrograms = [
         image: littleexplorers,
     },
     {
-        id: 2,
+        id: 2222222222,
         name: "Learning with Rhythm",
         price: "25",
         description: "Musical activities such as singing, playing basic instruments (maracas, tambourines), and learning rhythms through body games.",
@@ -29,7 +30,7 @@ const defaultPrograms = [
         image: dancing,
     },
     {
-        id: 3,
+        id: 333333333333,
         name: "Little Scientists",
         price: "35",
         description: "Stimulate curiosity and critical thinking through basic science experiments and activities through playing with different elements.",
@@ -39,7 +40,7 @@ const defaultPrograms = [
         image: Scientists,
     },
     {
-        id: 4,
+        id: 44444444444,
         name: "Creative Minds",
         price: "30",
         description: "Exploring creative thinking and hands-on activities in arts, crafts, and problem-solving.",
@@ -49,27 +50,27 @@ const defaultPrograms = [
         image: book,
     },
     {
-        id: 5,
+        id: 5555555555555,
         name: "Nature Explorers",
         price: "28",
         description: "An outdoor program focused on exploring nature, identifying plants and animals, and engaging in outdoor play and learning.",
         age: "4-6 Years",
         time: "9-11 am",
         capacity: "12 Kids",
-        image: littleexplorers, 
+        image: littleexplorers,
     },
     {
-        id: 6,
+        id: 6666666666666,
         name: "Artistic Adventures",
         price: "30",
         description: "A creative program where kids learn to express themselves through painting, sculpture, and crafts.",
         age: "3-5 Years",
         time: "8-10 am",
         capacity: "15 Kids",
-        image: dancing, 
+        image: dancing,
     },
     {
-        id: 7,
+        id: 77777777777,
         name: "Tech Tots",
         price: "35",
         description: "Introduce young minds to basic technology concepts using age-appropriate tools and games.",
@@ -79,18 +80,18 @@ const defaultPrograms = [
         image: Scientists,
     },
     {
-        id: 8,
+        id:88888888888888,
         name: "Mini Chefs",
         price: "30",
         description: "A fun and educational program where kids learn basic cooking skills and food safety.",
         age: "4-6 Years",
         time: "11 am - 1 pm",
         capacity: "10 Kids",
-        image: kids4C, 
+        image: kids4C,
     }
 ];
-
 export const Programs = () => {
+    const navigate = useNavigate();
     const { store, actions } = useContext(Context);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [visiblePrograms, setVisiblePrograms] = useState(3);
@@ -119,7 +120,7 @@ export const Programs = () => {
     };
 
     useEffect(() => {
-        actions.getPrograms(); 
+        actions.getPrograms();
     }, [actions]);
 
     return (
@@ -226,6 +227,7 @@ export const Programs = () => {
             <div className="tw-text-center tw-mt-12">
                 <button
                     className="tw-bg-[#9C29B2] tw-text-white tw-px-12 tw-py-4 tw-rounded-full tw-text-lg tw-font-bold hover:tw-bg-[#7A1D8D] tw-transition-colors"
+                    onClick={() => navigate('/allprograms')} // Redirige a la ruta de Allprograms
                 >
                     Discover All Programs
                 </button>
