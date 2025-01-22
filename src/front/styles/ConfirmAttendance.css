@@ -18,7 +18,7 @@
   textarea::placeholder {
     color: white; /* Color blanco para el placeholder */
 }
- .buttonConfirmAttendance{
+ .buttonConfirmAttendance-form{
     width: 20rem;
     height: 3rem;
     background-color: #FFC909;

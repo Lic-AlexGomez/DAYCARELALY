@@ -80,7 +80,7 @@ export const Footer = () => {
 						<Link to={"/"}><li>About us</li></Link>
 						<Link to={"/"}><li>our team</li></Link>
 						<Link to={"/"}><li>Privacy policy </li></Link>
-						<Link to={"/"}><li>Contact us</li></Link>
+						<Link to={"/contactus"}><li>Contact us</li></Link>
 						<Link to={"/"}><li>Terms of service</li></Link>
 					</ul>
 				</div>

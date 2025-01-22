@@ -32,7 +32,7 @@ const ConfirmAttendance = () => {
                         <textarea type="text" placeholder="Any dietary restrictions or special needs?" className=" tw-h-32  tw-text-white input-fullName tw-w-full tw-p-4 tw-border  tw-rounded" />
                     </label>
                     <div className="tw-w-full tw-flex tw-justify-center">
-                        <button type="submit" className=" buttonConfirmAttendance   tw-px-6  ">
+                        <button type="submit" className=" buttonConfirmAttendance-form   tw-px-6  ">
                         Confirm Attendance
                     </button>
                     </div>

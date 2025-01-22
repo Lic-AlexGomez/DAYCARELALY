@@ -104,11 +104,11 @@ const ContactUs = () => {
 
   return (
     <div className="container-form">
-      <h1 className="contactus tw-text-4xl tw-font-bold ">Contact Us</h1>
+      <h1 className="contactus tw-text-4xl tw-font-bold tw-pt-10 ">Contact Us</h1>
       <p className="anyquestion tw-mx-auto tw-w-70 tw-flex tw-justify-center">
         Any question or remarks? Just write us a message!
       </p>
-      <div className="contactus-container tw-mx-auto tw-w-64 tw-flex tw-justify-start">
+      <div className="contactus-container tw-mx-auto tw-w-64 tw-flex tw-justify-start tw-pb-10">
         <div className="contactInfo tw-w-64">
           <h2 className="tw-text-2xl tw-font-bold tw-text-white tw-ml-7 tw-w-max tw-mt-16">
             Contact information
