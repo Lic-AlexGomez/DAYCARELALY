@@ -1,17 +1,26 @@
 from flask_sqlalchemy import SQLAlchemy 
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+
 db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(250), nullable=False)
-    
     email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(250), nullable=False)
     role = db.Column(db.String(50), nullable=False)
+    profile_picture = db.Column(db.String(200))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return f'<User {self.username}>'
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
     
     def serialize(self):
         return {
@@ -19,13 +28,17 @@ class User(db.Model):
             "username": self.username,
             "email": self.email,
             "role": self.role,
+            "profile_picture": self.profile_picture
         }
 
 class Parent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     full_name = db.Column(db.String(120), nullable=False)
     phone_number = db.Column(db.String(15), nullable=False)
+    emergency_contact = db.Column(db.String(120))
+    birth_certificate_url = db.Column(db.String(200))
+    immunization_records_url = db.Column(db.String(200))
 
     def __repr__(self):
         return f'<Parent {self.full_name}>'
@@ -36,13 +49,20 @@ class Parent(db.Model):
             "user_id": self.user_id,
             "full_name": self.full_name,
             "phone_number": self.phone_number,
+            "emergency_contact": self.emergency_contact,
+            "birth_certificate_url": self.birth_certificate_url,
+            "immunization_records_url": self.immunization_records_url
         }
 
 class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     full_name = db.Column(db.String(120), nullable=False)
     specialization = db.Column(db.String(120), nullable=False)
+    qualifications = db.Column(db.Text)
+    teaching_experience = db.Column(db.Text)
+    certifications_url = db.Column(db.String(200))
+    background_check_url = db.Column(db.String(200))
 
     def __repr__(self):
         return f'<Teacher {self.full_name}>'
@@ -53,6 +73,10 @@ class Teacher(db.Model):
             "user_id": self.user_id,
             "full_name": self.full_name,
             "specialization": self.specialization,
+            "qualifications": self.qualifications,
+            "teaching_experience": self.teaching_experience,
+            "certifications_url": self.certifications_url,
+            "background_check_url": self.background_check_url
         }
 
 class Child(db.Model):
@@ -60,6 +84,8 @@ class Child(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
     full_name = db.Column(db.String(120), nullable=False)
     date_of_birth = db.Column(db.Date, nullable=False)
+    allergies = db.Column(db.Text)
+    medical_conditions = db.Column(db.Text)
 
     def __repr__(self):
         return f'<Child {self.full_name}>'
@@ -69,7 +95,9 @@ class Child(db.Model):
             "id": self.id,
             "parent_id": self.parent_id,
             "full_name": self.full_name,
-            "date_of_birth": self.date_of_birth,
+            "date_of_birth": self.date_of_birth.isoformat(),
+            "allergies": self.allergies,
+            "medical_conditions": self.medical_conditions
         }
 
 class Class(db.Model):
@@ -78,10 +106,10 @@ class Class(db.Model):
     name = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text, nullable=True)
     capacity = db.Column(db.Integer, nullable=False)
-    price = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     age = db.Column(db.String(20), nullable=False)
     time = db.Column(db.String(50), nullable=False)
-
+    image = db.Column(db.String(200))
 
     def __repr__(self):
         return f'<Class {self.name}>'
@@ -96,6 +124,7 @@ class Class(db.Model):
             "price": self.price,
             "age": self.age,
             "time": self.time,
+            "image": self.image
         }
 
 class Enrollment(db.Model):
@@ -112,7 +141,7 @@ class Enrollment(db.Model):
             "id": self.id,
             "child_id": self.child_id,
             "class_id": self.class_id,
-            "enrollment_date": self.enrollment_date,
+            "enrollment_date": self.enrollment_date.isoformat()
         }
 
 class Program(db.Model):
@@ -121,10 +150,9 @@ class Program(db.Model):
     name = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text, nullable=True)
     capacity = db.Column(db.Integer, nullable=False)
-    price = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     age = db.Column(db.String(20), nullable=False)
     time = db.Column(db.String(50), nullable=False)
-
 
     def __repr__(self):
         return f'<Program {self.name}>'
@@ -138,7 +166,7 @@ class Program(db.Model):
             "capacity": self.capacity,
             "price": self.price,
             "age": self.age,
-            "time": self.time,
+            "time": self.time
         }
       
 class Subscription(db.Model):
@@ -156,8 +184,8 @@ class Subscription(db.Model):
             "id": self.id,
             "parent_id": self.parent_id,
             "plan_type": self.plan_type,
-            "start_date": self.start_date,
-            "end_date": self.end_date,
+            "start_date": self.start_date.isoformat(),
+            "end_date": self.end_date.isoformat()
         }
 
 class ProgressReport(db.Model):
@@ -175,8 +203,8 @@ class ProgressReport(db.Model):
             "id": self.id,
             "child_id": self.child_id,
             "teacher_id": self.teacher_id,
-            "report_date": self.report_date,
-            "content": self.content,
+            "report_date": self.report_date.isoformat(),
+            "content": self.content
         }
 
 class Event(db.Model):
@@ -194,8 +222,8 @@ class Event(db.Model):
             "id": self.id,
             "name": self.name,
             "description": self.description,
-            "start_time": self.start_time,
-            "end_time": self.end_time,
+            "start_time": self.start_time.isoformat(),
+            "end_time": self.end_time.isoformat()
         }
 
 class Message(db.Model):
@@ -214,7 +242,7 @@ class Message(db.Model):
             "sender_id": self.sender_id,
             "receiver_id": self.receiver_id,
             "content": self.content,
-            "timestamp": self.timestamp,
+            "timestamp": self.timestamp.isoformat()
         }
 
 class Task(db.Model):
@@ -234,8 +262,8 @@ class Task(db.Model):
             "teacher_id": self.teacher_id,
             "title": self.title,
             "description": self.description,
-            "due_date": self.due_date,
-            "status": self.status,
+            "due_date": self.due_date.isoformat(),
+            "status": self.status
         }
 
 class Attendance(db.Model):
@@ -253,8 +281,8 @@ class Attendance(db.Model):
             "id": self.id,
             "child_id": self.child_id,
             "class_id": self.class_id,
-            "date": self.date,
-            "status": self.status,
+            "date": self.date.isoformat(),
+            "status": self.status
         }
 
 class Grade(db.Model):
@@ -273,13 +301,13 @@ class Grade(db.Model):
             "child_id": self.child_id,
             "class_id": self.class_id,
             "grade": self.grade,
-            "date": self.date,
+            "date": self.date.isoformat()
         }
 
 class Payment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
+    amount = db.Column(db.Float, nullable=False)
     date = db.Column(db.Date, nullable=False)
 
     def __repr__(self):
@@ -290,14 +318,14 @@ class Payment(db.Model):
             "id": self.id,
             "parent_id": self.parent_id,
             "amount": self.amount,
-            "date": self.date,
+            "date": self.date.isoformat()
         }
 
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    price = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
     age = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
@@ -309,7 +337,7 @@ class Course(db.Model):
             "name": self.name,
             "description": self.description,
             "price": self.price,
-            "age": self.age,
+            "age": self.age
         }
 
 class Notification(db.Model):
@@ -327,8 +355,8 @@ class Notification(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "content": self.content,
-            "date": self.date,
-            "status": self.status,
+            "date": self.date.isoformat(),
+            "status": self.status
         }
 
 class Contact(db.Model):
@@ -341,17 +369,17 @@ class Contact(db.Model):
     message = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
-        return f'<Contact {self.first_name}{self.last_name}>'
+        return f'<Contact {self.first_name} {self.last_name}>'
 
     def serialize(self):
         return {
             "id": self.id,
             "first_name": self.first_name,
-            "last_name": self.first_name,
+            "last_name": self.last_name,
             "email": self.email,
             "subject": self.subject,
             "phone_number": self.phone_number,
-            "message": self.message,
+            "message": self.message
         }
 
 class Newsletter(db.Model):
@@ -364,7 +392,7 @@ class Newsletter(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "email": self.email,
+            "email": self.email
         }
     
 class Getintouch(db.Model):
@@ -385,12 +413,10 @@ class Getintouch(db.Model):
             "email": self.email,
             "subject": self.subject,
             "phone_number": self.phone_number,
-            "message": self.message,
+            "message": self.message
         }
     
-    # Admin Dashboard
-
-# admin dashboard models
+# Admin Dashboard models
 
 class Client(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -464,4 +490,4 @@ class Email(db.Model):
             "date": self.date.isoformat(),
             "scheduledDate": self.scheduled_date.isoformat() if self.scheduled_date else None
         }
-    
+

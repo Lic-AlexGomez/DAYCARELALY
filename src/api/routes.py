@@ -1,16 +1,25 @@
-import cloudinary
-from flask import Flask, request, jsonify, Blueprint,current_app
-from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification,Getintouch, Client, Email, User
+import os, cloudinary,cloudinary.uploader
+from flask import Flask, request, jsonify, Blueprint, current_app
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from flask_bcrypt import Bcrypt
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash
-from flask_jwt_extended import create_access_token
+
+
+
 
 api = Blueprint('api', __name__)
 CORS(api, resources={r"/api/*": {"origins": "*"}})
+cloudinary.config( 
+    cloud_name = os.environ.get("CLOUDINARY_CLOUD_NAME"), 
+    api_key = os.environ.get("CLOUDINARY_API_KEY"), 
+    api_secret = os.environ.get("CLOUDINARY_API_SECRET"), 
+    
+)
+
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
@@ -23,53 +32,70 @@ def login():
 
     user = User.query.filter_by(email=data['email']).first()
     
-    if not user or not bcrypt.check_password_hash(user.password, data['password']):
+    if not user or not user.check_password(data['password']):
         return jsonify({"error": "Invalid email or password"}), 401
 
     access_token = create_access_token(identity=user.id)
     return jsonify({"token": access_token, "user": user.serialize()}), 200
-    
-
-
 
 @api.route('/signup', methods=['POST'])
 def signup():
     data = request.json
-    if not data or 'username' not in data or 'email' not in data or 'password' not in data:
+    if not data or 'username' not in data or 'email' not in data or 'password' not in data or 'role' not in data:
         return jsonify({"error": "Invalid payload"}), 400
 
-   
     if User.query.filter_by(email=data['email']).first():
         return jsonify({"error": "Email already registered"}), 409
 
-    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    
     new_user = User(
         username=data['username'],
         email=data['email'],
-        password=hashed_password,
-        role=data.get('role', 'user') 
+        role=data['role']
     )
+    new_user.set_password(data['password'])
+    
     db.session.add(new_user)
+    db.session.commit()
+
+    if data['role'] == 'parent':
+        new_parent = Parent(
+            user_id=new_user.id,
+            full_name=data.get('full_name', ''),
+            phone_number=data.get('phone_number', ''),
+            emergency_contact=data.get('emergency_contact', ''),
+            birth_certificate_url=data.get('birth_certificate_url', ''),
+            immunization_records_url=data.get('immunization_records_url', '')
+        )
+        db.session.add(new_parent)
+    elif data['role'] == 'teacher':
+        new_teacher = Teacher(
+            user_id=new_user.id,
+            full_name=data.get('full_name', ''),
+            specialization=data.get('specialization', ''),
+            qualifications=data.get('qualifications', ''),
+            teaching_experience=data.get('teaching_experience', ''),
+            certifications_url=data.get('certifications_url', ''),
+            background_check_url=data.get('background_check_url', '')
+        )
+        db.session.add(new_teacher)
+
     db.session.commit()
     return jsonify(new_user.serialize()), 201
 
-
-
 @api.route('/users', methods=['GET'])
+@jwt_required()
 def get_users():
     users = User.query.all()
     users = list(map(lambda x: x.serialize(), users))
     return jsonify(users), 200
 
-
 @api.route('/users/<int:id>', methods=['GET'])
+@jwt_required()
 def get_user(id):
     user = User.query.get(id)
     if not user:
         return jsonify({"error": "User not found"}), 404
     return jsonify(user.serialize()), 200
-
 
 @api.route('/users/<int:id>', methods=['PUT'])
 @jwt_required()
@@ -82,10 +108,9 @@ def update_user(id):
     user.username = data.get('username', user.username)
     user.email = data.get('email', user.email)
     if 'password' in data:
-        user.password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+        user.set_password(data['password'])
     db.session.commit()
     return jsonify(user.serialize()), 200
-
 
 @api.route('/users/<int:id>', methods=['DELETE'])
 @jwt_required()
@@ -98,34 +123,36 @@ def delete_user(id):
     db.session.commit()
     return jsonify({"message": "User deleted"}), 200
 
-
 @api.route('/parents', methods=['GET'])
+@jwt_required()
 def get_parents():
     parents = Parent.query.all()
     parents = list(map(lambda x: x.serialize(), parents))
     return jsonify(parents), 200
 
-
 @api.route('/parents/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent(id):
     parent = Parent.query.get(id)
     if not parent:
         return jsonify({"error": "Parent not found"}), 404
     return jsonify(parent.serialize()), 200
 
-
 @api.route('/parents', methods=['POST'])
+@jwt_required()
 def create_parent():
     data = request.json
     new_parent = Parent(
         user_id=data['user_id'],
         full_name=data['full_name'],
-        phone_number=data['phone_number']
+        phone_number=data['phone_number'],
+        emergency_contact=data.get('emergency_contact', ''),
+        birth_certificate_url=data.get('birth_certificate_url', ''),
+        immunization_records_url=data.get('immunization_records_url', '')
     )
     db.session.add(new_parent)
     db.session.commit()
     return jsonify(new_parent.serialize()), 201
-
 
 @api.route('/teachers', methods=['GET'])
 def get_teachers():
@@ -140,8 +167,8 @@ def get_teacher(id):
         return jsonify({"error": "Teacher not found"}), 404
     return jsonify(teacher.serialize()), 200
 
-
-@api.route('/teacher', methods=['POST'])
+@api.route('/teachers', methods=['POST'])
+@jwt_required()
 def create_teacher():
     data = request.json
     print(data)
@@ -159,19 +186,21 @@ def create_teacher():
     new_teacher = Teacher(
         user_id=data['user_id'],
         full_name=data['full_name'],
-        specialization=data['specialization']
+        specialization=data['specialization'],
+        qualifications=data.get('qualifications', ''),
+        teaching_experience=data.get('teaching_experience', ''),
+        certifications_url=data.get('certifications_url', ''),
+        background_check_url=data.get('background_check_url', '')
     )
     db.session.add(new_teacher)
     db.session.commit()
     return jsonify(new_teacher.serialize()), 201
-
 
 @api.route('/classes', methods=['GET'])
 def get_classes():
     classes = Class.query.all()
     classes = list(map(lambda x: x.serialize(), classes))
     return jsonify(classes), 200
-
 
 @api.route('/classes/<int:id>', methods=['GET'])
 def get_class(id):
@@ -180,8 +209,8 @@ def get_class(id):
         return jsonify({"error": "Class not found"}), 404
     return jsonify(class_instance.serialize()), 200
 
-
 @api.route('/classes', methods=['POST'])
+@jwt_required()
 def create_class():
     data = request.json
     new_class = Class(
@@ -191,7 +220,8 @@ def create_class():
         capacity=data['capacity'],
         price=data['price'],
         age=data['age'],
-        time=data['time']
+        time=data['time'],
+        image=data.get('image', '')
     )
     db.session.add(new_class)
     db.session.commit()
@@ -203,7 +233,6 @@ def get_events():
     events = list(map(lambda x: x.serialize(), events))
     return jsonify(events), 200
 
-
 @api.route('/events/<int:id>', methods=['GET'])
 def get_event(id):
     event = Event.query.get(id)
@@ -211,68 +240,72 @@ def get_event(id):
         return jsonify({"error": "Event not found"}), 404
     return jsonify(event.serialize()), 200
 
-
 @api.route('/events', methods=['POST'])
+@jwt_required()
 def create_event():
     data = request.json
     new_event = Event(
         name=data['name'],
         description=data.get('description', ''),
-        start_time=data['start_time'],
-        end_time=data['end_time']
+        start_time=datetime.fromisoformat(data['start_time']),
+        end_time=datetime.fromisoformat(data['end_time'])
     )
     db.session.add(new_event)
     db.session.commit()
     return jsonify(new_event.serialize()), 201
 
-# @api.route("/private", methods=["GET"])
-# @jwt_required()
-# def protected():
-#     current_user = get_jwt_identity()
-
-#     if current_user is None:
-#         return jsonify({"msg": "Missing Authorization Header"}), 401
-#     return jsonify(current_user), 200
-
-# @api.route("/admin", methods=["GET"])
-# @jwt_required()
-# def protected_admin():
-#     current_user = get_jwt_identity()
-
-#     if current_user is None:
-#         return jsonify({"msg": "Missing Authorization Header"}), 401
-#     return jsonify(current_user), 200
-
 @api.route('/progress_reports', methods=['GET'])
+@jwt_required()
 def get_progress_reports():
     progress_reports = ProgressReport.query.all()
     progress_reports = list(map(lambda x: x.serialize(), progress_reports))
     return jsonify(progress_reports), 200
 
-        
+@api.route('/progress_reports/<int:id>', methods=['GET'])
+@jwt_required()
+def get_progress_report(id):
+    report = ProgressReport.query.get(id)
+    if not report:
+        return jsonify({"error": "Progress report not found"}), 404
+    return jsonify(report.serialize()), 200
+
+@api.route('/progress_reports', methods=['POST'])
+@jwt_required()
+def create_progress_report():
+    data = request.json
+    new_report = ProgressReport(
+        child_id=data['child_id'],
+        teacher_id=data['teacher_id'],
+        report_date=datetime.fromisoformat(data['report_date']),
+        content=data['content']
+    )
+    db.session.add(new_report)
+    db.session.commit()
+    return jsonify(new_report.serialize()), 201
 
 @api.route('/children', methods=['GET'])
+@jwt_required()
 def get_children():
     children = Child.query.all()
     children = list(map(lambda x: x.serialize(), children))
     return jsonify(children), 200
 
-    
 @api.route('/children/<int:id>', methods=['GET'])
+@jwt_required()
 def get_child(id):
     child = Child.query.get(id)
     if not child:
         return jsonify({"error": "Child not found"}), 404
     return jsonify(child.serialize()), 200
 
-
 @api.route('/children', methods=['POST'])
+@jwt_required()
 def create_child():
     data = request.json
     new_child = Child(
         parent_id=data['parent_id'],
         full_name=data['full_name'],
-        age=data['age'],
+        date_of_birth=datetime.fromisoformat(data['date_of_birth']),
         allergies=data.get('allergies', ''),
         medical_conditions=data.get('medical_conditions', '')
     )
@@ -280,40 +313,39 @@ def create_child():
     db.session.commit()
     return jsonify(new_child.serialize()), 201
 
-
 @api.route('/enrollments', methods=['GET'])
+@jwt_required()
 def get_enrollments():
     enrollments = Enrollment.query.all()
     enrollments = list(map(lambda x: x.serialize(), enrollments))
     return jsonify(enrollments), 200
 
-
 @api.route('/enrollments/<int:id>', methods=['GET'])
+@jwt_required()
 def get_enrollment(id):
     enrollment = Enrollment.query.get(id)
     if not enrollment:
         return jsonify({"error": "Enrollment not found"}), 404
     return jsonify(enrollment.serialize()), 200
 
-
 @api.route('/enrollments', methods=['POST'])
+@jwt_required()
 def create_enrollment():
     data = request.json
     new_enrollment = Enrollment(
         child_id=data['child_id'],
-        class_id=data['class_id']
+        class_id=data['class_id'],
+        enrollment_date=datetime.now().date()
     )
     db.session.add(new_enrollment)
     db.session.commit()
     return jsonify(new_enrollment.serialize()), 201
-
 
 @api.route('/programs', methods=['GET'])
 def get_programs():
     programs = Program.query.all()
     programs = list(map(lambda x: x.serialize(), programs))
     return jsonify(programs), 200
-
 
 @api.route('/programs/<int:id>', methods=['GET'])
 def get_program(id):
@@ -322,8 +354,8 @@ def get_program(id):
         return jsonify({"error": "Program not found"}), 404
     return jsonify(program.serialize()), 200
 
-
 @api.route('/programs', methods=['POST'])
+@jwt_required()
 def create_program():
     data = request.json
     required_fields = ['name', 'capacity', 'price', 'age', 'time']
@@ -336,26 +368,29 @@ def create_program():
         capacity=data['capacity'],
         price=data['price'],
         age=data['age'],
-        time=data['time']
+        time=data['time'],
+        teacher_id=data.get('teacher_id')
     )
     db.session.add(new_program)
     db.session.commit()
     return jsonify(new_program.serialize()), 201
 
 @api.route('/subscriptions', methods=['GET'])
+@jwt_required()
 def get_subscriptions():
     subscriptions = Subscription.query.all()
     subscriptions = list(map(lambda x: x.serialize(), subscriptions))
     return jsonify(subscriptions), 200
 
-
 @api.route('/contacts', methods=['GET'])
+@jwt_required()
 def get_contacts():
     contacts = Contact.query.all()
     contacts = list(map(lambda x: x.serialize(), contacts))
     return jsonify(contacts), 200
 
 @api.route('/contacts/<int:id>', methods=['GET'])
+@jwt_required()
 def get_contact(id):
     contact = Contact.query.get(id)
     if not contact:
@@ -379,22 +414,20 @@ def create_contact():
 
 @api.route('/upload', methods=['POST'])
 def upload_file():
-    try:
-        # Obtén el archivo desde la solicitud
+   
         file_to_upload = request.files['file']
+        if not file_to_upload:
+            return jsonify({"error": "No file provided"}), 400
 
-        # Sube el archivo a Cloudinary
         upload_result = cloudinary.uploader.upload(file_to_upload)
-
-        # Devuelve la URL del archivo cargado
         return jsonify({
             "message": "File uploaded successfully",
             "url": upload_result['secure_url']
         }), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+  
 
-        
+
+
 @api.route('/newsletter', methods=['POST'])
 def create_newsletter():
     data = request.json
@@ -406,12 +439,14 @@ def create_newsletter():
     return jsonify(new_subscription.serialize()), 201
 
 @api.route('/getintouch', methods=['GET'])
+@jwt_required()
 def get_contactus():
     getintouch = Getintouch.query.all()
     getintouch = list(map(lambda x: x.serialize(), getintouch))
     return jsonify(getintouch), 200
 
 @api.route('/getintouch/<int:id>', methods=['GET'])
+@jwt_required()
 def get_contactu(id):
     getintouch = Getintouch.query.get(id)
     if not getintouch:
@@ -432,15 +467,15 @@ def create_contactus():
     db.session.commit()
     return jsonify(new_contactus.serialize()), 201
 
-
-
 # Admin Dashboard routes
 @api.route('/clients', methods=['GET'])
+@jwt_required()
 def get_clients():
     clients = Client.query.all()
     return jsonify(list(map(lambda x: x.serialize(), clients))), 200
 
 @api.route('/clients', methods=['POST'])
+@jwt_required()
 def create_client():
     data = request.json
     new_client = Client(
@@ -454,6 +489,7 @@ def create_client():
     return jsonify(new_client.serialize()), 201
 
 @api.route('/clients/<int:id>', methods=['GET'])
+@jwt_required()
 def get_client(id):
     client = Client.query.get(id)
     if client is None:
@@ -461,6 +497,7 @@ def get_client(id):
     return jsonify(client.serialize()), 200
 
 @api.route('/clients/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_client(id):
     client = Client.query.get(id)
     if client is None:
@@ -476,8 +513,8 @@ def update_client(id):
     return jsonify(client.serialize()), 200
 
 @api.route('/clients/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_client(id):
-
     client = Client.query.get(id)
     if client is None:
         return jsonify({"error": "Client not found"}), 404
@@ -486,13 +523,14 @@ def delete_client(id):
     db.session.commit()
     return jsonify({"message": "Client deleted successfully"}), 200
 
-
 @api.route('/schedules', methods=['GET'])
+@jwt_required()
 def get_schedules():
     schedules = Schedule.query.all()
     return jsonify([schedule.serialize() for schedule in schedules]), 200
 
 @api.route('/schedules', methods=['POST'])
+@jwt_required()
 def create_schedule():
     data = request.json
     new_schedule = Schedule(
@@ -509,6 +547,7 @@ def create_schedule():
     return jsonify(new_schedule.serialize()), 201
 
 @api.route('/schedules/<int:id>', methods=['GET'])
+@jwt_required()
 def get_schedule(id):
     schedule = Schedule.query.get(id)
     if schedule is None:
@@ -516,6 +555,7 @@ def get_schedule(id):
     return jsonify(schedule.serialize()), 200
 
 @api.route('/schedules/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_schedule(id):
     schedule = Schedule.query.get(id)
     if schedule is None:
@@ -534,6 +574,7 @@ def update_schedule(id):
     return jsonify(schedule.serialize()), 200
 
 @api.route('/schedules/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_schedule(id):
     schedule = Schedule.query.get(id)
     if schedule is None:
@@ -544,11 +585,13 @@ def delete_schedule(id):
     return jsonify({"message": "Schedule deleted successfully"}), 200
 
 @api.route('/emails', methods=['GET'])
+@jwt_required()
 def get_emails():
     emails = Email.query.all()
     return jsonify([email.serialize() for email in emails]), 200
 
 @api.route('/emails', methods=['POST'])
+@jwt_required()
 def create_email():
     data = request.json
     if data.get('scheduledDate'):
@@ -565,6 +608,7 @@ def create_email():
     return jsonify(new_email.serialize()), 201
 
 @api.route('/emails/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_email(id):
     email = Email.query.get(id)
     if email is None:

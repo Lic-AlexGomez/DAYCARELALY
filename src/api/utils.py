@@ -41,20 +41,20 @@ def generate_sitemap(app):
         <p>Start working on your project by following the <a href="https://start.4geeksacademy.com/starters/full-stack" target="_blank">Quick Start</a></p>
         <p>Remember to specify a real endpoint path like: </p>
         <ul style="text-align: left;">"""+links_html+"</ul></div>"
-def upload_file(file, folder="uploads"):
-    """
-    Sube un archivo a Cloudinary.
+# def upload_file(file, folder="uploads"):
+#     """
+#     Sube un archivo a Cloudinary.
 
-    :param file: Archivo a subir (BytesIO o path del archivo).
-    :param folder: Carpeta en Cloudinary donde se almacenará.
-    :return: URL del archivo subido.
-    """
-    try:
-        response = cloudinary.uploader.upload(
-            file,
-            folder=folder
-        )
-        return response["secure_url"]
-    except Exception as e:
-        print(f"Error al subir archivo: {e}")
-        return None
+#     :param file: Archivo a subir (BytesIO o path del archivo).
+#     :param folder: Carpeta en Cloudinary donde se almacenará.
+#     :return: URL del archivo subido.
+#     """
+#     try:
+#         response = cloudinary.uploader.upload(
+#             file,
+#             folder=folder
+#         )
+#         return response["secure_url"]
+#     except Exception as e:
+#         print(f"Error al subir archivo: {e}")
+#         return None
