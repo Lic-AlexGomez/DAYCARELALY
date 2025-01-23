@@ -198,7 +198,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			return { success: false, error: error.message }
 		  }
 		},
-	
+
 		getPrograms: async () => {
 		  try {
 			const response = await fetch(process.env.BACKEND_URL + "/api/programs")
