@@ -27,13 +27,33 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        
+        if (!dataLogin.email || !dataLogin.password) {
+            alert("Please complete all fields.");
+            return;
+        }
+    
         try {
             const result = await actions.login(dataLogin.email, dataLogin.password);
+
             if (result) {
-                navigate(`/`);
+                const { role } = result.user;  
+                
+                if (role === 'admin' || role === 'Admin' ) {
+                    navigate(`/admin-dashboard`);
+                } else if (role === 'teacher' || role === 'Teacher') {
+                    navigate(`/teacher-dashboard`);
+                } else if (role === 'parent' ||role === 'Parent') {
+                    navigate(`/parent-dashboard`);
+                } else {
+                    alert("Unknown role. Access denied.");
+                }
+            } else {
+                alert("Incorrect credentials.");
             }
         } catch (error) {
-            console.error("Error", error);
+            console.error("Authentication failed", error);
+            alert("There was a problem logging in. Try again.");
         }
     };
     return (
