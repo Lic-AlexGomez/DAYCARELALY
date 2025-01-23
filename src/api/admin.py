@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, Parent, Teacher, Class, Enrollment, Child, Program, Subscription, ProgressReport,Event, Course,Message,Task, Attendance, Grade, Payment, Schedule, Notification, Contact, Newsletter, Getintouch
+from .models import db, User, Parent, Teacher, Class, Enrollment, Child, Program, Subscription, ProgressReport,Event, Course,Message,Task, Attendance, Grade, Payment, Schedule, Notification, Contact, Newsletter, Getintouch, Client
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -32,6 +32,7 @@ def setup_admin(app):
     admin.add_view(ModelView(Contact, db.session))
     admin.add_view(ModelView(Newsletter, db.session))
     admin.add_view(ModelView(Getintouch, db.session))
+    admin.add_view(ModelView(Client, db.session))
 
 
 
