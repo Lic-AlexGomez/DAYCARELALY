@@ -491,3 +491,23 @@ class Email(db.Model):
             "scheduledDate": self.scheduled_date.isoformat() if self.scheduled_date else None
         }
 
+class Eventsuscriptions(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(120), nullable=False)
+    events_selection = db.Column(db.String(120), nullable=False)
+    parent_name = db.Column(db.String(120), nullable=False)
+    special_request = db.Column(db.String(200), nullable=False)
+    
+
+    def __repr__(self):
+        return f'<Contact {self.full_name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "full_name": self.full_name,
+            "events_selection": self.events_selection,
+            "parent_name": self.parent_name,
+            "special_request": self.special_request,
+            
+        }
