@@ -491,7 +491,7 @@ class Email(db.Model):
             "scheduledDate": self.scheduled_date.isoformat() if self.scheduled_date else None
         }
 
-class Events(db.Model):
+class Eventsuscriptions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(120), nullable=False)
     events_selection = db.Column(db.String(120), nullable=False)

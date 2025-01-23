@@ -1,7 +1,6 @@
 import os, cloudinary,cloudinary.uploader
 from flask import Flask, request, jsonify, Blueprint, current_app
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email
-from api.utils import APIException
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email,Eventsuscriptions
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from flask_bcrypt import Bcrypt
@@ -616,4 +615,17 @@ def delete_email(id):
     db.session.delete(email)
     db.session.commit()
     return jsonify({"message": "Email deleted successfully"}), 200
+
+@api.route('/eventsuscription', methods=['POST'])
+def new_suscriptor_event():
+    data = request.json
+    new_event_suscriptor = Eventsuscriptions(
+        full_name=data['full_name'],
+        events_selection=data['events_selection'],
+        parent_name=data['parent_name'],
+        special_request= data.get('special_request'),
+    )
+    db.session.add(new_event_suscriptor)
+    db.session.commit()
+    return jsonify(new_event_suscriptor.serialize()), 201
 
