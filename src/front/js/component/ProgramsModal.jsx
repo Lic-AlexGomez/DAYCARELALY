@@ -1,6 +1,6 @@
 import React from "react";
 
-const ProgramModal = ({ program, isOpen, onClose }) => {
+export const ProgramModal = ({ program, isOpen, onClose }) => {
     if (!isOpen) return null; 
 
     return (
