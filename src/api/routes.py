@@ -1,29 +1,35 @@
 import cloudinary
 from flask import Flask, request, jsonify, Blueprint,current_app
-from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification,Getintouch, Client, Email
+from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification,Getintouch, Client, Email, User
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from flask_bcrypt import Bcrypt
 from datetime import datetime
+from werkzeug.security import check_password_hash
+from flask_jwt_extended import create_access_token
 
 api = Blueprint('api', __name__)
 CORS(api, resources={r"/api/*": {"origins": "*"}})
 bcrypt = Bcrypt()
-
+jwt = JWTManager()
 
 @api.route('/login', methods=['POST'])
 def login():
     data = request.json
+    print(data)
     if not data or 'email' not in data or 'password' not in data:
         return jsonify({"error": "Invalid payload"}), 400
 
     user = User.query.filter_by(email=data['email']).first()
+    
     if not user or not bcrypt.check_password_hash(user.password, data['password']):
         return jsonify({"error": "Invalid email or password"}), 401
 
     access_token = create_access_token(identity=user.id)
     return jsonify({"token": access_token, "user": user.serialize()}), 200
+    
+
 
 
 @api.route('/signup', methods=['POST'])
@@ -37,7 +43,7 @@ def signup():
         return jsonify({"error": "Email already registered"}), 409
 
     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-
+    
     new_user = User(
         username=data['username'],
         email=data['email'],
