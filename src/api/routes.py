@@ -478,3 +478,61 @@ def delete_client(id):
     db.session.delete(client)
     db.session.commit()
     return jsonify({"message": "Client deleted successfully"}), 200
+
+
+@api.route('/schedules', methods=['GET'])
+def get_schedules():
+    schedules = Schedule.query.all()
+    return jsonify([schedule.serialize() for schedule in schedules]), 200
+
+@api.route('/schedules', methods=['POST'])
+def create_schedule():
+    data = request.json
+    new_schedule = Schedule(
+        class_name=data['class'],
+        teacher=data['teacher'],
+        dayOfWeek=data['dayOfWeek'],
+        startTime=data['startTime'],
+        endTime=data['endTime'],
+        capacity=data['capacity'],
+        enrolled=data['enrolled']
+    )
+    db.session.add(new_schedule)
+    db.session.commit()
+    return jsonify(new_schedule.serialize()), 201
+
+@api.route('/schedules/<int:id>', methods=['GET'])
+def get_schedule(id):
+    schedule = Schedule.query.get(id)
+    if schedule is None:
+        return jsonify({"error": "Schedule not found"}), 404
+    return jsonify(schedule.serialize()), 200
+
+@api.route('/schedules/<int:id>', methods=['PUT'])
+def update_schedule(id):
+    schedule = Schedule.query.get(id)
+    if schedule is None:
+        return jsonify({"error": "Schedule not found"}), 404
+    
+    data = request.json
+    schedule.class_name = data.get('class', schedule.class_name)
+    schedule.teacher = data.get('teacher', schedule.teacher)
+    schedule.dayOfWeek = data.get('dayOfWeek', schedule.dayOfWeek)
+    schedule.startTime = data.get('startTime', schedule.startTime)
+    schedule.endTime = data.get('endTime', schedule.endTime)
+    schedule.capacity = data.get('capacity', schedule.capacity)
+    schedule.enrolled = data.get('enrolled', schedule.enrolled)
+    
+    db.session.commit()
+    return jsonify(schedule.serialize()), 200
+
+@api.route('/schedules/<int:id>', methods=['DELETE'])
+def delete_schedule(id):
+    schedule = Schedule.query.get(id)
+    if schedule is None:
+        return jsonify({"error": "Schedule not found"}), 404
+    
+    db.session.delete(schedule)
+    db.session.commit()
+    return jsonify({"message": "Schedule deleted successfully"}), 200
+

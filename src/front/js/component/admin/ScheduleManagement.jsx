@@ -1,42 +1,11 @@
-import React, { useState } from "react"
-import { Plus, Edit, Trash, List, Search, Calendar } from "lucide-react"
+import React, { useState, useEffect, useContext } from "react"
+import { Plus, Edit, Trash, List, Search, Calendar, X } from "lucide-react"
+import { Context } from "../../store/appContext"
 
 const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
 
 const ScheduleManagementPage = () => {
-  const [schedules, setSchedules] = useState([
-    {
-      id: 1,
-      class: "Arte y Creatividad",
-      teacher: "María García",
-      dayOfWeek: "Lunes",
-      startTime: "09:00",
-      endTime: "10:30",
-      capacity: 15,
-      enrolled: 12,
-    },
-    {
-      id: 2,
-      class: "Música y Movimiento",
-      teacher: "Juan Pérez",
-      dayOfWeek: "Martes",
-      startTime: "11:00",
-      endTime: "12:30",
-      capacity: 20,
-      enrolled: 18,
-    },
-    {
-      id: 3,
-      class: "Juegos Educativos",
-      teacher: "Ana Rodríguez",
-      dayOfWeek: "Miércoles",
-      startTime: "14:00",
-      endTime: "15:30",
-      capacity: 12,
-      enrolled: 10,
-    },
-  ])
-
+  const { store, actions } = useContext(Context)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedDay, setSelectedDay] = useState("all")
   const [newSchedule, setNewSchedule] = useState({
@@ -48,8 +17,14 @@ const ScheduleManagementPage = () => {
     capacity: "",
     enrolled: 0,
   })
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingSchedule, setEditingSchedule] = useState(null)
 
-  const filteredSchedules = schedules.filter(
+  useEffect(() => {
+    actions.GetSchedules()
+  }, [])
+
+  const filteredSchedules = store.schedules.filter(
     (schedule) =>
       (selectedDay === "all" || schedule.dayOfWeek === selectedDay) &&
       (schedule.class.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -57,12 +32,17 @@ const ScheduleManagementPage = () => {
   )
 
   const handleInputChange = (e) => {
-    setNewSchedule({ ...newSchedule, [e.target.name]: e.target.value })
+    const { name, value } = e.target
+    if (editingSchedule) {
+      setEditingSchedule({ ...editingSchedule, [name]: value })
+    } else {
+      setNewSchedule({ ...newSchedule, [name]: value })
+    }
   }
 
   const handleAddSchedule = (e) => {
     e.preventDefault()
-    setSchedules([...schedules, { id: schedules.length + 1, ...newSchedule }])
+    actions.addSchedule(newSchedule)
     setNewSchedule({
       class: "",
       teacher: "",
@@ -74,8 +54,24 @@ const ScheduleManagementPage = () => {
     })
   }
 
+  const handleEditSchedule = (schedule) => {
+    setEditingSchedule(schedule)
+    setIsModalOpen(true)
+  }
+
+  const handleUpdateSchedule = (e) => {
+    e.preventDefault()
+    actions.updateSchedule(editingSchedule.id, editingSchedule)
+    setIsModalOpen(false)
+    setEditingSchedule(null)
+  }
+
   const handleDeleteSchedule = (id) => {
-    setSchedules(schedules.filter((schedule) => schedule.id !== id))
+    actions.deleteSchedule(id)
+  }
+ const handleListScheduleModal = (schedule) => {
+    setEditingSchedule(schedule)
+    setIsModalOpen(true)
   }
 
   return (
@@ -96,10 +92,23 @@ const ScheduleManagementPage = () => {
               handleInputChange={handleInputChange}
               handleAddSchedule={handleAddSchedule}
             />
-            <SchedulesTable filteredSchedules={filteredSchedules} handleDeleteSchedule={handleDeleteSchedule} />
+            <SchedulesTable
+              filteredSchedules={filteredSchedules}
+              handleDeleteSchedule={handleDeleteSchedule}
+              handleEditSchedule={handleEditSchedule}
+              handleListScheduleModal={handleListScheduleModal}
+            />
           </div>
         </main>
       </div>
+      {isModalOpen && (
+        <EditScheduleModal
+          editingSchedule={editingSchedule}
+          handleInputChange={handleInputChange}
+          handleUpdateSchedule={handleUpdateSchedule}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
     </div>
   )
 }
@@ -220,7 +229,7 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule }) 
   </form>
 )
 
-const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule }) => (
+const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSchedule,handleListScheduleModal }) => (
   <table className="tw-w-full">
     <thead className="tw-bg-gray-50">
       <tr>
@@ -267,10 +276,13 @@ const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule }) => (
             </span>
           </td>
           <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap tw-text-sm tw-font-medium">
-            <button className="tw-text-indigo-600 hover:tw-text-indigo-900 tw-mr-2">
+            <button
+              className="tw-text-indigo-600 hover:tw-text-indigo-900 tw-mr-2"
+              onClick={() => handleEditSchedule(schedule)}
+            >
               <Edit className="tw-w-5 tw-h-5" />
             </button>
-            <button className="tw-text-indigo-600 hover:tw-text-indigo-900 tw-mr-2">
+            <button className="tw-text-indigo-600 hover:tw-text-indigo-900 tw-mr-2" onClick={() => handleListScheduleModal(schedule)}>
               <List className="tw-w-5 tw-h-5" />
             </button>
             <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteSchedule(schedule.id)}>
@@ -282,6 +294,141 @@ const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule }) => (
     </tbody>
   </table>
 )
+
+const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSchedule, setIsModalOpen }) => (
+  <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
+    <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
+      <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
+        <h3 className="tw-text-xl tw-font-semibold">Editar Horario</h3>
+        <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
+          <X className="tw-w-6 tw-h-6" />
+        </button>
+      </div>
+      <form onSubmit={handleUpdateSchedule} className="tw-space-y-4">
+        <div>
+          <label htmlFor="class" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
+            Clase
+          </label>
+          <input
+            type="text"
+            name="class"
+            id="class"
+            value={editingSchedule.class}
+            onChange={handleInputChange}
+            className="tw-mt-1 tw-block tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-py-2 tw-px-3 focus:tw-outline-none focus:tw-ring-indigo-500 focus:tw-border-indigo-500"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="teacher" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
+            Profesor
+          </label>
+          <input
+            type="text"
+            name="teacher"
+            id="teacher"
+            value={editingSchedule.teacher}
+            onChange={handleInputChange}
+            className="tw-mt-1 tw-block tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-py-2 tw-px-3 focus:tw-outline-none focus:tw-ring-indigo-500 focus:tw-border-indigo-500"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="dayOfWeek" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
+            Día de la semana
+          </label>
+          <select
+            name="dayOfWeek"
+            id="dayOfWeek"
+            value={editingSchedule.dayOfWeek}
+            onChange={handleInputChange}
+            className="tw-mt-1 tw-block tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-py-2 tw-px-3 focus:tw-outline-none focus:tw-ring-indigo-500 focus:tw-border-indigo-500"
+            required
+          >
+            {daysOfWeek.map((day) => (
+              <option key={day} value={day}>
+                {day}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="startTime" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
+            Hora de inicio
+          </label>
+          <input
+            type="time"
+            name="startTime"
+            id="startTime"
+            value={editingSchedule.startTime}
+            onChange={handleInputChange}
+            className="tw-mt-1 tw-block tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-py-2 tw-px-3 focus:tw-outline-none focus:tw-ring-indigo-500 focus:tw-border-indigo-500"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="endTime" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
+            Hora de fin
+          </label>
+          <input
+            type="time"
+            name="endTime"
+            id="endTime"
+            value={editingSchedule.endTime}
+            onChange={handleInputChange}
+            className="tw-mt-1 tw-block tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-py-2 tw-px-3 focus:tw-outline-none focus:tw-ring-indigo-500 focus:tw-border-indigo-500"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="capacity" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
+            Capacidad
+          </label>
+          <input
+            type="number"
+            name="capacity"
+            id="capacity"
+            value={editingSchedule.capacity}
+            onChange={handleInputChange}
+            className="tw-mt-1 tw-block tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-py-2 tw-px-3 focus:tw-outline-none focus:tw-ring-indigo-500 focus:tw-border-indigo-500"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="enrolled" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
+            Inscritos
+          </label>
+          <input
+            type="number"
+            name="enrolled"
+            id="enrolled"
+            value={editingSchedule.enrolled}
+            onChange={handleInputChange}
+            className="tw-mt-1 tw-block tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-py-2 tw-px-3 focus:tw-outline-none focus:tw-ring-indigo-500 focus:tw-border-indigo-500"
+            required
+          />
+        </div>
+        <div className="tw-flex tw-justify-end tw-space-x-3">
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(false)}
+            className="tw-bg-gray-200 tw-text-gray-700 tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-gray-300"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
+          >
+            Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)
+
+
 
 export default ScheduleManagementPage
 

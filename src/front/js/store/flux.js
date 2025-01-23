@@ -23,6 +23,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			programs: [],
 			// admin dashboard store
 			clients: [],
+			schedules: [],
 		},
 		actions: {
 			signUp: async (username, email, password) => {
@@ -157,15 +158,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			
-
-
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
 			},
-
-
-
 			
 			getinTouch: async (name, email, subject, phone_number, message) => {
 				try {
@@ -328,7 +324,132 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 	
-
+			// Schedules
+			GetSchedules: async () => {
+				try {
+				const response = await fetch(process.env.BACKEND_URL + "/api/schedules")
+				if (response.ok) {
+					const data = await response.json()
+					setStore({ schedules: data })
+	
+					// Si la base de datos está vacía, cargar datos iniciales
+					if (data.length === 0) {
+					getActions().loadInitialSchedulesData()
+					}
+				} else {
+					console.error("Error fetching schedules:", response.status)
+				}
+				} catch (error) {
+				console.error("Error fetching schedules:", error)
+				}
+			},
+	
+			loadInitialSchedulesData: async () => {
+				const initialSchedules = [
+				{
+					class: "Arte y Creatividad",
+					teacher: "María García",
+					dayOfWeek: "Lunes",
+					startTime: "09:00",
+					endTime: "10:30",
+					capacity: 15,
+					enrolled: 12,
+				},
+				{
+					class: "Música y Movimiento",
+					teacher: "Juan Pérez",
+					dayOfWeek: "Martes",
+					startTime: "11:00",
+					endTime: "12:30",
+					capacity: 20,
+					enrolled: 18,
+				},
+				{
+					class: "Juegos Educativos",
+					teacher: "Ana Rodríguez",
+					dayOfWeek: "Miércoles",
+					startTime: "14:00",
+					endTime: "15:30",
+					capacity: 12,
+					enrolled: 10,
+				},
+				]
+	
+				try {
+				for (const schedule of initialSchedules) {
+					await getActions().addSchedule(schedule)
+				}
+				} catch (error) {
+				console.error("Error loading initial schedules data:", error)
+				}
+			},
+	
+			addSchedule: async (scheduleData) => {
+				try {
+				const response = await fetch(process.env.BACKEND_URL + "/api/schedules", {
+					method: "POST",
+					headers: {
+					"Content-Type": "application/json",
+					},
+					body: JSON.stringify(scheduleData),
+				})
+	
+				if (response.ok) {
+					const newSchedule = await response.json()
+					const store = getStore()
+					setStore({ schedules: [...store.schedules, newSchedule] })
+					return newSchedule
+				} else {
+					console.error("Error adding schedule:", response.status)
+				}
+				} catch (error) {
+				console.error("Error adding schedule:", error)
+				}
+			},
+	
+			updateSchedule: async (id, scheduleData) => {
+				try {
+				const response = await fetch(`${process.env.BACKEND_URL}/api/schedules/${id}`, {
+					method: "PUT",
+					headers: {
+					"Content-Type": "application/json",
+					},
+					body: JSON.stringify(scheduleData),
+				})
+	
+				if (response.ok) {
+					const updatedSchedule = await response.json()
+					const store = getStore()
+					const updatedSchedules = store.schedules.map((schedule) =>
+					schedule.id === id ? updatedSchedule : schedule,
+					)
+					setStore({ schedules: updatedSchedules })
+					return updatedSchedule
+				} else {
+					console.error("Error updating schedule:", response.status)
+				}
+				} catch (error) {
+				console.error("Error updating schedule:", error)
+				}
+			},
+	
+			deleteSchedule: async (id) => {
+				try {
+				const response = await fetch(`${process.env.BACKEND_URL}/api/schedules/${id}`, {
+					method: "DELETE",
+				})
+	
+				if (response.ok) {
+					const store = getStore()
+					const updatedSchedules = store.schedules.filter((schedule) => schedule.id !== id)
+					setStore({ schedules: updatedSchedules })
+				} else {
+					console.error("Error deleting schedule:", response.status)
+				}
+				} catch (error) {
+				console.error("Error deleting schedule:", error)
+				}
+			},
 		}
 	};
 };
