@@ -122,7 +122,7 @@ export const Signup = () => {
 
         const response = await actions.signUp(signupData)
         if (response.success) {
-          navigate("/dashboard")
+          navigate("/login")
         } else {
           setSignupError(response.error || "Signup failed. Please try again.")
         }
