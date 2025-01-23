@@ -13,7 +13,7 @@ export const Signup = () => {
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
   const [signupError, setSignupError] = useState("")
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(null) // Added state for uploaded image URL
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null) 
 
   const [formData, setFormData] = useState({
     username: "",
@@ -62,7 +62,7 @@ export const Signup = () => {
       setSignupError("Passwords do not match")
       return false
     }
-    // Add more validation as needed
+    
     return true
   }
 

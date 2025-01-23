@@ -17,7 +17,7 @@ useEffect(() => {
 			<Hero />
 			<Aday/>
 			<Classes />
-			<FileUploader />
+			{/* <FileUploader /> */}
 			<Getintouch />
 		</div>
 	);
