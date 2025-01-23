@@ -1,10 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
-import { BookOpen } from 'lucide-react';
-import book from "../../img/books.png";
-import littleexplorers from "../../img/little-explorers.jpg";
-import dancing from "../../img/dancing.jpg";
-import Scientists from "../../img/LittleScientist.jpg";
 import kids4C from "../../img/kids4C.png";
 import { useNavigate } from 'react-router-dom';
 import { defaultPrograms } from "./Programs.jsx"
@@ -13,11 +8,28 @@ export const Allprograms = () => {
     const navigate = useNavigate();
     const { store, actions } = useContext(Context);
 
+    const [selectedAge, setSelectedAge] = useState("");
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
     const allPrograms = [...defaultPrograms, ...(store.programs || [])];
 
     useEffect(() => {
         actions.getPrograms();
     }, [actions]);
+
+    const uniqueAges = [...new Set(allPrograms.map((program) => program.age))];
+
+    const filteredPrograms = allPrograms.filter((program) =>
+        selectedAge ? program.age === selectedAge : true
+    );
+
+    const toggleDropdown = () => {
+        setIsDropdownOpen((prev) => !prev);
+    };
+
+    const handleAgeChange = (e) => {
+        setSelectedAge(e.target.value);
+    };
 
     return (
         <div className="tw-container tw-mx-auto tw-px-4 tw-text-center tw-mb-12">
@@ -38,8 +50,40 @@ export const Allprograms = () => {
                 <br />
             </h3>
 
+            <div className="tw-relative tw-inline-block tw-text-left tw-mb-6">
+                <button
+                    className="tw-py-2 tw-px-4 tw-bg-[#FFC909] tw-text-[#9C29B2] tw-font-bold tw-rounded-full hover:tw-bg-[#FFE57A] tw-transition-colors"
+                    onClick={toggleDropdown}
+                >
+                    Filter by Age ▼
+                </button>
+
+                {isDropdownOpen && (
+                    <div className="tw-absolute tw-right-0 tw-mt-2 tw-w-56 tw-bg-white tw-shadow-lg tw-rounded-lg tw-z-10">
+                        <div className="tw-p-4">
+                            <label className="tw-block tw-mb-3">
+                                <span className="tw-text-sm tw-font-bold tw-text-[#9C29B2]">Select Age:</span>
+                                <select
+                                    value={selectedAge}
+                                    onChange={handleAgeChange}
+                                    className="tw-w-full tw-p-2 tw-border tw-rounded-lg tw-mt-1"
+                                >
+                                    <option value="">All</option>
+                                    {uniqueAges.map((age) => (
+                                        <option key={age} value={age}>
+                                            {age}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Tarjetas filtradas */}
             <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6">
-                {allPrograms.map((programItem) => (
+                {filteredPrograms.map((programItem) => (
                     <div
                         key={programItem.id}
                         className="tw-bg-white tw-rounded-3xl tw-overflow-hidden tw-shadow-lg tw-border tw-border-[#9C29B2]"
@@ -59,32 +103,17 @@ export const Allprograms = () => {
                                 {programItem.name}
                             </h3>
                             <p className="tw-text-sm tw-mb-4 tw-text-[#555] tw-opacity-90 tw-text-left">
-                                <span className="tw-font-bold tw-text-[#9C29B2]">Description:</span>{" "}
-                                {programItem.description}
+                                <span className="tw-font-bold tw-text-[#9C29B2]">Description:</span> {programItem.description}
                             </p>
-
-                            {/* Etiquetas */}
-                            <div className="tw-flex tw-justify-between tw-items-center tw-gap-4 tw-my-5">
-                                <div className="tw-flex tw-items-center tw-bg-gradient-to-r tw-from-[#FFC909] tw-to-[#FFE57A] tw-px-3 tw-py-2 tw-rounded-lg tw-shadow-md">
-                                    <span className="tw-text-[#9C29B2] tw-font-bold tw-mr-2">
-                                        <i className="fas fa-baby tw-mr-1"></i> Age:
-                                    </span>
-                                    <span className="tw-text-sm tw-text-[#555] tw-font-bold">{programItem.age}</span>
-                                </div>
-                                <div className="tw-flex tw-items-center tw-bg-gradient-to-r tw-from-[#FFC909] tw-to-[#FFE57A] tw-px-3 tw-py-2 tw-rounded-lg tw-shadow-md">
-                                    <span className="tw-text-[#9C29B2] tw-font-bold tw-mr-2">
-                                        <i className="fas fa-clock tw-mr-1"></i> Time:
-                                    </span>
-                                    <span className="tw-text-sm tw-text-[#555] tw-font-bold">{programItem.time}</span>
-                                </div>
-                                <div className="tw-flex tw-items-center tw-bg-gradient-to-r tw-from-[#FFC909] tw-to-[#FFE57A] tw-px-3 tw-py-2 tw-rounded-lg tw-shadow-md">
-                                    <span className="tw-text-[#9C29B2] tw-font-bold tw-mr-2">
-                                        <i className="fas fa-users tw-mr-1"></i> Capacity:
-                                    </span>
-                                    <span className="tw-text-sm tw-text-[#555] tw-font-bold">{programItem.capacity}</span>
-                                </div>
-                            </div>
-
+                            <p className="tw-text-sm tw-mb-2 tw-text-[#555] tw-text-left">
+                                <span className="tw-font-bold tw-text-[#9C29B2]">Age:</span> {programItem.age}
+                            </p>
+                            <p className="tw-text-sm tw-mb-2 tw-text-[#555] tw-text-left">
+                                <span className="tw-font-bold tw-text-[#9C29B2]">Time:</span> {programItem.time}
+                            </p>
+                            <p className="tw-text-sm tw-mb-4 tw-text-[#555] tw-text-left">
+                                <span className="tw-font-bold tw-text-[#9C29B2]">Capacity:</span> {programItem.capacity}
+                            </p>
                             <button className="tw-w-full tw-py-2 tw-border tw-border-[#FFC909] tw-rounded-full tw-bg-[#FFC909] tw-text-[#9C29B2] tw-font-bold hover:tw-bg-[#FFE57A] tw-transition-colors">
                                 Read more
                             </button>
