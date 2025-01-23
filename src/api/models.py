@@ -443,3 +443,25 @@ class Schedule(db.Model):
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat()
         }
+
+class Email(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    to = db.Column(db.String(120), nullable=False)
+    subject = db.Column(db.String(120), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    scheduled_date = db.Column(db.DateTime, nullable=True)
+
+    def __repr__(self):
+        return f'<Email {self.subject}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "to": self.to,
+            "subject": self.subject,
+            "content": self.content,
+            "date": self.date.isoformat(),
+            "scheduledDate": self.scheduled_date.isoformat() if self.scheduled_date else None
+        }
+    

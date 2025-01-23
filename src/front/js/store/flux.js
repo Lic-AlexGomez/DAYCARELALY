@@ -24,6 +24,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// admin dashboard store
 			clients: [],
 			schedules: [],
+			emails:[],
+			scheduledEmails:[],
 		},
 		actions: {
 			signUp: async (username, email, password) => {
@@ -450,6 +452,72 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.error("Error deleting schedule:", error)
 				}
 			},
+
+			//Email
+			GetEmails: async () => {
+				try {
+				  const response = await fetch(process.env.BACKEND_URL + "/api/emails")
+				  if (response.ok) {
+					const data = await response.json()
+					console.log(data);
+					const emails = data.filter((email) => !email.scheduledDate)
+					const scheduledEmails = data.filter((email) => email.scheduledDate)
+					setStore({ emails, scheduledEmails })
+				  } else {
+					console.error("Error fetching emails:", response.status)
+				  }
+				} catch (error) {
+				  console.error("Error fetching emails:", error)
+				}
+			  },
+			
+			  sendEmail: async (emailData) => {
+				console.log(emailData);
+				try {
+				  const response = await fetch(process.env.BACKEND_URL + "/api/emails", {
+					method: "POST",
+					headers: {
+					  "Content-Type": "application/json",
+					},
+					body: JSON.stringify(emailData),
+				  })
+		
+				  if (response.ok) {
+					const newEmail = await response.json()
+					const store = getStore()
+					if (newEmail.scheduledDate) {
+					  setStore({ scheduledEmails: [...store.scheduledEmails, newEmail] })
+					} else {
+					  setStore({ emails: [...store.emails, newEmail] })
+					}
+					return newEmail
+				  } else {
+					console.error("Error sending email:", response.status)
+				  }
+				} catch (error) {
+				  console.error("Error sending email:", error)
+				}
+			  },
+		
+			  deleteEmail: async (id) => {
+				try {
+				  const response = await fetch(`${process.env.BACKEND_URL}/api/emails/${id}`, {
+					method: "DELETE",
+				  })
+					
+		
+				  if (response.ok) {
+					const store = getStore()
+					const updatedEmails = store.emails.filter((email) => email.id !== id)
+					const updatedScheduledEmails = store.scheduledEmails.filter((email) => email.id !== id)
+					setStore({ emails: updatedEmails, scheduledEmails: updatedScheduledEmails })
+				  } else {
+					console.error("Error deleting email:", response.status)
+				  }
+				} catch (error) {
+				  console.error("Error deleting email:", error)
+				}
+			  },
 		}
 	};
 };
