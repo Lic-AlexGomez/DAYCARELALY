@@ -1,10 +1,11 @@
 import cloudinary
 from flask import Flask, request, jsonify, Blueprint,current_app
-from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification,Getintouch, Client
+from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification,Getintouch, Client, Email
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from flask_bcrypt import Bcrypt
+from datetime import datetime
 
 api = Blueprint('api', __name__)
 CORS(api, resources={r"/api/*": {"origins": "*"}})
@@ -535,4 +536,34 @@ def delete_schedule(id):
     db.session.delete(schedule)
     db.session.commit()
     return jsonify({"message": "Schedule deleted successfully"}), 200
+
+@api.route('/emails', methods=['GET'])
+def get_emails():
+    emails = Email.query.all()
+    return jsonify([email.serialize() for email in emails]), 200
+
+@api.route('/emails', methods=['POST'])
+def create_email():
+    data = request.json
+    if data.get('scheduledDate'):
+        data['scheduledDate'] = datetime.fromisoformat(data['scheduledDate'])
+    new_email = Email(
+        to=data['to'],
+        subject=data['subject'],
+        content=data['content'],
+        date=datetime.now(),
+        scheduled_date=data.get('scheduledDate')
+    )
+    db.session.add(new_email)
+    db.session.commit()
+    return jsonify(new_email.serialize()), 201
+
+@api.route('/emails/<int:id>', methods=['DELETE'])
+def delete_email(id):
+    email = Email.query.get(id)
+    if email is None:
+        return jsonify({"error": "Email not found"}), 404
+    db.session.delete(email)
+    db.session.commit()
+    return jsonify({"message": "Email deleted successfully"}), 200
 
