@@ -105,8 +105,8 @@ const {actions,store} = useContext(Context)
                     </label>
                     <label className="tw-block tw-mb-12">
                         <span className="EventSelection tw-mb-2 ">Event Selection:</span>
-                        <select className="input-fullName tw-w-full tw-p-4 tw-border tw-rounded tw-text-white" name="events_selection" value={dataForm.events_selection} onChange={handleChangeFormEvents}>
-                            <option className="tw" value="Select Event">Select Event</option>
+                        <select className="input-fullName tw-w-full tw-p-4 tw-border tw-rounded tw-text-white events_selection" name="events_selection" value={dataForm.events_selection} onChange={handleChangeFormEvents}>
+                            <option value="Select Event">Select Event</option>
                             <option value="Skill Games">Skill Games</option>
                             <option value="Puppet Theater">Puppet Theater</option>
                             <option value="Halloween Party">Halloween Party</option>

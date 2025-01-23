@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
+
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -491,6 +493,7 @@ class Email(db.Model):
             "scheduledDate": self.scheduled_date.isoformat() if self.scheduled_date else None
         }
 
+
 class Eventsuscriptions(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(120), nullable=False)
@@ -511,3 +514,25 @@ class Eventsuscriptions(db.Model):
             "special_request": self.special_request,
             
         }
+    
+class Video(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120), nullable=False)
+    url = db.Column(db.String(200), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Video {self.title}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "url": self.url,
+            "user_id": self.user_id,
+            "createdAt": self.created_at.isoformat(),
+            "updatedAt": self.updated_at.isoformat()
+        }
+

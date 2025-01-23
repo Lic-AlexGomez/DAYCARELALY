@@ -1,14 +1,14 @@
-import os, cloudinary,cloudinary.uploader
+import cloudinary,os
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
 from flask import Flask, request, jsonify, Blueprint, current_app
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email,Eventsuscriptions
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions
+from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash
-
-
-
 
 api = Blueprint('api', __name__)
 CORS(api, resources={r"/api/*": {"origins": "*"}})
@@ -18,7 +18,6 @@ cloudinary.config(
     api_secret = os.environ.get("CLOUDINARY_API_SECRET"), 
     
 )
-
 bcrypt = Bcrypt()
 jwt = JWTManager()
 
@@ -423,9 +422,6 @@ def upload_file():
             "message": "File uploaded successfully",
             "url": upload_result['secure_url']
         }), 200
-  
-
-
 
 @api.route('/newsletter', methods=['POST'])
 def create_newsletter():
@@ -628,4 +624,39 @@ def new_suscriptor_event():
     db.session.add(new_event_suscriptor)
     db.session.commit()
     return jsonify(new_event_suscriptor.serialize()), 201
+
+@api.route('/videos', methods=['GET'])
+def get_videos():
+    videos = Video.query.all()
+    return jsonify([video.serialize() for video in videos]), 200
+
+@api.route('/videos', methods=['POST'])
+def upload_video():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    
+    if file:
+        upload_result = upload(file, resource_type="video")
+        new_video = Video(
+            title=request.form.get('title'),
+            url=upload_result['secure_url'],
+            user_id=1  # Replace with appropriate user ID or remove if not required
+        )
+        db.session.add(new_video)
+        db.session.commit()
+        return jsonify(new_video.serialize()), 201
+
+@api.route('/videos/<int:id>', methods=['DELETE'])
+# @jwt_required()
+def delete_video(id):
+    video = Video.query.get(id)
+    if video is None:
+        return jsonify({"error": "Video not found"}), 404
+    
+    db.session.delete(video)
+    db.session.commit()
+    return jsonify({"message": "Video deleted successfully"}), 200
 

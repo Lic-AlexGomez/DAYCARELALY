@@ -25,3 +25,7 @@
     border-radius: 5px;
     color:black
  } 
+ .events_selection option{
+    background-color: #9C29B2;
+    color: #FFC909;                                                                                                         
+ }

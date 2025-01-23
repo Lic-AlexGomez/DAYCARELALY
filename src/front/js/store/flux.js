@@ -25,6 +25,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		schedules: [],
 		emails: [],
 		scheduledEmails: [],
+		videos: [],
 	  },
 	  actions: {
 		signUp: async (userData) => {
@@ -197,28 +198,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			return { success: false, error: error.message }
 		  }
 		},
-		formEvent: async (full_name, events_selection, parent_name,special_request) => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/eventsuscription", {
-				method: "POST",
-				headers: {
-				  "Content-Type": "application/json",
-				},
-				body: JSON.stringify({ full_name,events_selection, parent_name, special_request }),
-			  })
-	
-			  if (!response.ok) {
-				const errorData = await response.json()
-				throw new Error(errorData.error || "Failed to send message")
-			  }
-	
-			  const data = await response.json()
-			  return { success: true, data }
-			} catch (error) {
-			  console.error("form event Error:", error.message)
-			  return { success: false, error: error.message }
-			}
-		  },
+
 		getPrograms: async () => {
 		  try {
 			const response = await fetch(process.env.BACKEND_URL + "/api/programs")
@@ -527,6 +507,79 @@ const getState = ({ getStore, getActions, setStore }) => {
 			console.error("Error deleting email:", error)
 		  }
 		},
+		fetchVideos: async () => {
+		  try {
+			const response = await fetch(process.env.BACKEND_URL + "/api/videos")
+			if (response.ok) {
+			  const data = await response.json()
+			  setStore({ videos: data })
+			} else {
+			  console.error("Error fetching videos:", response.status)
+			}
+		  } catch (error) {
+			console.error("Error fetching videos:", error)
+		  }
+		},
+  
+		uploadVideo: async (formData) => {
+		  try {
+			const response = await fetch(process.env.BACKEND_URL + "/api/videos", {
+			  method: "POST",
+			  body: formData,
+			})
+  
+			if (response.ok) {
+			  const data = await response.json()
+			  return { success: true, data }
+			} else {
+			  const errorData = await response.json()
+			  return { success: false, error: errorData.error || "Failed to upload video" }
+			}
+		  } catch (error) {
+			console.error("Error uploading video:", error)
+			return { success: false, error: error.message }
+		  }
+		},
+  
+		deleteVideo: async (id) => {
+		  try {
+			const response = await fetch(`${process.env.BACKEND_URL}/api/videos/${id}`, {
+			  method: "DELETE",
+			})
+  
+			if (response.ok) {
+			  return { success: true }
+			} else {
+			  const errorData = await response.json()
+			  return { success: false, error: errorData.error || "Failed to delete video" }
+			}
+		  } catch (error) {
+			console.error("Error deleting video:", error)
+			return { success: false, error: error.message }
+		  }
+		},
+			formEvent: async (full_name, events_selection, parent_name,special_request) => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/eventsuscription", {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify({ full_name,events_selection, parent_name, special_request }),
+			  })
+
+			  if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || "Failed to send message")
+			  }
+
+			  const data = await response.json()
+			  return { success: true, data }
+			} catch (error) {
+			  console.error("form event Error:", error.message)
+			  return { success: false, error: error.message }
+			}
+		  },
 	  },
 	}
   }
