@@ -3,8 +3,25 @@ import { Context } from "../store/appContext";
 import kids4C from "../../img/kids4C.png";
 import { useNavigate } from 'react-router-dom';
 import { defaultPrograms } from "./Programs.jsx"
+import ProgramModal from "../component/ProgramsModal.jsx";
+import LittleScientists from "../../img/LittleScientist.jpg"
 
 export const Allprograms = () => {
+
+    const [isModalOpen, setIsModalOpen] = useState(true); 
+
+  const closeModal = () => setIsModalOpen(false);  
+  const program = {
+    name: "Program 1",
+    image: LittleScientists,
+    description: "This is a sample description",
+    age: "3-5 years",
+    time: "9:00 AM - 12:00 PM",
+    capacity: 20,
+    price: "$100"
+  };
+
+
     const navigate = useNavigate();
     const { store, actions } = useContext(Context);
 
@@ -33,6 +50,13 @@ export const Allprograms = () => {
 
     return (
         <div className="tw-container tw-mx-auto tw-px-4 tw-text-center tw-mb-12">
+
+<div>
+<ProgramModal program={program} isOpen={isModalOpen} onClose={closeModal} />
+</div>
+
+
+
     <div className="tw-relative tw-inline-block tw-py-4">
         <h2
             className="tw-text-4xl tw-font-extrabold tw-text-transparent tw-bg-clip-text tw-bg-gradient-to-r tw-from-[#9C29B2] tw-to-[#FFC909]"
