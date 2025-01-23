@@ -118,10 +118,6 @@ const ScheduleManagementPage = () => {
 const Header = () => (
   <header className="tw-flex tw-items-center tw-justify-between tw-p-4 tw-border-b">
     <h1 className="tw-text-2xl tw-font-bold">Gestión de Horarios</h1>
-    <div className="tw-flex tw-items-center">
-      <span className="tw-mr-2">Usuario</span>
-      <div className="tw-w-8 tw-h-8 tw-bg-gray-300 tw-rounded-full"></div>
-    </div>
   </header>
 )
 
