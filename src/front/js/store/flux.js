@@ -198,6 +198,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 			return { success: false, error: error.message }
 		  }
 		},
+		formEvent: async (full_name, events_selection, parent_name,special_request) => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/eventsuscription", {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify({ full_name,events_selection, parent_name, special_request }),
+			  })
+
+			  if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || "Failed to send message")
+			  }
+
+			  const data = await response.json()
+			  return { success: true, data }
+			} catch (error) {
+			  console.error("form event Error:", error.message)
+			  return { success: false, error: error.message }
+			}
+		  },
 		getPrograms: async () => {
 		  try {
 			const response = await fetch(process.env.BACKEND_URL + "/api/programs")
