@@ -207,6 +207,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return { success: false, error: error.message };
 				}
 			},
+			formEvents: async (full_name,event_selection, parent_name,special_request) => {
+				try {
+					const response = await fetch(process.env.BACKEND_URL + "/api/formevents", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ full_name,event_selection, parent_name,special_request }),
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(errorData.error || "Failed to send message");
+					}
+			
+					const data = await response.json();
+					return { success: true, data };
+				} catch (error) {
+					console.error("Form Error:", error.message);
+					return { success: false, error: error.message };
+				}
+			},
 			getPrograms: async () => {
 				try {
 					const response = await fetch(process.env.BACKEND_URL + "/api/programs");
