@@ -37,7 +37,6 @@ const Login = () => {
             const result = await actions.login(dataLogin.email, dataLogin.password);
 
             if (result) {
-                console.log("Login successful");
                 const { role } = result.user;  
                 
                 if (role === 'admin' || role === 'Admin' ) {
