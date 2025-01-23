@@ -1,7 +1,16 @@
-import React from "react";
+import React,{useContext,useState} from "react";
+import { Context } from "../store/appContext";
 import '../../styles/ConfirmAttendance.css'
 
+
 const ConfirmAttendance = () => {
+const {actions,store} = useContext(Context)
+ const[dataForm,SetDataForm]=useState({
+     full_name:"",
+     event_selection:"",
+     
+ })
+
     return (
         <div className="tw-bg-[#FFC909]  tw-flex tw-flex-col tw-justify-center tw-items-center">
             <h1 className="title-confirmAttendance tw-text-2xl tw-font-bold tw-pt-20 tw-pb-10 ">
