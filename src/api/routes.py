@@ -1,6 +1,6 @@
 import cloudinary
-from flask import Flask, request, jsonify, Blueprint
-from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification,Getintouch
+from flask import Flask, request, jsonify, Blueprint,current_app
+from api.models import db, Newsletter,User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification,Getintouch, Client
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
@@ -424,3 +424,57 @@ def create_contactus():
     db.session.add(new_contactus)
     db.session.commit()
     return jsonify(new_contactus.serialize()), 201
+
+
+
+# Admin Dashboard routes
+@api.route('/clients', methods=['GET'])
+def get_clients():
+    clients = Client.query.all()
+    return jsonify(list(map(lambda x: x.serialize(), clients))), 200
+
+@api.route('/clients', methods=['POST'])
+def create_client():
+    data = request.json
+    new_client = Client(
+        name=data['name'],
+        email=data['email'],
+        phone=data['phone'],
+        status=data.get('status', 'Activo')
+    )
+    db.session.add(new_client)
+    db.session.commit()
+    return jsonify(new_client.serialize()), 201
+
+@api.route('/clients/<int:id>', methods=['GET'])
+def get_client(id):
+    client = Client.query.get(id)
+    if client is None:
+        return jsonify({"error": "Client not found"}), 404
+    return jsonify(client.serialize()), 200
+
+@api.route('/clients/<int:id>', methods=['PUT'])
+def update_client(id):
+    client = Client.query.get(id)
+    if client is None:
+        return jsonify({"error": "Client not found"}), 404
+    
+    data = request.json
+    client.name = data.get('name', client.name)
+    client.email = data.get('email', client.email)
+    client.phone = data.get('phone', client.phone)
+    client.status = data.get('status', client.status)
+    
+    db.session.commit()
+    return jsonify(client.serialize()), 200
+
+@api.route('/clients/<int:id>', methods=['DELETE'])
+def delete_client(id):
+
+    client = Client.query.get(id)
+    if client is None:
+        return jsonify({"error": "Client not found"}), 404
+    
+    db.session.delete(client)
+    db.session.commit()
+    return jsonify({"message": "Client deleted successfully"}), 200

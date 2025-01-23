@@ -21,6 +21,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			error: null,
 			classes: [],
 			programs: [],
+			// admin dashboard store
+			clients: [],
 		},
 		actions: {
 			signUp: async (username, email, password) => {
@@ -221,7 +223,112 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error("Error fetching programs:", error);
 				}
-			}
+			},
+
+			// Admin Dashboard actions
+
+			// Clients
+			GetClients: async () => {
+				try {
+				const response = await fetch(process.env.BACKEND_URL + "/api/clients")
+				if (response.ok) {
+					const data = await response.json()
+					setStore({ clients: data })
+					
+					// If the database is empty, load initial data
+					if (data.length === 0) {
+					getActions().loadInitialClientsData()
+					}
+				} else {
+					console.error("Error fetching clients:", response.status)
+				}
+				} catch (error) {
+				console.error("Error fetching clients:", error)
+				}
+			},
+	
+			loadInitialClientsData: async () => {
+				const initialClients = [
+				{ name: "Juan Pérez", email: "juan@example.com", phone: "123-456-7890", status: "Activo" },
+				{ name: "María García", email: "maria@example.com", phone: "098-765-4321", status: "Inactivo" },
+				{ name: "Carlos Rodríguez", email: "carlos@example.com", phone: "555-555-5555", status: "Activo" },
+				]
+	
+				try {
+				for (const client of initialClients) {
+					await getActions().addClient(client)
+				}
+				} catch (error) {
+				console.error("Error loading initial clients data:", error)
+				}
+			},
+	
+			addClient: async (clientData) => {
+				try {
+				const response = await fetch(process.env.BACKEND_URL + "/api/clients", {
+					method: "POST",
+					headers: {
+					"Content-Type": "application/json",
+					},
+					body: JSON.stringify(clientData),
+				})
+	
+				if (response.ok) {
+					const newClient = await response.json()
+					const store = getStore()
+					setStore({ clients: [...store.clients, newClient] })
+					return newClient
+				} else {
+					console.error("Error adding client:", response.status)
+				}
+				} catch (error) {
+				console.error("Error adding client:", error)
+				}
+			},
+	
+			updateClient: async (id, clientData) => {
+				try {
+				const response = await fetch(`${process.env.BACKEND_URL}/api/clients/${id}`, {
+					method: "PUT",
+					headers: {
+					"Content-Type": "application/json",
+					},
+					body: JSON.stringify(clientData),
+				})
+	
+				if (response.ok) {
+					const updatedClient = await response.json()
+					const store = getStore()
+					const updatedClients = store.clients.map((client) => (client.id === id ? updatedClient : client))
+					setStore({ clients: updatedClients })
+					return updatedClient
+				} else {
+					console.error("Error updating client:", response.status)
+				}
+				} catch (error) {
+				console.error("Error updating client:", error)
+				}
+			},
+	
+			deleteClient: async (id) => {
+				try {
+				const response = await fetch(`${process.env.BACKEND_URL}/api/clients/${id}`, {
+					method: "DELETE",
+				})
+	
+				if (response.ok) {
+					const store = getStore()
+					const updatedClients = store.clients.filter((client) => client.id !== id)
+					setStore({ clients: updatedClients })
+				} else {
+					console.error("Error deleting client:", response.status)
+				}
+				} catch (error) {
+				console.error("Error deleting client:", error)
+				}
+			},
+	
+
 		}
 	};
 };
