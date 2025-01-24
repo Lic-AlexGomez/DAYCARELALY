@@ -26,6 +26,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		emails: [],
 		scheduledEmails: [],
 		videos: [],
+		inactiveAccounts: [],
 	  },
 	  actions: {
 		signUp: async (userData) => {
@@ -577,6 +578,79 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  return { success: true, data }
 			} catch (error) {
 			  console.error("form event Error:", error.message)
+			  return { success: false, error: error.message }
+			}
+		  },
+		  fetchInactiveAccounts: async () => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/inactive-accounts")
+			  if (response.ok) {
+				const data = await response.json()
+				setStore({ inactiveAccounts: data })
+			  } else {
+				console.error("Error fetching inactive accounts:", response.status)
+			  }
+			} catch (error) {
+			  console.error("Error fetching inactive accounts:", error)
+			}
+		  },
+	
+		  reactivateAccount: async (id) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}/reactivate`, {
+				method: "POST",
+			  })
+			  if (response.ok) {
+				const updatedAccount = await response.json()
+				const store = getStore()
+				const updatedAccounts = store.inactiveAccounts.map((account) =>
+				  account.id === id ? updatedAccount : account,
+				)
+				setStore({ inactiveAccounts: updatedAccounts })
+				return { success: true, data: updatedAccount }
+			  } else {
+				console.error("Error reactivating account:", response.status)
+				return { success: false, error: "Failed to reactivate account" }
+			  }
+			} catch (error) {
+			  console.error("Error reactivating account:", error)
+			  return { success: false, error: error.message }
+			}
+		  },
+	
+		  sendReminder: async (id) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}/send-reminder`, {
+				method: "POST",
+			  })
+			  if (response.ok) {
+				return { success: true }
+			  } else {
+				console.error("Error sending reminder:", response.status)
+				return { success: false, error: "Failed to send reminder" }
+			  }
+			} catch (error) {
+			  console.error("Error sending reminder:", error)
+			  return { success: false, error: error.message }
+			}
+		  },
+	
+		  deleteInactiveAccount: async (id) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}`, {
+				method: "DELETE",
+			  })
+			  if (response.ok) {
+				const store = getStore()
+				const updatedAccounts = store.inactiveAccounts.filter((account) => account.id !== id)
+				setStore({ inactiveAccounts: updatedAccounts })
+				return { success: true }
+			  } else {
+				console.error("Error deleting inactive account:", response.status)
+				return { success: false, error: "Failed to delete inactive account" }
+			  }
+			} catch (error) {
+			  console.error("Error deleting inactive account:", error)
 			  return { success: false, error: error.message }
 			}
 		  },
