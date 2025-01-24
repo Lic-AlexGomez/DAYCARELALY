@@ -127,8 +127,7 @@ const Events = () => {
                       <div className="tw-flex tw-flex-col tw-items-center tw-space-y-2">
                         {isPreviousEvent ? (
                           <>
-                            <button className="buttonViewEvent tw-text-xs">View Event</button>
-                            <button className="buttonEventPhotos tw-text-xs">See Event Photos</button>
+                            <button className="buttonViewEvent tw-text-xs"><Link to="/eventphotos">View Event</Link></button>
                           </>
                         ) : (
                           <>
