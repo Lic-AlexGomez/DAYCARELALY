@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
-import { Context } from "../store/appContext"
+import { Context } from "../../store/appContext"
 import { AlertCircle, ChevronDown, Upload } from "lucide-react"
 
 // UI Components

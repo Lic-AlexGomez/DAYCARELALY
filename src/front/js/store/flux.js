@@ -30,29 +30,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 		approvals: [],
 	  },
 	  actions: {
-		signUp: async (userData) => {
-		  try {
-			const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
-			  method: "POST",
-			  headers: {
-				"Content-Type": "application/json",
-			  },
-			  body: JSON.stringify(userData),
-			})
-  
-			if (!response.ok) {
-			  const errorData = await response.json()
-			  throw new Error(errorData.error || "Sign Up Failed")
+		signUp: async (signupData) => {
+			console.log(signupData)
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify(signupData),
+			  })
+	
+			  if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || "Sign Up Failed")
+			  }
+	
+			  const data = await response.json()
+			  setStore({ user: data.user, token: data.token })
+			  return { success: true, data }
+			} catch (error) {
+			  console.error("Sign Up Error:", error.message)
+			  return { success: false, error: error.message }
 			}
-  
-			const data = await response.json()
-			setStore({ user: data })
-			return { success: true, data }
-		  } catch (error) {
-			console.error("Sign Up Error:", error.message)
-			return { success: false, error: error.message }
-		  }
-		},
+		  },
 		uploadToCloudinary: async (file) => {
 		  const BACKEND_URL = process.env.BACKEND_URL
 		  const store = getStore()
