@@ -19,6 +19,7 @@ import MoreInfo from "./pages/MoreInfo.jsx"
 import ConfirmAttendance from "./pages/ConfirmAttendance.jsx"
 import Allprograms from "./pages/Allprograms.jsx"
 import PreviousEventsPhotos from "./pages/PreviousEventsPhotos.jsx"
+import Gallery from "./pages/Gallery.jsx"
 
 // Componentes del Admin Dashboard
 import Sidebar from "./component/admin/Sidebar"
@@ -178,6 +179,7 @@ const MainRoutes = () => {
         <Route path="/programs" element={<Programs />} />
         <Route path="*" element={<h1>Not found!</h1>} />
         <Route path="/allprograms" element={<Allprograms />} />
+        <Route path="/gallery" element={<Gallery />} />
       </Routes>
       {!isAdminRoute && !isTeacherRoute && !isParentRoute && <Footer />}
     </>
