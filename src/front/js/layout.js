@@ -18,6 +18,7 @@ import Programs from "./pages/Programs.jsx"
 import MoreInfo from "./pages/MoreInfo.jsx"
 import ConfirmAttendance from "./pages/ConfirmAttendance.jsx"
 import Allprograms from "./pages/Allprograms.jsx"
+import PreviousEventsPhotos from "./pages/PreviousEventsPhotos.jsx"
 
 // Componentes del Admin Dashboard
 import Sidebar from "./component/admin/Sidebar"
@@ -169,6 +170,7 @@ const MainRoutes = () => {
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/events" element={<Events />} />
         <Route path="/moreinfo" element={<MoreInfo />} />
+        <Route path="/eventphotos" element={<PreviousEventsPhotos />} />
         <Route path="/confirmattendance" element={<ConfirmAttendance />} />
         <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
         <Route path="/teacher-dashboard/*" element={<TeacherDashboardRoutes />} />
