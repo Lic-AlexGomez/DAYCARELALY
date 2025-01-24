@@ -601,3 +601,33 @@ class Approval(db.Model):
             "updated_at": self.updated_at.isoformat()
         }
 
+class Activity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    image = db.Column(db.String(255), nullable=True)  # Changed from image_url
+    age_range = db.Column(db.String(50), nullable=False)
+    time = db.Column(db.String(50), nullable=False)
+    capacity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    skills_to_develop = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Activity {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "image": self.image,
+            "age_range": self.age_range,
+            "time": self.time,
+            "capacity": self.capacity,
+            "price": self.price,
+            "skills_to_develop": self.skills_to_develop,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
+        }

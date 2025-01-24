@@ -2,7 +2,7 @@ import cloudinary,os
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Flask, request, jsonify, Blueprint, current_app
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
@@ -44,7 +44,7 @@ def login():
 @api.route('/signup', methods=['POST'])
 def signup():
     data = request.json
-    print(data)
+  
     if not data:
         raise APIException("No input data provided", status_code=400)
 
@@ -503,6 +503,18 @@ def upload_file():
         upload_result = cloudinary.uploader.upload(file)
         return jsonify({"url": upload_result['secure_url']}), 200
 
+@api.route('/upload/img', methods=['POST'])
+def upload_img():
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+    
+    if file:
+        upload_result = upload(file)
+        return jsonify({"url": upload_result['secure_url']}), 200
+
 @api.route('/newsletter', methods=['POST'])
 def create_newsletter():
     data = request.json
@@ -887,4 +899,100 @@ def add_sample_approvals_data():
     return jsonify({'message': 'Sample approvals data added successfully'}), 201
 
 
-    
+
+
+@api.route('/activities', methods=['GET'])
+def get_activities():
+    activities = Activity.query.all()
+    return jsonify([activity.serialize() for activity in activities]), 200
+
+@api.route('/activities/<int:id>', methods=['GET'])
+def get_activity(id):
+    activity = Activity.query.get_or_404(id)
+    return jsonify(activity.serialize()), 200
+
+@api.route('/activities', methods=['POST'])
+# @jwt_required()
+def create_activity():
+    try:
+        image = None  
+        if 'image' in request.files:
+            file = request.files['image']
+            if file:
+                upload_result = cloudinary.uploader.upload(file)
+                image = upload_result['secure_url']
+
+        data = request.form.to_dict()
+        
+        required_fields = ['name', 'description', 'age_range', 'time', 'capacity', 'price']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"Missing required field: {field}"}), 400
+
+        new_activity = Activity(
+            name=data['name'],
+            description=data['description'],
+            image=image,
+            age_range=data['age_range'],
+            time=data['time'],
+            capacity=int(data['capacity']),
+            price=float(data['price']),
+            skills_to_develop=data.get('skills_to_develop')
+        )
+        
+        db.session.add(new_activity)
+        db.session.commit()
+        return jsonify(new_activity.serialize()), 201
+
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+@api.route('/activities/<int:id>', methods=['PUT'])
+# @jwt_required()
+def update_activity(id):
+    try:
+        
+        activity = Activity.query.get_or_404(id)
+        
+        
+        data = request.get_json()  
+        print("Data received:", data)
+
+        if 'image' in request.files:
+            file = request.files['image']
+            if file:
+                upload_result = cloudinary.uploader.upload(file)
+                activity.image = upload_result['secure_url']
+
+        activity.name = data.get('name', activity.name)
+        activity.description = data.get('description', activity.description)
+        activity.age_range = data.get('age_range', activity.age_range)
+        activity.time = data.get('time', activity.time)
+        activity.capacity = int(data.get('capacity', activity.capacity))
+        activity.price = float(data.get('price', activity.price))
+        activity.skills_to_develop = data.get('skills_to_develop', activity.skills_to_develop)
+
+        
+        db.session.commit()
+        return jsonify(activity.serialize()), 200
+
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@api.route('/activities/<int:id>', methods=['DELETE'])
+# @jwt_required()
+def delete_activity(id):
+    activity = Activity.query.get_or_404(id)
+    try:
+        db.session.delete(activity)
+        db.session.commit()
+        return '', 204
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+

@@ -28,10 +28,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 		videos: [],
 		inactiveAccounts: [],
 		approvals: [],
+		activities: [],
 	  },
 	  actions: {
 		signUp: async (signupData) => {
-			console.log(signupData)
+			
 			try {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
 				method: "POST",
@@ -82,6 +83,34 @@ const getState = ({ getStore, getActions, setStore }) => {
 			return { success: false, error: error.message }
 		  }
 		},
+		uploadToCloudinaryImg: async (file) => {
+			const BACKEND_URL = process.env.BACKEND_URL
+			const store = getStore()
+	
+			try {
+			  const formData = new FormData()
+			  formData.append("file", file)
+	
+			  const response = await fetch(`${BACKEND_URL}/api/upload/img`, {
+				method: "POST",
+				body: formData,
+			  })
+	
+			  if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || "Failed to upload file")
+			  }
+	
+			  const data = await response.json()
+			  setStore({ uploadedFileUrl: data.url, error: null })
+	
+			  return { success: true, url: data.url }
+			} catch (error) {
+			  console.error("Upload Error:", error.message)
+			  setStore({ error: error.message })
+			  return { success: false, error: error.message }
+			}
+		  },
 		fetchClasses: async () => {
 		  try {
 			const response = await fetch(process.env.BACKEND_URL + "/api/classes")
@@ -452,7 +481,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			const response = await fetch(process.env.BACKEND_URL + "/api/emails")
 			if (response.ok) {
 			  const data = await response.json()
-			  console.log(data)
 			  const emails = data.filter((email) => !email.scheduledDate)
 			  const scheduledEmails = data.filter((email) => email.scheduledDate)
 			  setStore({ emails, scheduledEmails })
@@ -465,7 +493,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
   
 		sendEmail: async (emailData) => {
-		  console.log(emailData)
+		
 		  try {
 			const response = await fetch(process.env.BACKEND_URL + "/api/emails", {
 			  method: "POST",
@@ -693,6 +721,109 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  return { success: false, error: error.message };
 			}
 		  },
+		  
+		  fetchActivities: async () => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/activities")
+			  if (response.ok) {
+				const data = await response.json()
+				setStore({ activities: data })
+				return { success: true, data }
+			  } else {
+				console.error("Error fetching activities:", response.status)
+				return { success: false, error: "Failed to fetch activities" }
+			  }
+			} catch (error) {
+			  console.error("Error fetching activities:", error)
+			  return { success: false, error: error.message }
+			}
+		  },
+
+		  createActivity: async (formData) => {
+			try {
+			  const form = new FormData();
+		
+			  for (const key in formData) {
+				if (key === "image" && typeof formData[key] === "string") {
+				  form.append("image", formData[key]);
+				} else if (key === "image" && formData[key] instanceof File) {
+				  form.append("image", formData[key]);
+				} else {
+				  form.append(key, formData[key]);
+				}
+			  }
+		  
+			  const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
+				method: "POST",
+				body: form,
+			  });
+		  
+			  if (response.ok) {
+				
+				const newActivity = await response.json();
+				const store = getStore();
+				setStore({ activities: [...store.activities, newActivity] });
+				return { success: true, data: newActivity };
+			  } else {
+				const error = await response.json();
+				console.error("Error response:", error); // Log error response
+				return { success: false, error: error.error || "Failed to create activity" };
+			  }
+			} catch (error) {
+			  console.error("Error creating activity:", error);
+			  return { success: false, error: error.message };
+			}
+		  },
+		  
+		  updateActivity: async (id, activityData) =>{
+			
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
+				method: "PUT",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify(activityData),
+			  })
+		  
+			  if (response.ok) {
+				
+				const updatedActivity = await response.json()
+				const store = getStore()
+				const updatedActivities = store.activities.map((activity) => (activity.id === id ? updatedActivity : activity))
+				setStore({ activities: updatedActivities })
+				return { success: true, data: updatedActivity }
+			  } else {
+				const error = await response.json()
+				return { success: false, error: error.error || "Failed to update activity" }
+			  }
+			} catch (error) {
+			  console.error("Error updating activity:", error)
+			  return { success: false, error: error.message }
+			}
+		},
+		  
+			deleteActivity: async (id) =>{
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
+				method: "DELETE",
+			  })
+		  
+			  if (response.ok) {
+				const store = getStore()
+				const updatedActivities = store.activities.filter((activity) => activity.id !== id)
+				setStore({ activities: updatedActivities })
+				return { success: true }
+			  } else {
+				const error = await response.json()
+				return { success: false, error: error.error || "Failed to delete activity" }
+			  }
+			} catch (error) {
+			  console.error("Error deleting activity:", error)
+			  return { success: false, error: error.message }
+			}
+		},
+
 	  },
 	}
   }
