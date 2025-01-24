@@ -28,17 +28,28 @@ jwt = JWTManager()
 @api.route('/login', methods=['POST'])
 def login():
     data = request.json
-    print(data)
+    print("Datos recibidos:", data)
+
     if not data or 'email' not in data or 'password' not in data:
         return jsonify({"error": "Invalid payload"}), 400
 
     user = User.query.filter_by(email=data['email']).first()
+    print("Usuario encontrado:", user)
+
+    if not user:
+        return jsonify({"error": "Invalid email or password"}), 401
+
     
-    if not user or not user.check_password(data['password']):
+    password_valid = user.check_password(data['password'])
+    print("¿Contraseña válida?", password_valid)
+
+    if not password_valid:
         return jsonify({"error": "Invalid email or password"}), 401
 
     access_token = create_access_token(identity=user.id)
+    print("Token generado:", access_token)
     return jsonify({"token": access_token, "user": user.serialize()}), 200
+
 
 
 @api.route('/signup', methods=['POST'])
@@ -69,7 +80,7 @@ def signup():
 
     
     hashed_password = generate_password_hash(password)
-    new_user = User(username=username, email=email, password=hashed_password, role=role, profile_picture=profile_picture)
+    new_user = User(username=username, email=email, password_hash=hashed_password, role=role, profile_picture=profile_picture)
     db.session.add(new_user)
     db.session.flush()
 
