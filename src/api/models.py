@@ -546,12 +546,43 @@ class InactiveAccount(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    def to_dict(self):
+    def __repr__(self):
+        return f'<InactiveAccount {self.name}>'
+
+    def serialize(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'lastActive': self.last_active.strftime('%Y-%m-%d'),
-            'type': self.type,
-            'reason': self.reason
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "last_active": self.last_active.isoformat(),
+            "type": self.type,
+            "reason": self.reason,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
         }
+
+class Approval(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    details = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='pending')
+    date = db.Column(db.Date, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Approval {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "type": self.type,
+            "name": self.name,
+            "details": self.details,
+            "status": self.status,
+            "date": self.date.isoformat(),
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
+        }
+

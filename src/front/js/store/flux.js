@@ -27,6 +27,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		scheduledEmails: [],
 		videos: [],
 		inactiveAccounts: [],
+		approvals: [],
 	  },
 	  actions: {
 		signUp: async (userData) => {
@@ -652,6 +653,43 @@ const getState = ({ getStore, getActions, setStore }) => {
 			} catch (error) {
 			  console.error("Error deleting inactive account:", error)
 			  return { success: false, error: error.message }
+			}
+		  },
+		  // Approvals actions
+		  fetchApprovals: async () => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/approvals")
+			  if (response.ok) {
+				const data = await response.json()
+				setStore({ approvals: data })
+			  } else {
+				console.error("Error fetching approvals:", response.status)
+			  }
+			} catch (error) {
+			  console.error("Error fetching approvals:", error)
+			}
+		  },
+		  updateApprovalStatus: async (id, status) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/approvals/${id}`, {
+				method: "PATCH",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ status }),
+			  });
+			  if (!response.ok) throw new Error("Error actualizando el estado");
+			  const updatedApproval = await response.json();
+		  
+			  // Actualiza el estado global
+			  setStore({
+				approvals: getStore().approvals.map((item) =>
+				  item.id === updatedApproval.id ? updatedApproval : item
+				),
+			  });
+		  
+			  return { success: true };
+			} catch (error) {
+			  console.error(error);
+			  return { success: false, error: error.message };
 			}
 		  },
 	  },
