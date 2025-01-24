@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react"
 import { useNavigate } from "react-router-dom"
-import { Context } from "../store/appContext"
+import { Context } from "../../store/appContext"
 import { AlertCircle, ChevronDown, Upload } from "lucide-react"
 
 // UI Components
@@ -252,7 +252,7 @@ export const StaffSignup = () => {
 
         const response = await actions.signUp(signupData)
         if (response.success) {
-          navigate("/dashboard")
+          navigate("/login")
         } else {
           setSignupError(response.error || "Signup failed. Please try again.")
         }

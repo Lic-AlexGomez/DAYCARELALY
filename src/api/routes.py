@@ -2,7 +2,7 @@ import cloudinary,os
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Flask, request, jsonify, Blueprint, current_app
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
@@ -10,6 +10,10 @@ from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash
 from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.security import generate_password_hash
+
+
+
 api = Blueprint('api', __name__)
 CORS(api, resources={r"/api/*": {"origins": "*"}})
 cloudinary.config( 
@@ -36,49 +40,124 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify({"token": access_token, "user": user.serialize()}), 200
 
+
 @api.route('/signup', methods=['POST'])
 def signup():
     data = request.json
-    if not data or 'username' not in data or 'email' not in data or 'password' not in data or 'role' not in data:
-        return jsonify({"error": "Invalid payload"}), 400
+    print(data)
+    if not data:
+        raise APIException("No input data provided", status_code=400)
 
-    if User.query.filter_by(email=data['email']).first():
-        return jsonify({"error": "Email already registered"}), 409
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role')
+    profile_picture = data.get('profilePicture')
 
-    new_user = User(
-        username=data['username'],
-        email=data['email'],
-        role=data['role']
-    )
-    new_user.set_password(data['password'])
+  
+    if not all([username, email, password, role]):
+        raise APIException("Missing required fields", status_code=400)
+
     
-    db.session.add(new_user)
-    db.session.commit()
+    if User.query.filter_by(email=email).first():
+        raise APIException("User already exists", status_code=400)
 
-    if data['role'] == 'parent':
-        new_parent = Parent(
-            user_id=new_user.id,
-            full_name=data.get('full_name', ''),
-            phone_number=data.get('phone_number', ''),
-            emergency_contact=data.get('emergency_contact', ''),
-            birth_certificate_url=data.get('birth_certificate_url', ''),
-            immunization_records_url=data.get('immunization_records_url', '')
-        )
+    if isinstance(profile_picture, dict) and 'url' in profile_picture:
+        profile_picture = profile_picture['url']
+    elif profile_picture and not isinstance(profile_picture, str):
+        raise APIException("Invalid profile picture format", status_code=400)
+
+    
+    hashed_password = generate_password_hash(password)
+    new_user = User(username=username, email=email, password=hashed_password, role=role, profile_picture=profile_picture)
+    db.session.add(new_user)
+    db.session.flush()
+
+    
+    if role == 'parent':
+        child_name = data.get('childName')
+        child_dob = data.get('childDateOfBirth')
+        child_allergies = data.get('childAllergies')
+        emergency_contact = data.get('emergencyContact')
+        birth_certificate_url = data.get('birthCertificateUrl')
+        immunization_records_url = data.get('immunizationRecordsUrl')
+
+        if not all([child_name, child_dob, emergency_contact]):
+            raise APIException("Missing child or parent required fields", status_code=400)
+
+        if isinstance(birth_certificate_url, dict):
+            birth_certificate_url = birth_certificate_url.get('url')
+
+        if isinstance(immunization_records_url, dict):
+            immunization_records_url = immunization_records_url.get('url')
+
+        try:
+            child_dob = datetime.strptime(child_dob, '%Y-%m-%d').date()
+        except ValueError:
+            raise APIException("Invalid date format for childDateOfBirth", status_code=400)
+
+        new_parent = Parent(user_id=new_user.id, emergency_contact=emergency_contact)
         db.session.add(new_parent)
-    elif data['role'] == 'teacher':
+        db.session.flush()
+
+        new_child = Child(
+            parent_id=new_parent.id,
+            name=child_name,
+            date_of_birth=child_dob,
+            allergies=child_allergies,
+            birth_certificate=birth_certificate_url,
+            immunization_records=immunization_records_url
+        )
+        db.session.add(new_child)
+
+    elif role == 'teacher':
+        qualifications = data.get('qualifications')
+        teaching_experience = data.get('teachingExperience')
+        certifications_url = data.get('certificationsUrl')
+        background_check_url = data.get('backgroundCheckUrl')
+
+        if not all([qualifications, teaching_experience]):
+            raise APIException("Missing teacher required fields", status_code=400)
+
+        certifications = certifications_url.get('url') if isinstance(certifications_url, dict) and 'url' in certifications_url else None
+        background_check = background_check_url.get('url') if isinstance(background_check_url, dict) and 'url' in background_check_url else None
+
+        if certifications is None:
+            raise APIException("Certifications URL is required", status_code=400)
+        if background_check is None:
+            raise APIException("Background check URL is required", status_code=400)
+
         new_teacher = Teacher(
             user_id=new_user.id,
-            full_name=data.get('full_name', ''),
-            specialization=data.get('specialization', ''),
-            qualifications=data.get('qualifications', ''),
-            teaching_experience=data.get('teaching_experience', ''),
-            certifications_url=data.get('certifications_url', ''),
-            background_check_url=data.get('background_check_url', '')
+            qualifications=qualifications,
+            teaching_experience=teaching_experience,
+            certifications=certifications,
+            background_check=background_check
         )
         db.session.add(new_teacher)
 
+    elif role == 'admin':
+        position = data.get('position')
+        department = data.get('department')
+
+        if not all([position, department]):
+            raise APIException("Missing admin required fields", status_code=400)
+
+        new_admin = AdminD(user_id=new_user.id, position=position, department=department)
+        db.session.add(new_admin)
+
+    else:
+        raise APIException("Invalid role", status_code=400)
+
     db.session.commit()
-    return jsonify(new_user.serialize()), 201
+
+    access_token = create_access_token(identity=new_user.id)
+
+    return jsonify({
+        "message": "User created successfully",
+        "token": access_token,
+        "user": new_user.serialize()
+    }), 201
 
 @api.route('/users', methods=['GET'])
 @jwt_required()
@@ -145,8 +224,9 @@ def create_parent():
         full_name=data['full_name'],
         phone_number=data['phone_number'],
         emergency_contact=data.get('emergency_contact', ''),
-        birth_certificate_url=data.get('birth_certificate_url', ''),
-        immunization_records_url=data.get('immunization_records_url', '')
+        birth_certificate = data.get('birthCertificateUrl', {}).get('url'),
+        immunization_records = data.get('immunizationRecordsUrl', {}).get('url')
+
     )
     db.session.add(new_parent)
     db.session.commit()
@@ -412,16 +492,16 @@ def create_contact():
 
 @api.route('/upload', methods=['POST'])
 def upload_file():
-   
-        file_to_upload = request.files['file']
-        if not file_to_upload:
-            return jsonify({"error": "No file provided"}), 400
-
-        upload_result = cloudinary.uploader.upload(file_to_upload)
-        return jsonify({
-            "message": "File uploaded successfully",
-            "url": upload_result['secure_url']
-        }), 200
+    if 'file' not in request.files:
+        raise APIException("No file part", status_code=400)
+    
+    file = request.files['file']
+    if file.filename == '':
+        raise APIException("No selected file", status_code=400)
+    
+    if file:
+        upload_result = cloudinary.uploader.upload(file)
+        return jsonify({"url": upload_result['secure_url']}), 200
 
 @api.route('/newsletter', methods=['POST'])
 def create_newsletter():
@@ -643,7 +723,7 @@ def upload_video():
         new_video = Video(
             title=request.form.get('title'),
             url=upload_result['secure_url'],
-            user_id=1  # Replace with appropriate user ID or remove if not required
+            user_id=request.form.get('user_id')
         )
         db.session.add(new_video)
         db.session.commit()
@@ -773,7 +853,7 @@ def update_approval_status(id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@api.route('/api/approvals/data', methods=['POST'])
+@api.route('approvals/data', methods=['POST'])
 def add_sample_approvals_data():
     sample_data = [
         {
@@ -805,3 +885,6 @@ def add_sample_approvals_data():
 
     db.session.commit()
     return jsonify({'message': 'Sample approvals data added successfully'}), 201
+
+
+    

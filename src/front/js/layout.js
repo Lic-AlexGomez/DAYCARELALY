@@ -43,7 +43,7 @@ import MaintenanceView from "./component/admin/MaintenanceView"
 import SettingsView from "./component/admin/SettingsView"
 import DashboardContent from "./component/admin/DahboardContent.jsx"
 import { SignupCommon } from "./pages/SignupCommon.jsx"
-import { StaffSignup } from "./pages/StaffSignup.jsx"
+import { StaffSignup } from "./component/admin/StaffSignup.jsx"
 import ProfileView from "./component/admin/ProfileView.jsx"
 
 // Componentes del Teacher Dashboard

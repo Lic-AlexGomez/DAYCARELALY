@@ -7,6 +7,8 @@ import dancing from "../../img/dancing.jpg";
 import Scientists from "../../img/LittleScientist.jpg";
 import kids4C from "../../img/kids4C.png";
 import { useNavigate } from 'react-router-dom';
+import ProgramModal from "../component/ProgramsModal.jsx"
+
 
 export const defaultPrograms = [
     {
@@ -95,6 +97,8 @@ export const Programs = () => {
     const { store, actions } = useContext(Context);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [visiblePrograms, setVisiblePrograms] = useState(3);
+    const [selectedProgram, setSelectedProgram] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const allPrograms = [...defaultPrograms, ...(store.programs || [])];
 
@@ -121,11 +125,20 @@ export const Programs = () => {
 
     useEffect(() => {
         actions.getPrograms();
-    }, [actions]);
+    }, []);
+
+    const openModal = (program) => {
+        setSelectedProgram(program);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedProgram(null);
+    };
 
     return (
         <div className="tw-container tw-mx-auto tw-px-4 tw-text-center tw-mb-12">
-            {/* Título principal */}
             <div className="tw-relative tw-inline-block tw-py-4">
                 <h2
                     className="tw-text-4xl tw-font-extrabold tw-text-transparent tw-bg-clip-text tw-bg-gradient-to-r tw-from-[#9C29B2] tw-to-[#FFC909]"
@@ -134,11 +147,8 @@ export const Programs = () => {
                     <br />
                     Our Programs
                 </h2>
-                {/* Línea decorativa debajo del título */}
                 <div className="tw-absolute tw-left-1/2 tw-transform -tw-translate-x-1/2 tw-mt-2 tw-h-1 tw-w-3/4 tw-bg-gradient-to-r tw-from-[#FFC909] tw-to-[#9C29B2] tw-rounded-full"></div>
             </div>
-
-            {/* Descripción debajo del título */}
             <h3 className="tw-text-lg tw-mt-4 tw-text-[#555] tw-italic tw-opacity-90">
                 "Discover the programs designed to enhance your child's development and learning"
                 <br />
@@ -147,7 +157,6 @@ export const Programs = () => {
 
             {/* Carousel de Programas */}
             <div className="tw-relative">
-                {/* Botón Anterior */}
                 {currentIndex > 0 && (
                     <button
                         onClick={goToPrev}
@@ -205,9 +214,12 @@ export const Programs = () => {
                                     </div>
                                 </div>
 
-                                <button className="tw-w-full tw-py-2 tw-border tw-border-[#FFC909] tw-rounded-full tw-bg-[#FFC909] tw-text-[#9C29B2] tw-font-bold hover:tw-bg-[#FFE57A] tw-transition-colors">
-                                    Read more
-                                </button>
+                                <button
+                                onClick={() => openModal(programItem)}
+                                className="tw-w-full tw-py-2 tw-border tw-border-[#FFC909] tw-rounded-full tw-bg-[#FFC909] tw-text-[#9C29B2] tw-font-bold hover:tw-bg-[#FFE57A] tw-transition-colors"
+                            >
+                                Read More
+                            </button>
                             </div>
                         </div>
                     ))}
@@ -227,11 +239,16 @@ export const Programs = () => {
             <div className="tw-text-center tw-mt-12">
                 <button
                     className="tw-bg-[#9C29B2] tw-text-white tw-px-12 tw-py-4 tw-rounded-full tw-text-lg tw-font-bold hover:tw-bg-[#7A1D8D] tw-transition-colors"
-                    onClick={() => navigate('/allprograms')} // Redirige a la ruta de Allprograms
+                    onClick={() => navigate('/allprograms')}
                 >
                     Discover All Programs
                 </button>
             </div>
+              <ProgramModal
+                                        program={selectedProgram}
+                                        isOpen={isModalOpen}
+                                        onClose={closeModal}
+                                    />
         </div>
     );
 };
