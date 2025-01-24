@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin
-from .models import db, User, Parent, Teacher, Class, Enrollment, Child, Program, Subscription, ProgressReport,Event, Course,Message,Task, Attendance, Grade, Payment, Schedule, Notification, Contact, Newsletter, Getintouch, Client, Email,Eventsuscriptions, Video, InactiveAccount
+from .models import db, User, Parent, Teacher, Class, Enrollment, Child, Program, Subscription, ProgressReport,Event, Course,Message,Task, Attendance, Grade, Payment, Schedule, Notification, Contact, Newsletter, Getintouch, Client, Email,Eventsuscriptions, Video, InactiveAccount, Approval, AdminD, Activity
 from flask_admin.contrib.sqla import ModelView
 
 def setup_admin(app):
@@ -37,6 +37,9 @@ def setup_admin(app):
     admin.add_view(ModelView(Eventsuscriptions, db.session))
     admin.add_view(ModelView(Video, db.session))
     admin.add_view(ModelView(InactiveAccount, db.session))
+    admin.add_view(ModelView(Approval, db.session))
+    admin.add_view(ModelView(AdminD, db.session))
+    admin.add_view(ModelView(Activity, db.session))
 
 
     # You can duplicate that line to add mew models

@@ -1,40 +1,51 @@
-import React, { useState } from 'react';
-import { CheckCircle, XCircle } from 'lucide-react';
+import React, { useEffect, useContext } from "react";
+import { CheckCircle, XCircle } from "lucide-react";
+import { Context } from "../../store/appContext";
+import { toast } from "react-toastify";
 
 const ApprovalsView = () => {
-  const [approvals, setApprovals] = useState([
-    { id: 1, type: 'Inscripción', name: 'Ana Martínez', details: 'Solicitud de inscripción para el programa de verano', status: 'pending',date: '2025-10-01' },
-    { id: 2, type: 'Cambio de Horario', name: 'Luis Sánchez', details: 'Solicitud de cambio de horario de tarde a mañana', status: 'pending', date: '2025-10-01' },
-    { id: 3, type: 'Actividad Especial', name: 'Sofía Rodríguez', details: 'Propuesta de actividad de pintura al aire libre', status: 'pending', date: '2025-10-01' },
-  ]);
+  const { store, actions } = useContext(Context);
 
-  const handleApprove = (id) => {
-    setApprovals(approvals.map(approval => 
-      approval.id === id ? { ...approval, status: 'approved' } : approval
-    ));
+  useEffect(() => {
+    // Cargar aprobaciones al montar el componente
+    actions.fetchApprovals();
+  }, []);
+
+  const handleApprove = async (id) => {
+    const result = await actions.updateApprovalStatus(id, "approved");
+    if (result.success) {
+      toast.success("Aprobación actualizada con éxito");
+    } else {
+      toast.error(`Error al aprobar: ${result.error}`);
+    }
   };
 
-  const handleReject = (id) => {
-    setApprovals(approvals.map(approval => 
-      approval.id === id ? { ...approval, status: 'rejected' } : approval
-    ));
+  const handleReject = async (id) => {
+    const result = await actions.updateApprovalStatus(id, "rejected");
+    if (result.success) {
+      toast.success("Rechazo actualizado con éxito");
+    } else {
+      toast.error(`Error al rechazar: ${result.error}`);
+    }
   };
 
   return (
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Aprobaciones</h2>
       <div className="tw-space-y-4">
-        {approvals.map((approval) => (
+        {store.approvals.map((approval) => (
           <div key={approval.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
             <div className="tw-flex tw-justify-between tw-items-start">
               <div>
                 <h3 className="tw-text-lg tw-font-semibold tw-mb-2">{approval.type}</h3>
                 <p className="tw-text-gray-600 tw-mb-1">Solicitante: {approval.name}</p>
                 <p className="tw-text-gray-600 tw-mb-4">{approval.details}</p>
-                <div className="tw-text-gray-500 tw-text-sm">Fecha de solicitud: {approval.date}</div>
+                <div className="tw-text-gray-500 tw-text-sm">
+                  Fecha de solicitud: {approval.date}
+                </div>
               </div>
               <div className="tw-flex tw-space-x-2">
-                {approval.status === 'pending' && (
+                {approval.status === "pending" && (
                   <>
                     <button
                       onClick={() => handleApprove(approval.id)}
@@ -52,12 +63,12 @@ const ApprovalsView = () => {
                     </button>
                   </>
                 )}
-                {approval.status === 'approved' && (
+                {approval.status === "approved" && (
                   <span className="tw-bg-green-100 tw-text-green-800 tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold">
                     Aprobado
                   </span>
                 )}
-                {approval.status === 'rejected' && (
+                {approval.status === "rejected" && (
                   <span className="tw-bg-red-100 tw-text-red-800 tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold">
                     Rechazado
                   </span>
@@ -72,4 +83,3 @@ const ApprovalsView = () => {
 };
 
 export default ApprovalsView;
-

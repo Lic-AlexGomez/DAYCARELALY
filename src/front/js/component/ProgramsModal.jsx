@@ -40,7 +40,6 @@ export const ProgramModal = ({ program, isOpen, onClose }) => {
                         <span className="tw-font-bold tw-text-[#9C29B2]">Skills to Develop:</span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula ex nec erat congue, sit amet lacinia neque gravida.<br/>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula ex nec erat congue, sit amet lacinia neque gravida.<br/>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula ex nec erat congue, sit amet lacinia neque gravida.<br/>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur vehicula ex nec erat congue, sit amet lacinia neque gravida.<br/>
                     </p>
                 </div>
                 <div className="tw-p-6 tw-text-center">

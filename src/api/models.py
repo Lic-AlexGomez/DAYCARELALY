@@ -10,9 +10,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(250), nullable=False)
-    role = db.Column(db.String(50), nullable=False)
-    profile_picture = db.Column(db.String(200))
+    password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(20), nullable=False)
+    profile_picture = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
@@ -30,76 +30,91 @@ class User(db.Model):
             "username": self.username,
             "email": self.email,
             "role": self.role,
-            "profile_picture": self.profile_picture
+            "profile_picture": self.profile_picture,
+            "created_at": self.created_at.isoformat()
         }
 
 class Parent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    full_name = db.Column(db.String(120), nullable=False)
-    phone_number = db.Column(db.String(15), nullable=False)
-    emergency_contact = db.Column(db.String(120))
-    birth_certificate_url = db.Column(db.String(200))
-    immunization_records_url = db.Column(db.String(200))
+    emergency_contact = db.Column(db.String(120), nullable=False)
+    user = db.relationship('User', backref=db.backref('parent', uselist=False))
+    children = db.relationship('Child', backref='parent', lazy=True)
 
     def __repr__(self):
-        return f'<Parent {self.full_name}>'
+        return f'<Parent {self.user.username}>'
 
     def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "full_name": self.full_name,
-            "phone_number": self.phone_number,
             "emergency_contact": self.emergency_contact,
-            "birth_certificate_url": self.birth_certificate_url,
-            "immunization_records_url": self.immunization_records_url
+            "children": [child.serialize() for child in self.children]
         }
 
 class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    full_name = db.Column(db.String(120), nullable=False)
-    specialization = db.Column(db.String(120), nullable=False)
-    qualifications = db.Column(db.Text)
-    teaching_experience = db.Column(db.Text)
-    certifications_url = db.Column(db.String(200))
-    background_check_url = db.Column(db.String(200))
+    qualifications = db.Column(db.Text, nullable=False)
+    teaching_experience = db.Column(db.Text, nullable=False)
+    certifications = db.Column(db.String(255), nullable=False)
+    background_check = db.Column(db.String(255), nullable=False)
+    user = db.relationship('User', backref=db.backref('teacher', uselist=False))
 
     def __repr__(self):
-        return f'<Teacher {self.full_name}>'
+        return f'<Teacher {self.user.username}>'
 
     def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "full_name": self.full_name,
-            "specialization": self.specialization,
             "qualifications": self.qualifications,
             "teaching_experience": self.teaching_experience,
-            "certifications_url": self.certifications_url,
-            "background_check_url": self.background_check_url
+            "certifications": self.certifications,
+            "background_check": self.background_check
         }
 
 class Child(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
-    full_name = db.Column(db.String(120), nullable=False)
+    name = db.Column(db.String(120), nullable=False)
     date_of_birth = db.Column(db.Date, nullable=False)
-    allergies = db.Column(db.Text)
-    medical_conditions = db.Column(db.Text)
+    allergies = db.Column(db.Text, nullable=True)
+    birth_certificate = db.Column(db.String(255), nullable=False)
+    immunization_records = db.Column(db.String(255), nullable=False)
+
 
     def __repr__(self):
-        return f'<Child {self.full_name}>'
+        return f'<Child {self.name}>'
 
     def serialize(self):
         return {
             "id": self.id,
             "parent_id": self.parent_id,
-            "full_name": self.full_name,
+            "name": self.name,
             "date_of_birth": self.date_of_birth.isoformat(),
             "allergies": self.allergies,
-            "medical_conditions": self.medical_conditions
+            "birth_certificate": self.birth_certificate,
+            "immunization_records": self.immunization_records
+        }
+
+
+class AdminD(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    position = db.Column(db.String(120), nullable=False)
+    department = db.Column(db.String(120), nullable=False)
+    user = db.relationship('User', backref=db.backref('adminD', uselist=False))
+
+    def __repr__(self):
+        return f'<AdminD {self.user.username}>'
+    
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "position": self.position,
+            "department": self.department
         }
 
 class Class(db.Model):
@@ -546,12 +561,73 @@ class InactiveAccount(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    def to_dict(self):
+    def __repr__(self):
+        return f'<InactiveAccount {self.name}>'
+
+    def serialize(self):
         return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'lastActive': self.last_active.strftime('%Y-%m-%d'),
-            'type': self.type,
-            'reason': self.reason
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "last_active": self.last_active.isoformat(),
+            "type": self.type,
+            "reason": self.reason,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
+        }
+
+class Approval(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    details = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='pending')
+    date = db.Column(db.Date, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Approval {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "type": self.type,
+            "name": self.name,
+            "details": self.details,
+            "status": self.status,
+            "date": self.date.isoformat(),
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
+        }
+
+class Activity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    image = db.Column(db.String(255), nullable=True)  # Changed from image_url
+    age_range = db.Column(db.String(50), nullable=False)
+    time = db.Column(db.String(50), nullable=False)
+    capacity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    skills_to_develop = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Activity {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "image": self.image,
+            "age_range": self.age_range,
+            "time": self.time,
+            "capacity": self.capacity,
+            "price": self.price,
+            "skills_to_develop": self.skills_to_develop,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
         }
