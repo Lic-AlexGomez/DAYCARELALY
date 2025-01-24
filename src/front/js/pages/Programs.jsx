@@ -7,8 +7,6 @@ import dancing from "../../img/dancing.jpg";
 import Scientists from "../../img/LittleScientist.jpg";
 import kids4C from "../../img/kids4C.png";
 import { useNavigate } from 'react-router-dom';
-import ProgramModal from "../component/ProgramsModal.jsx"
-
 
 export const defaultPrograms = [
     {
@@ -97,8 +95,6 @@ export const Programs = () => {
     const { store, actions } = useContext(Context);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [visiblePrograms, setVisiblePrograms] = useState(3);
-    const [selectedProgram, setSelectedProgram] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const allPrograms = [...defaultPrograms, ...(store.programs || [])];
 
@@ -126,16 +122,6 @@ export const Programs = () => {
     useEffect(() => {
         actions.getPrograms();
     }, [actions]);
-
-    const openModal = (program) => {
-        setSelectedProgram(program);
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedProgram(null);
-    };
 
     return (
         <div className="tw-container tw-mx-auto tw-px-4 tw-text-center tw-mb-12">
@@ -219,12 +205,9 @@ export const Programs = () => {
                                     </div>
                                 </div>
 
-                                <button
-                                onClick={() => openModal(programItem)}
-                                className="tw-w-full tw-py-2 tw-border tw-border-[#FFC909] tw-rounded-full tw-bg-[#FFC909] tw-text-[#9C29B2] tw-font-bold hover:tw-bg-[#FFE57A] tw-transition-colors"
-                            >
-                                Read More
-                            </button>
+                                <button className="tw-w-full tw-py-2 tw-border tw-border-[#FFC909] tw-rounded-full tw-bg-[#FFC909] tw-text-[#9C29B2] tw-font-bold hover:tw-bg-[#FFE57A] tw-transition-colors">
+                                    Read more
+                                </button>
                             </div>
                         </div>
                     ))}
@@ -249,11 +232,6 @@ export const Programs = () => {
                     Discover All Programs
                 </button>
             </div>
-              <ProgramModal
-                                        program={selectedProgram}
-                                        isOpen={isModalOpen}
-                                        onClose={closeModal}
-                                    />
         </div>
     );
 };
