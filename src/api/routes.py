@@ -2,7 +2,7 @@ import cloudinary,os
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Flask, request, jsonify, Blueprint, current_app
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
@@ -659,4 +659,64 @@ def delete_video(id):
     db.session.delete(video)
     db.session.commit()
     return jsonify({"message": "Video deleted successfully"}), 200
+
+@api.route('/inactive-accounts', methods=['GET'])
+def get_inactive_accounts():
+    accounts = InactiveAccount.query.all()
+    return jsonify([account.to_dict() for account in accounts])
+
+@api.route('/inactive-accounts/<int:id>/reactivate', methods=['POST'])
+def reactivate_account(id):
+    account = InactiveAccount.query.get_or_404(id)
+    # Here you would implement the logic to reactivate the account
+    # For this example, we'll just delete it from the inactive accounts list
+    db.session.delete(account)
+    db.session.commit()
+    return jsonify(account.to_dict()), 200
+
+@api.route('/inactive-accounts/<int:id>/send-reminder', methods=['POST'])
+def send_reminder(id):
+    account = InactiveAccount.query.get_or_404(id)
+    return jsonify({'message': f'Reminder sent to {account.email}'}), 200
+
+@api.route('/inactive-accounts/<int:id>', methods=['DELETE'])
+def delete_inactive_account(id):
+    account = InactiveAccount.query.get_or_404(id)
+    db.session.delete(account)
+    db.session.commit()
+    return '', 204
+
+    # Add sample data to the InactiveAccount table, for testing purposes, do in postman
+@api.route('/add-sample-data', methods=['POST'])
+def add_sample_data():
+    sample_data = [
+        {
+            'name': "Juan Pérez",
+            'email': "juan@example.com",
+            'last_active': datetime(2023, 1, 15),
+            'type': "Padre",
+            'reason': "No completó registro",
+        },
+        {
+            'name': "María García",
+            'email': "maria@example.com",
+            'last_active': datetime(2023, 2, 20),
+            'type': "Profesor",
+            'reason': "Baja temporal",
+        },
+        {
+            'name': "Carlos Rodríguez",
+            'email': "carlos@example.com",
+            'last_active': datetime(2023, 3, 10),
+            'type': "Padre",
+            'reason': "Inactividad prolongada",
+        },
+    ]
+
+    for data in sample_data:
+        account = InactiveAccount(**data)
+        db.session.add(account)
+
+    db.session.commit()
+    return jsonify({'message': 'Sample data added successfully'}), 201
 

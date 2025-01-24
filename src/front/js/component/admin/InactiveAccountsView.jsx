@@ -1,56 +1,45 @@
-
-
-import React, { useState } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { UserX, RefreshCw, Trash, Mail } from "lucide-react"
+import { Context } from "../../store/appContext"
 
 const InactiveAccountsView = () => {
-  const [inactiveAccounts, setInactiveAccounts] = useState([
-    {
-      id: 1,
-      name: "Juan Pérez",
-      email: "juan@example.com",
-      lastActive: "2023-01-15",
-      type: "Padre",
-      reason: "No completó registro",
-    },
-    {
-      id: 2,
-      name: "María García",
-      email: "maria@example.com",
-      lastActive: "2023-02-20",
-      type: "Profesor",
-      reason: "Baja temporal",
-    },
-    {
-      id: 3,
-      name: "Carlos Rodríguez",
-      email: "carlos@example.com",
-      lastActive: "2023-03-10",
-      type: "Padre",
-      reason: "Inactividad prolongada",
-    },
-  ])
-
+  const { store, actions } = useContext(Context)
   const [searchTerm, setSearchTerm] = useState("")
 
-  const handleReactivateAccount = (id) => {
-    // In a real application, you would send a request to the backend to reactivate the account
-    setInactiveAccounts(
-      inactiveAccounts.map((account) => (account.id === id ? { ...account, reason: "Cuenta reactivada" } : account)),
-    )
+  useEffect(() => {
+    actions.fetchInactiveAccounts()
+  }, [])
+
+  const handleReactivateAccount = async (id,name) => {
+    const result = await actions.reactivateAccount(id)
+    if (result.success) {
+      alert(`Cuenta con ID ${id} y Nombre ${name} reactivada`)
+    } else {
+      console.error("Failed to reactivate account:", result.error)
+    }
   }
 
-  const handleSendReminder = (id) => {
-    // In a real application, you would send a reminder email to the user
-    alert(`Recordatorio enviado a la cuenta con ID: ${id}`)
+  const handleSendReminder = async (id,name) => {
+    const result = await actions.sendReminder(id)
+    if (result.success) {
+      alert(`Recordatorio enviado a la cuenta con ID: ${id} y Nombre: ${name}`)
+    } else {
+     
+      console.error("Failed to send reminder:", result.error)
+    }
   }
 
-  const handleDeleteAccount = (id) => {
-    // In a real application, you would send a request to the backend to delete the account
-    setInactiveAccounts(inactiveAccounts.filter((account) => account.id !== id))
+  const handleDeleteAccount = async (id,name) => {
+    const result = await actions.deleteInactiveAccount(id)
+    if (result.success) {
+      alert(`Cuenta con ID ${id} y Nombre: ${name} eliminada`)
+    } else {
+      
+      console.error("Failed to delete account:", result.error)
+    }
   }
 
-  const filteredAccounts = inactiveAccounts.filter(
+  const filteredAccounts = store.inactiveAccounts.filter(
     (account) =>
       account.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       account.email.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -119,19 +108,19 @@ const InactiveAccountsView = () => {
                 </td>
                 <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap tw-text-sm tw-font-medium">
                   <button
-                    onClick={() => handleReactivateAccount(account.id)}
+                    onClick={() => handleReactivateAccount(account.id, account.name)}
                     className="tw-text-indigo-600 hover:tw-text-indigo-900 tw-mr-2"
                   >
                     <RefreshCw className="tw-w-5 tw-h-5" />
                   </button>
                   <button
-                    onClick={() => handleSendReminder(account.id)}
+                    onClick={() => handleSendReminder(account.id, account.name)}
                     className="tw-text-yellow-600 hover:tw-text-yellow-900 tw-mr-2"
                   >
                     <Mail className="tw-w-5 tw-h-5" />
                   </button>
                   <button
-                    onClick={() => handleDeleteAccount(account.id)}
+                    onClick={() => handleDeleteAccount(account.id, account.name)}
                     className="tw-text-red-600 hover:tw-text-red-900"
                   >
                     <Trash className="tw-w-5 tw-h-5" />

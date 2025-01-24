@@ -536,3 +536,22 @@ class Video(db.Model):
             "updatedAt": self.updated_at.isoformat()
         }
 
+class InactiveAccount(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    last_active = db.Column(db.DateTime, nullable=False)
+    type = db.Column(db.String(50), nullable=False)
+    reason = db.Column(db.String(200), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'lastActive': self.last_active.strftime('%Y-%m-%d'),
+            'type': self.type,
+            'reason': self.reason
+        }

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 1428168d7126
+Revision ID: 2daf5f357fbb
 Revises: 
-Create Date: 2025-01-23 18:39:58.790809
+Create Date: 2025-01-24 00:04:31.741837
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '1428168d7126'
+revision = '2daf5f357fbb'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -81,6 +81,18 @@ def upgrade():
     sa.Column('message', sa.Text(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('inactive_account',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=False),
+    sa.Column('email', sa.String(length=120), nullable=False),
+    sa.Column('last_active', sa.DateTime(), nullable=False),
+    sa.Column('type', sa.String(length=50), nullable=False),
+    sa.Column('reason', sa.String(length=200), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email')
+    )
     op.create_table('newsletter',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
@@ -150,6 +162,16 @@ def upgrade():
     sa.Column('teaching_experience', sa.Text(), nullable=True),
     sa.Column('certifications_url', sa.String(length=200), nullable=True),
     sa.Column('background_check_url', sa.String(length=200), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('video',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('title', sa.String(length=120), nullable=False),
+    sa.Column('url', sa.String(length=200), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -269,6 +291,7 @@ def downgrade():
     op.drop_table('payment')
     op.drop_table('class')
     op.drop_table('child')
+    op.drop_table('video')
     op.drop_table('teacher')
     op.drop_table('parent')
     op.drop_table('notification')
@@ -276,6 +299,7 @@ def downgrade():
     op.drop_table('user')
     op.drop_table('schedule')
     op.drop_table('newsletter')
+    op.drop_table('inactive_account')
     op.drop_table('getintouch')
     op.drop_table('eventsuscriptions')
     op.drop_table('event')
