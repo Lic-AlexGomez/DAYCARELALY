@@ -2,14 +2,14 @@ import cloudinary,os
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Flask, request, jsonify, Blueprint, current_app
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
 from flask_bcrypt import Bcrypt
 from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash
-
+from sqlalchemy.exc import SQLAlchemyError
 api = Blueprint('api', __name__)
 CORS(api, resources={r"/api/*": {"origins": "*"}})
 cloudinary.config( 
@@ -667,12 +667,33 @@ def get_inactive_accounts():
 
 @api.route('/inactive-accounts/<int:id>/reactivate', methods=['POST'])
 def reactivate_account(id):
-    account = InactiveAccount.query.get_or_404(id)
-    # Here you would implement the logic to reactivate the account
-    # For this example, we'll just delete it from the inactive accounts list
-    db.session.delete(account)
-    db.session.commit()
-    return jsonify(account.to_dict()), 200
+    try:
+        inactive_account = InactiveAccount.query.get_or_404(id)
+        user = User.query.filter_by(email=inactive_account.email).first()
+        
+        if user:
+
+            user.name = inactive_account.name
+            user.last_active = datetime.utcnow()
+            user.is_active = True
+        else:
+            user = User(
+                name=inactive_account.name,
+                email=inactive_account.email,
+                type=inactive_account.type,
+                last_active=datetime.utcnow(),
+                is_active=True
+            )
+            db.session.add(user)
+        
+        db.session.delete(inactive_account)
+        db.session.commit()
+        return jsonify(user.to_dict()), 200
+    
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
 
 @api.route('/inactive-accounts/<int:id>/send-reminder', methods=['POST'])
 def send_reminder(id):
@@ -720,3 +741,67 @@ def add_sample_data():
     db.session.commit()
     return jsonify({'message': 'Sample data added successfully'}), 201
 
+@api.route('/approvals', methods=['GET'])
+def get_approvals():
+    approvals = Approval.query.all()
+    return jsonify([approval.serialize() for approval in approvals]), 200
+
+@api.route('/approvals/<int:id>', methods=['PATCH'])
+def update_approval_status(id):
+    try:
+        approval = Approval.query.filter_by(id=id).first()
+        if not approval:
+            return jsonify({'error': f'Approval with id {id} not found'}), 404
+
+        data = request.json
+
+        if 'status' not in data:
+            return jsonify({'error': 'Status field is required'}), 400
+
+        
+        if data['status'] not in ['pending', 'approved', 'rejected']:
+            return jsonify({'error': 'Invalid status value'}), 400
+
+        approval.status = data['status']
+        db.session.commit()
+
+        return jsonify(approval.serialize()), 200
+
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@api.route('/api/approvals/data', methods=['POST'])
+def add_sample_approvals_data():
+    sample_data = [
+        {
+            'type': 'Inscripción',
+            'name': 'Ana Martínez',
+            'details': 'Solicitud de inscripción para el programa de verano',
+            'status': 'pending',
+            'date': datetime(2025, 10, 1).date(),
+        },
+        {
+            'type': 'Cambio de Horario',
+            'name': 'Luis Sánchez',
+            'details': 'Solicitud de cambio de horario de tarde a mañana',
+            'status': 'pending',
+            'date': datetime(2025, 10, 1).date(),
+        },
+        {
+            'type': 'Actividad Especial',
+            'name': 'Sofía Rodríguez',
+            'details': 'Propuesta de actividad de pintura al aire libre',
+            'status': 'pending',
+            'date': datetime(2025, 10, 1).date(),
+        },
+    ]
+
+    for data in sample_data:
+        approval = Approval(**data)
+        db.session.add(approval)
+
+    db.session.commit()
+    return jsonify({'message': 'Sample approvals data added successfully'}), 201
