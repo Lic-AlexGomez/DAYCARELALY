@@ -128,7 +128,6 @@ const Events = () => {
                         {isPreviousEvent ? (
                           <>
                             <button className="buttonViewEvent tw-text-xs">View Event</button>
-                            <button className="buttonEventPhotos tw-text-xs">See Event Photos</button>
                           </>
                         ) : (
                           <>
