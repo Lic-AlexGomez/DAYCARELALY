@@ -1,58 +1,255 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Context } from "../store/appContext";
-import { useNavigate } from 'react-router-dom';
+import React from "react";
 import littleexplorers from "../../img/little-explorers.jpg";
 import dancing from "../../img/dancing.jpg";
 import Scientists from "../../img/LittleScientist.jpg";
+import kids3C from "../../img/kids3C.png";
 import galleryback from "../../img/gallery-back.jpg";
-
 
 const Gallery = () => {
   return (
-    <div>
-      <div className="relative w-screen h-64 overflow-hidden">
-        <img
-          src={galleryback}
-          alt="Header"
-          className="w-screen h-full object-cover"
-        />
-      </div>
-      <div className="bg-yellow-400 p-8 text-center">
-        <div className="tw-relative tw-inline-block tw-py-4">
-          <h2
-            className="tw-text-4xl tw-font-extrabold tw-text-transparent tw-bg-clip-text tw-bg-gradient-to-r tw-from-yellow-400 tw-to-red-500"
-            style={{ fontFamily: "'Fredoka', sans-serif" }}
-          >
-            <br />
-            Gallery
-          </h2>
-          <div className="tw-absolute tw-left-1/2 tw-transform -tw-translate-x-1/2 tw-mt-2 tw-h-1 tw-w-3/4 tw-bg-gradient-to-r tw-from-red-500 tw-to-yellow-400 tw-rounded-full"></div>
-        </div>
+    <div
+      style={{
+        backgroundImage: `url(${galleryback})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100vh",
+        padding: "20px",
+      }}
+ >
+      <div
+  style={{
+    textAlign: "center",
+    padding: "20px 0",
+    fontFamily: "'Fredoka', sans-serif",
+    marginBottom: "40px",
+    width: "90%",
+    maxWidth: "800px",
+  }}
+>
+  <h2
+    style={{
+      fontSize: "2.5rem",
+      fontWeight: "800",
+      margin: 0,
+      color: "#FFC909",
+      display: "inline-block",
+      backgroundColor: "#9C29B2",
+      padding: "5px 10px",
+      borderRadius: "8px",
+    }}
+  >
+    Gallery
+  </h2>
+</div>
+
+      {/* Galería */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "30px",
+          width: "90%",
+          maxWidth: "1500px",
+        }}
+      >
+
         <div
-          className="flex flex-row justify-center gap-6 mt-6"
-          style={{ flexWrap: "nowrap", overflowX: "auto" }}
+          style={{
+            width: "100%",
+            height: "350px",
+            backgroundColor: "#000",
+            borderRadius: "12px",
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+            position: "relative",
+            overflow: "hidden",
+          }}
         >
-          <div className="flex-shrink-0 w-48 h-48 rounded-lg shadow-lg overflow-hidden">
-            <img
-              src={dancing}
-              alt="Dancing"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex-shrink-0 w-48 h-48 rounded-lg shadow-lg overflow-hidden">
-            <img
-              src={Scientists}
-              alt="Scientists"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex-shrink-0 w-48 h-48 rounded-lg shadow-lg overflow-hidden">
-            <img
-              src={littleexplorers}
-              alt="Gallery Back"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "-10px",
+              transform: "translateY(-50%)",
+              width: "10px",
+              height: "40px",
+              backgroundColor: "#000",
+              borderRadius: "50%",
+              boxShadow: "inset 0 0 4px rgba(255, 255, 255, 0.5)",
+            }}
+          ></div>
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: "-10px",
+              transform: "translateY(-50%)",
+              width: "10px",
+              height: "40px",
+              backgroundColor: "#000",
+              borderRadius: "50%",
+              boxShadow: "inset 0 0 4px rgba(255, 255, 255, 0.5)",
+            }}
+          ></div>
+          <img
+            src={littleexplorers}
+            alt="Little Explorers"
+            style={{
+              width: "calc(100% - 40px)",
+              height: "100%",
+              margin: "0 20px",
+              objectFit: "cover",
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            width: "100%",
+            height: "350px",
+            backgroundColor: "#000",
+            borderRadius: "12px",
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "-10px",
+              transform: "translateY(-50%)",
+              width: "10px",
+              height: "40px",
+              backgroundColor: "#000",
+              borderRadius: "50%",
+              boxShadow: "inset 0 0 4px rgba(255, 255, 255, 0.5)",
+            }}
+          ></div>
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: "-10px",
+              transform: "translateY(-50%)",
+              width: "10px",
+              height: "40px",
+              backgroundColor: "#000",
+              borderRadius: "50%",
+              boxShadow: "inset 0 0 4px rgba(255, 255, 255, 0.5)",
+            }}
+          ></div>
+          <img
+            src={dancing}
+            alt="Dancing"
+            style={{
+              width: "calc(100% - 40px)",
+              height: "100%",
+              margin: "0 20px",
+              objectFit: "cover",
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            width: "100%",
+            height: "350px",
+            backgroundColor: "#000",
+            borderRadius: "12px",
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "-10px",
+              transform: "translateY(-50%)",
+              width: "10px",
+              height: "40px",
+              backgroundColor: "#000",
+              borderRadius: "50%",
+              boxShadow: "inset 0 0 4px rgba(255, 255, 255, 0.5)",
+            }}
+          ></div>
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: "-10px",
+              transform: "translateY(-50%)",
+              width: "10px",
+              height: "40px",
+              backgroundColor: "#000",
+              borderRadius: "50%",
+              boxShadow: "inset 0 0 4px rgba(255, 255, 255, 0.5)",
+            }}
+          ></div>
+          <img
+            src={Scientists}
+            alt="Little Scientists"
+            style={{
+              width: "calc(100% - 40px)",
+              height: "100%",
+              margin: "0 20px",
+              objectFit: "cover",
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            width: "100%",
+            height: "350px",
+            backgroundColor: "#000",
+            borderRadius: "12px",
+            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "-10px",
+              transform: "translateY(-50%)",
+              width: "10px",
+              height: "40px",
+              backgroundColor: "#000",
+              borderRadius: "50%",
+              boxShadow: "inset 0 0 4px rgba(255, 255, 255, 0.5)",
+            }}
+          ></div>
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: "-10px",
+              transform: "translateY(-50%)",
+              width: "10px",
+              height: "40px",
+              backgroundColor: "#000",
+              borderRadius: "50%",
+              boxShadow: "inset 0 0 4px rgba(255, 255, 255, 0.5)",
+            }}
+          ></div>
+          <img
+            src={kids3C}
+            alt="Kids Activity"
+            style={{
+              width: "calc(100% - 40px)",
+              height: "100%",
+              margin: "0 20px",
+              objectFit: "cover",
+            }}
+          />
         </div>
       </div>
     </div>
