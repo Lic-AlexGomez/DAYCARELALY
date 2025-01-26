@@ -20,6 +20,7 @@ import ConfirmAttendance from "./pages/ConfirmAttendance.jsx"
 import Allprograms from "./pages/Allprograms.jsx"
 import PreviousEventsPhotos from "./pages/PreviousEventsPhotos.jsx"
 import Gallery from "./pages/Gallery.jsx"
+import Services from "./pages/Services.jsx"
 
 // Componentes del Admin Dashboard
 import Sidebar from "./component/admin/Sidebar"
@@ -171,6 +172,7 @@ const MainRoutes = () => {
         <Route path="/contactus" element={<ContactUs />} />
         <Route path="/events" element={<Events />} />
         <Route path="/moreinfo" element={<MoreInfo />} />
+        <Route path="/services" element={<Services />} />
         <Route path="/eventphotos" element={<PreviousEventsPhotos />} />
         <Route path="/confirmattendance" element={<ConfirmAttendance />} />
         <Route path="/admin-dashboard/*" element={<AdminDashboard />} />

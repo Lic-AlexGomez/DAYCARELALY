@@ -121,7 +121,7 @@ useEffect (() => {
                 </ul>
               )}
             </li>
-            <li className="navLink">Services</li>
+            <li className="navLink"><Link className="navLink" to="/services">Services</Link></li>
             <li className="navLink"><Link className="navLink" to="/gallery">Gallery</Link></li>
             <li className="navLink"><Link className="navLink" to="/programs">Programs</Link></li>
             <li className="navLink"><Link className="navLink" to="/events">Events</Link></li>
