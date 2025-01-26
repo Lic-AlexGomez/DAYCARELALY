@@ -27,17 +27,21 @@
 }
 
 .title-services {
+    margin: .5rem;
     color: #111827;
     font-size: 1.125rem;
     line-height: 1.75rem;
     font-weight: 600;
+    
 }
 
 .desc-services {
-    margin-top: 0.5rem;
+    margin: 1rem;
     color: #6B7280;
     font-size: 0.875rem;
     line-height: 1.25rem;
+    width: 20rem;
+    height: 5rem;
 }
 
 .action-services {
