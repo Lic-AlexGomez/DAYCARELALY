@@ -3,12 +3,12 @@ import { Plus, Edit, Trash } from 'lucide-react';
 
 const ClassesView = () => {
   const [classes, setClasses] = useState([
-    { id: 1, name: 'Clase de Arte', teacher: 'Ana Gómez', capacity: 15, schedule: 'Lunes y Miércoles 10:00-11:30' },
-    { id: 2, name: 'Clase de Música', teacher: 'Carlos Ruiz', capacity: 12, schedule: 'Martes y Jueves 14:00-15:30' },
-    { id: 3, name: 'Clase de Baile', teacher: 'Laura Sánchez', capacity: 20, schedule: 'Viernes 16:00-17:30' },
+    { id: 1, name: 'Clase de Arte',description:'esto es una prueba', teacher: 'Ana Gómez', capacity: 15,price:'$20',age:'5-7', schedule: 'Lunes y Miércoles 10:00-11:30',image:'image.png' },
+    { id: 2, name: 'Clase de Ingles',description:'esto es una prueba', teacher: 'Juan Gómez', capacity: 20,price:'$15',age:'7-10', schedule: 'Lunes y Miércoles 10:00-11:30',image:'image.png' },
+    { id: 3, name: 'Clase de Japones',description:'esto es una prueba', teacher: 'Pedro Gómez', capacity: 25,price:'$10',age:'4-7', schedule: 'Lunes y Miércoles 10:00-11:30',image:'image.png' },
   ]);
 
-  const [newClass, setNewClass] = useState({ name: '', teacher: '', capacity: '', schedule: '' });
+  const [newClass, setNewClass] = useState({ name: '',description:'',teacher: '',capacity: '',price:'',age:'', schedule: '',image:''});
 
   const handleInputChange = (e) => {
     setNewClass({ ...newClass, [e.target.name]: e.target.value });
@@ -17,7 +17,7 @@ const ClassesView = () => {
   const handleAddClass = (e) => {
     e.preventDefault();
     setClasses([...classes, { id: classes.length + 1, ...newClass }]);
-    setNewClass({ name: '', teacher: '', capacity: '', schedule: '' });
+    setNewClass({ name: '',description:'', teacher: '', capacity: '',price:'',age:'', schedule: '',image:'' });
   };
 
   const handleDeleteClass = (id) => {
@@ -29,7 +29,9 @@ const ClassesView = () => {
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Clases</h2>
       <div className="tw-mb-6">
         <form onSubmit={handleAddClass} className="tw-flex tw-space-x-4">
-          <input
+          <div className='tw-flex-1'>
+            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre de la clase</label>
+            <input
             type="text"
             name="name"
             value={newClass.name}
@@ -38,7 +40,22 @@ const ClassesView = () => {
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
-          <input
+          </div>
+          <div className='tw-flex-1'>
+          <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
+            <input
+            type="text"
+            name="description"
+            value={newClass.description}
+            onChange={handleInputChange}
+            placeholder="Descripcion de la clase"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+            required
+          />
+          </div>
+          <div className='tw-flex-1'>
+          <label htmlFor="description" className='tw-block tw-mb-2'>Teacher</label>
+            <input
             type="text"
             name="teacher"
             value={newClass.teacher}
@@ -47,6 +64,9 @@ const ClassesView = () => {
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
+          </div>
+          <div className='tw-flex-1'>
+          <label htmlFor="Capacity" className='tw-block tw-mb-2'>Capacity</label> 
           <input
             type="number"
             name="capacity"
@@ -56,7 +76,34 @@ const ClassesView = () => {
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
+          </div>
+          <div className='tw-flex-1'>
+          <label htmlFor="Price" className='tw-block tw-mb-2'>Price</label> 
           <input
+            type="text"
+            name="price"
+            value={newClass.price}
+            onChange={handleInputChange}
+            placeholder="Costo"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+            required
+          />
+          </div>
+          <div className='tw-flex-1' >
+          <label htmlFor="Age" className='tw-block tw-mb-2'> Rango de Edad</label> 
+            <input
+            type="text"
+            name="age"
+            value={newClass.age}
+            onChange={handleInputChange}
+            placeholder="rango de edad"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+            required
+            />
+          </div>
+          <div className='tw-flex-1'>
+          <label htmlFor="schedule" className='tw-block tw-mb-2'>Horario</label>
+            <input
             type="text"
             name="schedule"
             value={newClass.schedule}
@@ -65,6 +112,20 @@ const ClassesView = () => {
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
+          </div>
+          <div className='tw-flex-1'>
+          <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
+            <input
+            type="file"
+            name="image"
+            value={newClass.image}
+            onChange={handleInputChange}
+            placeholder="image"
+            className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+            required
+          />
+          </div>
+          
           <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
             Agregar Clase
@@ -75,9 +136,13 @@ const ClassesView = () => {
         <thead className="tw-bg-gray-100">
           <tr>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Nombre</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Descripcion</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Profesor</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacidad</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Precio</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Edad</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Horario</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Imagen</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
           </tr>
         </thead>
@@ -85,9 +150,13 @@ const ClassesView = () => {
           {classes.map((classItem) => (
             <tr key={classItem.id}>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.description}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.teacher}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.capacity}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.price}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.age}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.schedule}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.image}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">
                   <Edit className="tw-w-5 tw-h-5" />
