@@ -636,3 +636,32 @@ class Activity(db.Model):
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat()
         }
+    
+
+class VirtualClass(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)
+    duration = db.Column(db.String(50), nullable=False)
+    teacher = db.Column(db.String(120), nullable=False)
+    capacity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f'<VirtualClass {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "date": self.date.isoformat(),
+            "time": self.time.isoformat(),
+            "duration": self.duration,
+            "teacher": self.teacher,
+            "capacity": self.capacity,
+            "price": self.price
+        }
+

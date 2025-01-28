@@ -29,6 +29,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 		inactiveAccounts: [],
 		approvals: [],
 		activities: [],
+
+		//parent dashboard store
+		parentvirtualClasses: [],
 	  },
 	  actions: {
 		signUp: async (signupData) => {
@@ -845,7 +848,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  return { success: false, error: error.message }
 			}
 		  },
-
+		  getVirtualClasses : async () => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/virtual-classes")
+			  if (response.ok) {
+				const data = await response.json()
+				setStore({ parentvirtualClasses: data })
+			  }
+			} catch (error) {
+				console.error("Error fetching parent virtual classes:", error)
+			}						
+		},
 	  },
 	}
   }

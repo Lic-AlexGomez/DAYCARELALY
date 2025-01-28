@@ -2,7 +2,7 @@ import cloudinary,os
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Flask, request, jsonify, Blueprint, current_app
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
@@ -1021,4 +1021,127 @@ def delete_activity(id):
         return jsonify({"error": str(e)}), 500
 
 
+# Virtual Class routes
+@api.route('/virtual-classes', methods=['GET'])
+# @jwt_required()
+def get_virtual_classes():
+    virtual_classes = VirtualClass.query.all()
+    return jsonify([vc.serialize() for vc in virtual_classes]), 200
 
+@api.route('/virtual-classes/<int:id>', methods=['GET'])
+@jwt_required()
+def get_virtual_class(id):
+    virtual_class = VirtualClass.query.get_or_404(id)
+    return jsonify(virtual_class.serialize()), 200
+
+@api.route('/virtual-classes', methods=['POST'])
+# @jwt_required()
+def create_virtual_class():
+   
+    try:
+        data = request.json
+        print(data)
+        new_virtual_class = VirtualClass(
+            name=data['name'],
+            description=data['description'],
+            date=datetime.fromisoformat(data['date']),
+            time=data['time'],
+            duration=data['duration'],
+            teacher=data['teacher'],
+            capacity=data['capacity'],
+            price=data['price']
+        )
+        db.session.add(new_virtual_class)
+        db.session.commit()
+        return jsonify(new_virtual_class.serialize()), 201
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@api.route('/virtual-classes/<int:id>', methods=['PUT'])
+@jwt_required()
+def update_virtual_class(id):
+    try:
+        virtual_class = VirtualClass.query.get_or_404(id)
+        data = request.json
+        virtual_class.name = data.get('name', virtual_class.name)
+        virtual_class.description = data.get('description', virtual_class.description)
+        virtual_class.date = datetime.fromisoformat(data.get('date', str(virtual_class.date)))
+        virtual_class.time = data.get('time', virtual_class.time)
+        virtual_class.duration = data.get('duration', virtual_class.duration)
+        virtual_class.teacher = data.get('teacher', virtual_class.teacher)
+        virtual_class.capacity = data.get('capacity', virtual_class.capacity)
+        virtual_class.price = data.get('price', virtual_class.price)
+        db.session.commit()
+        return jsonify(virtual_class.serialize()), 200
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@api.route('/virtual-classes/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_virtual_class(id):
+    virtual_class = VirtualClass.query.get_or_404(id)
+    try:
+        db.session.delete(virtual_class)
+        db.session.commit()
+        return '', 204
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+@api.route('/virtual-classes/sample-data', methods=['POST'])
+def add_sample_virtual_classes():
+    sample_data = [
+                {
+                    'name': 'Yoga for Kids',
+                    'description': 'A fun and engaging yoga class for children.',
+                    'date': '2023-11-01',
+                    'time': '10:00',
+                    'duration': '1',
+                    'teacher': 'John Doe',
+                    'capacity': 20,
+                    'price': 15.0
+                },
+                {
+                    'name': 'Art and Craft',
+                    'description': 'Creative art and craft activities for kids.',
+                    'date': '2023-11-02',
+                    'time': '14:00',
+                    'duration': '2 hours',
+                    'teacher': 'Jane Smith',
+                    'capacity': 15,
+                    'price': 20.0
+                },
+                {
+                    'name': 'Science Experiments',
+                    'description': 'Exciting science experiments for young minds.',
+                    'date': '2023-11-03',
+                    'time': '16:00',
+                    'duration': '1.5 hours',
+                    'teacher': 'Albert Einstein',
+                    'capacity': 25,
+                    'price': 25.0
+                }
+            ]
+
+    for data in sample_data:
+        new_virtual_class = VirtualClass(
+            name=data['name'],
+            description=data['description'],
+            date=datetime.fromisoformat(data['date']),
+            time=data['time'],
+            duration=data['duration'],
+            teacher=data['teacher'],
+            capacity=data['capacity'],
+            price=data['price']
+        )
+        db.session.add(new_virtual_class)
+
+    db.session.commit()
+    return jsonify({'message': 'Sample virtual classes added successfully'}), 201
