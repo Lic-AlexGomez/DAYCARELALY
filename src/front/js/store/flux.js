@@ -823,6 +823,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  return { success: false, error: error.message }
 			}
 		},
+		addClass: async (teacher_id, name, description,capacity, price, age,time,image) => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify({teacher_id, name, description, capacity, price, age,time,image }),
+			  })
+	
+			  if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || "Failed to create class")
+			  }
+	
+			  const data = await response.json()
+			  return { success: true, data }
+			} catch (error) {
+			  console.error("Class Error:", error.message)
+			  return { success: false, error: error.message }
+			}
+		  },
 
 	  },
 	}

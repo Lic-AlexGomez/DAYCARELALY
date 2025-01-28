@@ -73,6 +73,11 @@ class Teacher(db.Model):
             "certifications": self.certifications,
             "background_check": self.background_check
         }
+    def serialize_classes(self):
+        return {
+            'id':self.id,
+            'username':self.user.username
+        }
 
 class Child(db.Model):
     id = db.Column(db.Integer, primary_key=True)

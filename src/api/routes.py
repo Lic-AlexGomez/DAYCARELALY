@@ -249,6 +249,12 @@ def get_teachers():
     teachers = list(map(lambda x: x.serialize(), teachers))
     return jsonify(teachers), 200
 
+@api.route('/teachers/classes', methods=['GET'])
+def get_teachers_classes():
+    teachers = Teacher.query.all()
+    teachers = list(map(lambda x: x.serialize_classes(), teachers))
+    return jsonify(teachers), 200
+
 @api.route('/teachers/<int:id>', methods=['GET'])
 def get_teacher(id):
     teacher = Teacher.query.get(id)
