@@ -12,99 +12,103 @@ export const Classes = () => {
   const { store, actions } = useContext(Context);
   const [visibleClasses, setVisibleClasses] = useState(8);
 
-  useEffect(() => {
-    if (store.classes.length === 0) {
+    useEffect(()=>{
       actions.fetchClasses();
-    }
-  }, [store.classes.length]);
+    },[])
+
+  // useEffect(() => {
+  //   if (store.classes.length === 0) {
+  //     actions.fetchClasses();
+  //   }
+  // }, [store.classes.length]);
 
   const handleShowMore = () => {
     setVisibleClasses((prev) => prev + 4);
   };
 
-  const allClasses = [
-    {
-      id: 1,
-      title: "Language Class",
-      price: "45",
-      description: "Interactive brand client center through is customized value good ideas.",
-      age: "3-5 Years",
-      time: "8-10 am",
-      capacity: "30 Kids",
-      image: kids1C,
-    },
-    {
-      id: 2,
-      title: "Drawing Class",
-      price: "47",
-      description: "Interactive brand client center through is customized value good ideas.",
-      age: "3-4 Years",
-      time: "9-11 am",
-      capacity: "35 Kids",
-      image: kids2C,
-    },
-    {
-      id: 3,
-      title: "Mathematics Class",
-      price: "50",
-      description: "Interactive brand client center through is customized value good ideas.",
-      age: "3-5 Years",
-      time: "8-10 am",
-      capacity: "30 Kids",
-      image: kids3C,
-    },
-    {
-      id: 4,
-      title: "Language Class",
-      price: "45",
-      description: "Interactive brand client center through is customized value good ideas.",
-      age: "2-4 Years",
-      time: "8-10 am",
-      capacity: "30 Kids",
-      image: kids4C,
-    },
-    // Duplicate the first 4 items to match the 8-item grid
-    {
-      id: 5,
-      title: "Language Class",
-      price: "45",
-      description: "Interactive brand client center through is customized value good ideas.",
-      age: "3-5 Years",
-      time: "8-10 am",
-      capacity: "30 Kids",
-      image:kids1C,
-    },
-    {
-      id: 6,
-      title: "Drawing Class",
-      price: "47",
-      description: "Interactive brand client center through is customized value good ideas.",
-      age: "3-4 Years",
-      time: "9-11 am",
-      capacity: "35 Kids",
-      image: kids2C,
-    },
-    {
-      id: 7,
-      title: "Mathematics Class",
-      price: "50",
-      description: "Interactive brand client center through is customized value good ideas.",
-      age: "3-5 Years",
-      time: "8-10 am",
-      capacity: "30 Kids",
-      image: kids3C,
-    },
-    {
-      id: 8,
-      title: "Language Class",
-      price: "45",
-      description: "Interactive brand client center through is customized value good ideas.",
-      age: "2-4 Years",
-      time: "8-10 am",
-      capacity: "30 Kids",
-      image: kids4C,
-    },
-  ];
+  // const allClasses = [
+  //   {
+  //     id: 1,
+  //     title: "Language Class",
+  //     price: "45",
+  //     description: "Interactive brand client center through is customized value good ideas.",
+  //     age: "3-5 Years",
+  //     time: "8-10 am",
+  //     capacity: "30 Kids",
+  //     image: kids1C,
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Drawing Class",
+  //     price: "47",
+  //     description: "Interactive brand client center through is customized value good ideas.",
+  //     age: "3-4 Years",
+  //     time: "9-11 am",
+  //     capacity: "35 Kids",
+  //     image: kids2C,
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Mathematics Class",
+  //     price: "50",
+  //     description: "Interactive brand client center through is customized value good ideas.",
+  //     age: "3-5 Years",
+  //     time: "8-10 am",
+  //     capacity: "30 Kids",
+  //     image: kids3C,
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "Language Class",
+  //     price: "45",
+  //     description: "Interactive brand client center through is customized value good ideas.",
+  //     age: "2-4 Years",
+  //     time: "8-10 am",
+  //     capacity: "30 Kids",
+  //     image: kids4C,
+  //   },
+  //   // Duplicate the first 4 items to match the 8-item grid
+  //   {
+  //     id: 5,
+  //     title: "Language Class",
+  //     price: "45",
+  //     description: "Interactive brand client center through is customized value good ideas.",
+  //     age: "3-5 Years",
+  //     time: "8-10 am",
+  //     capacity: "30 Kids",
+  //     image:kids1C,
+  //   },
+  //   {
+  //     id: 6,
+  //     title: "Drawing Class",
+  //     price: "47",
+  //     description: "Interactive brand client center through is customized value good ideas.",
+  //     age: "3-4 Years",
+  //     time: "9-11 am",
+  //     capacity: "35 Kids",
+  //     image: kids2C,
+  //   },
+  //   {
+  //     id: 7,
+  //     title: "Mathematics Class",
+  //     price: "50",
+  //     description: "Interactive brand client center through is customized value good ideas.",
+  //     age: "3-5 Years",
+  //     time: "8-10 am",
+  //     capacity: "30 Kids",
+  //     image: kids3C,
+  //   },
+  //   {
+  //     id: 8,
+  //     title: "Language Class",
+  //     price: "45",
+  //     description: "Interactive brand client center through is customized value good ideas.",
+  //     age: "2-4 Years",
+  //     time: "8-10 am",
+  //     capacity: "30 Kids",
+  //     image: kids4C,
+  //   },
+  // ];
 
   return (
     <div className="tw-bg-white tw-py-12">
@@ -129,23 +133,22 @@ export const Classes = () => {
     
       <div className="tw-container tw-mx-auto tw-px-4">
         <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-6">
-          {/* {store.classes.slice(0, visibleClasses).map((classItem) => ( */}
-          {allClasses.slice(0, visibleClasses).map((classItem) => (
+           {store.classes.slice(0, visibleClasses).map((classItem) => ( 
             <div
               key={classItem.id}
               className="tw-bg-white tw-rounded-2xl tw-overflow-hidden tw-border-4 tw-border-[#FFC909]"
             >
               <div className="tw-aspect-w-16 tw-aspect-h-9">
                 <img
-                  src={classItem.image || kids1C}
-                  alt={classItem.title}
+                  src={classItem.image }
+                  alt={classItem.name}
                   className="tw-w-full tw-h-full tw-object-cover"
                 />
               </div>
               <div className="tw-p-4 tw-bg-[#9C29B2] tw-text-white">
                 <div className="tw-flex tw-justify-between tw-items-center tw-mb-3">
                   <h3 className="tw-text-lg tw-font-bold">
-                    {classItem.title}
+                    {classItem.name}
                   </h3>
                   <div className="tw-bg-[#FFC909] tw-text-[#9C29B2] tw-px-2 tw-py-2 tw-rounded-full tw-font-bold">
                     ${classItem.price}
@@ -176,7 +179,7 @@ export const Classes = () => {
           ))}
         </div>
 
-        {visibleClasses < allClasses.length && (
+        {visibleClasses < store.classes.length && (
           <div className="tw-text-center tw-mt-8">
             <button
               onClick={handleShowMore}

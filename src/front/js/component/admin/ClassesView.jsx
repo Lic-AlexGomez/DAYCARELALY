@@ -28,24 +28,6 @@ const ClassesView = () => {
     e.preventDefault();
     setClasses([...classes, { id: classes.length + 1, ...newClass }]);
     setNewClass({ teacher_id: '', name: '', description: '', capacity: '', price: '', age: '', time: '', image: '' });
-    if (
-      !newClass.teacher_id ||
-      !newClass.name ||
-      !newClass.description ||
-      !newClass.capacity ||
-      !newClass.price ||
-      !newClass.age ||
-      !newClass.time ||
-      !newClass.image
-    ) {
-      Swal.fire({
-        icon: "warning",
-        title: "Missing Fields",
-        text: "Please complete all fields before submitting.",
-      });
-      return;
-    }
-
     
     const confirmSubmit = await Swal.fire({
       title: "Are you sure?",
