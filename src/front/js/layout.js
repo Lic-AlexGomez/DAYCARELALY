@@ -72,6 +72,7 @@ import ParentPayments from "./component/parent/ParentPayments"
 import ParentSettings from "./component/parent/ParentSettings"
 import ParentSidebar from "./component/parent/ParentSidebar.jsx"
 import ParentHeader from "./component/parent/ParentHeader.jsx"
+import ParentVirtualClasses from "./component/parent/ParentVirtualClasses.jsx"
 
 
 
@@ -145,6 +146,7 @@ const ParentDashboardRoutes = () => (
     <Route path="/schedule" element={<ParentSchedule />} />
     <Route path="/activities" element={<ParentActivities />} />
     <Route path="/payments" element={<ParentPayments />} />
+    <Route path="/virtual-classes" element={<ParentVirtualClasses />} />
     <Route path="/settings" element={<ParentSettings />} />
     <Route path="*" element={<h1>Not found!</h1>} />
   </Routes>

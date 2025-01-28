@@ -1,6 +1,6 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
-import { Home, Users, Calendar, Activity, CreditCard, Settings } from "lucide-react"
+import { Home, Users, Calendar, Activity, CreditCard, Settings,Video } from "lucide-react"
 
 const menuItems = [
   { icon: Home, label: "Inicio", path: "/parent-dashboard" },
@@ -8,6 +8,7 @@ const menuItems = [
   { icon: Calendar, label: "Horario", path: "/parent-dashboard/schedule" },
   { icon: Activity, label: "Actividades", path: "/parent-dashboard/activities" },
   { icon: CreditCard, label: "Pagos", path: "/parent-dashboard/payments" },
+  { icon: Video, label: "Clases Virtuales", path: "/parent-dashboard/virtual-classes" },
   { icon: Settings, label: "Configuración", path: "/parent-dashboard/settings" },
 ]
 
@@ -24,7 +25,7 @@ const ParentSidebar = () => {
               <NavLink
                 to={item.path}
                 className="tw-flex tw-items-center tw-p-2 tw-text-gray-700 tw-rounded-lg hover:tw-bg-gray-100"
-                activClassName="tw-bg-gray-100 tw-text-blue-600"
+                
               >
                 <item.icon className="tw-w-5 tw-h-5 tw-mr-3" />
                 <span>{item.label}</span>
