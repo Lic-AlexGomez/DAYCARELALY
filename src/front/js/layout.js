@@ -49,6 +49,7 @@ import DashboardContent from "./component/admin/DahboardContent.jsx"
 import { SignupCommon } from "./pages/SignupCommon.jsx"
 import { StaffSignup } from "./component/admin/StaffSignup.jsx"
 import ProfileView from "./component/admin/ProfileView.jsx"
+import EventsView from "./component/admin/EventsView.jsx"
 
 // Componentes del Teacher Dashboard
 import TeacherDashboard from "./component/teacher/TeacherDashboard"
@@ -86,6 +87,7 @@ const AdminDashboard = () => (
         <Routes>
           <Route path="/" element={<DashboardOverview />} />
           <Route path="/clients" element={<ClientsView />} />
+          <Route path="/events" element={<EventsView />} />
           <Route path="/schedule-management" element={<ScheduleManagement />} />
           <Route path="/classes" element={<ClassesView />} />
           <Route path="/enrollments" element={<EnrollmentsView />} />

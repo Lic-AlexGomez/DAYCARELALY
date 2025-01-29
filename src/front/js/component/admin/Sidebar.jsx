@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { HomeIcon as House, Users, Clock, BookOpen, FileText, BarChartIcon as ChartNoAxesColumnIncreasing, PenLine, Package, Mail, Bell, Archive, Calendar, SquareCheckBig, Activity, Video, UserX, CircleCheckBig, PenTool, Settings } from 'lucide-react';
+import { HomeIcon as House, Users, Clock, BookOpen, FileText, BarChartIcon as ChartNoAxesColumnIncreasing, PenLine, Package, Mail, Bell, Archive, Calendar, SquareCheckBig, Activity, Video, UserX, CircleCheckBig, PenTool, Settings,Calendar1 } from 'lucide-react';
 
 const menuItems = [
   { icon: House, label: 'Dashboard', path: '/admin-dashboard' },
   { icon: Users, label: 'Clientes', path: '/admin-dashboard/clients' },
   { icon: Clock, label: 'Horarios', path: '/admin-dashboard/schedule-management' },
   { icon: BookOpen, label: 'Clases', path: '/admin-dashboard/classes' },
+  { icon: Calendar1, label: 'Eventos', path: '/admin-dashboard/events' },
   { icon: FileText, label: 'Inscripciones', path: '/admin-dashboard/enrollments' },
   { icon: ChartNoAxesColumnIncreasing, label: 'Informes', path: '/admin-dashboard/reports' },
   { icon: PenLine, label: 'Blog', path: '/admin-dashboard/blog' },
