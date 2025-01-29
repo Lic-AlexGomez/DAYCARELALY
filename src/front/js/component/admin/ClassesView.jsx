@@ -1,4 +1,4 @@
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Plus, Edit, Trash } from 'lucide-react';
 import { Context } from '../../store/appContext';
 import Swal from "sweetalert2";
@@ -6,28 +6,26 @@ import Swal from "sweetalert2";
 
 const ClassesView = () => {
   const { actions, store } = useContext(Context)
-  const [teachers,setTeachers] = useState([])
-  const [classes, setClasses] = useState([
-    { id: 1, name: 'Clase de Arte', description: 'esto es una prueba', teacher_id: 'Ana Gómez', capacity: 15, price: '$20', age: '5-7', time: 'Lunes y Miércoles 10:00-11:30', image: 'image.png' },
-    { id: 2, name: 'Clase de Ingles', description: 'esto es una prueba', teacher_id: 'Juan Gómez', capacity: 20, price: '$15', age: '7-10', time: 'Lunes y Miércoles 10:00-11:30', image: 'image.png' },
-    { id: 3, name: 'Clase de Japones', description: 'esto es una prueba', teacher_id: 'Pedro Gómez', capacity: 25, price: '$10', age: '4-7', time: 'Lunes y Miércoles 10:00-11:30', image: 'image.png' },
-  ]);
+  const [teachers, setTeachers] = useState([])
+  const [classes, setClasses] = useState([]);
 
   const [newClass, setNewClass] = useState({ teacher_id: '', name: '', description: '', capacity: '', price: '', age: '', time: '', image: '' });
+
+  useEffect(() => {
+    actions.fetchClasses()
+  }, []);
 
   const handleInputChange = (e) => {
     setNewClass({ ...newClass, [e.target.name]: e.target.value });
   };
-  const handleImageChange = async (e)=>{
+  const handleImageChange = async (e) => {
     const result = await actions.uploadToCloudinary(e.target.files[0])
-    if(result.success){
+    if (result.success) {
       setNewClass({ ...newClass, image: result.url });
     }
   }
   const handleAddClass = async (e) => {
     e.preventDefault();
-    setClasses([...classes, { id: classes.length + 1, ...newClass }]);
-    setNewClass({ teacher_id: '', name: '', description: '', capacity: '', price: '', age: '', time: '', image: '' });
     
     const confirmSubmit = await Swal.fire({
       title: "Are you sure?",
@@ -37,11 +35,11 @@ const ClassesView = () => {
       confirmButtonText: "Yes, add!",
       cancelButtonText: "No, cancel",
     });
-
+  
     if (!confirmSubmit.isConfirmed) {
       return;
     }
-
+  
     try {
       const result = await actions.addClass(
         newClass.teacher_id,
@@ -52,17 +50,20 @@ const ClassesView = () => {
         newClass.age,
         newClass.time,
         newClass.image
-
       );
-      console.log(result);
-
+  
       if (result) {
         Swal.fire({
           icon: "success",
           title: "Class Added",
           text: "a new class has been added!",
         });
-
+        
+        // Actualiza el store con la nueva clase
+        actions.fetchClasses();  // Asegúrate de tener esta función que recarga las clases
+        
+        // Limpiar el formulario
+        setNewClass({ teacher_id: '', name: '', description: '', capacity: '', price: '', age: '', time: '', image: '' });
       } else {
         Swal.fire({
           icon: "error",
@@ -79,21 +80,60 @@ const ClassesView = () => {
       });
     }
   };
-
-  const handleDeleteClass = (id) => {
-    setClasses(classes.filter(classItem => classItem.id !== id));
-  };
-  const getTeachers = async()=>{
-    const response=await fetch (`${process.env.BACKEND_URL}api/teachers/classes`)
-    if(response.ok){
-     const data= await response.json()
-     setTeachers(data)
-    }
- }
   
-  useEffect(()=>{
-     getTeachers()
-  },[])
+
+
+  const handleDeleteClass = async (id) => {
+    const confirmDelete = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (confirmDelete.isConfirmed) {
+      try {
+        const result = await actions.deleteClass(id);
+
+        if (result) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Clase eliminada',
+            text: 'La clase ha sido eliminada con éxito.',
+          });
+
+          actions.fetchClasses();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al eliminar la clase.',
+          });
+        }
+      } catch (error) {
+        console.error("Error en handleDeleteClass:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un error al intentar eliminar la clase. Intenta nuevamente.',
+        });
+      }
+    }
+  };
+
+  const getTeachers = async () => {
+    const response = await fetch(`${process.env.BACKEND_URL}api/teachers/classes`)
+    if (response.ok) {
+      const data = await response.json()
+      setTeachers(data)
+    }
+  }
+
+  useEffect(() => {
+    getTeachers()
+  }, [])
 
   return (
     <div>
@@ -113,39 +153,39 @@ const ClassesView = () => {
             /> */}
             <select name="teacher_id" onChange={handleInputChange} defaultValue={0} >
               <option value={0} disabled>select an option</option>
-              { teachers.map(item => {
+              {teachers.map(item => {
                 return (
                   <option key={`teacher-${item.id}`} value={item.id}>{item.username}</option>
                 )
               })
-              
+
               }
             </select>
-            </div>
-            <div className='tw-flex-1'>
-              <label htmlFor="name" className='tw-block tw-mb-2'>Nombre de la clase</label>
-              <input
-                type="text"
-                name="name"
-                value={newClass.name}
-                onChange={handleInputChange}
-                placeholder="Nombre de la clase"
-                className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                required
-              />
-            </div>
-            <div className='tw-flex-1'>
-              <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
-              <input
-                type="text"
-                name="description"
-                value={newClass.description}
-                onChange={handleInputChange}
-                placeholder="Descripcion de la clase"
-                className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                required
-              />
-            </div>
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre de la clase</label>
+            <input
+              type="text"
+              name="name"
+              value={newClass.name}
+              onChange={handleInputChange}
+              placeholder="Nombre de la clase"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
+            <input
+              type="text"
+              name="description"
+              value={newClass.description}
+              onChange={handleInputChange}
+              placeholder="Descripcion de la clase"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
           <div className='tw-flex-1'>
             <label htmlFor="Capacity" className='tw-block tw-mb-2'>Capacity</label>
             <input
@@ -216,7 +256,7 @@ const ClassesView = () => {
       <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
         <thead className="tw-bg-gray-100">
           <tr>
-          <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Profesor</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Profesor</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Nombre</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Descripcion</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacidad</th>
@@ -228,7 +268,7 @@ const ClassesView = () => {
           </tr>
         </thead>
         <tbody className="tw-divide-y tw-divide-gray-200">
-          {classes.map((classItem) => (
+          {store.classes.map((classItem) => (
             <tr key={classItem.id}>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.teacher_id}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
