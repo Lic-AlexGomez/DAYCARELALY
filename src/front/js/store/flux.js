@@ -29,6 +29,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		inactiveAccounts: [],
 		approvals: [],
 		activities: [],
+		events:[],
 
 		//parent dashboard store
 		parentvirtualClasses: [],
@@ -888,7 +889,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				body: JSON.stringify(classData),
 			  })
 	
-			  if (response.ok) {
+			  if (response.ok) { 
 				const updatedClass = await response.json()
 				const store = getStore()
 				const updatedClasses = store.classes.map((classes) => (classes.id === id ? updatedClass : classes))

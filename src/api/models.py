@@ -235,6 +235,7 @@ class Event(db.Model):
     description = db.Column(db.Text, nullable=True)
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
+    image = db.Column(db.String(200))
 
     def __repr__(self):
         return f'<Event {self.name}>'
@@ -245,7 +246,8 @@ class Event(db.Model):
             "name": self.name,
             "description": self.description,
             "start_time": self.start_time.isoformat(),
-            "end_time": self.end_time.isoformat()
+            "end_time": self.end_time.isoformat(),
+            "image": self.image
         }
 
 class Message(db.Model):

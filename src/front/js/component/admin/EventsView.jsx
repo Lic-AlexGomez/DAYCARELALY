@@ -6,9 +6,15 @@ import Swal from "sweetalert2";
 
 const EventsView = () => {
   const { actions, store } = useContext(Context)
-  const [newEvent, setNewEvent] = useState({  name: '', date: '', description: '',  image: '' });
+  const [newEvent, setNewEvent] = useState({  name: '',description: '', start_time: '',end_time: '',   image: '' });
 
-  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewEvent(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
   return (
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Eventos</h2>
@@ -19,6 +25,7 @@ const EventsView = () => {
             <input
               type="text"
               name="name"
+              value={newEvent.name}
               placeholder="Nombre del evento"
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
@@ -36,12 +43,23 @@ const EventsView = () => {
             />
           </div>
           <div className='tw-flex-1'>
-            <label htmlFor="fecha" className='tw-block tw-mb-2'>Fecha del evento</label>
+            <label htmlFor="fecha de inicio" className='tw-block tw-mb-2'>Fecha de inicio</label>
             <input
-              type="number"
-              name="fecha"
-              value={newEvent.date}
-              placeholder="fecha del evento"
+              type="datetime-local"
+              name="fecha de inicio"
+              value={newEvent.start_time}
+              placeholder="fecha de inicio"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="fecha de termino" className='tw-block tw-mb-2'>Fecha de termino</label>
+            <input
+              type="datetime-local"
+              name="fecha de termino"
+              value={newEvent.end_time}
+              placeholder="fecha de termino "
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
             />
@@ -71,18 +89,19 @@ const EventsView = () => {
             
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Titulo</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Descripcion</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Fecha</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Fecha de inicio</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Fecha de termino</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Imagen</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
           </tr>
         </thead>
         <tbody className="tw-divide-y tw-divide-gray-200">
-          {store.classes.map((classItem) => (
+          {store.events.map((event) => (
             <tr key={classItem.id}>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.description}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.date}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.image}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.name}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.description}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.start_time}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.end_time}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3 " >
                   <Edit className="tw-w-5 tw-h-5" />
