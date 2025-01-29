@@ -11,6 +11,7 @@ import Aday from "../component/Aday.jsx";
 import ServicesSection from "../component/services-section.jsx";
 import AboutUs from "../component/AboutUs.jsx";
 import EducationalPrograms from "../component/EducationalPrograms.jsx";
+import Statistics from "../component/Statistics.jsx";
 
 
 export const Home = () => {
@@ -28,6 +29,8 @@ useEffect(() => {
 			<Classes />
 			<EducationalPrograms />
 			{/* <FileUploader /> */}
+			
+			<Statistics />
 			<Getintouch />
 		</div>
 	);

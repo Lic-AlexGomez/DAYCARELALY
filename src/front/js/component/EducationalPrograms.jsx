@@ -34,15 +34,12 @@ const EducationalPrograms = () => {
   ]
 
   return (
-    <div className="tw-min-h-screen tw-bg-gradient-to-b tw-from-purple-100 tw-to-purple-200 tw-py-16 tw-px-4 tw-relative tw-overflow-hidden">
+    <div className="tw-border-none tw-z-10 tw-min-h-screen tw-bg-gradient-to-b tw-from-purple-100 tw-to-purple-200 tw-py-16 tw-px-4 tw-relative tw-overflow-hidden">
       {/* Decorative Elements */}
-      <div className="tw-absolute tw-left-8 tw-top-8 tw-animate-float">
-          
-          <img src={img11} alt="Decorative Element" />
-         
+      <div className="tw-absolute tw-left-8 tw-top-8 tw-animate-float">       
+          <img src={img11} alt="Decorative Element" /> 
       </div>
-
-      <div className="tw-absolute tw-right-8 tw-top-8 tw-animate-float-delayed">
+            <div className="tw-absolute tw-right-8 tw-top-8 tw-animate-float-delayed">
         <img src={img10} alt="Decorative Element" />
       </div>
 
@@ -87,15 +84,21 @@ const EducationalPrograms = () => {
           ))}
         </div>
       </div>
-
+ 
       {/* Bottom Wave */}
-      <div className="tw-absolute tw-mt-20 tw-bottom-0 tw-left-0 tw-right-0">
-        <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="tw-w-full">
-          <path
-            d="M0 100L48 108.3C96 116.7 192 133.3 288 141.7C384 150 480 150 576 133.3C672 116.7 768 83.3 864 75C960 66.7 1056 83.3 1152 91.7C1248 100 1344 100 1392 100L1440 100V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0V100Z"
-            fill="white"
-          />
+      {/* <div className="tw-absolute tw-bottom-0 tw-left-0 tw-right-0">
+      <svg
+          className="tw-w-full tw-h-32"
+          viewBox="0 0 1440 120"
+          preserveAspectRatio="none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M0 0C480 80 960 80 1440 0V120H0V0Z" fill="white" />
         </svg>
+      </div> */}
+      <div className="tw-absolute tw-mt-20 tw-bottom-0 tw-left-0 tw-right-0 edu">
+
       </div>
     </div>
   )
