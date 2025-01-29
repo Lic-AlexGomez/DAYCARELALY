@@ -119,12 +119,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			const response = await fetch(process.env.BACKEND_URL + "/api/classes")
 			if (response.ok) {
 			  const data = await response.json()
+			  console.log("Clases obtenidas:", data);
 			  setStore({ classes: data })
 			} else {
 			  console.error("Error fetching classes:", response.status)
 			}
 		  } catch (error) {
 			console.error("Error fetching classes:", error)
+			return null
 		  }
 		},
 		login: async (email, password) => {
@@ -859,6 +861,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.error("Error fetching parent virtual classes:", error)
 			}						
 		},
+		deleteClass: async (id) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
+				method: "DELETE",
+			  });
+		  
+			  if (response.ok) {
+				return { success: true };
+			  } else {
+				console.error("Error deleting class:", response.status);
+				return { success: false, error: `Status: ${response.status}` };
+			  }
+			} catch (error) {
+			  console.error("Error deleting class:", error);
+			  return { success: false, error: error.message };
+			}
+		  },
+		  
 	  },
 	}
   }

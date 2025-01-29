@@ -322,6 +322,17 @@ def create_class():
     db.session.commit()
     return jsonify(new_class.serialize()), 201
 
+@api.route('/classes/<int:id>', methods=['DELETE'])
+#@jwt_required()
+def delete_class(id):
+    classes = Class.query.get(id)
+    if not classes:
+        return jsonify({"error": "Class not found"}), 404
+
+    db.session.delete(classes)
+    db.session.commit()
+    return jsonify({"message": "class deleted"}), 200
+
 @api.route('/events', methods=['GET'])
 def get_events():
     events = Event.query.all()
