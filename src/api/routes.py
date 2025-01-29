@@ -333,6 +333,27 @@ def delete_class(id):
     db.session.commit()
     return jsonify({"message": "class deleted"}), 200
 
+@api.route('/classes/<int:id>', methods=['PUT'])
+#@jwt_required()
+def update_class(id):
+    classes = Class.query.get(id)
+    if classes is None:
+        return jsonify({"error": "Class not found"}), 404
+    
+    data = request.json
+    classes.teacher_id = data.get('teacher_id', classes.teacher_id)
+    classes.name = data.get('name', classes.name)
+    classes.description = data.get('description', classes.description)
+    classes.capacity = data.get('capacity', classes.capacity)
+    classes.price = data.get('price', classes.price)
+    classes.age = data.get('age', classes.age)
+    classes.time = data.get('time', classes.time)
+    classes.image = data.get('image', classes.image)
+    
+    db.session.commit()
+    return jsonify(classes.serialize()), 200
+
+
 @api.route('/events', methods=['GET'])
 def get_events():
     events = Event.query.all()
