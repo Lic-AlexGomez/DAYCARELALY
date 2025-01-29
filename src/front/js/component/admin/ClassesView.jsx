@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Plus, Edit, Trash } from 'lucide-react';
+import { Plus, Edit, Trash,X } from 'lucide-react';
 import { Context } from '../../store/appContext';
 import Swal from "sweetalert2";
 
@@ -7,8 +7,8 @@ import Swal from "sweetalert2";
 const ClassesView = () => {
   const { actions, store } = useContext(Context)
   const [teachers, setTeachers] = useState([])
-  const [classes, setClasses] = useState([]);
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingClass, setEditingClass] = useState(null)
   const [newClass, setNewClass] = useState({ teacher_id: '', name: '', description: '', capacity: '', price: '', age: '', time: '', image: '' });
 
   useEffect(() => {
@@ -16,7 +16,12 @@ const ClassesView = () => {
   }, []);
 
   const handleInputChange = (e) => {
-    setNewClass({ ...newClass, [e.target.name]: e.target.value });
+    const { name, value } = e.target
+    if (editingClass) {
+      setEditingClass({ ...editingClass, [name]: value })
+    } else {
+      setNewClass({ ...newClass, [name]: value })
+    }
   };
   const handleImageChange = async (e) => {
     const result = await actions.uploadToCloudinary(e.target.files[0])
@@ -58,11 +63,8 @@ const ClassesView = () => {
           title: "Class Added",
           text: "a new class has been added!",
         });
-        
-        // Actualiza el store con la nueva clase
-        actions.fetchClasses();  // Asegúrate de tener esta función que recarga las clases
-        
-        // Limpiar el formulario
+        actions.fetchClasses();  
+
         setNewClass({ teacher_id: '', name: '', description: '', capacity: '', price: '', age: '', time: '', image: '' });
       } else {
         Swal.fire({
@@ -81,7 +83,16 @@ const ClassesView = () => {
     }
   };
   
-
+  const handleEditClass = (classes) => {
+    setEditingClass(classes)
+    setIsModalOpen(true)
+  }
+  const handleUpdateClass = async (e) => {
+    e.preventDefault()
+    await actions.updateClass(editingClass.id, editingClass)
+    setIsModalOpen(false)
+    setEditingClass(null)
+  }
 
   const handleDeleteClass = async (id) => {
     const confirmDelete = await Swal.fire({
@@ -279,7 +290,7 @@ const ClassesView = () => {
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.time}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.image}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">
+                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3 " onClick={()=> handleEditClass(classItem)}>
                   <Edit className="tw-w-5 tw-h-5" />
                 </button>
                 <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteClass(classItem.id)}>
@@ -290,7 +301,146 @@ const ClassesView = () => {
           ))}
         </tbody>
       </table>
+      {isModalOpen && (
+        <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
+          <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
+            <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
+              <h3 className="tw-text-xl tw-font-semibold">Editar Clase</h3>
+              <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
+                <X className="tw-w-6 tw-h-6" />
+              </button>
+            </div>
+            <form onSubmit={handleUpdateClass} className="tw-space-y-4">
+            <div className='tw-flex-1'>
+            <label htmlFor="teacher_id" className='tw-block tw-mb-2'>Teacher ID</label>
+            {/* <input
+              type="text"
+              name="teacher_id"
+              value={newClass.teacher_id}
+              onChange={handleInputChange}
+              placeholder="Profesor"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            /> */}
+            <select name="teacher_id" onChange={handleInputChange} defaultValue={0} >
+              <option value={0} disabled>select an option</option>
+              {teachers.map(item => {
+                return (
+                  <option key={`teacher-${item.id}`} value={item.id}>{item.username}</option>
+                )
+              })
+
+              }
+            </select>
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre de la clase</label>
+            <input
+              type="text"
+              name="name"
+              value={editingClass.name}
+              onChange={handleInputChange}
+              placeholder="Nombre de la clase"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
+            <input
+              type="text"
+              name="description"
+              value={editingClass.description}
+              onChange={handleInputChange}
+              placeholder="Descripcion de la clase"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="Capacity" className='tw-block tw-mb-2'>Capacity</label>
+            <input
+              type="number"
+              name="capacity"
+              value={editingClass.capacity}
+              onChange={handleInputChange}
+              placeholder="Capacidad"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="Price" className='tw-block tw-mb-2'>Price</label>
+            <input
+              type="number"
+              name="price"
+              value={editingClass.price}
+              onChange={handleInputChange}
+              placeholder="Costo"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1' >
+            <label htmlFor="Age" className='tw-block tw-mb-2'> Rango de Edad</label>
+            <input
+              type="text"
+              name="age"
+              value={editingClass.age}
+              onChange={handleInputChange}
+              placeholder="rango de edad"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="time" className='tw-block tw-mb-2'>Horario</label>
+            <input
+              type="text"
+              name="time"
+              value={editingClass.time}
+              onChange={handleInputChange}
+              placeholder="Horario"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
+            <input
+              type="file"
+              name="image"
+              // value={editingClass.image}
+              onChange={handleImageChange}
+              placeholder="image"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+              
+              
+              
+              <div className="tw-flex tw-justify-end tw-space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="tw-bg-gray-200 tw-text-gray-700 tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-gray-300"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
+                >
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
+    
   );
 };
 

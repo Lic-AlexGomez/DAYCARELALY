@@ -878,6 +878,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  return { success: false, error: error.message };
 			}
 		  },
+		  updateClass: async (id, classData) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
+				method: "PUT",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify(classData),
+			  })
+	
+			  if (response.ok) {
+				const updatedClass = await response.json()
+				const store = getStore()
+				const updatedClasses = store.classes.map((classes) => (classes.id === id ? updatedClass : classes))
+				setStore({ classes: updatedClasses })
+				return updatedClass
+			  } else {
+				console.error("Error updating client:", response.status)
+			  }
+			} catch (error) {
+			  console.error("Error updating client:", error)
+			}
+		  },
 		  
 	  },
 	}
