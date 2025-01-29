@@ -29,6 +29,7 @@ const ClassesView = () => {
       setNewClass({ ...newClass, image: result.url });
     }
   }
+  
   const handleAddClass = async (e) => {
     e.preventDefault();
     
