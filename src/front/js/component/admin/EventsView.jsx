@@ -8,6 +8,10 @@ const EventsView = () => {
   const { actions, store } = useContext(Context)
   const [newEvent, setNewEvent] = useState({  name: '',description: '', start_time: '',end_time: '',   image: '' });
 
+  useEffect(() => {
+      actions.fetchEvents();
+    }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewEvent(prevState => ({
@@ -97,7 +101,7 @@ const EventsView = () => {
         </thead>
         <tbody className="tw-divide-y tw-divide-gray-200">
           {store.events.map((event) => (
-            <tr key={classItem.id}>
+            <tr key={event.id}>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.name}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.description}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.start_time}</td>
