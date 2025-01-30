@@ -291,6 +291,118 @@ def create_teacher():
     db.session.commit()
     return jsonify(new_teacher.serialize()), 201
 
+@api.route('/add_simple_data_user', methods=['POST'])
+def add_simple_data_user():
+    try:
+        # Verificar si ya existen datos en la tabla User
+        if User.query.count() > 0:
+            return jsonify({"message": "La tabla User ya contiene datos."}), 200
+
+        # Crear datos simples de usuarios
+        simple_users = [
+            {
+                "id": 1,
+                "username": "johndoe",
+                "email": "johndoe@example.com",
+                "password_hash": "hashed_password_1"
+            },
+            {
+                "id": 2,
+                "username": "janesmith",
+                "email": "janesmith@example.com",
+                "password_hash": "hashed_password_2"
+            },
+            {
+                "id": 3,
+                "username": "alicejohnson",
+                "email": "alicejohnson@example.com",
+                "password_hash": "hashed_password_3"
+            }
+        ]
+
+        # Insertar los datos en la base de datos
+        for user_data in simple_users:
+            new_user = User(
+                id=user_data["id"],
+                username=user_data["username"],
+                email=user_data["email"],
+                password_hash=user_data["password_hash"]
+            )
+            db.session.add(new_user)
+
+        db.session.commit()
+
+        return jsonify({"message": "Datos simples de usuarios agregados exitosamente."}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+@api.route('/add_simple_data_teacher', methods=['POST'])
+def add_simple_data_teacher():
+    print("dd")
+    try:
+        # Verificar si ya existen datos en la tabla Teacher
+        if Teacher.query.count() > 0:
+            return jsonify({"message": "La tabla Teacher ya contiene datos."}), 200
+
+        # Crear datos simples de profesores
+        simple_teachers = [
+            {
+                "user_id": 1,
+                "full_name": "John Doe",
+                "specialization": "Mathematics",
+                "qualifications": "PhD in Mathematics",
+                "teaching_experience": "10 years",
+                "certifications_url": "https://example.com/certifications/johndoe",
+                "background_check_url": "https://example.com/background/johndoe"
+            },
+            {
+                "user_id": 2,
+                "full_name": "Jane Smith",
+                "specialization": "Physics",
+                "qualifications": "MSc in Physics",
+                "teaching_experience": "5 years",
+                "certifications_url": "https://example.com/certifications/janesmith",
+                "background_check_url": "https://example.com/background/janesmith"
+            },
+            {
+                "user_id": 3,
+                "full_name": "Alice Johnson",
+                "specialization": "Chemistry",
+                "qualifications": "BSc in Chemistry",
+                "teaching_experience": "3 years",
+                "certifications_url": "https://example.com/certifications/alicejohnson",
+                "background_check_url": "https://example.com/background/alicejohnson"
+            }
+        ]
+
+        # Insertar los datos en la base de datos
+        for teacher_data in simple_teachers:
+            # Verificar si el usuario existe
+            user = User.query.get(teacher_data["user_id"])
+            print(user)
+            if not user:
+                return jsonify({"error": f"User with ID {teacher_data['user_id']} not found."}), 404
+
+            new_teacher = Teacher(
+                user_id=teacher_data["user_id"],
+                full_name=teacher_data["full_name"],
+                specialization=teacher_data["specialization"],
+                qualifications=teacher_data["qualifications"],
+                teaching_experience=teacher_data["teaching_experience"],
+                certifications_url=teacher_data["certifications_url"],
+                background_check_url=teacher_data["background_check_url"]
+            )
+            db.session.add(new_teacher)
+
+        db.session.commit()
+
+        return jsonify({"message": "Datos simples de profesores agregados exitosamente."}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
 @api.route('/classes', methods=['GET'])
 def get_classes():
     classes = Class.query.all()

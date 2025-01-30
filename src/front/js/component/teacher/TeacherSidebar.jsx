@@ -6,7 +6,7 @@ const menuItems = [
   { icon: Home, label: "Inicio", path: "/teacher-dashboard" },
   { icon: BookOpen, label: "Mis Clases", path: "/teacher-dashboard/classes" },
   { icon: Users, label: "Estudiantes", path: "/teacher-dashboard/students" },
-  { icon: CheckSquare, label: "Tareas", path: "/teacher-dashboard/assignments" },
+  // { icon: CheckSquare, label: "Tareas", path: "/teacher-dashboard/assignments" },
   { icon: Calendar, label: "Horario", path: "/teacher-dashboard/schedule" },
   { icon: Settings, label: "Configuración", path: "/teacher-dashboard/settings" },
 ]
