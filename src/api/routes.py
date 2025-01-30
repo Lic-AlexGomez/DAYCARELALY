@@ -486,9 +486,9 @@ def create_event():
     new_event = Event(
         name=data['name'],
         description=data.get('description', ''),
-        image=data.get('image',''),
         start_time=datetime.fromisoformat(data['start_time']),
-        end_time=datetime.fromisoformat(data['end_time'])
+        end_time=datetime.fromisoformat(data['end_time']),
+        image=data.get('image','')
     )
     db.session.add(new_event)
     db.session.commit()

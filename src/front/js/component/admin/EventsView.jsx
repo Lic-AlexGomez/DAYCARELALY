@@ -1,16 +1,22 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Plus, Edit, Trash,X } from 'lucide-react';
+import { Plus, Edit, Trash, X } from 'lucide-react';
 import { Context } from '../../store/appContext';
 import Swal from "sweetalert2";
 
 
 const EventsView = () => {
   const { actions, store } = useContext(Context)
-  const [newEvent, setNewEvent] = useState({  name: '',description: '', start_time: '',end_time: '',   image: '' });
+  const [newEvent, setNewEvent] = useState({
+    name: '',
+    description: '',
+    start_time: '',
+    end_time: '',
+    image: ''
+  });
 
   useEffect(() => {
-      actions.fetchEvents();
-    }, []);
+    actions.fetchEvents();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -19,54 +25,125 @@ const EventsView = () => {
       [name]: value
     }));
   };
-  const handleDeleteEvent = async (id) => {
-      const confirmDelete = await Swal.fire({
-        title: '¿Estás seguro?',
-        text: "Esta acción no se puede deshacer.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
+
+  const handleImageChange = async (e) => {
+    const result = await actions.uploadToCloudinary(e.target.files[0]);
+    if (result.success) {
+      setNewEvent(prevState => ({
+        ...prevState,
+        image: result.url
+      }));
+    }
+  };
+  
+  const handleAddEvent = async (e) => {
+    e.preventDefault();
+
+
+
+    const confirmSubmit = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to add this event?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, add!",
+      cancelButtonText: "No, cancel",
+    });
+
+    if (!confirmSubmit.isConfirmed) {
+      return;
+    }
+
+    try {
+      const result = await actions.addEvent(
+        newEvent.name,
+        newEvent.description,
+        newEvent.start_time,
+        newEvent.end_time,
+        newEvent.image,
+
+      );
+
+      if (result) {
+        Swal.fire({
+          icon: "success",
+          title: "Event Added",
+          text: "A new class has been added!",
+        });
+        actions.fetchEvents();
+        setNewEvent({
+
+          name: '',
+          description: '',
+          start_time: '',
+          end_time: '',
+          image: '',
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: `There was an error: ${result.error}`,
+        });
+      }
+    } catch (error) {
+      console.error("Error in handleAddEvent:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Submission Error",
+        text: "There was an error submitting the form. Please try again.",
       });
-  
-      if (confirmDelete.isConfirmed) {
-        try {
-          const result = await actions.deleteEvent(id);
-  
-          if (result) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Evento eliminado',
-              text: 'El evento ha sido eliminada con éxito.',
-            });
-            actions.fetchEvents();
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Hubo un error al eliminar el evento .',
-            });
-          }
-        } catch (error) {
-          console.error("Error en handleDeleteEvent:", error);
+    }
+  };
+  const handleDeleteEvent = async (id) => {
+    const confirmDelete = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "Esta acción no se puede deshacer.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (confirmDelete.isConfirmed) {
+      try {
+        const result = await actions.deleteEvent(id);
+
+        if (result) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Evento eliminado',
+            text: 'El evento ha sido eliminada con éxito.',
+          });
+          actions.fetchEvents();
+        } else {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Hubo un error al intentar eliminar el evento. Intenta nuevamente.',
+            text: 'Hubo un error al eliminar el evento .',
           });
         }
+      } catch (error) {
+        console.error("Error en handleDeleteEvent:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un error al intentar eliminar el evento. Intenta nuevamente.',
+        });
       }
     }
+  }
   return (
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Eventos</h2>
       <div className="tw-mb-6">
-        <form  className="tw-flex tw-space-x-4">
+        <form className="tw-flex tw-space-x-4" onSubmit={handleAddEvent}>
           <div className='tw-flex-1'>
             <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del Evento</label>
             <input
               type="text"
               name="name"
+              onChange={handleInputChange}
               value={newEvent.name}
               placeholder="Nombre del evento"
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
@@ -78,6 +155,7 @@ const EventsView = () => {
             <input
               type="text"
               name="description"
+              onChange={handleInputChange}
               value={newEvent.description}
               placeholder="Descripcion de la clase"
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
@@ -85,10 +163,11 @@ const EventsView = () => {
             />
           </div>
           <div className='tw-flex-1'>
-            <label htmlFor="fecha de inicio" className='tw-block tw-mb-2'>Fecha de inicio</label>
+            <label htmlFor="start_time" className='tw-block tw-mb-2'>Fecha de inicio</label>
             <input
               type="datetime-local"
-              name="fecha de inicio"
+              name="start_time"
+              onChange={handleInputChange}
               value={newEvent.start_time}
               placeholder="fecha de inicio"
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
@@ -96,23 +175,25 @@ const EventsView = () => {
             />
           </div>
           <div className='tw-flex-1'>
-            <label htmlFor="fecha de termino" className='tw-block tw-mb-2'>Fecha de termino</label>
+            <label htmlFor="end_time" className='tw-block tw-mb-2'>Fecha de termino</label>
             <input
               type="datetime-local"
-              name="fecha de termino"
+              name="end_time"
+              onChange={handleInputChange}
               value={newEvent.end_time}
               placeholder="fecha de termino "
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
             />
           </div>
-          
+
           <div className='tw-flex-1'>
             <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
             <input
               type="file"
               name="image"
-              // value={newClass.image}
+              onChange={handleImageChange}
+
               placeholder="image"
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
@@ -128,7 +209,7 @@ const EventsView = () => {
       <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
         <thead className="tw-bg-gray-100">
           <tr>
-            
+
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Titulo</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Descripcion</th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Fecha de inicio</th>
@@ -144,7 +225,9 @@ const EventsView = () => {
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.description}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.start_time}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.end_time}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.image}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                {event.image ? <img src={event.image} alt="Event" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
+              </td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3 " >
                   <Edit className="tw-w-5 tw-h-5" />
@@ -158,7 +241,7 @@ const EventsView = () => {
         </tbody>
       </table>
     </div>
-    
+
   );
 };
 

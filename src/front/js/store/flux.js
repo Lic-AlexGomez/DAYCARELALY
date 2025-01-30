@@ -935,6 +935,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  return { success: false, error: error.message };
 			}
 		  },
+		  addEvent: async ( name, description,start_time,end_time,image) => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/events", {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify({name, description,start_time,end_time,image }),
+			  })
+	
+			  if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || "Failed to create event")
+			  }
+	
+			  const data = await response.json()
+			  return { success: true, data }
+			} catch (error) {
+			  console.error("Event Error:", error.message)
+			  return { success: false, error: error.message }
+			}
+		  },
 		  
 	  },
 	}

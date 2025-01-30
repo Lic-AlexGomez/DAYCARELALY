@@ -9,7 +9,7 @@ const ClassesView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClass, setEditingClass] = useState(null);
   const [newClass, setNewClass] = useState({
-    teacher_id: 0, // Inicializado como número
+    teacher_id: 0, 
     name: '',
     description: '',
     capacity: '',
@@ -306,7 +306,9 @@ const ClassesView = () => {
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.price}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.age}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.time}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.image}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                {classItem.image ? <img src={classItem.image} alt="Class" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
+              </td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3" onClick={() => handleEditClass(classItem)}>
                   <Edit className="tw-w-5 tw-h-5" />
