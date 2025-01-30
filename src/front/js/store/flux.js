@@ -830,6 +830,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			}
 		},
 		addClass: async (teacher_id, name, description,capacity, price, age,time,image) => {
+			console.log(teacher_id, name, description,capacity, price, age,time,image)
 			try {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
 				method: "POST",

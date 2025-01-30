@@ -23,7 +23,7 @@ useEffect(() => {
 		<div className="text-center ">
 			
 			<Hero />
-			<FileUploader />
+			{/* <FileUploader /> */}
 			<ServicesSection />
 		
 	  <AboutUs />
