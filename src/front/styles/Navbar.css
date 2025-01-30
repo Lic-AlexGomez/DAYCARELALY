@@ -191,7 +191,7 @@
   }
   
   /* Responsive Design */
-  @media (max-width: 1024px) {
+  /* @media (max-width: 1024px) {
     .topRow,
     .bottomRow {
       flex-direction: column;
@@ -200,13 +200,13 @@
   
     .searchContainer {
       width: 90%;
-    }
+    } */
   
-    .navLinks {
+    /* .navLinks {
       flex-direction: column;
       gap: 15px;
-    }
-  }
+    } */
+  /* } */
   /* WhatsApp Specific */
   .whatsapp-icon .fab.fa-whatsapp {
     font-size: 24px;
