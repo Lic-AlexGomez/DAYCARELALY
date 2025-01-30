@@ -21,14 +21,16 @@ useEffect(() => {
 }, []);
 	return (
 		<div className="text-center ">
+			
 			<Hero />
+			<FileUploader />
 			<ServicesSection />
 		
 	  <AboutUs />
 			<Aday/>
 			<Classes />
 			<EducationalPrograms />
-			{/* <FileUploader /> */}
+			
 			
 			<Statistics />
 			<Getintouch />
