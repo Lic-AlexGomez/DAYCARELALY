@@ -902,53 +902,59 @@ const getState = ({ getStore, getActions, setStore }) => {
 			} catch (error) {
 			  console.error("Error updating client:", error)
 			}
-		  },fetchEvents: async () => {
+		  },
+		  fetchEvents: async () => {
 			try {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/events")
 			  if (response.ok) {
 				const data = await response.json()
+				console.log("Eventos obtenidos:", data);
 				setStore({ events: data })
 			  } else {
 				console.error("Error fetching events:", response.status)
 			  }
 			} catch (error) {
-			  console.error("Error fetching classes:", error)
+			  console.error("Error fetching events:", error)
 			  return null
 			}
 		  },
-		  login: async (email, password) => {
+		  deleteEvent: async (id) => {
 			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/login", {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
+				method: "DELETE",
+			  });
+		  
+			  if (response.ok) {
+				return { success: true };
+			  } else {
+				console.error("Error deleting event:", response.status);
+				return { success: false, error: `Status: ${response.status}` };
+			  }
+			} catch (error) {
+			  console.error("Error deleting events:", error);
+			  return { success: false, error: error.message };
+			}
+		  },
+		  addEvent: async ( name, description,start_time,end_time,image) => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/events", {
 				method: "POST",
 				headers: {
 				  "Content-Type": "application/json",
 				},
-				body: JSON.stringify({
-				  email: email,
-				  password: password,
-				}),
+				body: JSON.stringify({name, description,start_time,end_time,image }),
 			  })
 	
 			  if (!response.ok) {
 				const errorData = await response.json()
-				if (response.status === 401) {
-				  alert("Bad email or password")
-				} else if (response.status === 400) {
-				  alert("Email and password are required.")
-				} else {
-				  alert("Unknown error. Please try again.")
-				}
-				throw new Error(errorData.message || "Failed to login")
+				throw new Error(errorData.error || "Failed to create event")
 			  }
+	
 			  const data = await response.json()
-	
-			  localStorage.setItem("token", data.token)
-			  localStorage.setItem("user", JSON.stringify(data.user))
-			  setStore({ user: data.user })
-	
-			  return data
+			  return { success: true, data }
 			} catch (error) {
-			  console.log("Error loading message from backend", error)
+			  console.error("Event Error:", error.message)
+			  return { success: false, error: error.message }
 			}
 		  },
 		  
