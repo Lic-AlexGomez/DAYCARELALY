@@ -486,12 +486,24 @@ def create_event():
     new_event = Event(
         name=data['name'],
         description=data.get('description', ''),
+        image=data.get('image',''),
         start_time=datetime.fromisoformat(data['start_time']),
         end_time=datetime.fromisoformat(data['end_time'])
     )
     db.session.add(new_event)
     db.session.commit()
     return jsonify(new_event.serialize()), 201
+
+@api.route('/events/<int:id>', methods=['DELETE'])
+#@jwt_required()
+def delete_event(id):
+    event = Event.query.get(id)
+    if not event:
+        return jsonify({"error": "Event not found"}), 404
+
+    db.session.delete(event)
+    db.session.commit()
+    return jsonify({"message": "Event deleted"}), 200
 
 @api.route('/progress_reports', methods=['GET'])
 #@jwt_required()

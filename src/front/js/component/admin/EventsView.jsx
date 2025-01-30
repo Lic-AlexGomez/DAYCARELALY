@@ -19,6 +19,44 @@ const EventsView = () => {
       [name]: value
     }));
   };
+  const handleDeleteEvent = async (id) => {
+      const confirmDelete = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+      });
+  
+      if (confirmDelete.isConfirmed) {
+        try {
+          const result = await actions.deleteEvent(id);
+  
+          if (result) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Evento eliminado',
+              text: 'El evento ha sido eliminada con éxito.',
+            });
+            actions.fetchEvents();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un error al eliminar el evento .',
+            });
+          }
+        } catch (error) {
+          console.error("Error en handleDeleteEvent:", error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al intentar eliminar el evento. Intenta nuevamente.',
+          });
+        }
+      }
+    }
   return (
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Eventos</h2>
@@ -106,12 +144,13 @@ const EventsView = () => {
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.description}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.start_time}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.end_time}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.image}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3 " >
                   <Edit className="tw-w-5 tw-h-5" />
                 </button>
                 <button className="tw-text-red-600 hover:tw-text-red-900" >
-                  <Trash className="tw-w-5 tw-h-5" />
+                  <Trash className="tw-w-5 tw-h-5" onClick={() => handleDeleteEvent(event.id)} />
                 </button>
               </td>
             </tr>
