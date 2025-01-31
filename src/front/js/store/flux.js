@@ -487,6 +487,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			const response = await fetch(process.env.BACKEND_URL + "/api/emails")
 			if (response.ok) {
 			  const data = await response.json()
+			  console.log(data)
 			  const emails = data.filter((email) => !email.scheduledDate)
 			  const scheduledEmails = data.filter((email) => email.scheduledDate)
 			  setStore({ emails, scheduledEmails })

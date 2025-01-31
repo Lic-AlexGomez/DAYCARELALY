@@ -874,9 +874,9 @@ def create_email():
     if data.get('scheduledDate'):
         data['scheduledDate'] = datetime.fromisoformat(data['scheduledDate'])
     new_email = Email(
-        to=data['to'],
-        subject=data['subject'],
-        content=data['content'],
+        to_name=data['to_name'],
+        user_email=data['user_email'],
+        message=data['message'],
         date=datetime.now(),
         scheduled_date=data.get('scheduledDate')
     )
