@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f571d33429c4
+Revision ID: 47327a46a0b3
 Revises: 
-Create Date: 2025-01-25 00:00:56.246853
+Create Date: 2025-01-31 18:31:29.817143
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f571d33429c4'
+revision = '47327a46a0b3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -74,9 +74,9 @@ def upgrade():
     )
     op.create_table('email',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('to', sa.String(length=120), nullable=False),
-    sa.Column('subject', sa.String(length=120), nullable=False),
-    sa.Column('content', sa.Text(), nullable=False),
+    sa.Column('to_name', sa.String(length=120), nullable=False),
+    sa.Column('user_email', sa.String(length=120), nullable=False),
+    sa.Column('message', sa.Text(), nullable=False),
     sa.Column('date', sa.DateTime(), nullable=False),
     sa.Column('scheduled_date', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
@@ -87,6 +87,7 @@ def upgrade():
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('start_time', sa.DateTime(), nullable=False),
     sa.Column('end_time', sa.DateTime(), nullable=False),
+    sa.Column('image', sa.String(length=200), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('eventsuscriptions',
@@ -147,6 +148,18 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
+    )
+    op.create_table('virtual_class',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=120), nullable=False),
+    sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('date', sa.Date(), nullable=False),
+    sa.Column('time', sa.Time(), nullable=False),
+    sa.Column('duration', sa.String(length=50), nullable=False),
+    sa.Column('teacher', sa.String(length=120), nullable=False),
+    sa.Column('capacity', sa.Integer(), nullable=False),
+    sa.Column('price', sa.Float(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('admin_d',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -325,6 +338,7 @@ def downgrade():
     op.drop_table('notification')
     op.drop_table('message')
     op.drop_table('admin_d')
+    op.drop_table('virtual_class')
     op.drop_table('user')
     op.drop_table('schedule')
     op.drop_table('newsletter')

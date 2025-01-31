@@ -496,9 +496,9 @@ class Schedule(db.Model):
 
 class Email(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    to = db.Column(db.String(120), nullable=False)
-    subject = db.Column(db.String(120), nullable=False)
-    content = db.Column(db.Text, nullable=False)
+    to_name = db.Column(db.String(120), nullable=False)
+    user_email = db.Column(db.String(120), nullable=False)
+    message = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     scheduled_date = db.Column(db.DateTime, nullable=True)
 
@@ -508,9 +508,9 @@ class Email(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "to": self.to,
-            "subject": self.subject,
-            "content": self.content,
+            "to_name": self.to_name,
+            "user_email": self.user_email,
+            "message": self.message,
             "date": self.date.isoformat(),
             "scheduledDate": self.scheduled_date.isoformat() if self.scheduled_date else None
         }
