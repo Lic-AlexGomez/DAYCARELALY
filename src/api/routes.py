@@ -505,6 +505,23 @@ def delete_event(id):
     db.session.commit()
     return jsonify({"message": "Event deleted"}), 200
 
+@api.route('/events/<int:id>', methods=['PUT'])
+#@jwt_required()
+def update_event(id):
+    events = Event.query.get(id)
+    if events is None:
+        return jsonify({"error": "Event not found"}), 404
+    
+    data = request.json
+    events.name = data.get('name', events.name)
+    events.description = data.get('description', events.description)
+    events.start_time = data.get('start_time', events.start_time)
+    events.end_time = data.get('end_time', events.end_time)
+    events.image = data.get('image', events.image)
+
+    db.session.commit()
+    return jsonify(events.serialize()), 200
+
 @api.route('/progress_reports', methods=['GET'])
 #@jwt_required()
 def get_progress_reports():

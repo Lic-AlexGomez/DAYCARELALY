@@ -957,6 +957,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  return { success: false, error: error.message }
 			}
 		  },
+		  updateEvent: async (id, eventData) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
+				method: "PUT",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify(eventData),
+			  })
+	
+			  if (response.ok) { 
+				const updatedEvent = await response.json()
+				const store = getStore()
+				const updatedEvents = store.events.map((events) => (events.id === id ? updatedEvent : events))
+				setStore({ events: updatedEvents })
+				return updatedEvent
+			  } else {
+				console.error("Error updating event:", response.status)
+			  }
+			} catch (error) {
+			  console.error("Error updating event:", error)
+			}
+		  },
 		  
 	  },
 	}
