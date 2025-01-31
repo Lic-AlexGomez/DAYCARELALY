@@ -336,7 +336,7 @@ const ClassesView = () => {
                 <select
                   name="teacher_id"
                   onChange={handleInputChange}
-                  value={editingClass.teacher_id} // Controla el valor con el estado
+                  value={editingClass.teacher_id} 
                 >
                   <option value={0} disabled>select an option</option>
                   {teachers.map(item => (

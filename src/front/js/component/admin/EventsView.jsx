@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 
 const EventsView = () => {
   const { actions, store } = useContext(Context)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
   const [newEvent, setNewEvent] = useState({
     name: '',
     description: '',
@@ -20,11 +22,13 @@ const EventsView = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewEvent(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+    if (editingEvent) {
+      setEditingEvent({ ...editingEvent, [name]: value });
+    } else {
+      setNewEvent({ ...newEvent, [name]: value });
+    }
   };
+ 
 
   const handleImageChange = async (e) => {
     const result = await actions.uploadToCloudinary(e.target.files[0]);
@@ -35,7 +39,7 @@ const EventsView = () => {
       }));
     }
   };
-  
+
   const handleAddEvent = async (e) => {
     e.preventDefault();
 
@@ -133,6 +137,19 @@ const EventsView = () => {
       }
     }
   }
+  const handleEditEvent = (event) => {
+    setEditingEvent(event);  
+    setIsModalOpen(true);   
+  };
+
+  const handleUpdateEvent = async (e) => {
+    e.preventDefault();
+    await actions.updateEvent(editingEvent.id, editingEvent);
+    setIsModalOpen(false);
+    setEditingEvent(null);
+  };
+  
+
   return (
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Eventos</h2>
@@ -230,7 +247,7 @@ const EventsView = () => {
               </td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3 " >
-                  <Edit className="tw-w-5 tw-h-5" />
+                  <Edit className="tw-w-5 tw-h-5" onClick={() => handleEditEvent(event)} />
                 </button>
                 <button className="tw-text-red-600 hover:tw-text-red-900" >
                   <Trash className="tw-w-5 tw-h-5" onClick={() => handleDeleteEvent(event.id)} />
@@ -240,7 +257,100 @@ const EventsView = () => {
           ))}
         </tbody>
       </table>
+      {isModalOpen && (
+        <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
+          <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
+            <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
+              <h3 className="tw-text-xl tw-font-semibold">Editar Clase</h3>
+              <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
+                <X className="tw-w-6 tw-h-6" />
+              </button>
+            </div>
+            <form onSubmit={handleUpdateEvent} className="tw-space-y-4">
+
+            <div className='tw-flex-1'>
+            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del Evento</label>
+            <input
+              type="text"
+              name="name"
+              onChange={handleInputChange}
+              value={editingEvent.name}
+              placeholder="Nombre del evento"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
+            <input
+              type="text"
+              name="description"
+              onChange={handleInputChange}
+              value={editingEvent.description}
+              placeholder="Descripcion de la clase"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="start_time" className='tw-block tw-mb-2'>Fecha de inicio</label>
+            <input
+              type="datetime-local"
+              name="start_time"
+              onChange={handleInputChange}
+              value={editingEvent.start_time}
+              placeholder="fecha de inicio"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className='tw-flex-1'>
+            <label htmlFor="end_time" className='tw-block tw-mb-2'>Fecha de termino</label>
+            <input
+              type="datetime-local"
+              name="end_time"
+              onChange={handleInputChange}
+              value={editingEvent.end_time}
+              placeholder="fecha de termino "
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+
+          <div className='tw-flex-1'>
+            <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
+            <input
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+
+              placeholder="image"
+              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+              
+              <div className="tw-flex tw-justify-end tw-space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="tw-bg-gray-200 tw-text-gray-700 tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-gray-300"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
+                >
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
+
 
   );
 };
