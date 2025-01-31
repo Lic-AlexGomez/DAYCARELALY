@@ -38,6 +38,18 @@ const ClassesView = () => {
       setNewClass({ ...newClass, image: result.url });
     }
   };
+  const handleImageEditChange = async (e) => {
+    const result = await actions.uploadToCloudinary(e.target.files[0]);
+    if (result.success) {
+      setEditingClass((prevState) => {
+        const updatedClass = {
+          ...prevState,
+          image: result.url,
+        };
+        return updatedClass;
+      });
+    }
+  };
 
   const handleAddClass = async (e) => {
     e.preventDefault();
@@ -416,17 +428,21 @@ const ClassesView = () => {
                   required
                 />
               </div>
+              {editingClass.image && (
+                <div className="tw-mb-4">
+                  <h4 className="tw-text-sm">Imagen Actual:</h4>
+                  <img src={editingClass.image} alt="Imagen del Evento" className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md" />
+                </div>
+              )}
+
+
               <div className='tw-flex-1'>
                 <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
-                <img src={editingClass.image} alt=''/>
                 <input
                   type="file"
                   name="image"
-                
-                  onChange={handleImageChange}
-                  placeholder="image"
+                  onChange={handleImageEditChange}
                   className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                  required
                 />
               </div>
 

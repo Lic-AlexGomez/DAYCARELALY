@@ -28,7 +28,7 @@ const EventsView = () => {
       setNewEvent({ ...newEvent, [name]: value });
     }
   };
- 
+
 
   const handleImageChange = async (e) => {
     const result = await actions.uploadToCloudinary(e.target.files[0]);
@@ -39,6 +39,20 @@ const EventsView = () => {
       }));
     }
   };
+
+  const handleImageEditChange = async (e) => {
+    const result = await actions.uploadToCloudinary(e.target.files[0]);
+    if (result.success) {
+      setEditingEvent((prevState) => {
+        const updatedEvent = {
+          ...prevState,
+          image: result.url,
+        };
+        return updatedEvent;
+      });
+    }
+  };
+  
 
   const handleAddEvent = async (e) => {
     e.preventDefault();
@@ -138,8 +152,8 @@ const EventsView = () => {
     }
   }
   const handleEditEvent = (event) => {
-    setEditingEvent(event);  
-    setIsModalOpen(true);   
+    setEditingEvent(event);
+    setIsModalOpen(true);
   };
 
   const handleUpdateEvent = async (e) => {
@@ -148,7 +162,7 @@ const EventsView = () => {
     setIsModalOpen(false);
     setEditingEvent(null);
   };
-  
+
 
   return (
     <div>
@@ -268,68 +282,74 @@ const EventsView = () => {
             </div>
             <form onSubmit={handleUpdateEvent} className="tw-space-y-4">
 
-            <div className='tw-flex-1'>
-            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del Evento</label>
-            <input
-              type="text"
-              name="name"
-              onChange={handleInputChange}
-              value={editingEvent.name}
-              placeholder="Nombre del evento"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
-            <input
-              type="text"
-              name="description"
-              onChange={handleInputChange}
-              value={editingEvent.description}
-              placeholder="Descripcion de la clase"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="start_time" className='tw-block tw-mb-2'>Fecha de inicio</label>
-            <input
-              type="datetime-local"
-              name="start_time"
-              onChange={handleInputChange}
-              value={editingEvent.start_time}
-              placeholder="fecha de inicio"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="end_time" className='tw-block tw-mb-2'>Fecha de termino</label>
-            <input
-              type="datetime-local"
-              name="end_time"
-              onChange={handleInputChange}
-              value={editingEvent.end_time}
-              placeholder="fecha de termino "
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
+              <div className='tw-flex-1'>
+                <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del Evento</label>
+                <input
+                  type="text"
+                  name="name"
+                  onChange={handleInputChange}
+                  value={editingEvent.name}
+                  placeholder="Nombre del evento"
+                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  required
+                />
+              </div>
+              <div className='tw-flex-1'>
+                <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
+                <input
+                  type="text"
+                  name="description"
+                  onChange={handleInputChange}
+                  value={editingEvent.description}
+                  placeholder="Descripcion de la clase"
+                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  required
+                />
+              </div>
+              <div className='tw-flex-1'>
+                <label htmlFor="start_time" className='tw-block tw-mb-2'>Fecha de inicio</label>
+                <input
+                  type="datetime-local"
+                  name="start_time"
+                  onChange={handleInputChange}
+                  value={editingEvent.start_time}
+                  placeholder="fecha de inicio"
+                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  required
+                />
+              </div>
+              <div className='tw-flex-1'>
+                <label htmlFor="end_time" className='tw-block tw-mb-2'>Fecha de termino</label>
+                <input
+                  type="datetime-local"
+                  name="end_time"
+                  onChange={handleInputChange}
+                  value={editingEvent.end_time}
+                  placeholder="fecha de termino "
+                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  required
+                />
+              </div>
 
-          <div className='tw-flex-1'>
-            <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
-            <input
-              type="file"
-              name="image"
-              onChange={handleImageChange}
 
-              placeholder="image"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-              
+              {editingEvent.image && (
+                <div className="tw-mb-4">
+                  <h4 className="tw-text-sm">Imagen Actual:</h4>
+                  <img src={editingEvent.image} alt="Imagen del Evento" className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md" />
+                </div>
+              )}
+
+
+              <div className='tw-flex-1'>
+                <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
+                <input
+                  type="file"
+                  name="image"
+                  onChange={handleImageEditChange}
+                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                />
+              </div>
+
               <div className="tw-flex tw-justify-end tw-space-x-3">
                 <button
                   type="button"
