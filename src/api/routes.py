@@ -255,6 +255,8 @@ def get_teachers_classes():
     teachers = list(map(lambda x: x.serialize_classes(), teachers))
     return jsonify(teachers), 200
 
+
+
 @api.route('/teachers/<int:id>', methods=['GET'])
 def get_teacher(id):
     teacher = Teacher.query.get(id)
@@ -1127,6 +1129,7 @@ def create_activity():
                 return jsonify({"error": f"Missing required field: {field}"}), 400
 
         new_activity = Activity(
+            
             name=data['name'],
             description=data['description'],
             image=image,
@@ -1134,7 +1137,6 @@ def create_activity():
             time=data['time'],
             capacity=int(data['capacity']),
             price=float(data['price']),
-            skills_to_develop=data.get('skills_to_develop')
         )
         
         db.session.add(new_activity)
@@ -1146,6 +1148,7 @@ def create_activity():
         return jsonify({"error": str(e)}), 500
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
 @api.route('/activities/<int:id>', methods=['PUT'])
 # #@jwt_required()
 def update_activity(id):
@@ -1169,7 +1172,6 @@ def update_activity(id):
         activity.time = data.get('time', activity.time)
         activity.capacity = int(data.get('capacity', activity.capacity))
         activity.price = float(data.get('price', activity.price))
-        activity.skills_to_develop = data.get('skills_to_develop', activity.skills_to_develop)
 
         
         db.session.commit()

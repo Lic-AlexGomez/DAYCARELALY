@@ -71,7 +71,8 @@ class Teacher(db.Model):
             "qualifications": self.qualifications,
             "teaching_experience": self.teaching_experience,
             "certifications": self.certifications,
-            "background_check": self.background_check
+            "background_check": self.background_check,
+            
         }
     def serialize_classes(self):
         return {
@@ -173,7 +174,7 @@ class Program(db.Model):
     description = db.Column(db.Text, nullable=True)
     capacity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    age = db.Column(db.String(20), nullable=False)
+    age = db.Column(db.Integer, nullable=False)
     time = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
@@ -617,9 +618,7 @@ class Activity(db.Model):
     time = db.Column(db.String(50), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    skills_to_develop = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 
     def __repr__(self):
         return f'<Activity {self.name}>'
@@ -634,9 +633,7 @@ class Activity(db.Model):
             "time": self.time,
             "capacity": self.capacity,
             "price": self.price,
-            "skills_to_develop": self.skills_to_develop,
-            "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            
         }
     
 
