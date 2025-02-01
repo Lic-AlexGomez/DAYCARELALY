@@ -31,6 +31,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		activities: [],
 		events:[],
 		teachers:[],
+		services:[],
 
 		//parent dashboard store
 		parentvirtualClasses: [],
@@ -985,6 +986,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 		  fetchTeachers: async () => {
 			try {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/teachers")
+			  if (response.ok) {
+				const data = await response.json()
+				console.log(data)
+				setStore({ teachers: data })
+				return { success: true, data }
+			  } else {
+				console.error("Error fetching teachers:", response.status)
+				return { success: false, error: "Failed to fetch activities" }
+			  }
+			} catch (error) {
+			  console.error("Error fetching activities:", error)
+			  return { success: false, error: error.message }
+			}
+		  },
+		  fetchServices: async () => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/services")
 			  if (response.ok) {
 				const data = await response.json()
 				console.log(data)
