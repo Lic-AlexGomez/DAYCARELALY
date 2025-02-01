@@ -5,8 +5,10 @@ import { Plus, Edit, Trash, X } from "lucide-react"
 const ActivitiesView = () => {
   const { store, actions } = useContext(Context)
   const [selectedActivity, setSelectedActivity] = useState(null)
+  const [teachers, setTeachers] = useState([]);
   const [showModal, setShowModal] = useState(false)
   const [formData, setFormData] = useState({
+    
     name: "",
     description: "",
     image: null,
@@ -14,7 +16,6 @@ const ActivitiesView = () => {
     time: "",
     capacity: "",
     price: "",
-    skills_to_develop: "",
   })
   const [imagePreview, setImagePreview] = useState(null)
 
@@ -28,9 +29,9 @@ const ActivitiesView = () => {
       const file = files[0]
       setFormData((prev) => ({
         ...prev,
-        [name]: file,
+        [name]: file,  // Guardamos el archivo en el estado formData
       }))
-      setImagePreview(URL.createObjectURL(file))
+      setImagePreview(URL.createObjectURL(file)) // Establecemos la vista previa de la imagen
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -49,15 +50,28 @@ const ActivitiesView = () => {
       handleCloseModal()
       actions.fetchActivities()
     } else {
-      alert(result.error || "An error occurred while saving the activity.")
+      alert(result.error || "An error occurred while saving the program.")
     }
   }
+  const getTeachers = async () => {
+      const response = await fetch(`${process.env.BACKEND_URL}api/teachers/classes`);
+      if (response.ok) {
+        const data = await response.json();
+        setTeachers(data);
+      }
+    };
+  
+  
+    useEffect(() => {
+      getTeachers();
+    }, []);
 
   const handleCloseModal = () => {
     setShowModal(false)
     setSelectedActivity(null)
     setImagePreview(null)
     setFormData({
+      
       name: "",
       description: "",
       image: null,
@@ -65,7 +79,6 @@ const ActivitiesView = () => {
       time: "",
       capacity: "",
       price: "",
-      skills_to_develop: "",
     })
   }
 
@@ -74,17 +87,16 @@ const ActivitiesView = () => {
     setFormData({
       name: activity.name,
       description: activity.description,
-      image: activity.image,
+      image: activity.image, // Al editar, conservamos la imagen actual de la actividad
       age_range: activity.age_range,
       time: activity.time,
       capacity: activity.capacity,
       price: activity.price,
-      skills_to_develop: activity.skills_to_develop,
     })
-    setImagePreview(activity.image)
+    setImagePreview(activity.image)  // Si la actividad ya tiene imagen, la mostramos como vista previa
     setShowModal(true)
   }
-
+  
   const handleDeleteActivity = async (id) => {
     if (window.confirm("Are you sure you want to delete this activity?")) {
       const result = await actions.deleteActivity(id)
@@ -96,66 +108,60 @@ const ActivitiesView = () => {
     }
   }
 
+  
+
   return (
     <div className="tw-p-4">
       <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-        <h2 className="tw-text-2xl tw-font-semibold">Activities Management</h2>
+        <h2 className="tw-text-2xl tw-font-semibold">Programs Management</h2>
         <button
           onClick={() => setShowModal(true)}
           className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-gap-2"
         >
           <Plus className="tw-w-5 tw-h-5" />
-          Add Activity
+          Add Program
         </button>
       </div>
-
-      <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6">
-        {store.activities.map((activity) => (
-          <div key={activity.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-overflow-hidden">
-            <img
-              src={activity.image || "/placeholder.svg"}
-              alt={activity.name}
-              className="tw-w-full tw-h-48 tw-object-cover"
-            />
-            <div className="tw-p-4">
-              <h3 className="tw-text-xl tw-font-semibold tw-text-black tw-mb-2">{activity.name}</h3>
-              <p className="tw-text-gray-600 tw-mb-4 tw-line-clamp-2">{activity.description}</p>
-
-              <div className="tw-grid tw-grid-cols-3 tw-gap-4 tw-mb-4">
-                <div className="tw-text-center">
-                  <p className="tw-text-sm tw-text-gray-500">Age:</p>
-                  <p className="tw-font-semibold">{activity.age_range}</p>
-                </div>
-                <div className="tw-text-center">
-                  <p className="tw-text-sm tw-text-gray-500">Time:</p>
-                  <p className="tw-font-semibold">{activity.time}</p>
-                </div>
-                <div className="tw-text-center">
-                  <p className="tw-text-sm tw-text-gray-500">Capacity:</p>
-                  <p className="tw-font-semibold">{activity.capacity} Kids</p>
-                </div>
-              </div>
-
-              <div className="tw-flex tw-justify-between tw-items-center">
-                <button
-                  onClick={() => handleEditActivity(activity)}
-                  className="tw-bg-yellow-500 tw-text-white tw-px-3 tw-py-1 tw-rounded-md tw-flex tw-items-center"
-                >
-                  <Edit className="tw-w-4 tw-h-4 tw-mr-1" />
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDeleteActivity(activity.id)}
-                  className="tw-bg-red-500 tw-text-white tw-px-3 tw-py-1 tw-rounded-md tw-flex tw-items-center"
-                >
-                  <Trash className="tw-w-4 tw-h-4 tw-mr-1" />
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
+              <thead className="tw-bg-gray-100">
+                <tr>
+               
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Programa</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Descripcion</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Edad</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Horario</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacidad</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Precio</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="tw-divide-y tw-divide-gray-200">
+                {store.activities.map((activity) => (
+                  <tr key={activity.id}>
+          
+                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.name}</td>
+                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.description}</td>
+                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.age_range}</td>
+                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.time}</td>
+                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.capacity}</td>
+                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.price}</td>
+                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                      {activity.image ? <img src={activity.image} alt="Event" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
+                    </td>
+                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                      <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3 " >
+                        <Edit className="tw-w-5 tw-h-5" onClick={() => handleEditActivity(activity)} />
+                      </button>
+                      <button className="tw-text-red-600 hover:tw-text-red-900" >
+                        <Trash className="tw-w-5 tw-h-5" onClick={() => handleDeleteActivity(activity.id)} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+        </tbody>
+            </table>
+      
 
       {showModal && (
         <div className="tw-fixed tw-inset-0 tw-bg-black/50 tw-flex tw-items-center tw-justify-center tw-p-4 tw-z-50">
@@ -163,7 +169,7 @@ const ActivitiesView = () => {
             <div className="tw-p-6">
               <div className="tw-flex tw-justify-between tw-items-center tw-mb-4">
                 <h2 className="tw-text-2xl tw-font-semibold">
-                  {selectedActivity ? "Edit Activity" : "Add New Activity"}
+                  {selectedActivity ? "Edit Activity" : "Add New Program"}
                 </h2>
                 <button onClick={handleCloseModal} className="tw-text-gray-500 hover:tw-text-gray-700">
                   <X className="tw-w-6 tw-h-6" />
@@ -171,6 +177,7 @@ const ActivitiesView = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="tw-space-y-4">
+            
                 <div>
                   <label htmlFor="name" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
                     Name
@@ -284,20 +291,7 @@ const ActivitiesView = () => {
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="skills_to_develop" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-                    Skills to Develop
-                  </label>
-                  <textarea
-                    id="skills_to_develop"
-                    name="skills_to_develop"
-                    value={formData.skills_to_develop}
-                    onChange={handleInputChange}
-                    rows={3}
-                    className="tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300 tw-shadow-sm focus:tw-border-blue-500 focus:tw-ring-blue-500"
-                  />
-                </div>
-
+                
                 <div className="tw-flex tw-justify-end tw-gap-4">
                   <button
                     type="button"
