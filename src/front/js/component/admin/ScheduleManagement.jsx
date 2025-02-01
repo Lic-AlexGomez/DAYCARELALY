@@ -7,6 +7,7 @@ const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
 const ScheduleManagementPage = () => {
   const { store, actions } = useContext(Context)
   const [searchTerm, setSearchTerm] = useState("")
+  const [teachers, setTeachers] = useState([]);
   const [selectedDay, setSelectedDay] = useState("all")
   const [newSchedule, setNewSchedule] = useState({
     class: "",
@@ -69,12 +70,27 @@ const ScheduleManagementPage = () => {
   const handleDeleteSchedule = (id) => {
     actions.deleteSchedule(id)
   }
- const handleListScheduleModal = (schedule) => {
+  const handleListScheduleModal = (schedule) => {
     setEditingSchedule(schedule)
     setIsModalOpen(true)
   }
+  const getTeachers = async () => {
+    const response = await fetch(`${process.env.BACKEND_URL}api/teachers/classes`);
+    if (response.ok) {
+      const data = await response.json();
+      setTeachers(data);
+      console.log(data);
+      setTeachers(data);
+    }
+  };
+
+  useEffect(() => {
+    getTeachers();
+  }, []);
+
 
   return (
+
     <div className="tw-flex tw-h-screen tw-overflow-hidden">
       <div className="tw-flex-1 tw-overflow-auto">
         <Header />
@@ -91,6 +107,7 @@ const ScheduleManagementPage = () => {
               newSchedule={newSchedule}
               handleInputChange={handleInputChange}
               handleAddSchedule={handleAddSchedule}
+              teachers={teachers} 
             />
             <SchedulesTable
               filteredSchedules={filteredSchedules}
@@ -158,7 +175,7 @@ const SearchAndFilter = ({ searchTerm, setSearchTerm, selectedDay, setSelectedDa
   </div>
 )
 
-const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule }) => (
+const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule,teachers }) => (
   <form onSubmit={handleAddSchedule} className="tw-mb-6 tw-grid tw-grid-cols-7 tw-gap-4">
     <input
       name="class"
@@ -168,14 +185,19 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule }) 
       required
       className="tw-border tw-rounded-md tw-px-3 tw-py-2"
     />
-    <input
-      name="teacher"
-      value={newSchedule.teacher}
-      onChange={handleInputChange}
-      placeholder="Profesor"
-      required
-      className="tw-border tw-rounded-md tw-px-3 tw-py-2"
-    />
+    <div className='tw-flex-1'>
+      <select
+        name="teacher"
+        onChange={handleInputChange}
+        value={newSchedule.teacher} 
+      >
+        <option value={0} disabled>select an option</option>
+        {teachers.map(item => (
+          <option key={`teacher-${item.id}`} value={item.id}>{item.username}</option>
+        ))}
+      </select>
+
+    </div>
     <select
       name="dayOfWeek"
       value={newSchedule.dayOfWeek}
@@ -225,7 +247,7 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule }) 
   </form>
 )
 
-const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSchedule,handleListScheduleModal }) => (
+const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSchedule, handleListScheduleModal }) => (
   <table className="tw-w-full">
     <thead className="tw-bg-gray-50">
       <tr>
@@ -262,11 +284,10 @@ const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSch
           <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.capacity}</td>
           <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
             <span
-              className={`tw-px-2 tw-inline-flex tw-text-xs tw-leading-5 tw-font-semibold tw-rounded-full ${
-                schedule.enrolled >= schedule.capacity
+              className={`tw-px-2 tw-inline-flex tw-text-xs tw-leading-5 tw-font-semibold tw-rounded-full ${schedule.enrolled >= schedule.capacity
                   ? "tw-bg-red-100 tw-text-red-800"
                   : "tw-bg-green-100 tw-text-green-800"
-              }`}
+                }`}
             >
               {schedule.enrolled}/{schedule.capacity}
             </span>
