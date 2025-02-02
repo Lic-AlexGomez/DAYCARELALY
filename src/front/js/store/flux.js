@@ -32,6 +32,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		events:[],
 		teachers:[],
 		services:[],
+		gallery:[],
 
 		//parent dashboard store
 		parentvirtualClasses: [],
@@ -1076,6 +1077,85 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  }
 			} catch (error) {
 			  console.error("Error deleting service:", error);
+			  return { success: false, error: error.message };
+			}
+		  },
+		  fetchGallery: async () => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/gallery")
+			  if (response.ok) {
+				const data = await response.json()
+				console.log(data)
+				setStore({ gallery: data })
+				return { success: true, data }
+			  } else {
+				console.error("Error fetching gallery:", response.status)
+				return { success: false, error: "Failed to fetch gallery" }
+			  }
+			} catch (error) {
+			  console.error("Error fetching gallery:", error)
+			  return { success: false, error: error.message }
+			}
+		  },
+		  updateGallery: async (id, galleryData) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/gallery/${id}`, {
+				method: "PUT",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify(galleryData),
+			  })
+	
+			  if (response.ok) { 
+				const updatedGallery = await response.json()
+				const store = getStore()
+				const updatedGalleries = store.gallery.map((gallery) => (gallery.id === id ? updatedGallery : gallery))
+				setStore({ gallery: updatedGalleries })
+				return updatedGallery
+			  } else {
+				console.error("Error updating service:", response.status)
+			  }
+			} catch (error) {
+			  console.error("Error updating service:", error)
+			}
+		  },
+		  addGallery: async ( name,image) => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/gallery", {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify({name,image }),
+			  })
+	
+			  if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || "Failed to create image")
+			  }
+	
+			  const data = await response.json()
+			  return { success: true, data }
+			} catch (error) {
+			  console.error("gallery Error:", error.message)
+			  return { success: false, error: error.message }
+			}
+		  },
+		  deleteGallery: async (id) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/gallery/${id}`, {
+				method: "DELETE",
+			  });
+		  
+			  if (response.ok) {
+				return { success: true };
+			  } else {
+				console.error("Error deleting image:", response.status);
+				return { success: false, error: `Status: ${response.status}` };
+			  }
+			} catch (error) {
+			  console.error("Error deleting image:", error);
 			  return { success: false, error: error.message };
 			}
 		  },
