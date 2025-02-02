@@ -1,12 +1,39 @@
-import React from "react"
-import { Users, Calendar, Activity, CreditCard } from "lucide-react"
+import React, { useEffect, useContext, useState } from "react"
+import { Users, Activity, CreditCard, Video } from "lucide-react"
+import { Context } from "../../store/appContext"
 
 const ParentOverview = () => {
+  const { store, actions } = useContext(Context)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadOverviewData = async () => {
+      await Promise.all([
+        actions.fetchParentData(),
+        actions.fetchParentChildren(),
+        actions.fetchParentActivities(),
+        actions.fetchParentPayments(),
+        actions.fetchParentVirtualClasses(),
+      ])
+      setIsLoading(false)
+    }
+    loadOverviewData()
+  }, [])
+
+  if (isLoading) {
+    return <div>Loading overview...</div>
+  }
+
   const stats = [
-    { title: "Hijos Inscritos", value: "2", icon: Users, color: "tw-bg-blue-500" },
-    { title: "Próximas Actividades", value: "3", icon: Activity, color: "tw-bg-green-500" },
-    { title: "Pagos Pendientes", value: "$150", icon: CreditCard, color: "tw-bg-yellow-500" },
-    { title: "Días Hasta Vacaciones", value: "15", icon: Calendar, color: "tw-bg-purple-500" },
+    { title: "Hijos Inscritos", value: store.parentChildren.length, icon: Users, color: "tw-bg-blue-500" },
+    { title: "Actividades Próximas", value: store.parentActivities.length, icon: Activity, color: "tw-bg-green-500" },
+    {
+      title: "Pagos Pendientes",
+      value: store.parentPayments.filter((p) => p.status === "Pendiente").length,
+      icon: CreditCard,
+      color: "tw-bg-yellow-500",
+    },
+    { title: "Clases Virtuales", value: store.parentVirtualClasses.length, icon: Video, color: "tw-bg-purple-500" },
   ]
 
   return (
@@ -30,14 +57,14 @@ const ParentOverview = () => {
       <div className="tw-mt-8">
         <h4 className="tw-text-lg tw-font-semibold tw-mb-4">Actividades Recientes</h4>
         <ul className="tw-space-y-2">
-          <li className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-            <p className="tw-font-semibold">Clase de Arte</p>
-            <p className="tw-text-sm tw-text-gray-600">Juan participó en la clase de pintura</p>
-          </li>
-          <li className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-            <p className="tw-font-semibold">Pago Mensual</p>
-            <p className="tw-text-sm tw-text-gray-600">Se realizó el pago de la mensualidad</p>
-          </li>
+          {store.parentActivities.slice(0, 3).map((activity, index) => (
+            <li key={index} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
+              <p className="tw-font-semibold">{activity.name}</p>
+              <p className="tw-text-sm tw-text-gray-600">
+                {activity.date} - {activity.time}
+              </p>
+            </li>
+          ))}
         </ul>
       </div>
     </div>

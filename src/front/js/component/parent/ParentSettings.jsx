@@ -1,14 +1,25 @@
-import React, { useState } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { Save } from "lucide-react"
+import { Context } from "../../store/appContext"
 
 const ParentSettings = () => {
-  const [settings, setSettings] = useState({
-    name: "Sr. Martínez",
-    email: "martinez@example.com",
-    phone: "(123) 456-7890",
-    notifications: true,
-    language: "es",
-  })
+  const { store, actions } = useContext(Context)
+  const [settings, setSettings] = useState(store.parentSettings || {})
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      await actions.fetchParentSettings()
+      setIsLoading(false)
+    }
+    loadSettings()
+  }, [actions.fetchParentSettings])
+
+  useEffect(() => {
+    if (store.parentSettings) {
+      setSettings(store.parentSettings)
+    }
+  }, [store.parentSettings])
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -20,10 +31,13 @@ const ParentSettings = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Aquí iría la lógica para guardar la configuración
-    alert("Configuración guardada")
+    actions.updateParentSettings(settings)
   }
 
+  if (isLoading) {
+    return <div>Loading settings...</div>
+  }
+console.log(store.parentSettings)
   return (
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Configuración</h3>
@@ -36,7 +50,7 @@ const ParentSettings = () => {
             type="text"
             id="name"
             name="name"
-            value={settings.name}
+            value={settings.name || ""}
             onChange={handleInputChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
           />
@@ -49,7 +63,7 @@ const ParentSettings = () => {
             type="email"
             id="email"
             name="email"
-            value={settings.email}
+            value={settings.email || ""}
             onChange={handleInputChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
           />
@@ -62,7 +76,7 @@ const ParentSettings = () => {
             type="tel"
             id="phone"
             name="phone"
-            value={settings.phone}
+            value={settings.phone || ""}
             onChange={handleInputChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
           />
@@ -72,7 +86,7 @@ const ParentSettings = () => {
             <input
               type="checkbox"
               name="notifications"
-              checked={settings.notifications}
+              checked={settings.notifications || false}
               onChange={handleInputChange}
               className="tw-mr-2"
             />
@@ -86,7 +100,7 @@ const ParentSettings = () => {
           <select
             id="language"
             name="language"
-            value={settings.language}
+            value={settings.language || "es"}
             onChange={handleInputChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
           >

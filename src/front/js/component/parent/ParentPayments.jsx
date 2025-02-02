@@ -1,18 +1,28 @@
-import React from "react"
-import { DollarSign, Calendar, CheckCircle, XCircle } from "lucide-react"
+import React, { useEffect, useContext, useState } from "react"
+import { DollarSign, Calendar } from "lucide-react"
+import { Context } from "../../store/appContext"
 
 const ParentPayments = () => {
-  const payments = [
-    { id: 1, concept: "Mensualidad Junio", amount: 250, dueDate: "2023-06-05", status: "Pagado" },
-    { id: 2, concept: "Material Escolar", amount: 50, dueDate: "2023-06-15", status: "Pendiente" },
-    { id: 3, concept: "Excursión al Zoológico", amount: 30, dueDate: "2023-06-10", status: "Pagado" },
-  ]
+  const { store, actions } = useContext(Context)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const loadPayments = async () => {
+      await actions.fetchParentPayments()
+      setIsLoading(false)
+    }
+    loadPayments()
+  }, [])
+
+  if (isLoading) {
+    return <div>Loading payments...</div>
+  }
 
   return (
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Pagos</h3>
       <div className="tw-space-y-4">
-        {payments.map((payment) => (
+        {store.parentPayments.map((payment) => (
           <div key={payment.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-2">
               <h4 className="tw-text-lg tw-font-semibold">{payment.concept}</h4>

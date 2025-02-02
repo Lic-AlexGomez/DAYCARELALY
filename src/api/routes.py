@@ -1,16 +1,19 @@
-import cloudinary,os
-from cloudinary.uploader import upload
-from cloudinary.utils import cloudinary_url
-from flask import Flask, request, jsonify, Blueprint, current_app
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery
+import cloudinary,os # type: ignore
+from cloudinary.uploader import upload# type: ignore
+from cloudinary.utils import cloudinary_url# type: ignore
+from flask import Flask, request, jsonify, Blueprint, current_app # type: ignore
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentVirtualClass,ParentActivity,ParentAttendance,ParentGrade,ParentCourse,ParentEvent,ParentPayment,ParentNotification,ParentPaymentHistory,ParentSchedule,ParentService,ParentSetting,ParentSubscription,ParentTask,MessageP
 from api.utils import APIException
-from flask_cors import CORS
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
-from flask_bcrypt import Bcrypt
+from flask_cors import CORS# type: ignore
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager# type: ignore
+from flask_bcrypt import Bcrypt # type: ignore
 from datetime import datetime, timedelta
-from werkzeug.security import check_password_hash
-from sqlalchemy.exc import SQLAlchemyError
-from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash # type: ignore
+from sqlalchemy.exc import SQLAlchemyError # type: ignore
+from werkzeug.security import generate_password_hash # type: ignore
+from faker import Faker # type: ignore
+import random
+
 
 
 
@@ -24,7 +27,7 @@ cloudinary.config(
 )
 bcrypt = Bcrypt()
 jwt = JWTManager()
-
+fake = Faker()
 @api.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -1423,3 +1426,1600 @@ def update_image(id):
 
     db.session.commit()
     return jsonify(image.serialize()), 200
+
+# PARENT ROUTES CRUD
+# ParentActivity, ParentCourse,ParentAttendance,ParentEvent,ParentGrade,ParentNotification,ParentPayment,ParentPaymentHistory,ParentSchedule,ParentService,ParentSubscription,ParentSetting,ParentTask,ParentVirtualClass,MessageP
+@api.route('/parent_activities', methods=['GET'])
+def get_parent_activities():
+    activities = ParentActivity.query.all()
+    return jsonify([activity.serialize() for activity in activities]), 200
+
+@api.route('/parent_activities/<int:id>', methods=['GET'])
+def get_parent_activity(id):
+    activity = ParentActivity.query.get(id)
+    if activity is None:
+        return jsonify({"error": "Activity not found"}), 404
+    return jsonify(activity.serialize()), 200
+
+@api.route('/parent_activities', methods=['POST'])
+def create_parent_activity():
+    data = request.get_json()
+    new_activity = ParentActivity(
+        parent_id=data['parent_id'],
+        name=data['name'],
+        date=datetime.strptime(data['date'], "%Y-%m-%d").date(),
+        time=datetime.strptime(data['time'], "%H:%M:%S").time(),
+        duration=data['duration'],
+        status=data['status'],
+        location=data['location']
+    )
+    db.session.add(new_activity)
+    db.session.commit()
+    return jsonify(new_activity.serialize()), 201
+
+@api.route('/parent_activities/<int:id>', methods=['PUT'])
+def update_parent_activity(id):
+    activity = ParentActivity.query.get(id)
+    if activity is None:
+        return jsonify({"error": "Activity not found"}), 404
+    data = request.get_json()
+    activity.parent_id = data.get('parent_id', activity.parent_id)
+    activity.name = data.get('name', activity.name)
+    activity.date = datetime.strptime(data.get('date', activity.date.isoformat()), "%Y-%m-%d").date()
+    activity.time = datetime.strptime(data.get('time', activity.time.isoformat()), "%H:%M:%S").time()
+    activity.duration = data.get('duration', activity.duration)
+    activity.status = data.get('status', activity.status)
+    activity.location = data.get('location', activity.location)
+    db.session.commit()
+    return jsonify(activity.serialize()), 200
+
+@api.route('/parent_activities/<int:id>', methods=['DELETE'])
+def delete_parent_activity(id):
+    activity = ParentActivity.query.get(id)
+    if activity is None:
+        return jsonify({"error": "Activity not found"}), 404
+    db.session.delete(activity)
+    db.session.commit()
+    return jsonify({"message": "Activity deleted"}), 200
+
+@api.route('/parent_schedules', methods=['GET'])
+def get_parent_schedules():
+    schedules = ParentSchedule.query.all()
+    return jsonify([schedule.serialize() for schedule in schedules]), 200
+
+@api.route('/parent_schedules/<int:id>', methods=['GET'])
+def get_parent_schedule(id):
+    schedule = ParentSchedule.query.get(id)
+    if schedule is None:
+        return jsonify({"error": "Schedule not found"}), 404
+    return jsonify(schedule.serialize()), 200
+
+@api.route('/parent_schedules', methods=['POST'])
+def create_parent_schedule():
+    data = request.get_json()
+    new_schedule = ParentSchedule(
+        parent_id=data['parent_id'],
+        day=data['day'],
+        activities=", ".join(data['activities'])
+    )
+    db.session.add(new_schedule)
+    db.session.commit()
+    return jsonify(new_schedule.serialize()), 201
+
+@api.route('/parent_schedules/<int:id>', methods=['PUT'])
+def update_parent_schedule(id):
+    schedule = ParentSchedule.query.get(id)
+    if schedule is None:
+        return jsonify({"error": "Schedule not found"}), 404
+    data = request.get_json()
+    schedule.parent_id = data.get('parent_id', schedule.parent_id)
+    schedule.day = data.get('day', schedule.day)
+    schedule.activities = ", ".join(data.get('activities', schedule.activities.split(', ')))
+    db.session.commit()
+    return jsonify(schedule.serialize()), 200
+
+@api.route('/parent_schedules/<int:id>', methods=['DELETE'])
+def delete_parent_schedule(id):
+    schedule = ParentSchedule.query.get(id)
+    if schedule is None:
+        return jsonify({"error": "Schedule not found"}), 404
+    db.session.delete(schedule)
+    db.session.commit()
+    return jsonify({"message": "Schedule deleted"}), 200
+
+@api.route('/parent_payments', methods=['GET'])
+def get_parent_payments():
+    payments = ParentPayment.query.all()
+    return jsonify([payment.serialize() for payment in payments]), 200
+
+@api.route('/parent_payments/<int:id>', methods=['GET'])
+def get_parent_payment(id):
+    payment = ParentPayment.query.get(id)
+    if payment is None:
+        return jsonify({"error": "Payment not found"}), 404
+    return jsonify(payment.serialize()), 200
+
+@api.route('/parent_payments', methods=['POST'])
+def create_parent_payment():
+    data = request.get_json()
+    new_payment = ParentPayment(
+        parent_id=data['parent_id'],
+        amount=data['amount'],
+        concept=data['concept'],
+        status=data['status'],
+        due_date=datetime.strptime(data['due_date'], "%Y-%m-%d").date()
+    )
+    db.session.add(new_payment)
+    db.session.commit()
+    return jsonify(new_payment.serialize()), 201
+
+@api.route('/parent_payments/<int:id>', methods=['PUT'])
+def update_parent_payment(id):
+    payment = ParentPayment.query.get(id)
+    if payment is None:
+        return jsonify({"error": "Payment not found"}), 404
+    data = request.get_json()
+    payment.parent_id = data.get('parent_id', payment.parent_id)
+    payment.amount = data.get('amount', payment.amount)
+    payment.concept = data.get('concept', payment.concept)
+    payment.status = data.get('status', payment.status)
+    payment.due_date = datetime.strptime(data.get('due_date', payment.due_date.isoformat()), "%Y-%m-%d").date()
+    db.session.commit()
+    return jsonify(payment.serialize()), 200
+
+@api.route('/parent_payments/<int:id>', methods=['DELETE'])
+def delete_parent_payment(id):
+    payment = ParentPayment.query.get(id)
+    if payment is None:
+        return jsonify({"error": "Payment not found"}), 404
+    db.session.delete(payment)
+    db.session.commit()
+    return jsonify({"message": "Payment deleted"}), 200
+
+@api.route('/parent_settings', methods=['GET'])
+def get_parent_settings():
+    settings = ParentSetting.query.all()
+    return jsonify([setting.serialize() for setting in settings]), 200
+
+@api.route('/parent_settings/<int:id>', methods=['GET'])
+def get_parent_setting(id):
+    setting = ParentSetting.query.get(id)
+    if setting is None:
+        return jsonify({"error": "Setting not found"}), 404
+    return jsonify(setting.serialize()), 200
+
+@api.route('/parent_settings', methods=['POST'])
+def create_parent_setting():
+    data = request.get_json()
+    new_setting = ParentSetting(
+        parent_id=data['parent_id'],
+        notifications=data.get('notifications', True),
+        language=data.get('language', 'es')
+    )
+    db.session.add(new_setting)
+    db.session.commit()
+    return jsonify(new_setting.serialize()), 201
+
+@api.route('/parent_settings/<int:id>', methods=['PUT'])
+def update_parent_setting(id):
+    setting = ParentSetting.query.get(id)
+    if setting is None:
+        return jsonify({"error": "Setting not found"}), 404
+    data = request.get_json()
+    setting.parent_id = data.get('parent_id', setting.parent_id)
+    setting.notifications = data.get('notifications', setting.notifications)
+    setting.language = data.get('language', setting.language)
+    db.session.commit()
+    return jsonify(setting.serialize()), 200
+
+@api.route('/parent_settings/<int:id>', methods=['DELETE'])
+def delete_parent_setting(id):
+    setting = ParentSetting.query.get(id)
+    if setting is None:
+        return jsonify({"error": "Setting not found"}), 404
+    db.session.delete(setting)
+    db.session.commit()
+    return jsonify({"message": "Setting deleted"}), 200
+
+@api.route('/parent_virtual_classes', methods=['GET'])
+def get_parent_virtual_classes():
+    classes = ParentVirtualClass.query.all()
+    return jsonify([cls.serialize() for cls in classes]), 200
+
+@api.route('/parent_virtual_classes/<int:id>', methods=['GET'])
+def get_parent_virtual_class(id):
+    cls = ParentVirtualClass.query.get(id)
+    if cls is None:
+        return jsonify({"error": "Virtual class not found"}), 404
+    return jsonify(cls.serialize()), 200
+
+@api.route('/parent_virtual_classes', methods=['POST'])
+def create_parent_virtual_class():
+    data = request.get_json()
+    new_class = ParentVirtualClass(
+        parent_id=data['parent_id'],
+        name=data['name'],
+        date=datetime.strptime(data['date'], "%Y-%m-%d").date(),
+        time=datetime.strptime(data['time'], "%H:%M:%S").time(),
+        link=data['link']
+    )
+    db.session.add(new_class)
+    db.session.commit()
+    return jsonify(new_class.serialize()), 201
+
+@api.route('/parent_virtual_classes/<int:id>', methods=['PUT'])
+def update_parent_virtual_class(id):
+    cls = ParentVirtualClass.query.get(id)
+    if cls is None:
+        return jsonify({"error": "Virtual class not found"}), 404
+    data = request.get_json()
+    cls.parent_id = data.get('parent_id', cls.parent_id)
+    cls.name = data.get('name', cls.name)
+    cls.date = datetime.strptime(data.get('date', cls.date.isoformat()), "%Y-%m-%d").date()
+    cls.time = datetime.strptime(data.get('time', cls.time.isoformat()), "%H:%M:%S").time()
+    cls.link = data.get('link', cls.link)
+    db.session.commit()
+    return jsonify(cls.serialize()), 200
+
+@api.route('/parent_virtual_classes/<int:id>', methods=['DELETE'])
+def delete_parent_virtual_class(id):
+    cls = ParentVirtualClass.query.get(id)
+    if cls is None:
+        return jsonify({"error": "Virtual class not found"}), 404
+    db.session.delete(cls)
+    db.session.commit()
+    return jsonify({"message": "Virtual class deleted"}), 200
+# fill data virtual class
+@api.route('/parent_virtual_classes/sample-data', methods=['POST'])
+def add_sample_parent_virtual_classes():
+    sample_data = [
+                {
+                    'parent_id': 1,
+                    'name': 'Yoga for Kids',
+                    'date': '2023-11-01',
+                    'time': '10:00:00',
+                    'link': 'https://example.com/yoga'
+                },
+                {
+                    'parent_id': 2,
+                    'name': 'Art and Craft',
+                    'date': '2023-11-02',
+                    'time': '14:00:00',
+                    'link': 'https://example.com/art'
+                },
+                {
+                    'parent_id': 1,
+                    'name': 'Science Experiments',
+                    'date': '2023-11-03',
+                    'time': '16:00:00',
+                    'link': 'https://example.com/science'
+                }
+            ]
+
+    for data in sample_data:
+        new_class = ParentVirtualClass(
+            parent_id=data['parent_id'],
+            name=data['name'],
+            date=datetime.fromisoformat(data['date']),
+            time=datetime.strptime(data['time'], "%H:%M:%S").time(),
+            link=data['link']
+        )
+        db.session.add(new_class)
+
+    db.session.commit()
+    return jsonify({'message': 'Sample parent virtual classes added successfully'}), 201
+
+@api.route('/messagesP', methods=['GET'])
+def get_messages():
+    messages = MessageP.query.all()
+    return jsonify([message.serialize() for message in messages]), 200
+
+@api.route('/messages/<int:id>', methods=['GET'])
+def get_message(id):
+    message = MessageP.query.get(id)
+    if message is None:
+        return jsonify({"error": "Message not found"}), 404
+    return jsonify(message.serialize()), 200
+
+@api.route('/messages', methods=['POST'])
+def create_message():
+    data = request.get_json()
+    new_message = MessageP(
+        parent_id=data['parent_id'],
+        content=data['content'],
+        sender=data['sender']
+    )
+    db.session.add(new_message)
+    db.session.commit()
+    return jsonify(new_message.serialize()), 201
+
+@api.route('/messages/<int:id>', methods=['PUT'])
+def update_message(id):
+    message = MessageP.query.get(id)
+    if message is None:
+        return jsonify({"error": "Message not found"}), 404
+    data = request.get_json()
+    message.parent_id = data.get('parent_id', message.parent_id)
+    message.content = data.get('content', message.content)
+    message.sender = data.get('sender', message.sender)
+    db.session.commit()
+    return jsonify(message.serialize()), 200
+
+@api.route('/messages/<int:id>', methods=['DELETE'])
+def delete_message(id):
+    message = MessageP.query.get(id)
+    if message is None:
+        return jsonify({"error": "Message not found"}), 404
+    db.session.delete(message)
+    db.session.commit()
+    return jsonify({"message": "Message deleted"}), 200
+
+@api.route('/parent_notifications', methods=['GET'])
+def get_parent_notifications():
+    notifications = ParentNotification.query.all()
+    return jsonify([notification.serialize() for notification in notifications]), 200
+
+@api.route('/parent_notifications/<int:id>', methods=['GET'])
+def get_parent_notification(id):
+    notification = ParentNotification.query.get(id)
+    if notification is None:
+        return jsonify({"error": "Notification not found"}), 404
+    return jsonify(notification.serialize()), 200
+
+@api.route('/parent_notifications', methods=['POST'])
+def create_parent_notification():
+    data = request.get_json()
+    new_notification = ParentNotification(
+        parent_id=data['parent_id'],
+        content=data['content'],
+        status=data.get('status', 'unread')
+    )
+    db.session.add(new_notification)
+    db.session.commit()
+    return jsonify(new_notification.serialize()), 201
+
+@api.route('/parent_notifications/<int:id>', methods=['PUT'])
+def update_parent_notification(id):
+    notification = ParentNotification.query.get(id)
+    if notification is None:
+        return jsonify({"error": "Notification not found"}), 404
+    data = request.get_json()
+    notification.parent_id = data.get('parent_id', notification.parent_id)
+    notification.content = data.get('content', notification.content)
+    notification.status = data.get('status', notification.status)
+    db.session.commit()
+    return jsonify(notification.serialize()), 200
+
+@api.route('/parent_notifications/<int:id>', methods=['DELETE'])
+def delete_parent_notification(id):
+    notification = ParentNotification.query.get(id)
+    if notification is None:
+        return jsonify({"error": "Notification not found"}), 404
+    db.session.delete(notification)
+    db.session.commit()
+    return jsonify({"message": "Notification deleted"}), 200
+
+@api.route('/parent_tasks', methods=['GET'])
+def get_parent_tasks():
+    tasks = ParentTask.query.all()
+    return jsonify([task.serialize() for task in tasks]), 200
+
+@api.route('/parent_tasks/<int:id>', methods=['GET'])
+def get_parent_task(id):
+    task = ParentTask.query.get(id)
+    if task is None:
+        return jsonify({"error": "Task not found"}), 404
+    return jsonify(task.serialize()), 200
+
+@api.route('/parent_tasks', methods=['POST'])
+def create_parent_task():
+    data = request.get_json()
+    new_task = ParentTask(
+        parent_id=data['parent_id'],
+        title=data['title'],
+        description=data['description'],
+        due_date=datetime.strptime(data['due_date'], "%Y-%m-%d").date(),
+        status=data['status']
+    )
+    db.session.add(new_task)
+    db.session.commit()
+    return jsonify(new_task.serialize()), 201
+
+@api.route('/parent_tasks/<int:id>', methods=['PUT'])
+def update_parent_task(id):
+    task = ParentTask.query.get(id)
+    if task is None:
+        return jsonify({"error": "Task not found"}), 404
+    data = request.get_json()
+    task.parent_id = data.get('parent_id', task.parent_id)
+    task.title = data.get('title', task.title)
+    task.description = data.get('description', task.description)
+    task.due_date = datetime.strptime(data.get('due_date', task.due_date.isoformat()), "%Y-%m-%d").date()
+    task.status = data.get('status', task.status)
+    db.session.commit()
+    return jsonify(task.serialize()), 200
+
+@api.route('/parent_tasks/<int:id>', methods=['DELETE'])
+def delete_parent_task(id):
+    task = ParentTask.query.get(id)
+    if task is None:
+        return jsonify({"error": "Task not found"}), 404
+    db.session.delete(task)
+    db.session.commit()
+    return jsonify({"message": "Task deleted"}), 200
+
+@api.route('/parent_attendances', methods=['GET'])
+def get_parent_attendances():
+    attendances = ParentAttendance.query.all()
+    return jsonify([attendance.serialize() for attendance in attendances]), 200
+
+@api.route('/parent_attendances/<int:id>', methods=['GET'])
+def get_parent_attendance(id):
+    attendance = ParentAttendance.query.get(id)
+    if attendance is None:
+        return jsonify({"error": "Attendance not found"}), 404
+    return jsonify(attendance.serialize()), 200
+
+@api.route('/parent_attendances', methods=['POST'])
+def create_parent_attendance():
+    data = request.get_json()
+    new_attendance = ParentAttendance(
+        parent_id=data['parent_id'],
+        class_id=data['class_id'],
+        date=datetime.strptime(data['date'], "%Y-%m-%d").date(),
+        status=data['status']
+    )
+    db.session.add(new_attendance)
+    db.session.commit()
+    return jsonify(new_attendance.serialize()), 201
+
+@api.route('/parent_attendances/<int:id>', methods=['PUT'])
+def update_parent_attendance(id):
+    attendance = ParentAttendance.query.get(id)
+    if attendance is None:
+        return jsonify({"error": "Attendance not found"}), 404
+    data = request.get_json()
+    attendance.parent_id = data.get('parent_id', attendance.parent_id)
+    attendance.class_id = data.get('class_id', attendance.class_id)
+    attendance.date = datetime.strptime(data.get('date', attendance.date.isoformat()), "%Y-%m-%d").date()
+    attendance.status = data.get('status', attendance.status)
+    db.session.commit()
+    return jsonify(attendance.serialize()), 200
+
+@api.route('/parent_attendances/<int:id>', methods=['DELETE'])
+def delete_parent_attendance(id):
+    attendance = ParentAttendance.query.get(id)
+    if attendance is None:
+        return jsonify({"error": "Attendance not found"}), 404
+    db.session.delete(attendance)
+    db.session.commit()
+    return jsonify({"message": "Attendance deleted"}), 200
+
+
+@api.route('/parent_grades', methods=['GET'])
+def get_parent_grades():
+    parent_grades = ParentGrade.query.all()
+    return jsonify([pg.serialize() for pg in parent_grades])
+
+@api.route('/parent_grades/<int:id>', methods=['GET'])
+def get_parent_grade(id):
+    parent_grade = ParentGrade.query.get(id)
+    if parent_grade is None:
+        return jsonify({"error": "ParentGrade not found"}), 404
+    return jsonify(parent_grade.serialize())
+
+@api.route('/parent_grades', methods=['POST'])
+def create_parent_grade():
+    data = request.get_json()
+    new_parent_grade = ParentGrade(
+        parent_id=data['parent_id'],
+        class_id=data['class_id'],
+        grade=data['grade'],
+        date=data['date']
+    )
+    db.session.add(new_parent_grade)
+    db.session.commit()
+    return jsonify(new_parent_grade.serialize()), 201
+
+@api.route('/parent_grades/<int:id>', methods=['PUT'])
+def update_parent_grade(id):
+    parent_grade = ParentGrade.query.get(id)
+    if parent_grade is None:
+        return jsonify({"error": "ParentGrade not found"}), 404
+    data = request.get_json()
+    parent_grade.parent_id = data.get('parent_id', parent_grade.parent_id)
+    parent_grade.class_id = data.get('class_id', parent_grade.class_id)
+    parent_grade.grade = data.get('grade', parent_grade.grade)
+    parent_grade.date = data.get('date', parent_grade.date)
+    db.session.commit()
+    return jsonify(parent_grade.serialize())
+
+@api.route('/parent_grades/<int:id>', methods=['DELETE'])
+def delete_parent_grade(id):
+    parent_grade = ParentGrade.query.get(id)
+    if parent_grade is None:
+        return jsonify({"error": "ParentGrade not found"}), 404
+    db.session.delete(parent_grade)
+    db.session.commit()
+    return jsonify({"message": "ParentGrade deleted"}), 200
+
+@api.route('/parent_payment_histories', methods=['GET'])
+def get_parent_payment_histories():
+    parent_payment_histories = ParentPaymentHistory.query.all()
+    return jsonify([pph.serialize() for pph in parent_payment_histories])
+
+@api.route('/parent_payment_histories/<int:id>', methods=['GET'])
+def get_parent_payment_history(id):
+    parent_payment_history = ParentPaymentHistory.query.get(id)
+    if parent_payment_history is None:
+        return jsonify({"error": "ParentPaymentHistory not found"}), 404
+    return jsonify(parent_payment_history.serialize())
+
+@api.route('/parent_payment_histories', methods=['POST'])
+def create_parent_payment_history():
+    data = request.get_json()
+    new_parent_payment_history = ParentPaymentHistory(
+        parent_id=data['parent_id'],
+        amount=data['amount'],
+        concept=data['concept'],
+        status=data['status'],
+        due_date=data['due_date']
+    )
+    db.session.add(new_parent_payment_history)
+    db.session.commit()
+    return jsonify(new_parent_payment_history.serialize()), 201
+
+@api.route('/parent_payment_histories/<int:id>', methods=['PUT'])
+def update_parent_payment_history(id):
+    parent_payment_history = ParentPaymentHistory.query.get(id)
+    if parent_payment_history is None:
+        return jsonify({"error": "ParentPaymentHistory not found"}), 404
+    data = request.get_json()
+    parent_payment_history.parent_id = data.get('parent_id', parent_payment_history.parent_id)
+    parent_payment_history.amount = data.get('amount', parent_payment_history.amount)
+    parent_payment_history.concept = data.get('concept', parent_payment_history.concept)
+    parent_payment_history.status = data.get('status', parent_payment_history.status)
+    parent_payment_history.due_date = data.get('due_date', parent_payment_history.due_date)
+    db.session.commit()
+    return jsonify(parent_payment_history.serialize())
+
+@api.route('/parent_payment_histories/<int:id>', methods=['DELETE'])
+def delete_parent_payment_history(id):
+    parent_payment_history = ParentPaymentHistory.query.get(id)
+    if parent_payment_history is None:
+        return jsonify({"error": "ParentPaymentHistory not found"}), 404
+    db.session.delete(parent_payment_history)
+    db.session.commit()
+    return jsonify({"message": "ParentPaymentHistory deleted"}), 200
+
+@api.route('/parent_subscriptions', methods=['GET'])
+def get_parent_subscriptions():
+    parent_subscriptions = ParentSubscription.query.all()
+    return jsonify([ps.serialize() for ps in parent_subscriptions])
+
+@api.route('/parent_subscriptions/<int:id>', methods=['GET'])
+def get_parent_subscription(id):
+    parent_subscription = ParentSubscription.query.get(id)
+    if parent_subscription is None:
+        return jsonify({"error": "ParentSubscription not found"}), 404
+    return jsonify(parent_subscription.serialize())
+
+@api.route('/parent_subscriptions', methods=['POST'])
+def create_parent_subscription():
+    data = request.get_json()
+    new_parent_subscription = ParentSubscription(
+        parent_id=data['parent_id'],
+        plan_type=data['plan_type'],
+        start_date=data['start_date'],
+        end_date=data['end_date']
+    )
+    db.session.add(new_parent_subscription)
+    db.session.commit()
+    return jsonify(new_parent_subscription.serialize()), 201
+
+@api.route('/parent_subscriptions/<int:id>', methods=['PUT'])
+def update_parent_subscription(id):
+    parent_subscription = ParentSubscription.query.get(id)
+    if parent_subscription is None:
+        return jsonify({"error": "ParentSubscription not found"}), 404
+    data = request.get_json()
+    parent_subscription.parent_id = data.get('parent_id', parent_subscription.parent_id)
+    parent_subscription.plan_type = data.get('plan_type', parent_subscription.plan_type)
+    parent_subscription.start_date = data.get('start_date', parent_subscription.start_date)
+    parent_subscription.end_date = data.get('end_date', parent_subscription.end_date)
+    db.session.commit()
+    return jsonify(parent_subscription.serialize())
+
+@api.route('/parent_subscriptions/<int:id>', methods=['DELETE'])
+def delete_parent_subscription(id):
+    parent_subscription = ParentSubscription.query.get(id)
+    if parent_subscription is None:
+        return jsonify({"error": "ParentSubscription not found"}), 404
+    db.session.delete(parent_subscription)
+    db.session.commit()
+    return jsonify({"message": "ParentSubscription deleted"}), 200
+
+@api.route('/parent_courses', methods=['GET'])
+def get_parent_courses():
+    parent_courses = ParentCourse.query.all()
+    return jsonify([pc.serialize() for pc in parent_courses])
+
+@api.route('/parent_courses/<int:id>', methods=['GET'])
+def get_parent_course(id):
+    parent_course = ParentCourse.query.get(id)
+    if parent_course is None:
+        return jsonify({"error": "ParentCourse not found"}), 404
+    return jsonify(parent_course.serialize())
+
+@api.route('/parent_courses', methods=['POST'])
+def create_parent_course():
+    data = request.get_json()
+    new_parent_course = ParentCourse(
+        parent_id=data['parent_id'],
+        course_id=data['course_id'],
+        enrollment_date=data['enrollment_date']
+    )
+    db.session.add(new_parent_course)
+    db.session.commit()
+    return jsonify(new_parent_course.serialize()), 201
+
+@api.route('/parent_courses/<int:id>', methods=['PUT'])
+def update_parent_course(id):
+    parent_course = ParentCourse.query.get(id)
+    if parent_course is None:
+        return jsonify({"error": "ParentCourse not found"}), 404
+    data = request.get_json()
+    parent_course.parent_id = data.get('parent_id', parent_course.parent_id)
+    parent_course.course_id = data.get('course_id', parent_course.course_id)
+    parent_course.enrollment_date = data.get('enrollment_date', parent_course.enrollment_date)
+    db.session.commit()
+    return jsonify(parent_course.serialize())
+
+@api.route('/parent_courses/<int:id>', methods=['DELETE'])
+def delete_parent_course(id):
+    parent_course = ParentCourse.query.get(id)
+    if parent_course is None:
+        return jsonify({"error": "ParentCourse not found"}), 404
+    db.session.delete(parent_course)
+    db.session.commit()
+    return jsonify({"message": "ParentCourse deleted"}), 200
+
+@api.route('/parent_services', methods=['GET'])
+def get_parent_services():
+    parent_services = ParentService.query.all()
+    return jsonify([ps.serialize() for ps in parent_services])
+
+@api.route('/parent_services/<int:id>', methods=['GET'])
+def get_parent_service(id):
+    parent_service = ParentService.query.get(id)
+    if parent_service is None:
+        return jsonify({"error": "ParentService not found"}), 404
+    return jsonify(parent_service.serialize())
+
+@api.route('/parent_services', methods=['POST'])
+def create_parent_service():
+    data = request.get_json()
+    new_parent_service = ParentService(
+        parent_id=data['parent_id'],
+        service_id=data['service_id'],
+        enrollment_date=data['enrollment_date']
+    )
+    db.session.add(new_parent_service)
+    db.session.commit()
+    return jsonify(new_parent_service.serialize()), 201
+
+@api.route('/parent_services/<int:id>', methods=['PUT'])
+def update_parent_service(id):
+    parent_service = ParentService.query.get(id)
+    if parent_service is None:
+        return jsonify({"error": "ParentService not found"}), 404
+    data = request.get_json()
+    parent_service.parent_id = data.get('parent_id', parent_service.parent_id)
+    parent_service.service_id = data.get('service_id', parent_service.service_id)
+    parent_service.enrollment_date = data.get('enrollment_date', parent_service.enrollment_date)
+    db.session.commit()
+    return jsonify(parent_service.serialize())
+
+@api.route('/parent_services/<int:id>', methods=['DELETE'])
+def delete_parent_service(id):
+    parent_service = ParentService.query.get(id)
+    if parent_service is None:
+        return jsonify({"error": "ParentService not found"}), 404
+    db.session.delete(parent_service)
+    db.session.commit()
+    return jsonify({"message": "ParentService deleted"}), 200
+
+@api.route('/parent_events', methods=['GET'])
+def get_parent_events():
+    parent_events = ParentEvent.query.all()
+    return jsonify([pe.serialize() for pe in parent_events])
+
+@api.route('/parent_events/<int:id>', methods=['GET'])
+def get_parent_event(id):
+    parent_event = ParentEvent.query.get(id)
+    if parent_event is None:
+        return jsonify({"error": "ParentEvent not found"}), 404
+    return jsonify(parent_event.serialize())
+
+@api.route('/parent_events', methods=['POST'])
+def create_parent_event():
+    data = request.get_json()
+    new_parent_event = ParentEvent(
+        parent_id=data['parent_id'],
+        event_id=data['event_id'],
+        enrollment_date=data['enrollment_date']
+    )
+    db.session.add(new_parent_event)
+    db.session.commit()
+    return jsonify(new_parent_event.serialize()), 201
+
+@api.route('/parent_events/<int:id>', methods=['PUT'])
+def update_parent_event(id):
+    parent_event = ParentEvent.query.get(id)
+    if parent_event is None:
+        return jsonify({"error": "ParentEvent not found"}), 404
+    data = request.get_json()
+    parent_event.parent_id = data.get('parent_id', parent_event.parent_id)
+    parent_event.event_id = data.get('event_id', parent_event.event_id)
+    parent_event.enrollment_date = data.get('enrollment_date', parent_event.enrollment_date)
+    db.session.commit()
+    return jsonify(parent_event.serialize())
+
+@api.route('/parent_events/<int:id>', methods=['DELETE'])
+def delete_parent_event(id):
+    parent_event = ParentEvent.query.get(id)
+    if parent_event is None:
+        return jsonify({"error": "ParentEvent not found"}), 404
+    db.session.delete(parent_event)
+    db.session.commit()
+    return jsonify({"message": "ParentEvent deleted"}), 200
+
+
+
+
+@api.route('/fill-database', methods=['POST'])
+def fill_database():
+    try:
+        # Crear usuarios de prueba
+        for _ in range(20):
+            user = User(
+                username=fake.user_name(),
+                email=fake.email(),
+                password_hash=generate_password_hash('password'),
+                role=fake.random_element(elements=('parent', 'teacher', 'admin')),
+                profile_picture=fake.image_url(),
+                created_at=datetime.utcnow()
+            )
+            db.session.add(user)
+        db.session.commit()
+
+        # Crear padres de prueba
+        users = User.query.filter_by(role='parent').all()
+        for user in users:
+            parent = Parent(
+                user_id=user.id,
+                emergency_contact=fake.phone_number(),
+            )
+            db.session.add(parent)
+        db.session.commit()
+
+        # Crear niños de prueba
+        parents = Parent.query.all()
+        for parent in parents:
+            for _ in range(random.randint(1, 3)):  # Cada padre tiene entre 1 y 3 hijos
+                child = Child(
+                    parent_id=parent.id,
+                    name=fake.first_name(),
+                    date_of_birth=fake.date_of_birth(minimum_age=1, maximum_age=10),
+                    allergies=fake.text(max_nb_chars=200),
+                    birth_certificate=fake.file_name(),
+                    immunization_records=fake.file_name()
+                )
+                db.session.add(child)
+        db.session.commit()
+
+        # Crear profesores de prueba
+        users = User.query.filter_by(role='teacher').all()
+        for user in users:
+            teacher = Teacher(
+                user_id=user.id,
+                qualifications=fake.text(max_nb_chars=200),
+                teaching_experience=fake.text(max_nb_chars=200),
+                certifications=fake.file_name(),
+                background_check=fake.file_name()
+            )
+            db.session.add(teacher)
+        db.session.commit()
+
+        # Crear clases de prueba
+        teachers = Teacher.query.all()
+        for _ in range(10):
+            class_ = Class(
+                teacher_id=random.choice(teachers).id if teachers else None,
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                capacity=random.randint(10, 30),
+                price=random.uniform(50, 200),
+                age=fake.random_element(elements=('3-5', '6-8', '9-12')),
+                time=fake.time(),
+                image=fake.image_url()
+            )
+            db.session.add(class_)
+        db.session.commit()
+
+        # Crear inscripciones de prueba
+        children = Child.query.all()
+        classes = Class.query.all()
+        for child in children:
+            enrollment = Enrollment(
+                child_id=child.id,
+                class_id=random.choice(classes).id,
+                enrollment_date=fake.date_this_year()
+            )
+            db.session.add(enrollment)
+        db.session.commit()
+
+        # Crear programas de prueba
+        for _ in range(5):
+            program = Program(
+                teacher_id=random.choice(teachers).id if teachers else None,
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                capacity=random.randint(10, 30),
+                price=random.uniform(50, 200),
+                age=random.randint(3, 12),
+                time=fake.time()
+            )
+            db.session.add(program)
+        db.session.commit()
+
+        # Crear suscripciones de prueba
+        parents = Parent.query.all()
+        for parent in parents:
+            subscription = Subscription(
+                parent_id=parent.id,
+                plan_type=fake.random_element(elements=('basic', 'premium', 'gold')),
+                start_date=fake.date_this_year(),
+                end_date=fake.date_between(start_date='+30d', end_date='+1y')
+            )
+            db.session.add(subscription)
+        db.session.commit()
+
+        # Crear informes de progreso de prueba
+        children = Child.query.all()
+        teachers = Teacher.query.all()
+        for child in children:
+            progress_report = ProgressReport(
+                child_id=child.id,
+                teacher_id=random.choice(teachers).id,
+                report_date=fake.date_this_year(),
+                content=fake.text(max_nb_chars=500)
+            )
+            db.session.add(progress_report)
+        db.session.commit()
+
+        # Crear eventos de prueba
+        for _ in range(5):
+            event = Event(
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                start_time=fake.date_time_this_year(),
+                end_time=fake.date_time_this_year(),
+                image=fake.image_url()
+            )
+            db.session.add(event)
+        db.session.commit()
+
+        # Crear mensajes de prueba
+        users = User.query.all()
+        for _ in range(50):
+            sender = random.choice(users)
+            receiver = random.choice(users)
+            while receiver.id == sender.id:  # Asegurarse de que el remitente y el receptor no sean el mismo
+                receiver = random.choice(users)
+            message = Message(
+                sender_id=sender.id,
+                receiver_id=receiver.id,
+                content=fake.text(max_nb_chars=200),
+                timestamp=fake.date_time_this_year()
+            )
+            db.session.add(message)
+        db.session.commit()
+
+        # Crear tareas de prueba
+        teachers = Teacher.query.all()
+        for teacher in teachers:
+            for _ in range(random.randint(1, 5)):
+                task = Task(
+                    teacher_id=teacher.id,
+                    title=fake.sentence(),
+                    description=fake.text(max_nb_chars=200),
+                    due_date=fake.date_this_year(),
+                    status=fake.random_element(elements=('pending', 'completed', 'in progress'))
+                )
+                db.session.add(task)
+        db.session.commit()
+
+        # Crear asistencias de prueba
+        children = Child.query.all()
+        classes = Class.query.all()
+        for child in children:
+            for _ in range(random.randint(1, 5)):
+                attendance = Attendance(
+                    child_id=child.id,
+                    class_id=random.choice(classes).id,
+                    date=fake.date_this_year(),
+                    status=fake.random_element(elements=('present', 'absent', 'late'))
+                )
+                db.session.add(attendance)
+        db.session.commit()
+
+        # Crear calificaciones de prueba
+        for child in children:
+            for _ in range(random.randint(1, 5)):
+                grade = Grade(
+                    child_id=child.id,
+                    class_id=random.choice(classes).id,
+                    grade=fake.random_element(elements=('A', 'B', 'C', 'D', 'F')),
+                    date=fake.date_this_year()
+                )
+                db.session.add(grade)
+        db.session.commit()
+
+        # Crear pagos de prueba
+        parents = Parent.query.all()
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                payment = Payment(
+                    parent_id=parent.id,
+                    amount=random.uniform(50, 500),
+                    date=fake.date_this_year()
+                )
+                db.session.add(payment)
+        db.session.commit()
+
+        # Crear cursos de prueba
+        for _ in range(5):
+            course = Course(
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                price=random.uniform(50, 200),
+                age=random.randint(3, 12)
+            )
+            db.session.add(course)
+        db.session.commit()
+
+        # Crear notificaciones de prueba
+        users = User.query.all()
+        for user in users:
+            for _ in range(random.randint(1, 5)):
+                notification = Notification(
+                    user_id=user.id,
+                    content=fake.text(max_nb_chars=200),
+                    date=fake.date_time_this_year(),
+                    status=fake.random_element(elements=('unread', 'read'))
+                )
+                db.session.add(notification)
+        db.session.commit()
+
+        # Crear contactos de prueba
+        for _ in range(10):
+            contact = Contact(
+            first_name=fake.first_name(),
+            last_name=fake.last_name(),
+            email=fake.email(),
+            subject=fake.sentence(),
+            phone_number=fake.numerify(text='###########'),  # Número de 11 dígitos
+            message=fake.text(max_nb_chars=200)
+        )
+            db.session.add(contact)
+        db.session.commit()
+
+        # Crear suscripciones a boletines de prueba
+        for _ in range(10):
+            newsletter = Newsletter(
+                email=fake.email()
+            )
+            db.session.add(newsletter)
+        db.session.commit()
+
+        # Crear actividades de prueba
+        for _ in range(10):
+            activity = Activity(
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                image=fake.image_url(),
+                age_range=fake.random_element(elements=('3-5', '6-8', '9-12')),
+                time=fake.time(),
+                capacity=random.randint(10, 30),
+                price=random.uniform(50, 200)
+            )
+            db.session.add(activity)
+        db.session.commit()
+
+        # Crear clases virtuales de prueba
+        teachers = Teacher.query.all()
+        for _ in range(5):
+            virtual_class = VirtualClass(
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                date=fake.date_this_year(),
+                time=fake.time(),
+                duration=fake.random_element(elements=('1 hour', '2 hours', '3 hours')),
+                teacher=random.choice(teachers).user.username,
+                capacity=random.randint(10, 30),
+                price=random.uniform(50, 200)
+            )
+            db.session.add(virtual_class)
+        db.session.commit()
+
+        return jsonify({"message": "Database filled with test data successfully!"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+
+
+
+
+
+
+@api.route('/fill-all-models', methods=['POST'])
+def fill_all_models():
+    parent_ids = [parent.id for parent in db.session.query(Parent).all()]
+    try:
+        # Crear usuarios de prueba (necesarios para relaciones)
+        for _ in range(20):
+            user = User(
+                username=fake.user_name(),
+                email=fake.email(),
+                password_hash=generate_password_hash('password'),
+                role=fake.random_element(elements=('parent', 'teacher', 'admin')),
+                profile_picture=fake.image_url(),
+                created_at=datetime.utcnow()
+            )
+            db.session.add(user)
+        db.session.commit()
+
+        # Crear padres de prueba
+        users = User.query.filter_by(role='parent').all()
+        for user in users:
+            parent = Parent(
+                user_id=user.id,
+                emergency_contact=fake.phone_number(),
+            )
+            db.session.add(parent)
+        db.session.commit()
+
+        # Crear niños de prueba
+        parents = Parent.query.all()
+        for parent in parents:
+            for _ in range(random.randint(1, 3)):  # Cada padre tiene entre 1 y 3 hijos
+                child = Child(
+                    parent_id=parent.id,
+                    name=fake.first_name(),
+                    date_of_birth=fake.date_of_birth(minimum_age=1, maximum_age=10),
+                    allergies=fake.text(max_nb_chars=200),
+                    birth_certificate=fake.file_name(),
+                    immunization_records=fake.file_name()
+                )
+                db.session.add(child)
+        db.session.commit()
+
+        # Crear profesores de prueba
+        users = User.query.filter_by(role='teacher').all()
+        for user in users:
+            teacher = Teacher(
+                user_id=user.id,
+                qualifications=fake.text(max_nb_chars=200),
+                teaching_experience=fake.text(max_nb_chars=200),
+                certifications=fake.file_name(),
+                background_check=fake.file_name()
+            )
+            db.session.add(teacher)
+        db.session.commit()
+
+        # Crear clases de prueba
+        teachers = Teacher.query.all()
+        for _ in range(10):
+            class_ = Class(
+                teacher_id=random.choice(teachers).id if teachers else None,
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                capacity=random.randint(10, 30),
+                price=random.uniform(50, 200),
+                age=fake.random_element(elements=('3-5', '6-8', '9-12')),
+                time=fake.time(),
+                image=fake.image_url()
+            )
+            db.session.add(class_)
+        db.session.commit()
+
+        # Crear inscripciones de prueba
+        children = Child.query.all()
+        classes = Class.query.all()
+        for child in children:
+            enrollment = Enrollment(
+                child_id=child.id,
+                class_id=random.choice(classes).id,
+                enrollment_date=fake.date_this_year()
+            )
+            db.session.add(enrollment)
+        db.session.commit()
+
+        # Crear programas de prueba
+        for _ in range(5):
+            program = Program(
+                teacher_id=random.choice(teachers).id if teachers else None,
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                capacity=random.randint(10, 30),
+                price=random.uniform(50, 200),
+                age=random.randint(3, 12),
+                time=fake.time()
+            )
+            db.session.add(program)
+        db.session.commit()
+
+        # Crear suscripciones de prueba
+        parents = Parent.query.all()
+        for parent in parents:
+            subscription = Subscription(
+                parent_id=parent.id,
+                plan_type=fake.random_element(elements=('basic', 'premium', 'gold')),
+                start_date=fake.date_this_year(),
+                end_date=fake.date_between(start_date='+30d', end_date='+1y')
+            )
+            db.session.add(subscription)
+        db.session.commit()
+
+        # Crear informes de progreso de prueba
+        children = Child.query.all()
+        teachers = Teacher.query.all()
+        for child in children:
+            progress_report = ProgressReport(
+                child_id=child.id,
+                teacher_id=random.choice(teachers).id,
+                report_date=fake.date_this_year(),
+                content=fake.text(max_nb_chars=500)
+            )
+            db.session.add(progress_report)
+        db.session.commit()
+
+        # Crear eventos de prueba
+        for _ in range(5):
+            event = Event(
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                start_time=fake.date_time_this_year(),
+                end_time=fake.date_time_this_year(),
+                image=fake.image_url()
+            )
+            db.session.add(event)
+        db.session.commit()
+
+        # Crear mensajes de prueba
+        users = User.query.all()
+        for _ in range(50):
+            sender = random.choice(users)
+            receiver = random.choice(users)
+            while receiver.id == sender.id:  # Asegurarse de que el remitente y el receptor no sean el mismo
+                receiver = random.choice(users)
+            message = Message(
+                sender_id=sender.id,
+                receiver_id=receiver.id,
+                content=fake.text(max_nb_chars=200),
+                timestamp=fake.date_time_this_year()
+            )
+            db.session.add(message)
+        db.session.commit()
+
+        # Crear tareas de prueba
+        teachers = Teacher.query.all()
+        for teacher in teachers:
+            for _ in range(random.randint(1, 5)):
+                task = Task(
+                    teacher_id=teacher.id,
+                    title=fake.sentence(),
+                    description=fake.text(max_nb_chars=200),
+                    due_date=fake.date_this_year(),
+                    status=fake.random_element(elements=('pending', 'completed', 'in progress'))
+                )
+                db.session.add(task)
+        db.session.commit()
+
+        # Crear asistencias de prueba
+        children = Child.query.all()
+        classes = Class.query.all()
+        for child in children:
+            for _ in range(random.randint(1, 5)):
+                attendance = Attendance(
+                    child_id=child.id,
+                    class_id=random.choice(classes).id,
+                    date=fake.date_this_year(),
+                    status=fake.random_element(elements=('present', 'absent', 'late'))
+                )
+                db.session.add(attendance)
+        db.session.commit()
+
+        # Crear calificaciones de prueba
+        for child in children:
+            for _ in range(random.randint(1, 5)):
+                grade = Grade(
+                    child_id=child.id,
+                    class_id=random.choice(classes).id,
+                    grade=fake.random_element(elements=('A', 'B', 'C', 'D', 'F')),
+                    date=fake.date_this_year()
+                )
+                db.session.add(grade)
+        db.session.commit()
+
+        # Crear pagos de prueba
+        parents = Parent.query.all()
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                payment = Payment(
+                    parent_id=parent.id,
+                    amount=random.uniform(50, 500),
+                    date=fake.date_this_year()
+                )
+                db.session.add(payment)
+        db.session.commit()
+
+        # Crear cursos de prueba
+        for _ in range(5):
+            course = Course(
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                price=random.uniform(50, 200),
+                age=random.randint(3, 12)
+            )
+            db.session.add(course)
+        db.session.commit()
+
+        # Crear notificaciones de prueba
+        users = User.query.all()
+        for user in users:
+            for _ in range(random.randint(1, 5)):
+                notification = Notification(
+                    user_id=user.id,
+                    content=fake.text(max_nb_chars=200),
+                    date=fake.date_time_this_year(),
+                    status=fake.random_element(elements=('unread', 'read'))
+                )
+                db.session.add(notification)
+        db.session.commit()
+
+        # Crear contactos de prueba
+        for _ in range(10):
+            contact = Contact(
+                first_name=fake.first_name(),
+                last_name=fake.last_name(),
+                email=fake.email(),
+                subject=fake.sentence(),
+                phone_number=fake.numerify(text='###########'),  # Número de 11 dígitos
+                message=fake.text(max_nb_chars=200)
+            )
+            db.session.add(contact)
+        db.session.commit()
+
+        # Crear suscripciones a boletines de prueba
+        for _ in range(10):
+            newsletter = Newsletter(
+                email=fake.email()
+            )
+            db.session.add(newsletter)
+        db.session.commit()
+
+        # Crear actividades de prueba
+        for _ in range(10):
+            activity = Activity(
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                image=fake.image_url(),
+                age_range=fake.random_element(elements=('3-5', '6-8', '9-12')),
+                time=fake.time(),
+                capacity=random.randint(10, 30),
+                price=random.uniform(50, 200)
+            )
+            db.session.add(activity)
+        db.session.commit()
+
+        # Crear clases virtuales de prueba
+        teachers = Teacher.query.all()
+        for _ in range(5):
+            virtual_class = VirtualClass(
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                date=fake.date_this_year(),
+                time=fake.time(),
+                duration=fake.random_element(elements=('1 hour', '2 hours', '3 hours')),
+                teacher=random.choice(teachers).user.username,
+                capacity=random.randint(10, 30),
+                price=random.uniform(50, 200)
+            )
+            db.session.add(virtual_class)
+        db.session.commit()
+
+        # Crear horarios de prueba
+        for _ in range(10):
+            schedule = Schedule(
+                class_name=fake.word(),
+                teacher=fake.name(),
+                dayOfWeek=fake.random_element(elements=('Mon', 'Tue', 'Wed', 'Thu', 'Fri')),
+                startTime=fake.time(),
+                endTime=fake.time(),
+                capacity=random.randint(10, 30),
+                enrolled=random.randint(0, 30),
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            db.session.add(schedule)
+        db.session.commit()
+
+        # Crear GetInTouch de prueba
+        for _ in range(10):
+            getintouch = Getintouch(
+                name=fake.name(),
+                email=fake.email(),
+                subject=fake.sentence(),
+                phone_number=fake.numerify(text='###########'),  # Número de 11 dígitos
+                message=fake.text(max_nb_chars=200)
+            )
+            db.session.add(getintouch)
+        db.session.commit()
+
+        # Crear clientes de prueba
+        for _ in range(10):
+            client = Client(
+                name=fake.name(),
+                email=fake.email(),
+                phone=fake.numerify(text='###########'),  # Número de 11 dígitos
+                status=fake.random_element(elements=('Active', 'Inactive')),
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            db.session.add(client)
+        db.session.commit()
+
+        # Crear correos electrónicos de prueba
+        for _ in range(10):
+            email = Email(
+                to_name=fake.name(),
+                user_email=fake.email(),
+                message=fake.text(max_nb_chars=200),
+                date=fake.date_time_this_year(),
+                scheduled_date=fake.date_time_this_year()
+            )
+            db.session.add(email)
+        db.session.commit()
+
+        # Crear suscripciones a eventos de prueba
+        for _ in range(10):
+            eventsuscription = Eventsuscriptions(
+                full_name=fake.name(),
+                events_selection=fake.word(),
+                parent_name=fake.name(),
+                special_request=fake.text(max_nb_chars=200)
+            )
+            db.session.add(eventsuscription)
+        db.session.commit()
+
+        # Crear videos de prueba
+        users = User.query.all()
+        for _ in range(10):
+            video = Video(
+                title=fake.word(),
+                url=fake.url(),
+                user_id=random.choice(users).id,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            db.session.add(video)
+        db.session.commit()
+
+        # Crear cuentas inactivas de prueba
+        for _ in range(10):
+            inactive_account = InactiveAccount(
+                name=fake.name(),
+                email=fake.email(),
+                last_active=fake.date_time_this_year(),
+                type=fake.random_element(elements=('parent', 'teacher', 'admin')),
+                reason=fake.text(max_nb_chars=200),
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            db.session.add(inactive_account)
+        db.session.commit()
+
+        # Crear aprobaciones de prueba
+        for _ in range(10):
+            approval = Approval(
+                type=fake.word(),
+                name=fake.name(),
+                details=fake.text(max_nb_chars=200),
+                status=fake.random_element(elements=('pending', 'approved', 'rejected')),
+                date=fake.date_this_year(),
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            db.session.add(approval)
+        db.session.commit()
+
+        # Crear administradores de prueba
+        users = User.query.filter_by(role='admin').all()
+        for user in users:
+            admin = AdminD(
+                user_id=user.id,
+                position=fake.job(),
+                department=fake.word()
+            )
+            db.session.add(admin)
+        db.session.commit()
+
+        # Crear servicios de prueba
+        for _ in range(10):
+            service = Service(
+                name=fake.word(),
+                description=fake.text(max_nb_chars=200),
+                image=fake.image_url()
+            )
+            db.session.add(service)
+        db.session.commit()
+
+        # Crear actividades de padres de prueba
+        parents = Parent.query.all()
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                parent_activity = ParentActivity(
+                    parent_id=parent.id,
+                    name=fake.word(),
+                    date=fake.date_this_year(),
+                    time=fake.time(),
+                    duration=fake.random_element(elements=('1 hour', '2 hours', '3 hours')),
+                    status=fake.random_element(elements=('pending', 'completed', 'in progress')),
+                    location=fake.address()
+                )
+                db.session.add(parent_activity)
+        db.session.commit()
+
+        # Crear cursos de padres de prueba
+        courses = Course.query.all()
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                parent_course = ParentCourse(
+                    parent_id=parent.id,
+                    course_id=random.choice(courses).id,
+                    enrollment_date=fake.date_this_year()
+                )
+                db.session.add(parent_course)
+        db.session.commit()
+
+        # Crear asistencias de padres de prueba
+        classes = Class.query.all()
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                parent_attendance = ParentAttendance(
+                    parent_id=parent.id,
+                    class_id=random.choice(classes).id,
+                    date=fake.date_this_year(),
+                    status=fake.random_element(elements=('present', 'absent', 'late'))
+                )
+                db.session.add(parent_attendance)
+        db.session.commit()
+
+        # Crear eventos de padres de prueba
+        events = Event.query.all()
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                parent_event = ParentEvent(
+                    parent_id=parent.id,
+                    event_id=random.choice(events).id,
+                    enrollment_date=fake.date_this_year()
+                )
+                db.session.add(parent_event)
+        db.session.commit()
+
+        # Crear calificaciones de padres de prueba
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                parent_grade = ParentGrade(
+                    parent_id=parent.id,
+                    class_id=random.choice(classes).id,
+                    grade=fake.random_element(elements=('A', 'B', 'C', 'D', 'F')),
+                    date=fake.date_this_year()
+                )
+                db.session.add(parent_grade)
+        db.session.commit()
+
+        # Crear notificaciones de padres de prueba
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                parent_notification = ParentNotification(
+                    parent_id=parent.id,
+                    content=fake.text(max_nb_chars=200),
+                    date=fake.date_time_this_year(),
+                    status=fake.random_element(elements=('unread', 'read'))
+                )
+                db.session.add(parent_notification)
+        db.session.commit()
+
+        # Crear pagos de padres de prueba
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                parent_payment = ParentPayment(
+                    parent_id=parent.id,
+                    amount=random.uniform(50, 500),
+                    concept=fake.word(),
+                    status=fake.random_element(elements=('pending', 'completed', 'failed')),
+                    due_date=fake.date_this_year()
+                )
+                db.session.add(parent_payment)
+        db.session.commit()
+
+        # Crear historial de pagos de padres de prueba
+        for parent in parents:
+            for _ in range(random.randint(1, 5)):
+                parent_payment_history = ParentPaymentHistory(
+                    parent_id=parent.id,
+                    amount=random.uniform(50, 500),
+                    concept=fake.word(),
+                    status=fake.random_element(elements=('pending', 'completed', 'failed')),
+                    due_date=fake.date_this_year()
+                )
+                db.session.add(parent_payment_history)
+        db.session.commit()
+        # Crear datos de prueba para MessageP
+        for _ in range(10):
+            if not parent_ids:
+                break  # Salir si no hay IDs de padres disponibles
+
+            parent_id = random.choice(parent_ids)  # Elegir un ID de padre existente aleatoriamente
+            message = MessageP(
+                parent_id=parent_id,
+                content=fake.sentence(),
+                sender=fake.name()
+            )
+            db.session.add(message)
+        db.session.commit()
+       
+        # Crear datos de prueba para Schedule
+        for _ in range(10):
+            schedule = Schedule(
+                class_name=fake.word(),
+                teacher=fake.name(),
+                dayOfWeek=fake.random_element(elements=('Mon', 'Tue', 'Wed', 'Thu', 'Fri')),
+                startTime=fake.time(),
+                endTime=fake.time(),
+                capacity=random.randint(10, 30),
+                enrolled=random.randint(0, 30),
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            db.session.add(schedule)
+        db.session.commit()
+
+    # Crear datos de prueba para ParentSchedule
+        for _ in range(10):
+            if not parent_ids:
+                break  # Salir si no hay IDs de padres disponibles
+
+            parent_id = random.choice(parent_ids)  # Elegir un ID de padre existente aleatoriamente
+            parent_schedule = ParentSchedule(
+                parent_id=parent_id,
+                day=fake.random_element(elements=('Mon', 'Tue', 'Wed', 'Thu', 'Fri')),
+                activities=', '.join(fake.words(nb=5))
+            )
+            db.session.add(parent_schedule)
+        db.session.commit()
+        # Crear datos de prueba para MessageP
+  
+                    
+        return jsonify({"message": "All models filled with test data successfully!"}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+    
+    

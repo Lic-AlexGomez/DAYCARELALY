@@ -1,9 +1,13 @@
-import React, { useContext } from "react"
+import React, { useContext,useEffect } from "react"
 import { Bell, User } from "lucide-react"
 import { Context } from "../../store/appContext"
 
 const ParentHeader = () => {
-  const { store } = useContext(Context)
+  const { store, actions } = useContext(Context)
+
+  useEffect(() => {
+    actions.fetchParentData()
+  }, [])
 
   return (
     <header className="tw-bg-white tw-border-b tw-border-gray-200">

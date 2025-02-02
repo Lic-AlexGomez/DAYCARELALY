@@ -34,8 +34,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 		services:[],
 		gallery:[],
 
-		//parent dashboard store
-		parentvirtualClasses: [],
+			//parent dashboard store
+			parentData: null,
+			parentChildren: [],
+			parentSchedule: [],
+			parentPayments: [],
+			parentActivities: [],
+			parentSettings: null,
+			parentVirtualClasses: [],
+			notifications: [],
 	  },
 	  actions: {
 		signUp: async (signupData) => {
@@ -123,7 +130,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			const response = await fetch(process.env.BACKEND_URL + "/api/classes")
 			if (response.ok) {
 			  const data = await response.json()
-			  console.log("Clases obtenidas:", data);
 			  setStore({ classes: data })
 			} else {
 			  console.error("Error fetching classes:", response.status)
@@ -490,7 +496,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			const response = await fetch(process.env.BACKEND_URL + "/api/emails")
 			if (response.ok) {
 			  const data = await response.json()
-			  console.log(data)
 			  const emails = data.filter((email) => !email.scheduledDate)
 			  const scheduledEmails = data.filter((email) => email.scheduledDate)
 			  setStore({ emails, scheduledEmails })
@@ -834,7 +839,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			}
 		},
 		addClass: async (teacher_id, name, description,capacity, price, age,time,image) => {
-			console.log(teacher_id, name, description,capacity, price, age,time,image)
 			try {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
 				method: "POST",
@@ -912,7 +916,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/events")
 			  if (response.ok) {
 				const data = await response.json()
-				console.log("Eventos obtenidos:", data);
 				setStore({ events: data })
 			  } else {
 				console.error("Error fetching events:", response.status)
@@ -989,7 +992,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/teachers")
 			  if (response.ok) {
 				const data = await response.json()
-				console.log(data)
 				setStore({ teachers: data })
 				return { success: true, data }
 			  } else {
@@ -1006,7 +1008,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/services")
 			  if (response.ok) {
 				const data = await response.json()
-				console.log(data)
 				setStore({ services: data })
 				return { success: true, data }
 			  } else {
@@ -1085,7 +1086,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/gallery")
 			  if (response.ok) {
 				const data = await response.json()
-				console.log(data)
 				setStore({ gallery: data })
 				return { success: true, data }
 			  } else {
@@ -1159,7 +1159,194 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  return { success: false, error: error.message };
 			}
 		  },
-		  
+		  // Datos del usuario
+fetchUserData: async () => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/user`)
+	  if (!resp.ok) throw new Error("Failed to fetch user data")
+	  const data = await resp.json()
+	  setStore({ user: data })
+	} catch (error) {
+	  console.error("Error fetching user data:", error)
+	}
+  },
+  
+  // Datos del padre
+  fetchParentData: async () => {
+	try {
+	  const resp = await fetch(process.env.BACKEND_URL + "/api/parents")
+	  const data = await resp.json()
+	  
+	  setStore({ parentData: data })
+	} catch (error) {
+	  console.error("Error fetching parent data:", error)
+	}
+  },
+  
+  // Hijos
+  fetchParentChildren: async () => {
+	try {
+	  const resp = await fetch(process.env.BACKEND_URL + "/api/children")
+	  const data = await resp.json()
+	  setStore({ parentChildren: data })
+	} catch (error) {
+	  console.error("Error fetching parent children:", error)
+	}
+  },
+  
+  // Horario
+  fetchParentSchedule: async () => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_schedules`)
+	  if (!resp.ok) throw new Error("Failed to fetch parent schedule")
+	  const data = await resp.json()
+	  setStore({ parentSchedule: data })
+	} catch (error) {
+	  console.error("Error fetching parent schedule:", error)
+	}
+  },
+  
+  // Pagos
+  fetchParentPayments: async () => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_payments`)
+	  if (!resp.ok) throw new Error("Failed to fetch parent payments")
+	  const data = await resp.json()
+	  setStore({ parentPayments: data })
+	} catch (error) {
+	  console.error("Error fetching parent payments:", error)
+	}
+  },
+  
+  // Actividades
+  fetchParentActivities: async () => {
+	
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_activities`)
+
+	  const data = await resp.json()
+
+	  setStore({ parentActivities: data })
+	} catch (error) {
+	  console.error("Error fetching parent activities:", error)
+	}
+  },
+  
+  addParentActivity: async (activityData) => {
+	try {
+	  const resp = await fetch(process.env.BACKEND_URL + "/api/add_parent_activity", {
+		method: "POST",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify(activityData),
+	  })
+	  const data = await resp.json()
+	  const store = getStore()
+	  setStore({ parentActivities: [...store.parentActivities, data] })
+	} catch (error) {
+	  console.error("Error adding parent activity:", error)
+	}
+  },
+  
+  // Configuración
+  fetchParentSettings: async () => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings`)
+	  if (!resp.ok) throw new Error("Failed to fetch parent settings")
+	  const data = await resp.json()
+	console.log(data)
+	  setStore({ parentSettings: data })
+	} catch (error) {
+	  console.error("Error fetching parent settings:", error)
+	}
+  },
+  
+  updateParentSettings: async (settings) => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings`, {
+		method: "PUT",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify(settings),
+	  })
+	  if (!resp.ok) throw new Error("Failed to update parent settings")
+	  const data = await resp.json()
+	  setStore({ parentSettings: data })
+	} catch (error) {
+	  console.error("Error updating parent settings:", error)
+	}
+  },
+  
+  // Clases virtuales
+  fetchParentVirtualClasses: async () => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_virtual_classes`)
+	  if (!resp.ok) throw new Error("Failed to fetch parent virtual classes")
+	  const data = await resp.json()
+	  setStore({ parentVirtualClasses: data })
+	} catch (error) {
+	  console.error("Error fetching parent virtual classes:", error)
+	}
+  },
+  
+  // Mensajes
+  fetchMessages: async () => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/messagesP`)
+	  if (!resp.ok) throw new Error("Failed to fetch messages")
+	  const data = await resp.json()
+	console.log(data)
+	  setStore({ messages: data })
+	} catch (error) {
+	  console.error("Error fetching messages:", error)
+	}
+  },
+  
+  sendMessage: async (message) => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/messages`, {
+		method: "POST",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify(message),
+	  })
+	  if (!resp.ok) throw new Error("Failed to send message")
+	  const data = await resp.json()
+	  setStore({ messages: [...store.messages, data] })
+	} catch (error) {
+	  console.error("Error sending message:", error)
+	}
+  },
+  
+  // Notificaciones
+  fetchNotifications: async () => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/notifications`)
+	  if (!resp.ok) throw new Error("Failed to fetch notifications")
+	  const data = await resp.json()
+	  setStore({ notifications: data })
+	} catch (error) {
+	  console.error("Error fetching notifications:", error)
+	}
+  },
+  
+  markNotificationAsRead: async (notificationId) => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/notifications/${notificationId}`, {
+		method: "PUT",
+	  })
+	  if (!resp.ok) throw new Error("Failed to mark notification as read")
+	  const updatedNotifications = store.notifications.map((notif) =>
+		notif.id === notificationId ? { ...notif, read: true } : notif,
+	  )
+	  setStore({ notifications: updatedNotifications })
+	} catch (error) {
+	  console.error("Error marking notification as read:", error)
+	}
+  },
 		  
 	  },
 	}

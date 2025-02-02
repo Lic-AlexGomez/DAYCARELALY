@@ -390,7 +390,7 @@ class Contact(db.Model):
     last_name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), nullable=False)
     subject = db.Column(db.String(120), nullable=False)
-    phone_number = db.Column(db.String(15), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
     message = db.Column(db.Text, nullable=False)
 
     def __repr__(self):
@@ -470,9 +470,9 @@ class Schedule(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     class_name = db.Column(db.String(120), nullable=False)
     teacher = db.Column(db.String(120), nullable=False)
-    dayOfWeek = db.Column(db.String(20), nullable=False)
-    startTime = db.Column(db.String(5), nullable=False)
-    endTime = db.Column(db.String(5), nullable=False)
+    dayOfWeek = db.Column(db.String(120), nullable=False)
+    startTime = db.Column(db.String(50), nullable=False)
+    endTime = db.Column(db.String(50), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     enrolled = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -694,3 +694,285 @@ class Gallery(db.Model):
             "name": self.name,
             "image": self.image
         }
+
+class ParentActivity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    name = db.Column(db.String(120), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)
+    duration = db.Column(db.String(50), nullable=False)
+    status = db.Column(db.String(50), nullable=False)
+    location = db.Column(db.String(120), nullable=False)
+
+    def __repr__(self):
+        return f'<ParentActivity {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "name": self.name,
+            "date": self.date.isoformat(),
+            "time": self.time.isoformat(),
+            "duration": self.duration,
+            "status": self.status,
+            "location": self.location
+        }
+
+class ParentSchedule(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    day = db.Column(db.String(10), nullable=False)
+    activities = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f'<ParentSchedule {self.day}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "day": self.day,
+            "activities": self.activities.split(', ')
+        }
+
+class ParentPayment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    concept = db.Column(db.String(120), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    due_date = db.Column(db.Date, nullable=False)
+
+    def __repr__(self):
+        return f'<ParentPayment {self.concept}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "amount": self.amount,
+            "concept": self.concept,
+            "status": self.status,
+            "due_date": self.due_date.isoformat()
+        }
+
+class ParentSetting(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    notifications = db.Column(db.Boolean, default=True)
+    language = db.Column(db.String(10), default='es')
+
+    def __repr__(self):
+        return f'<ParentSetting {self.parent_id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "notifications": self.notifications,
+            "language": self.language
+        }
+
+class ParentVirtualClass(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    name = db.Column(db.String(120), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    time = db.Column(db.Time, nullable=False)
+    link = db.Column(db.String(255), nullable=False)
+
+    def __repr__(self):
+        return f'<ParentVirtualClass {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "name": self.name,
+            "date": self.date.isoformat(),
+            "time": self.time.isoformat(),
+            "link": self.link
+        }
+
+class MessageP(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    sender = db.Column(db.String(20), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Message {self.id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "content": self.content,
+            "sender": self.sender,
+            "timestamp": self.timestamp.isoformat()
+        }
+
+class ParentNotification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(20), default='unread')
+
+    def __repr__(self):
+        return f'<ParentNotification {self.id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "content": self.content,
+            "date": self.date.isoformat(),
+            "status": self.status
+        }
+class ParentTask(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    title = db.Column(db.String(120), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    due_date = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        return f'<ParentTask {self.title}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "title": self.title,
+            "description": self.description,
+            "due_date": self.due_date.isoformat(),
+            "status": self.status
+        }
+class ParentAttendance(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    status = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        return f'<ParentAttendance {self.id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "class_id": self.class_id,
+            "date": self.date.isoformat(),
+            "status": self.status
+        }
+class ParentGrade(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)
+    grade = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.Date, nullable=False)
+
+    def __repr__(self):
+        return f'<ParentGrade {self.id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "class_id": self.class_id,
+            "grade": self.grade,
+            "date": self.date.isoformat()
+        }
+class ParentPaymentHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    concept = db.Column(db.String(120), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    due_date = db.Column(db.Date, nullable=False)
+
+    def __repr__(self):
+        return f'<ParentPaymentHistory {self.concept}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "amount": self.amount,
+            "concept": self.concept,
+            "status": self.status,
+            "due_date": self.due_date.isoformat()
+        }
+class ParentSubscription(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    plan_type = db.Column(db.String(50), nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+
+    def __repr__(self):
+        return f'<ParentSubscription {self.plan_type}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "plan_type": self.plan_type,
+            "start_date": self.start_date.isoformat(),
+            "end_date": self.end_date.isoformat()
+        }
+class ParentCourse(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    enrollment_date = db.Column(db.Date, nullable=False)
+
+    def __repr__(self):
+        return f'<ParentCourse {self.course_id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "course_id": self.course_id,
+            "enrollment_date": self.enrollment_date.isoformat()
+        }
+class ParentService(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    service_id = db.Column(db.Integer, db.ForeignKey('service.id'), nullable=False)
+    enrollment_date = db.Column(db.Date, nullable=False)
+
+    def __repr__(self):
+        return f'<ParentService {self.service_id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "service_id": self.service_id,
+            "enrollment_date": self.enrollment_date.isoformat()
+        }
+class ParentEvent(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    enrollment_date = db.Column(db.Date, nullable=False)
+
+    def __repr__(self):
+        return f'<ParentEvent {self.event_id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "parent_id": self.parent_id,
+            "event_id": self.event_id,
+            "enrollment_date": self.enrollment_date.isoformat()
+        }
+    
