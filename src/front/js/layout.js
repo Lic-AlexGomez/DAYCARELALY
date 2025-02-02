@@ -50,6 +50,7 @@ import { SignupCommon } from "./pages/SignupCommon.jsx"
 import { StaffSignup } from "./component/admin/StaffSignup.jsx"
 import ProfileView from "./component/admin/ProfileView.jsx"
 import EventsView from "./component/admin/EventsView.jsx"
+import ServicesView from "./component/admin/Services.jsx"
 
 // Componentes del Teacher Dashboard
 import TeacherDashboard from "./component/teacher/TeacherDashboard"
@@ -100,6 +101,7 @@ const AdminDashboard = () => (
           <Route path="/schedule" element={<ScheduleView />} />
           <Route path="/tasks" element={<TasksView />} />
           <Route path="/activities" element={<ActivitiesView />} />
+          <Route path="/services" element={<ServicesView />} />
           <Route path="/videos" element={<VideosView />} />
           <Route path="/inactive-accounts" element={<InactiveAccountsView />} />
           <Route path="/approvals" element={<ApprovalsView />} />
