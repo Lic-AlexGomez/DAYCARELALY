@@ -1,6 +1,6 @@
-import React from "react"
 import { NavLink } from "react-router-dom"
-import { Home, Users, Calendar, Activity, CreditCard, Settings,Video } from "lucide-react"
+import { Home, Users, Calendar, Activity, CreditCard, Settings, Video, MessageCircle } from "lucide-react"
+import React from "react"
 
 const menuItems = [
   { icon: Home, label: "Inicio", path: "/parent-dashboard" },
@@ -9,6 +9,7 @@ const menuItems = [
   { icon: Activity, label: "Actividades", path: "/parent-dashboard/activities" },
   { icon: CreditCard, label: "Pagos", path: "/parent-dashboard/payments" },
   { icon: Video, label: "Clases Virtuales", path: "/parent-dashboard/virtual-classes" },
+  { icon: MessageCircle, label: "Mensajes", path: "/parent-dashboard/messages" },
   { icon: Settings, label: "Configuración", path: "/parent-dashboard/settings" },
 ]
 
@@ -25,7 +26,7 @@ const ParentSidebar = () => {
               <NavLink
                 to={item.path}
                 className="tw-flex tw-items-center tw-p-2 tw-text-gray-700 tw-rounded-lg hover:tw-bg-gray-100"
-                
+                activeClassName="tw-bg-gray-100"
               >
                 <item.icon className="tw-w-5 tw-h-5 tw-mr-3" />
                 <span>{item.label}</span>

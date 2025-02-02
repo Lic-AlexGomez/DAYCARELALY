@@ -2,6 +2,8 @@ import React from "react"
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
 import ScrollToTop from "./component/scrollToTop"
 import { BackendURL } from "./component/backendURL"
+import { useEffect, useContext } from "react"
+import { Context } from "./store/appContext"
 
 import { Home } from "./pages/home"
 import { Demo } from "./pages/demo"
@@ -51,7 +53,6 @@ import { StaffSignup } from "./component/admin/StaffSignup.jsx"
 import ProfileView from "./component/admin/ProfileView.jsx"
 import EventsView from "./component/admin/EventsView.jsx"
 import ServicesView from "./component/admin/Services.jsx"
-import GalleryView from "./component/admin/Gallery.jsx"
 
 // Componentes del Teacher Dashboard
 import TeacherDashboard from "./component/teacher/TeacherDashboard"
@@ -76,7 +77,6 @@ import ParentSettings from "./component/parent/ParentSettings"
 import ParentSidebar from "./component/parent/ParentSidebar.jsx"
 import ParentHeader from "./component/parent/ParentHeader.jsx"
 import ParentVirtualClasses from "./component/parent/ParentVirtualClasses.jsx"
-import ParentMessages from "./component/parent/parentMessages.jsx"
 
 
 
@@ -104,7 +104,6 @@ const AdminDashboard = () => (
           <Route path="/tasks" element={<TasksView />} />
           <Route path="/activities" element={<ActivitiesView />} />
           <Route path="/services" element={<ServicesView />} />
-          <Route path="/gallery" element={<GalleryView/>} />
           <Route path="/videos" element={<VideosView />} />
           <Route path="/inactive-accounts" element={<InactiveAccountsView />} />
           <Route path="/approvals" element={<ApprovalsView />} />
@@ -155,7 +154,6 @@ const ParentDashboardRoutes = () => (
     <Route path="/payments" element={<ParentPayments />} />
     <Route path="/virtual-classes" element={<ParentVirtualClasses />} />
     <Route path="/settings" element={<ParentSettings />} />
-    <Route path="/messages" element={<ParentMessages />} />
     <Route path="*" element={<h1>Not found!</h1>} />
   </Routes>
   </main>
@@ -201,10 +199,13 @@ const MainRoutes = () => {
 }
 
 const Layout = () => {
+  const { auth, actions } = useContext(Context)
   const basename = process.env.BASENAME || ""
 
   if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />
-
+  useEffect(() => {
+    actions.checkAuth()
+  }, [])
   return (
     <BrowserRouter basename={basename}>
       <ScrollToTop />

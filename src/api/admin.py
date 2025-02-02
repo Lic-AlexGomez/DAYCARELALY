@@ -1,8 +1,8 @@
   
 import os
-from flask_admin import Admin
-from .models import db, User, Parent, Teacher, Class, Enrollment, Child, Program, Subscription, ProgressReport,Event, Course,Message,Task, Attendance, Grade, Payment, Schedule, Notification, Contact, Newsletter, Getintouch, Client, Email,Eventsuscriptions, Video, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery
-from flask_admin.contrib.sqla import ModelView
+from flask_admin import Admin # type: ignore
+from .models import db, User, Parent, Teacher, Class, Enrollment, Child, Program, Subscription, ProgressReport,Event, Course,Message,Task, Attendance, Grade, Payment, Schedule, Notification, Contact, Newsletter, Getintouch, Client, Email,Eventsuscriptions, Video, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentActivity, ParentCourse,ParentAttendance,ParentEvent,ParentGrade,ParentNotification,ParentPayment,ParentPaymentHistory,ParentSchedule,ParentService,ParentSubscription,ParentSetting,ParentTask,ParentVirtualClass,MessageP
+from flask_admin.contrib.sqla import ModelView # type: ignore
 
 def setup_admin(app):
     app.secret_key = os.environ.get('FLASK_APP_KEY', 'sample key')
@@ -43,6 +43,22 @@ def setup_admin(app):
     admin.add_view(ModelView(VirtualClass, db.session))
     admin.add_view(ModelView(Service, db.session))
     admin.add_view(ModelView(Gallery, db.session))
+    admin.add_view(ModelView(ParentActivity, db.session))
+    admin.add_view(ModelView(ParentCourse, db.session))
+    admin.add_view(ModelView(ParentAttendance, db.session))
+    admin.add_view(ModelView(ParentEvent, db.session))
+    admin.add_view(ModelView(ParentGrade, db.session))
+    admin.add_view(ModelView(ParentNotification, db.session))
+    admin.add_view(ModelView(ParentPayment, db.session))
+    admin.add_view(ModelView(ParentPaymentHistory, db.session))
+    admin.add_view(ModelView(ParentSchedule, db.session))
+    admin.add_view(ModelView(ParentService, db.session))
+    admin.add_view(ModelView(ParentSubscription, db.session))
+    admin.add_view(ModelView(ParentSetting, db.session))
+    admin.add_view(ModelView(ParentTask, db.session))
+    admin.add_view(ModelView(ParentVirtualClass, db.session))
+    admin.add_view(ModelView(MessageP, db.session))
+    
 
 
     # You can duplicate that line to add mew models
