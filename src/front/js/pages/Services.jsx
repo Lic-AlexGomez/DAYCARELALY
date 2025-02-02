@@ -62,7 +62,7 @@ const Services = () => {
                                 </p>
                             </div>
 
-                            <button class="cursor-pointer tw-transition-all tw-bg-[#9C29B2] tw-text-white tw-px-6  tw-rounded-lg
+                            <button className="cursor-pointer tw-transition-all tw-bg-[#9C29B2] tw-text-white tw-px-6  tw-rounded-lg
                              tw-border-purple-600
                              tw-border-b-[4px] tw-hover:brightness-110 tw-hover:-translate-y-[1px] tw-hover:border-b-[6px]
                              tw-active:border-b-[2px] tw-active:brightness-90 tw-active:translate-y-[2px]">

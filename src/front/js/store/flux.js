@@ -1006,15 +1006,60 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  if (response.ok) {
 				const data = await response.json()
 				console.log(data)
-				setStore({ teachers: data })
+				setStore({ services: data })
 				return { success: true, data }
 			  } else {
-				console.error("Error fetching teachers:", response.status)
-				return { success: false, error: "Failed to fetch activities" }
+				console.error("Error fetching services:", response.status)
+				return { success: false, error: "Failed to fetch services" }
 			  }
 			} catch (error) {
 			  console.error("Error fetching activities:", error)
 			  return { success: false, error: error.message }
+			}
+		  },
+		  addService: async ( name, description,image) => {
+			try {
+			  const response = await fetch(process.env.BACKEND_URL + "/api/services", {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify({name, description,image }),
+			  })
+	
+			  if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.error || "Failed to create event")
+			  }
+	
+			  const data = await response.json()
+			  return { success: true, data }
+			} catch (error) {
+			  console.error("Service Error:", error.message)
+			  return { success: false, error: error.message }
+			}
+		  },
+		  updateService: async (id, serviceData) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/services/${id}`, {
+				method: "PUT",
+				headers: {
+				  "Content-Type": "application/json",
+				},
+				body: JSON.stringify(serviceData),
+			  })
+	
+			  if (response.ok) { 
+				const updatedService = await response.json()
+				const store = getStore()
+				const updatedServices = store.services.map((services) => (services.id === id ? updatedService : services))
+				setStore({ services: updatedServices })
+				return updatedService
+			  } else {
+				console.error("Error updating service:", response.status)
+			  }
+			} catch (error) {
+			  console.error("Error updating service:", error)
 			}
 		  },
 		  

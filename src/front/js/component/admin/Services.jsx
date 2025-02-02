@@ -17,19 +17,111 @@ const ServicesView = () => {
      actions.fetchServices();
    }, []);
 
+   const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    if (editingService) {
+      setEditingService({ ...editingService, [name]: value });
+    } else {
+      setNewService({ ...newService, [name]: value });
+    }
+  };
+   
+  const handleImageChange = async (e) => {
+    const result = await actions.uploadToCloudinary(e.target.files[0]);
+    if (result.success) {
+      setNewService({ ...newService, image: result.url });
+    }
+  };
+  const handleImageEditChange = async (e) => {
+    const result = await actions.uploadToCloudinary(e.target.files[0]);
+    if (result.success) {
+      setEditingService((prevState) => {
+        const updatedService = {
+          ...prevState,
+          image: result.url,
+        };
+        return updatedService;
+      });
+    }
+  };
+  const handleEditService = (services) => {
+    setEditingService(services);
+    setIsModalOpen(true);
+  };
 
+  const handleUpdateService = async (e) => {
+    e.preventDefault();
+    await actions.updateService(editingService.id, editingService);
+    setIsModalOpen(false);
+    setEditingService(null);
+  };
+
+  const handleAddService = async (e) => {
+      e.preventDefault();
+  
+      const confirmSubmit = await Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to add this service?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, add!",
+        cancelButtonText: "No, cancel",
+      });
+  
+      if (!confirmSubmit.isConfirmed) {
+        return;
+      }
+  
+      try {
+        const result = await actions.addService(
+         
+          newService.name,
+          newService.description,
+          newService.image
+        );
+  
+        if (result) {
+          Swal.fire({
+            icon: "success",
+            title: "Class Added",
+            text: "A new class has been added!",
+          });
+          actions.fetchServices();
+          setNewService({
+            name: '',
+            description: '',
+            image: ''
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: `There was an error: ${result.error}`,
+          });
+        }
+      } catch (error) {
+        console.error("Error in handleAddService:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Submission Error",
+          text: "There was an error submitting the form. Please try again.",
+        });
+      }
+    };
 
   return (
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Servicios</h2>
       <div className="tw-mb-6">
-        <form  className="tw-flex tw-space-x-4">
+        <form  className="tw-flex tw-space-x-4" onSubmit={handleAddService}>
          
           <div className='tw-flex-1'>
             <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del serivico</label>
             <input
               type="text"
-              name="nombreDelServicio"
+              name="name"
+              value={newService.name}
+              onChange={handleInputChange}
               placeholder="nombreDelServicio"
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
@@ -40,6 +132,8 @@ const ServicesView = () => {
             <input
               type="text"
               name="description"
+              value={newService.description}
+              onChange={handleInputChange}
               placeholder="Descripcion de la clase"
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
@@ -51,6 +145,7 @@ const ServicesView = () => {
             <input
               type="file"
               name="image"
+              onChange={handleImageChange}
               className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
             />
@@ -73,18 +168,18 @@ const ServicesView = () => {
           </tr>
         </thead>
         <tbody className="tw-divide-y tw-divide-gray-200">
-          {store.classes.map((classItem) => (
-            <tr key={classItem.id}>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.description}</td>
+          {store.services.map((service) => (
+            <tr key={service.id}>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{service.name}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{service.description}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                {classItem.image ? <img src={classItem.image} alt="Class" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
+                {service.image ? <img src={service.image} alt="Class" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
               </td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3" onClick={() => handleEditClass(classItem)}>
+                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3" onClick={() => handleEditService(service)}>
                   <Edit className="tw-w-5 tw-h-5" />
                 </button>
-                <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteClass(classItem.id)}>
+                <button className="tw-text-red-600 hover:tw-text-red-900" >
                   <Trash className="tw-w-5 tw-h-5" />
                 </button>
               </td>
@@ -101,26 +196,14 @@ const ServicesView = () => {
                 <X className="tw-w-6 tw-h-6" />
               </button>
             </div>
-            <form  className="tw-space-y-4">
+            <form  className="tw-space-y-4" onSubmit={handleUpdateService}>
+              
               <div className='tw-flex-1'>
-                <label htmlFor="teacher_id" className='tw-block tw-mb-2'>Teacher ID</label>
-                <select
-                  name="teacher_id"
-                  onChange={handleInputChange}
-                  value={editingClass.teacher_id} 
-                >
-                  <option value={0} disabled>select an option</option>
-                  {teachers.map(item => (
-                    <option key={`teacher-${item.id}`} value={item.id}>{item.username}</option>
-                  ))}
-                </select>
-              </div>
-              <div className='tw-flex-1'>
-                <label htmlFor="name" className='tw-block tw-mb-2'>Nombre de la clase</label>
+                <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del Servicio</label>
                 <input
                   type="text"
                   name="name"
-                  value={editingClass.name}
+                  value={editingService.name}
                   onChange={handleInputChange}
                   placeholder="Nombre de la clase"
                   className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
@@ -132,68 +215,20 @@ const ServicesView = () => {
                 <input
                   type="text"
                   name="description"
-                  value={editingClass.description}
+                  value={editingService.description}
                   onChange={handleInputChange}
                   placeholder="Descripcion de la clase"
                   className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
-              <div className='tw-flex-1'>
-                <label htmlFor="Capacity" className='tw-block tw-mb-2'>Capacity</label>
-                <input
-                  type="number"
-                  name="capacity"
-                  value={editingClass.capacity}
-                  onChange={handleInputChange}
-                  placeholder="Capacidad"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                  required
-                />
-              </div>
-              <div className='tw-flex-1'>
-                <label htmlFor="Price" className='tw-block tw-mb-2'>Price</label>
-                <input
-                  type="number"
-                  name="price"
-                  value={editingClass.price}
-                  onChange={handleInputChange}
-                  placeholder="Costo"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                  required
-                />
-              </div>
-              <div className='tw-flex-1'>
-                <label htmlFor="Age" className='tw-block tw-mb-2'>Rango de Edad</label>
-                <input
-                  type="text"
-                  name="age"
-                  value={editingClass.age}
-                  onChange={handleInputChange}
-                  placeholder="rango de edad"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                  required
-                />
-              </div>
-              <div className='tw-flex-1'>
-                <label htmlFor="time" className='tw-block tw-mb-2'>Horario</label>
-                <input
-                  type="text"
-                  name="time"
-                  value={editingClass.time}
-                  onChange={handleInputChange}
-                  placeholder="Horario"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                  required
-                />
-              </div>
-              {editingClass.image && (
+              
+              {editingService.image && (
                 <div className="tw-mb-4">
                   <h4 className="tw-text-sm">Imagen Actual:</h4>
-                  <img src={editingClass.image} alt="Imagen del Evento" className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md" />
+                  <img src={editingService.image} alt="Imagen del Servicio" className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md" />
                 </div>
               )}
-
 
               <div className='tw-flex-1'>
                 <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
