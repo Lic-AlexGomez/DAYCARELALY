@@ -2,7 +2,7 @@ import cloudinary,os
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 from flask import Flask, request, jsonify, Blueprint, current_app
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery
 from api.utils import APIException
 from flask_cors import CORS
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager
@@ -1372,3 +1372,54 @@ def update_services(id):
 
     db.session.commit()
     return jsonify(service.serialize()), 200
+
+
+@api.route('/gallery', methods=['GET'])
+def get_images():
+    images = Gallery.query.all()
+    images = list(map(lambda x: x.serialize(), images))
+    return jsonify(images), 200
+
+@api.route('/gallery/<int:id>', methods=['GET'])
+def get_image(id):
+    images = Gallery.query.get(id)
+    if not images:
+        return jsonify({"error": "Service not found"}), 404
+    return jsonify(images.serialize()), 200
+
+@api.route('/gallery', methods=['POST'])
+#@jwt_required()
+def create_image():
+    data = request.json
+    new_image = Gallery(
+        name=data['name'],
+        image=data.get('image','')
+    )
+    db.session.add(new_image)
+    db.session.commit()
+    return jsonify(new_image.serialize()), 201
+
+@api.route('/gallery/<int:id>', methods=['DELETE'])
+#@jwt_required()
+def delete_image(id):
+    image = Gallery.query.get(id)
+    if not image:
+        return jsonify({"error": "Image not found"}), 404
+
+    db.session.delete(image)
+    db.session.commit()
+    return jsonify({"message": "Image deleted"}), 200
+
+@api.route('/gallery/<int:id>', methods=['PUT'])
+#@jwt_required()
+def update_image(id):
+    image = Gallery.query.get(id)
+    if image is None:
+        return jsonify({"error": "image not found"}), 404
+    
+    data = request.json
+    image.name = data.get('name', image.name)
+    image.image = data.get('image', image.image)
+
+    db.session.commit()
+    return jsonify(image.serialize()), 200
