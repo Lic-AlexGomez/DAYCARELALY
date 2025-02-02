@@ -108,6 +108,44 @@ const ServicesView = () => {
         });
       }
     };
+    const handleDeleteService = async (id) => {
+        const confirmDelete = await Swal.fire({
+          title: '¿Estás seguro?',
+          text: "Esta acción no se puede deshacer.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar',
+        });
+    
+        if (confirmDelete.isConfirmed) {
+          try {
+            const result = await actions.deleteService(id);
+    
+            if (result) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Clase eliminada',
+                text: 'La clase ha sido eliminada con éxito.',
+              });
+              actions.fetchServices();
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al eliminar la clase.',
+              });
+            }
+          } catch (error) {
+            console.error("Error en handleDeleteService:", error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un error al intentar eliminar el servicio. Intenta nuevamente.',
+            });
+          }
+        }
+      };
 
   return (
     <div>
@@ -179,7 +217,7 @@ const ServicesView = () => {
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3" onClick={() => handleEditService(service)}>
                   <Edit className="tw-w-5 tw-h-5" />
                 </button>
-                <button className="tw-text-red-600 hover:tw-text-red-900" >
+                <button className="tw-text-red-600 hover:tw-text-red-900"  onClick={() => handleDeleteService(service.id)} >
                   <Trash className="tw-w-5 tw-h-5" />
                 </button>
               </td>

@@ -1062,6 +1062,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  console.error("Error updating service:", error)
 			}
 		  },
+		  deleteService: async (id) => {
+			try {
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/services/${id}`, {
+				method: "DELETE",
+			  });
+		  
+			  if (response.ok) {
+				return { success: true };
+			  } else {
+				console.error("Error deleting service:", response.status);
+				return { success: false, error: `Status: ${response.status}` };
+			  }
+			} catch (error) {
+			  console.error("Error deleting service:", error);
+			  return { success: false, error: error.message };
+			}
+		  },
 		  
 	  },
 	}
