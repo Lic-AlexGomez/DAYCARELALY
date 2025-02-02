@@ -680,3 +680,15 @@ class Service(db.Model):
             "description": self.description,
             "image": self.image
         }
+class Gallery(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    image = db.Column(db.String(200))
+
+    def __repr__(self):
+        return f'<Class {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "image": self.image
+        }
