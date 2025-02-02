@@ -1,17 +1,19 @@
-import React from "react"
+import React, { useEffect, useContext } from "react"
 import { User, Calendar, Book } from "lucide-react"
+import { Context } from "../../store/appContext"
 
 const ParentChildren = () => {
-  const children = [
-    { id: 1, name: "Juan Martínez", age: 5, class: "Kinder A" },
-    { id: 2, name: "Ana Martínez", age: 3, class: "Pre-Kinder B" },
-  ]
+  const { store, actions } = useContext(Context)
+
+  useEffect(() => {
+    actions.fetchParentChildren()
+  }, [store])
 
   return (
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Mis Hijos</h3>
       <div className="tw-grid tw-grid-cols-1 tw-md:grid-cols-2 tw-gap-6">
-        {children.map((child) => (
+        {store.parentChildren.map((child) => (
           <div key={child.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
             <div className="tw-flex tw-items-center tw-mb-4">
               <User className="tw-w-12 tw-h-12 tw-text-blue-500 tw-mr-4" />
@@ -26,7 +28,7 @@ const ParentChildren = () => {
             </div>
             <div className="tw-flex tw-items-center">
               <Calendar className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
-              <span>Horario: 8:00 AM - 2:00 PM</span>
+              <span>Horario: {child.schedule}</span>
             </div>
           </div>
         ))}
