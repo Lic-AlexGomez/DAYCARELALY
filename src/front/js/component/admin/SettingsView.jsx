@@ -10,17 +10,17 @@ const SettingsPage = () => {
   
   // Inicializa el estado con un objeto vacío o con valores predeterminados vacíos
   const [settings, setSettings] = useState({
-    daycareName: "",
-    adminEmail: "",
-    maxCapacity: 0,
-    phone: "",
-    openingHours: "",
-    facebook: "",
-    twitter: "",
-    instagram: "",
-    linkedin: "",
-    logo: "",
-    address: "",
+    daycareName: "Your Daycare name",
+    adminEmail: "admin@daycare.com",
+    maxCapacity: 20,
+    phone: "123-456-789",
+    openingHours: "Lunes a viernes de 9 am a 6 pm ",
+    facebook: "www.facebook.com",
+    twitter: "www.x.com",
+    instagram: "www.instagram.com",
+    linkedin: "www.linkedin.com",
+    logo: "https://s1.piq.land/2015/01/01/Dg2koi0aiyokD1XlAGofwVDZ_400x400.png",
+    address: "calle #1300",
   });
   useEffect(()=>{
     actions.fetchSettings()
