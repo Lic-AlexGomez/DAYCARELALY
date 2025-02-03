@@ -1193,7 +1193,25 @@ fetchUserData: async () => {
 	  console.error("Error fetching parent children:", error)
 	}
   },
-  
+  addChild: async (childData) => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/children`, {
+		method: "POST",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify(childData),
+	  })
+	  if (!resp.ok) throw new Error("Failed to add child")
+	  const newChild = await resp.json()
+	  const store = getStore()
+	  setStore({ parentChildren: [...store.parentChildren, newChild] })
+	  return true
+	} catch (error) {
+	  console.error("Error adding child:", error)
+	  return false
+	}
+  },
   // Horario
   fetchParentSchedule: async () => {
 	try {

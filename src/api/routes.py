@@ -572,15 +572,17 @@ def get_child(id):
     return jsonify(child.serialize()), 200
 
 @api.route('/children', methods=['POST'])
-#@jwt_required()
 def create_child():
     data = request.json
+    print(data)
     new_child = Child(
         parent_id=data['parent_id'],
-        full_name=data['full_name'],
+        name=data['name'],
         date_of_birth=datetime.fromisoformat(data['date_of_birth']),
         allergies=data.get('allergies', ''),
-        medical_conditions=data.get('medical_conditions', '')
+        immunization_records=data.get('immunization_records', ''),
+        birth_certificate=data.get('birth_certificate', ''),
+       
     )
     db.session.add(new_child)
     db.session.commit()
