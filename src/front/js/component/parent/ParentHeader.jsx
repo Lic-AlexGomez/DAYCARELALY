@@ -20,7 +20,7 @@ const ParentHeader = () => {
             </button>
             <div className="tw-flex tw-items-center tw-space-x-2">
               <User className="tw-w-6 tw-h-6 tw-text-gray-700" />
-              <span className="tw-text-gray-700">{store.parentData?.name || "Cargando..."}</span>
+              <span className="tw-text-gray-700">{store.user?.username || "Cargando..."}</span>
             </div>
           </div>
         </div>
