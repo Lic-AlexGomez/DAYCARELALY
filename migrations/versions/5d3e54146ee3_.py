@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 8e154baa5a46
+Revision ID: 5d3e54146ee3
 Revises: 
-Create Date: 2025-02-02 21:01:11.763740
+Create Date: 2025-02-03 14:24:53.884330
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8e154baa5a46'
+revision = '5d3e54146ee3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -144,6 +144,21 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=120), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
+    sa.Column('image', sa.String(length=200), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('settings',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name_daycare', sa.String(length=120), nullable=False),
+    sa.Column('admin_email', sa.String(length=120), nullable=False),
+    sa.Column('max_capacity', sa.String(length=120), nullable=False),
+    sa.Column('phone', sa.String(length=120), nullable=False),
+    sa.Column('address', sa.String(length=120), nullable=False),
+    sa.Column('schedule_attention', sa.String(length=120), nullable=False),
+    sa.Column('facebook', sa.String(length=120), nullable=False),
+    sa.Column('twitter', sa.String(length=120), nullable=False),
+    sa.Column('instagram', sa.String(length=120), nullable=False),
+    sa.Column('linkedin', sa.String(length=120), nullable=False),
     sa.Column('image', sa.String(length=200), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -507,6 +522,7 @@ def downgrade():
     op.drop_table('admin_d')
     op.drop_table('virtual_class')
     op.drop_table('user')
+    op.drop_table('settings')
     op.drop_table('service')
     op.drop_table('schedule')
     op.drop_table('newsletter')
