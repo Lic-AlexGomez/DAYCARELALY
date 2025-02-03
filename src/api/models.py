@@ -975,4 +975,36 @@ class ParentEvent(db.Model):
             "event_id": self.event_id,
             "enrollment_date": self.enrollment_date.isoformat()
         }
-    
+
+class Settings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name_daycare = db.Column(db.String(120), nullable=False)
+    admin_email = db.Column(db.String(120), nullable=False)
+    max_capacity = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(120), nullable=False)
+    address = db.Column(db.String(120), nullable=False)
+    schedule_attention = db.Column(db.String(120), nullable=False)
+    facebook = db.Column(db.String(120), nullable=False)
+    twitter = db.Column(db.String(120), nullable=False)
+    instagram = db.Column(db.String(120), nullable=False)
+    linkedin = db.Column(db.String(120), nullable=False)
+    image = db.Column(db.String(200))
+
+    def __repr__(self):
+        return f'<Class {self.name_daycare}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name_daycare": self.name_daycare,
+            "admin_email": self.admin_email,
+            "max_capacity": self.max_capacity,
+            "phone": self.phone,
+            "address": self.address,
+            "schedule_attention": self.schedule_attention,
+            "facebook": self.facebook,
+            "twitter": self.twitter,
+            "instagram": self.instagram,
+            "linkedin": self.linkedin,
+            "image": self.image
+        }
