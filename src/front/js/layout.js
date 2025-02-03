@@ -52,6 +52,7 @@ import ProfileView from "./component/admin/ProfileView.jsx"
 import EventsView from "./component/admin/EventsView.jsx"
 import ServicesView from "./component/admin/Services.jsx"
 import GalleryView from "./component/admin/Gallery.jsx"
+import SettingsPage from "./component/admin/SettingsView"
 
 // Componentes del Teacher Dashboard
 import TeacherDashboard from "./component/teacher/TeacherDashboard"
@@ -105,6 +106,7 @@ const AdminDashboard = () => (
           <Route path="/activities" element={<ActivitiesView />} />
           <Route path="/services" element={<ServicesView />} />
           <Route path="/gallery" element={<GalleryView/>} />
+          <Route path="/settings" element={<SettingsView/>} />
           <Route path="/videos" element={<VideosView />} />
           <Route path="/inactive-accounts" element={<InactiveAccountsView />} />
           <Route path="/approvals" element={<ApprovalsView />} />

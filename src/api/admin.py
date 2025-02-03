@@ -1,7 +1,7 @@
   
 import os
 from flask_admin import Admin # type: ignore
-from .models import db, User, Parent, Teacher, Class, Enrollment, Child, Program, Subscription, ProgressReport,Event, Course,Message,Task, Attendance, Grade, Payment, Schedule, Notification, Contact, Newsletter, Getintouch, Client, Email,Eventsuscriptions, Video, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentActivity, ParentCourse,ParentAttendance,ParentEvent,ParentGrade,ParentNotification,ParentPayment,ParentPaymentHistory,ParentSchedule,ParentService,ParentSubscription,ParentSetting,ParentTask,ParentVirtualClass,MessageP
+from .models import db, User, Parent, Teacher, Class, Enrollment, Child, Program, Subscription, ProgressReport,Event, Course,Message,Task, Attendance, Grade, Payment, Schedule, Notification, Contact, Newsletter, Getintouch, Client, Email,Eventsuscriptions, Video, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentActivity, ParentCourse,ParentAttendance,ParentEvent,ParentGrade,ParentNotification,ParentPayment,ParentPaymentHistory,ParentSchedule,ParentService,ParentSubscription,ParentSetting,ParentTask,ParentVirtualClass,MessageP,Settings
 from flask_admin.contrib.sqla import ModelView # type: ignore
 
 def setup_admin(app):
@@ -58,6 +58,7 @@ def setup_admin(app):
     admin.add_view(ModelView(ParentTask, db.session))
     admin.add_view(ModelView(ParentVirtualClass, db.session))
     admin.add_view(ModelView(MessageP, db.session))
+    admin.add_view(ModelView(Settings, db.session))
     
 
 

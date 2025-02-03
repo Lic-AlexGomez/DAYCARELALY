@@ -1365,6 +1365,41 @@ fetchUserData: async () => {
 	  console.error("Error marking notification as read:", error)
 	}
   },
+  fetchSettings: async () => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/settings`)
+	  if (!resp.ok) throw new Error("Failed to fetch settings")
+	  const data = await resp.json()
+	  console.log(data)
+	  setStore({ settings: data })
+	} catch (error) {
+	  console.error("Error fetching messages:", error)
+	}
+  },
+  updateSettings: async (id, settingsData) => {
+	try {
+	  const response = await fetch(`${process.env.BACKEND_URL}/api/settings/${id}`, {
+		method: "PUT",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify(settingsData),
+	  })
+
+	  if (response.ok) { 
+		const updatedSettings = await response.json()
+		console.log('Respuesta de la API:', updatedSettings);
+		const store = getStore()
+		const updatedSetting = store.settings.map((settings) => (settings.id === id ? updatedSettings : settings))
+		setStore({ settings: updatedSetting })
+		return updatedSettings
+	  } else {
+		console.error("Error updating settings:", response.status)
+	  }
+	} catch (error) {
+	  console.error("Error updating settings:", error)
+	}
+  },
 		  
 	  },
 	}

@@ -2,7 +2,7 @@ import cloudinary,os # type: ignore
 from cloudinary.uploader import upload# type: ignore
 from cloudinary.utils import cloudinary_url# type: ignore
 from flask import Flask, request, jsonify, Blueprint, current_app # type: ignore
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentVirtualClass,ParentActivity,ParentAttendance,ParentGrade,ParentCourse,ParentEvent,ParentPayment,ParentNotification,ParentPaymentHistory,ParentSchedule,ParentService,ParentSetting,ParentSubscription,ParentTask,MessageP
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentVirtualClass,ParentActivity,ParentAttendance,ParentGrade,ParentCourse,ParentEvent,ParentPayment,ParentNotification,ParentPaymentHistory,ParentSchedule,ParentService,ParentSetting,ParentSubscription,ParentTask,MessageP,Settings
 from api.utils import APIException
 from flask_cors import CORS# type: ignore
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager# type: ignore
@@ -3024,4 +3024,33 @@ def fill_all_models():
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
     
+@api.route('/settings', methods=['GET'])
+def get_settings():
+    settings = Settings.query.all()
+    settings = list(map(lambda x: x.serialize(), settings))
+    return jsonify(settings), 200
+
+
+@api.route('/settings/<int:id>', methods=['PUT'])
+#@jwt_required()
+def update_settings(id):
+    settings = Settings.query.get(id)
+    if settings is None:
+        return jsonify({"error": "Error update settings"}), 404
     
+    data = request.json
+           
+    settings.name_daycare = data.get('name_daycare', settings.name_daycare)
+    settings.admin_email = data.get('admin_email', settings.admin_email)
+    settings.max_capacity = data.get('max_capacity', settings.max_capacity)
+    settings.phone = data.get('phone', settings.phone)
+    settings.address = data.get('address', settings.address)
+    settings.schedule_attention = data.get('schedule_attention', settings.schedule_attention)
+    settings.facebook = data.get('facebook', settings.facebook)
+    settings.twitter = data.get('twitter', settings.twitter)
+    settings.instagram = data.get('instagram', settings.instagram)
+    settings.linkedin= data.get('linkedin', settings.linkedin)
+    settings.image = data.get('image', settings.image)
+
+    db.session.commit()
+    return jsonify(settings.serialize()), 200
