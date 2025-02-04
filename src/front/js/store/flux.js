@@ -15,12 +15,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 		  },
 		],
 		user: null,
-		message: null,
 		uploadedFileUrl: null,
 		error: null,
 		classes: [],
 		programs: [],
-		// admin dashboard store
 		clients: [],
 		schedules: [],
 		emails: [],
@@ -29,116 +27,115 @@ const getState = ({ getStore, getActions, setStore }) => {
 		inactiveAccounts: [],
 		approvals: [],
 		activities: [],
-		events:[],
-		teachers:[],
-		services:[],
-		gallery:[],
-
-			//parent dashboard store
-			parentData: null,
-			parentChildren: [],
-			parentSchedule: [],
-			parentPayments: [],
-			parentActivities: [],
-			parentSettings: null,
-			parentVirtualClasses: [],
-			notifications: [],
+		events: [],
+		teachers: [],
+		services: [],
+		gallery: [],
+		parentData: null,
+		parentChildren: [],
+		parentSchedule: [],
+		parentPayments: [],
+		parentActivities: [],
+		parentSettings: null,
+		parentVirtualClasses: [],
+		notifications: [],
 	  },
 	  actions: {
-		signUp: async (signupData) => {
-			
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
-				method: "POST",
-				headers: {
-				  "Content-Type": "application/json",
-				},
-				body: JSON.stringify(signupData),
-			  })
-	
-			  if (!response.ok) {
-				const errorData = await response.json()
-				throw new Error(errorData.error || "Sign Up Failed")
-			  }
-	
-			  const data = await response.json()
-			  setStore({ user: data.user, token: data.token })
-			  return { success: true, data }
-			} catch (error) {
-			  console.error("Sign Up Error:", error.message)
-			  return { success: false, error: error.message }
-			}
-		  },
-		uploadToCloudinary: async (file) => {
-		  const BACKEND_URL = process.env.BACKEND_URL
-		  const store = getStore()
+		getToken: () => {
+		  return localStorage.getItem("token");
+		},
   
+		signUp: async (signupData) => {
 		  try {
-			const formData = new FormData()
-			formData.append("file", file)
+			const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
+			  method: "POST",
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  body: JSON.stringify(signupData),
+			});
+  
+			if (!response.ok) {
+			  const errorData = await response.json();
+			  throw new Error(errorData.error || "Sign Up Failed");
+			}
+  
+			const data = await response.json();
+			setStore({ user: data.user, token: data.token });
+			return { success: true, data };
+		  } catch (error) {
+			console.error("Sign Up Error:", error.message);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		uploadToCloudinary: async (file) => {
+		  const BACKEND_URL = process.env.BACKEND_URL;
+		  try {
+			const formData = new FormData();
+			formData.append("file", file);
   
 			const response = await fetch(`${BACKEND_URL}/api/upload`, {
 			  method: "POST",
 			  body: formData,
-			})
+			});
   
 			if (!response.ok) {
-			  const errorData = await response.json()
-			  throw new Error(errorData.error || "Failed to upload file")
+			  const errorData = await response.json();
+			  throw new Error(errorData.error || "Failed to upload file");
 			}
   
-			const data = await response.json()
-			setStore({ uploadedFileUrl: data.url, error: null })
-  
-			return { success: true, url: data.url }
+			const data = await response.json();
+			setStore({ uploadedFileUrl: data.url, error: null });
+			return { success: true, url: data.url };
 		  } catch (error) {
-			console.error("Upload Error:", error.message)
-			setStore({ error: error.message })
-			return { success: false, error: error.message }
+			console.error("Upload Error:", error.message);
+			setStore({ error: error.message });
+			return { success: false, error: error.message };
 		  }
 		},
+  
 		uploadToCloudinaryImg: async (file) => {
-			const BACKEND_URL = process.env.BACKEND_URL
-			const store = getStore()
-	
-			try {
-			  const formData = new FormData()
-			  formData.append("file", file)
-	
-			  const response = await fetch(`${BACKEND_URL}/api/upload/img`, {
-				method: "POST",
-				body: formData,
-			  })
-	
-			  if (!response.ok) {
-				const errorData = await response.json()
-				throw new Error(errorData.error || "Failed to upload file")
-			  }
-	
-			  const data = await response.json()
-			  setStore({ uploadedFileUrl: data.url, error: null })
-	
-			  return { success: true, url: data.url }
-			} catch (error) {
-			  console.error("Upload Error:", error.message)
-			  setStore({ error: error.message })
-			  return { success: false, error: error.message }
+		  const BACKEND_URL = process.env.BACKEND_URL;
+		  try {
+			const formData = new FormData();
+			formData.append("file", file);
+  
+			const response = await fetch(`${BACKEND_URL}/api/upload/img`, {
+			  method: "POST",
+			  body: formData,
+			});
+  
+			if (!response.ok) {
+			  const errorData = await response.json();
+			  throw new Error(errorData.error || "Failed to upload file");
 			}
-		  },
+  
+			const data = await response.json();
+			setStore({ uploadedFileUrl: data.url, error: null });
+			return { success: true, url: data.url };
+		  } catch (error) {
+			console.error("Upload Error:", error.message);
+			setStore({ error: error.message });
+			return { success: false, error: error.message };
+		  }
+		},
+  
 		fetchClasses: async () => {
 		  try {
-			const response = await fetch(process.env.BACKEND_URL + "/api/classes")
+			const response = await fetch(process.env.BACKEND_URL + "/api/classes");
 			if (response.ok) {
-			  const data = await response.json()
-			  setStore({ classes: data })
+			  const data = await response.json();
+			  setStore({ classes: data });
 			} else {
-			  console.error("Error fetching classes:", response.status)
+			  console.error("Error fetching classes:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error fetching classes:", error)
-			return null
+			console.error("Error fetching classes:", error);
+			return null;
 		  }
 		},
+  
 		login: async (email, password) => {
 		  try {
 			const response = await fetch(process.env.BACKEND_URL + "/api/login", {
@@ -150,30 +147,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 				email: email,
 				password: password,
 			  }),
-			})
+			});
   
 			if (!response.ok) {
-			  const errorData = await response.json()
+			  const errorData = await response.json();
 			  if (response.status === 401) {
-				alert("Bad email or password")
+				alert("Bad email or password");
 			  } else if (response.status === 400) {
-				alert("Email and password are required.")
+				alert("Email and password are required.");
 			  } else {
-				alert("Unknown error. Please try again.")
+				alert("Unknown error. Please try again.");
 			  }
-			  throw new Error(errorData.message || "Failed to login")
+			  throw new Error(errorData.message || "Failed to login");
 			}
-			const data = await response.json()
+			const data = await response.json();
   
-			localStorage.setItem("token", data.token)
-			localStorage.setItem("user", JSON.stringify(data.user))
-			setStore({ user: data.user })
+			localStorage.setItem("token", data.token);
+			localStorage.setItem("user", JSON.stringify(data.user));
+			setStore({ user: data.user });
   
-			return data
+			return data;
 		  } catch (error) {
-			console.log("Error loading message from backend", error)
+			console.log("Error loading message from backend", error);
 		  }
 		},
+  
 		newsletter: async (email) => {
 		  try {
 			const response = await fetch(process.env.BACKEND_URL + "/api/newsletter", {
@@ -184,20 +182,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  body: JSON.stringify({
 				email: email,
 			  }),
-			})
+			});
   
 			if (response.status === 400 || response.status === 422) {
-			  alert("The email is not in a valid format. ")
+			  alert("The email is not in a valid format. ");
 			} else if (response.status === 409) {
-			  alert("This email is already subscribed.")
+			  alert("This email is already subscribed.");
 			}
   
-			const data = await response.json()
+			const data = await response.json();
   
-			setStore({ user: data.user })
-			return data
+			setStore({ user: data.user });
+			return data;
 		  } catch (error) {
-			console.log("Error loading message from backend", error)
+			console.log("Error loading message from backend", error);
 		  }
 		},
   
@@ -209,20 +207,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 				"Content-Type": "application/json",
 			  },
 			  body: JSON.stringify({ name, email, subject, phone_number, message }),
-			})
+			});
   
 			if (!response.ok) {
-			  const errorData = await response.json()
-			  throw new Error(errorData.error || "Failed to send message")
+			  const errorData = await response.json();
+			  throw new Error(errorData.error || "Failed to send message");
 			}
   
-			const data = await response.json()
-			return { success: true, data }
+			const data = await response.json();
+			return { success: true, data };
 		  } catch (error) {
-			console.error("Get in touch Error:", error.message)
-			return { success: false, error: error.message }
+			console.error("Get in touch Error:", error.message);
+			return { success: false, error: error.message };
 		  }
 		},
+  
 		contactUs: async (first_name, last_name, email, subject, phone_number, message) => {
 		  try {
 			const response = await fetch(process.env.BACKEND_URL + "/api/contacts", {
@@ -231,54 +230,54 @@ const getState = ({ getStore, getActions, setStore }) => {
 				"Content-Type": "application/json",
 			  },
 			  body: JSON.stringify({ first_name, last_name, email, subject, phone_number, message }),
-			})
+			});
   
 			if (!response.ok) {
-			  const errorData = await response.json()
-			  throw new Error(errorData.error || "Failed to send message")
+			  const errorData = await response.json();
+			  throw new Error(errorData.error || "Failed to send message");
 			}
   
-			const data = await response.json()
-			return { success: true, data }
+			const data = await response.json();
+			return { success: true, data };
 		  } catch (error) {
-			console.error("Contact Us Error:", error.message)
-			return { success: false, error: error.message }
+			console.error("Contact Us Error:", error.message);
+			return { success: false, error: error.message };
 		  }
 		},
-
+  
 		getPrograms: async () => {
 		  try {
-			const response = await fetch(process.env.BACKEND_URL + "/api/programs")
+			const response = await fetch(process.env.BACKEND_URL + "/api/programs");
 			if (response.ok) {
-			  const data = await response.json()
-			  setStore({ programs: data })
+			  const data = await response.json();
+			  setStore({ programs: data });
 			} else {
-			  console.error("Error fetching programs:", response.status)
+			  console.error("Error fetching programs:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error fetching programs:", error)
+			console.error("Error fetching programs:", error);
 		  }
 		},
   
-		// Admin Dashboard actions
-  
-		// Clients
 		GetClients: async () => {
 		  try {
-			const response = await fetch(process.env.BACKEND_URL + "/api/clients")
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/clients", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
 			if (response.ok) {
-			  const data = await response.json()
-			  setStore({ clients: data })
-  
-			  // If the database is empty, load initial data
+			  const data = await response.json();
+			  setStore({ clients: data });
 			  if (data.length === 0) {
-				getActions().loadInitialClientsData()
+				getActions().loadInitialClientsData();
 			  }
 			} else {
-			  console.error("Error fetching clients:", response.status)
+			  console.error("Error fetching clients:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error fetching clients:", error)
+			console.error("Error fetching clients:", error);
 		  }
 		},
   
@@ -287,99 +286,109 @@ const getState = ({ getStore, getActions, setStore }) => {
 			{ name: "Juan Pérez", email: "juan@example.com", phone: "123-456-7890", status: "Activo" },
 			{ name: "María García", email: "maria@example.com", phone: "098-765-4321", status: "Inactivo" },
 			{ name: "Carlos Rodríguez", email: "carlos@example.com", phone: "555-555-5555", status: "Activo" },
-		  ]
+		  ];
   
 		  try {
 			for (const client of initialClients) {
-			  await getActions().addClient(client)
+			  await getActions().addClient(client);
 			}
 		  } catch (error) {
-			console.error("Error loading initial clients data:", error)
+			console.error("Error loading initial clients data:", error);
 		  }
 		},
   
 		addClient: async (clientData) => {
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(process.env.BACKEND_URL + "/api/clients", {
 			  method: "POST",
 			  headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			  },
 			  body: JSON.stringify(clientData),
-			})
+			});
   
 			if (response.ok) {
-			  const newClient = await response.json()
-			  const store = getStore()
-			  setStore({ clients: [...store.clients, newClient] })
-			  return newClient
+			  const newClient = await response.json();
+			  const store = getStore();
+			  setStore({ clients: [...store.clients, newClient] });
+			  return newClient;
 			} else {
-			  console.error("Error adding client:", response.status)
+			  console.error("Error adding client:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error adding client:", error)
+			console.error("Error adding client:", error);
 		  }
 		},
   
 		updateClient: async (id, clientData) => {
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(`${process.env.BACKEND_URL}/api/clients/${id}`, {
 			  method: "PUT",
 			  headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			  },
 			  body: JSON.stringify(clientData),
-			})
+			});
   
 			if (response.ok) {
-			  const updatedClient = await response.json()
-			  const store = getStore()
-			  const updatedClients = store.clients.map((client) => (client.id === id ? updatedClient : client))
-			  setStore({ clients: updatedClients })
-			  return updatedClient
+			  const updatedClient = await response.json();
+			  const store = getStore();
+			  const updatedClients = store.clients.map((client) => (client.id === id ? updatedClient : client));
+			  setStore({ clients: updatedClients });
+			  return updatedClient;
 			} else {
-			  console.error("Error updating client:", response.status)
+			  console.error("Error updating client:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error updating client:", error)
+			console.error("Error updating client:", error);
 		  }
 		},
   
 		deleteClient: async (id) => {
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(`${process.env.BACKEND_URL}/api/clients/${id}`, {
 			  method: "DELETE",
-			})
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
   
 			if (response.ok) {
-			  const store = getStore()
-			  const updatedClients = store.clients.filter((client) => client.id !== id)
-			  setStore({ clients: updatedClients })
+			  const store = getStore();
+			  const updatedClients = store.clients.filter((client) => client.id !== id);
+			  setStore({ clients: updatedClients });
 			} else {
-			  console.error("Error deleting client:", response.status)
+			  console.error("Error deleting client:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error deleting client:", error)
+			console.error("Error deleting client:", error);
 		  }
 		},
   
-		// Schedules
 		GetSchedules: async () => {
 		  try {
-			const response = await fetch(process.env.BACKEND_URL + "/api/schedules")
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/schedules", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
 			if (response.ok) {
-			  const data = await response.json()
-			  setStore({ schedules: data })
-  
-			  // If the database is empty, load initial data
+			  const data = await response.json();
+			  setStore({ schedules: data });
 			  if (data.length === 0) {
-				getActions().loadInitialSchedulesData()
+				getActions().loadInitialSchedulesData();
 			  }
 			} else {
-			  console.error("Error fetching schedules:", response.status)
+			  console.error("Error fetching schedules:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error fetching schedules:", error)
+			console.error("Error fetching schedules:", error);
 		  }
 		},
   
@@ -412,633 +421,758 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  capacity: 12,
 			  enrolled: 10,
 			},
-		  ]
+		  ];
   
 		  try {
 			for (const schedule of initialSchedules) {
-			  await getActions().addSchedule(schedule)
+			  await getActions().addSchedule(schedule);
 			}
 		  } catch (error) {
-			console.error("Error loading initial schedules data:", error)
+			console.error("Error loading initial schedules data:", error);
 		  }
 		},
   
 		addSchedule: async (scheduleData) => {
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(process.env.BACKEND_URL + "/api/schedules", {
 			  method: "POST",
 			  headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			  },
 			  body: JSON.stringify(scheduleData),
-			})
+			});
   
 			if (response.ok) {
-			  const newSchedule = await response.json()
-			  const store = getStore()
-			  setStore({ schedules: [...store.schedules, newSchedule] })
-			  return newSchedule
+			  const newSchedule = await response.json();
+			  const store = getStore();
+			  setStore({ schedules: [...store.schedules, newSchedule] });
+			  return newSchedule;
 			} else {
-			  console.error("Error adding schedule:", response.status)
+			  console.error("Error adding schedule:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error adding schedule:", error)
+			console.error("Error adding schedule:", error);
 		  }
 		},
   
 		updateSchedule: async (id, scheduleData) => {
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(`${process.env.BACKEND_URL}/api/schedules/${id}`, {
 			  method: "PUT",
 			  headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			  },
 			  body: JSON.stringify(scheduleData),
-			})
+			});
   
 			if (response.ok) {
-			  const updatedSchedule = await response.json()
-			  const store = getStore()
+			  const updatedSchedule = await response.json();
+			  const store = getStore();
 			  const updatedSchedules = store.schedules.map((schedule) =>
 				schedule.id === id ? updatedSchedule : schedule,
-			  )
-			  setStore({ schedules: updatedSchedules })
-			  return updatedSchedule
+			  );
+			  setStore({ schedules: updatedSchedules });
+			  return updatedSchedule;
 			} else {
-			  console.error("Error updating schedule:", response.status)
+			  console.error("Error updating schedule:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error updating schedule:", error)
+			console.error("Error updating schedule:", error);
 		  }
 		},
   
 		deleteSchedule: async (id) => {
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(`${process.env.BACKEND_URL}/api/schedules/${id}`, {
 			  method: "DELETE",
-			})
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
   
 			if (response.ok) {
-			  const store = getStore()
-			  const updatedSchedules = store.schedules.filter((schedule) => schedule.id !== id)
-			  setStore({ schedules: updatedSchedules })
+			  const store = getStore();
+			  const updatedSchedules = store.schedules.filter((schedule) => schedule.id !== id);
+			  setStore({ schedules: updatedSchedules });
 			} else {
-			  console.error("Error deleting schedule:", response.status)
+			  console.error("Error deleting schedule:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error deleting schedule:", error)
+			console.error("Error deleting schedule:", error);
 		  }
 		},
   
-		//Email
 		GetEmails: async () => {
 		  try {
-			const response = await fetch(process.env.BACKEND_URL + "/api/emails")
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/emails", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
 			if (response.ok) {
-			  const data = await response.json()
-			  const emails = data.filter((email) => !email.scheduledDate)
-			  const scheduledEmails = data.filter((email) => email.scheduledDate)
-			  setStore({ emails, scheduledEmails })
+			  const data = await response.json();
+			  const emails = data.filter((email) => !email.scheduledDate);
+			  const scheduledEmails = data.filter((email) => email.scheduledDate);
+			  setStore({ emails, scheduledEmails });
 			} else {
-			  console.error("Error fetching emails:", response.status)
+			  console.error("Error fetching emails:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error fetching emails:", error)
+			console.error("Error fetching emails:", error);
 		  }
 		},
   
 		sendEmail: async (emailData) => {
-		
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(process.env.BACKEND_URL + "/api/emails", {
 			  method: "POST",
 			  headers: {
 				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
 			  },
 			  body: JSON.stringify(emailData),
-			})
+			});
   
 			if (response.ok) {
-			  const newEmail = await response.json()
-			  const store = getStore()
+			  const newEmail = await response.json();
+			  const store = getStore();
 			  if (newEmail.scheduledDate) {
-				setStore({ scheduledEmails: [...store.scheduledEmails, newEmail] })
+				setStore({ scheduledEmails: [...store.scheduledEmails, newEmail] });
 			  } else {
-				setStore({ emails: [...store.emails, newEmail] })
+				setStore({ emails: [...store.emails, newEmail] });
 			  }
-			  return newEmail
+			  return newEmail;
 			} else {
-			  console.error("Error sending email:", response.status)
+			  console.error("Error sending email:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error sending email:", error)
+			console.error("Error sending email:", error);
 		  }
 		},
   
 		deleteEmail: async (id) => {
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(`${process.env.BACKEND_URL}/api/emails/${id}`, {
 			  method: "DELETE",
-			})
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
   
 			if (response.ok) {
-			  const store = getStore()
-			  const updatedEmails = store.emails.filter((email) => email.id !== id)
-			  const updatedScheduledEmails = store.scheduledEmails.filter((email) => email.id !== id)
-			  setStore({ emails: updatedEmails, scheduledEmails: updatedScheduledEmails })
+			  const store = getStore();
+			  const updatedEmails = store.emails.filter((email) => email.id !== id);
+			  const updatedScheduledEmails = store.scheduledEmails.filter((email) => email.id !== id);
+			  setStore({ emails: updatedEmails, scheduledEmails: updatedScheduledEmails });
 			} else {
-			  console.error("Error deleting email:", response.status)
+			  console.error("Error deleting email:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error deleting email:", error)
+			console.error("Error deleting email:", error);
 		  }
 		},
+  
 		fetchVideos: async () => {
 		  try {
-			const response = await fetch(process.env.BACKEND_URL + "/api/videos")
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/videos", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
 			if (response.ok) {
-			  const data = await response.json()
-			  setStore({ videos: data })
+			  const data = await response.json();
+			  setStore({ videos: data });
 			} else {
-			  console.error("Error fetching videos:", response.status)
+			  console.error("Error fetching videos:", response.status);
 			}
 		  } catch (error) {
-			console.error("Error fetching videos:", error)
+			console.error("Error fetching videos:", error);
 		  }
 		},
   
 		uploadVideo: async (formData) => {
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(process.env.BACKEND_URL + "/api/videos", {
 			  method: "POST",
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
 			  body: formData,
-			})
+			});
   
 			if (response.ok) {
-			  const data = await response.json()
-			  return { success: true, data }
+			  const data = await response.json();
+			  return { success: true, data };
 			} else {
-			  const errorData = await response.json()
-			  return { success: false, error: errorData.error || "Failed to upload video" }
+			  const errorData = await response.json();
+			  return { success: false, error: errorData.error || "Failed to upload video" };
 			}
 		  } catch (error) {
-			console.error("Error uploading video:", error)
-			return { success: false, error: error.message }
+			console.error("Error uploading video:", error);
+			return { success: false, error: error.message };
 		  }
 		},
   
 		deleteVideo: async (id) => {
 		  try {
+			const token = getActions().getToken();
 			const response = await fetch(`${process.env.BACKEND_URL}/api/videos/${id}`, {
 			  method: "DELETE",
-			})
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
   
 			if (response.ok) {
-			  return { success: true }
+			  return { success: true };
 			} else {
-			  const errorData = await response.json()
-			  return { success: false, error: errorData.error || "Failed to delete video" }
+			  const errorData = await response.json();
+			  return { success: false, error: errorData.error || "Failed to delete video" };
 			}
 		  } catch (error) {
-			console.error("Error deleting video:", error)
-			return { success: false, error: error.message }
+			console.error("Error deleting video:", error);
+			return { success: false, error: error.message };
 		  }
 		},
-			formEvent: async (full_name, events_selection, parent_name,special_request) => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/eventsuscription", {
-				method: "POST",
-				headers: {
-				  "Content-Type": "application/json",
-				},
-				body: JSON.stringify({ full_name,events_selection, parent_name, special_request }),
-			  })
-
-			  if (!response.ok) {
-				const errorData = await response.json()
-				throw new Error(errorData.error || "Failed to send message")
-			  }
-
-			  const data = await response.json()
-			  return { success: true, data }
-			} catch (error) {
-			  console.error("form event Error:", error.message)
-			  return { success: false, error: error.message }
+  
+		formEvent: async (full_name, events_selection, parent_name, special_request) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/eventsuscription", {
+			  method: "POST",
+			  headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			  },
+			  body: JSON.stringify({ full_name, events_selection, parent_name, special_request }),
+			});
+  
+			if (!response.ok) {
+			  const errorData = await response.json();
+			  throw new Error(errorData.error || "Failed to send message");
 			}
-		  },
-		  fetchInactiveAccounts: async () => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/inactive-accounts")
-			  if (response.ok) {
-				const data = await response.json()
-				setStore({ inactiveAccounts: data })
-			  } else {
-				console.error("Error fetching inactive accounts:", response.status)
-			  }
-			} catch (error) {
-			  console.error("Error fetching inactive accounts:", error)
+  
+			const data = await response.json();
+			return { success: true, data };
+		  } catch (error) {
+			console.error("form event Error:", error.message);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		fetchInactiveAccounts: async () => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/inactive-accounts", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
+			  const data = await response.json();
+			  setStore({ inactiveAccounts: data });
+			} else {
+			  console.error("Error fetching inactive accounts:", response.status);
 			}
-		  },
-	
-		  reactivateAccount: async (id) => {
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}/reactivate`, {
-				method: "POST",
-			  })
-			  if (response.ok) {
-				const updatedAccount = await response.json()
-				const store = getStore()
-				const updatedAccounts = store.inactiveAccounts.map((account) =>
-				  account.id === id ? updatedAccount : account,
-				)
-				setStore({ inactiveAccounts: updatedAccounts })
-				return { success: true, data: updatedAccount }
-			  } else {
-				console.error("Error reactivating account:", response.status)
-				return { success: false, error: "Failed to reactivate account" }
-			  }
-			} catch (error) {
-			  console.error("Error reactivating account:", error)
-			  return { success: false, error: error.message }
+		  } catch (error) {
+			console.error("Error fetching inactive accounts:", error);
+		  }
+		},
+  
+		reactivateAccount: async (id) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}/reactivate`, {
+			  method: "POST",
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
+			  const updatedAccount = await response.json();
+			  const store = getStore();
+			  const updatedAccounts = store.inactiveAccounts.map((account) =>
+				account.id === id ? updatedAccount : account,
+			  );
+			  setStore({ inactiveAccounts: updatedAccounts });
+			  return { success: true, data: updatedAccount };
+			} else {
+			  console.error("Error reactivating account:", response.status);
+			  return { success: false, error: "Failed to reactivate account" };
 			}
-		  },
-	
-		  sendReminder: async (id) => {
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}/send-reminder`, {
-				method: "POST",
-			  })
-			  if (response.ok) {
-				return { success: true }
-			  } else {
-				console.error("Error sending reminder:", response.status)
-				return { success: false, error: "Failed to send reminder" }
-			  }
-			} catch (error) {
-			  console.error("Error sending reminder:", error)
-			  return { success: false, error: error.message }
-			}
-		  },
-	
-		  deleteInactiveAccount: async (id) => {
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}`, {
-				method: "DELETE",
-			  })
-			  if (response.ok) {
-				const store = getStore()
-				const updatedAccounts = store.inactiveAccounts.filter((account) => account.id !== id)
-				setStore({ inactiveAccounts: updatedAccounts })
-				return { success: true }
-			  } else {
-				console.error("Error deleting inactive account:", response.status)
-				return { success: false, error: "Failed to delete inactive account" }
-			  }
-			} catch (error) {
-			  console.error("Error deleting inactive account:", error)
-			  return { success: false, error: error.message }
-			}
-		  },
-		  // Approvals actions
-		  fetchApprovals: async () => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/approvals")
-			  if (response.ok) {
-				const data = await response.json()
-				setStore({ approvals: data })
-			  } else {
-				console.error("Error fetching approvals:", response.status)
-			  }
-			} catch (error) {
-			  console.error("Error fetching approvals:", error)
-			}
-		  },
-		  updateApprovalStatus: async (id, status) => {
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/approvals/${id}`, {
-				method: "PATCH",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ status }),
-			  });
-			  if (!response.ok) throw new Error("Error actualizando el estado");
-			  const updatedApproval = await response.json();
-		  
-			  // Actualiza el estado global
-			  setStore({
-				approvals: getStore().approvals.map((item) =>
-				  item.id === updatedApproval.id ? updatedApproval : item
-				),
-			  });
-		  
+		  } catch (error) {
+			console.error("Error reactivating account:", error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		sendReminder: async (id) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}/send-reminder`, {
+			  method: "POST",
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
 			  return { success: true };
-			} catch (error) {
-			  console.error(error);
-			  return { success: false, error: error.message };
+			} else {
+			  console.error("Error sending reminder:", response.status);
+			  return { success: false, error: "Failed to send reminder" };
 			}
-		  },
-		  
-		  fetchActivities: async () => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/activities")
-			  if (response.ok) {
-				const data = await response.json()
-				setStore({ activities: data })
-				return { success: true, data }
-			  } else {
-				console.error("Error fetching activities:", response.status)
-				return { success: false, error: "Failed to fetch activities" }
-			  }
-			} catch (error) {
-			  console.error("Error fetching activities:", error)
-			  return { success: false, error: error.message }
-			}
-		  },
-
-		  createActivity: async (formData) => {
-			try {
-			  const form = new FormData();
-		
-			  for (const key in formData) {
-				if (key === "image" && typeof formData[key] === "string") {
-				  form.append("image", formData[key]);
-				} else if (key === "image" && formData[key] instanceof File) {
-				  form.append("image", formData[key]);
-				} else {
-				  form.append(key, formData[key]);
-				}
-			  }
-		  
-			  const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
-				method: "POST",
-				body: form,
-			  });
-		  
-			  if (response.ok) {
-				
-				const newActivity = await response.json();
-				const store = getStore();
-				setStore({ activities: [...store.activities, newActivity] });
-				return { success: true, data: newActivity };
-			  } else {
-				const error = await response.json();
-				console.error("Error response:", error); // Log error response
-				return { success: false, error: error.error || "Failed to create activity" };
-			  }
-			} catch (error) {
-			  console.error("Error creating activity:", error);
-			  return { success: false, error: error.message };
-			}
-		  },
-		  
-		  updateActivity: async (id, activityData) =>{
-			
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
-				method: "PUT",
-				headers: {
-				  "Content-Type": "application/json",
-				},
-				body: JSON.stringify(activityData),
-			  })
-		  
-			  if (response.ok) {
-				
-				const updatedActivity = await response.json()
-				const store = getStore()
-				const updatedActivities = store.activities.map((activity) => (activity.id === id ? updatedActivity : activity))
-				setStore({ activities: updatedActivities })
-				return { success: true, data: updatedActivity }
-			  } else {
-				const error = await response.json()
-				return { success: false, error: error.error || "Failed to update activity" }
-			  }
-			} catch (error) {
-			  console.error("Error updating activity:", error)
-			  return { success: false, error: error.message }
-			}
+		  } catch (error) {
+			console.error("Error sending reminder:", error);
+			return { success: false, error: error.message };
+		  }
 		},
-		  
-			deleteActivity: async (id) =>{
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
-				method: "DELETE",
-			  })
-		  
-			  if (response.ok) {
-				const store = getStore()
-				const updatedActivities = store.activities.filter((activity) => activity.id !== id)
-				setStore({ activities: updatedActivities })
-				return { success: true }
+  
+		deleteInactiveAccount: async (id) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}`, {
+			  method: "DELETE",
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
+			  const store = getStore();
+			  const updatedAccounts = store.inactiveAccounts.filter((account) => account.id !== id);
+			  setStore({ inactiveAccounts: updatedAccounts });
+			  return { success: true };
+			} else {
+			  console.error("Error deleting inactive account:", response.status);
+			  return { success: false, error: "Failed to delete inactive account" };
+			}
+		  } catch (error) {
+			console.error("Error deleting inactive account:", error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		fetchApprovals: async () => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/approvals", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
+			  const data = await response.json();
+			  setStore({ approvals: data });
+			} else {
+			  console.error("Error fetching approvals:", response.status);
+			}
+		  } catch (error) {
+			console.error("Error fetching approvals:", error);
+		  }
+		},
+  
+		updateApprovalStatus: async (id, status) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/approvals/${id}`, {
+			  method: "PATCH",
+			  headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			  },
+			  body: JSON.stringify({ status }),
+			});
+			if (!response.ok) throw new Error("Error actualizando el estado");
+			const updatedApproval = await response.json();
+			setStore({
+			  approvals: getStore().approvals.map((item) =>
+				item.id === updatedApproval.id ? updatedApproval : item,
+			  ),
+			});
+			return { success: true };
+		  } catch (error) {
+			console.error(error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		fetchActivities: async () => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
+			  const data = await response.json();
+			  setStore({ activities: data });
+			  return { success: true, data };
+			} else {
+			  console.error("Error fetching activities:", response.status);
+			  return { success: false, error: "Failed to fetch activities" };
+			}
+		  } catch (error) {
+			console.error("Error fetching activities:", error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		createActivity: async (formData) => {
+		  try {
+			const token = getActions().getToken();
+			const form = new FormData();
+			for (const key in formData) {
+			  if (key === "image" && typeof formData[key] === "string") {
+				form.append("image", formData[key]);
+			  } else if (key === "image" && formData[key] instanceof File) {
+				form.append("image", formData[key]);
 			  } else {
-				const error = await response.json()
-				return { success: false, error: error.error || "Failed to delete activity" }
+				form.append(key, formData[key]);
 			  }
-			} catch (error) {
-			  console.error("Error deleting activity:", error)
-			  return { success: false, error: error.message }
 			}
-		},
-		addClass: async (teacher_id, name, description,capacity, price, age,time,image) => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
-				method: "POST",
-				headers: {
-				  "Content-Type": "application/json",
-				},
-				body: JSON.stringify({teacher_id, name, description, capacity, price, age,time,image }),
-			  })
-	
-			  if (!response.ok) {
-				const errorData = await response.json()
-				throw new Error(errorData.error || "Failed to create class")
-			  }
-	
-			  const data = await response.json()
-			  return { success: true, data }
-			} catch (error) {
-			  console.error("Class Error:", error.message)
-			  return { success: false, error: error.message }
+  
+			const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
+			  method: "POST",
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			  body: form,
+			});
+  
+			if (response.ok) {
+			  const newActivity = await response.json();
+			  const store = getStore();
+			  setStore({ activities: [...store.activities, newActivity] });
+			  return { success: true, data: newActivity };
+			} else {
+			  const error = await response.json();
+			  console.error("Error response:", error);
+			  return { success: false, error: error.error || "Failed to create activity" };
 			}
-		  },
-		  getVirtualClasses : async () => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/virtual-classes")
-			  if (response.ok) {
-				const data = await response.json()
-				setStore({ parentvirtualClasses: data })
-			  }
-			} catch (error) {
-				console.error("Error fetching parent virtual classes:", error)
-			}						
+		  } catch (error) {
+			console.error("Error creating activity:", error);
+			return { success: false, error: error.message };
+		  }
 		},
+  
+		updateActivity: async (id, activityData) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
+			  method: "PUT",
+			  headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			  },
+			  body: JSON.stringify(activityData),
+			});
+  
+			if (response.ok) {
+			  const updatedActivity = await response.json();
+			  const store = getStore();
+			  const updatedActivities = store.activities.map((activity) =>
+				activity.id === id ? updatedActivity : activity,
+			  );
+			  setStore({ activities: updatedActivities });
+			  return { success: true, data: updatedActivity };
+			} else {
+			  const error = await response.json();
+			  return { success: false, error: error.error || "Failed to update activity" };
+			}
+		  } catch (error) {
+			console.error("Error updating activity:", error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		deleteActivity: async (id) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
+			  method: "DELETE",
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+  
+			if (response.ok) {
+			  const store = getStore();
+			  const updatedActivities = store.activities.filter((activity) => activity.id !== id);
+			  setStore({ activities: updatedActivities });
+			  return { success: true };
+			} else {
+			  const error = await response.json();
+			  return { success: false, error: error.error || "Failed to delete activity" };
+			}
+		  } catch (error) {
+			console.error("Error deleting activity:", error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		addClass: async (teacher_id, name, description, capacity, price, age, time, image) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
+			  method: "POST",
+			  headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			  },
+			  body: JSON.stringify({ teacher_id, name, description, capacity, price, age, time, image }),
+			});
+  
+			if (!response.ok) {
+			  const errorData = await response.json();
+			  throw new Error(errorData.error || "Failed to create class");
+			}
+  
+			const data = await response.json();
+			return { success: true, data };
+		  } catch (error) {
+			console.error("Class Error:", error.message);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		getVirtualClasses: async () => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/virtual-classes", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
+			  const data = await response.json();
+			  setStore({ parentvirtualClasses: data });
+			}
+		  } catch (error) {
+			console.error("Error fetching parent virtual classes:", error);
+		  }
+		},
+  
 		deleteClass: async (id) => {
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
-				method: "DELETE",
-			  });
-		  
-			  if (response.ok) {
-				return { success: true };
-			  } else {
-				console.error("Error deleting class:", response.status);
-				return { success: false, error: `Status: ${response.status}` };
-			  }
-			} catch (error) {
-			  console.error("Error deleting class:", error);
-			  return { success: false, error: error.message };
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
+			  method: "DELETE",
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+  
+			if (response.ok) {
+			  return { success: true };
+			} else {
+			  console.error("Error deleting class:", response.status);
+			  return { success: false, error: `Status: ${response.status}` };
 			}
-		  },
-		  updateClass: async (id, classData) => {
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
-				method: "PUT",
-				headers: {
-				  "Content-Type": "application/json",
-				},
-				body: JSON.stringify(classData),
-			  })
-	
-			  if (response.ok) { 
-				const updatedClass = await response.json()
-				const store = getStore()
-				const updatedClasses = store.classes.map((classes) => (classes.id === id ? updatedClass : classes))
-				setStore({ classes: updatedClasses })
-				return updatedClass
-			  } else {
-				console.error("Error updating client:", response.status)
-			  }
-			} catch (error) {
-			  console.error("Error updating client:", error)
+		  } catch (error) {
+			console.error("Error deleting class:", error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		updateClass: async (id, classData) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
+			  method: "PUT",
+			  headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			  },
+			  body: JSON.stringify(classData),
+			});
+  
+			if (response.ok) {
+			  const updatedClass = await response.json();
+			  const store = getStore();
+			  const updatedClasses = store.classes.map((classes) =>
+				classes.id === id ? updatedClass : classes,
+			  );
+			  setStore({ classes: updatedClasses });
+			  return updatedClass;
+			} else {
+			  console.error("Error updating client:", response.status);
 			}
-		  },
-		  fetchEvents: async () => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/events")
-			  if (response.ok) {
-				const data = await response.json()
-				setStore({ events: data })
-			  } else {
-				console.error("Error fetching events:", response.status)
-			  }
-			} catch (error) {
-			  console.error("Error fetching events:", error)
-			  return null
+		  } catch (error) {
+			console.error("Error updating client:", error);
+		  }
+		},
+  
+		fetchEvents: async () => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/events", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
+			  const data = await response.json();
+			  setStore({ events: data });
+			} else {
+			  console.error("Error fetching events:", response.status);
 			}
-		  },
-		  deleteEvent: async (id) => {
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
-				method: "DELETE",
-			  });
-		  
-			  if (response.ok) {
-				return { success: true };
-			  } else {
-				console.error("Error deleting event:", response.status);
-				return { success: false, error: `Status: ${response.status}` };
-			  }
-			} catch (error) {
-			  console.error("Error deleting events:", error);
-			  return { success: false, error: error.message };
+		  } catch (error) {
+			console.error("Error fetching events:", error);
+			return null;
+		  }
+		},
+  
+		deleteEvent: async (id) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
+			  method: "DELETE",
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+  
+			if (response.ok) {
+			  return { success: true };
+			} else {
+			  console.error("Error deleting event:", response.status);
+			  return { success: false, error: `Status: ${response.status}` };
 			}
-		  },
-		  addEvent: async ( name, description,start_time,end_time,image) => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/events", {
-				method: "POST",
-				headers: {
-				  "Content-Type": "application/json",
-				},
-				body: JSON.stringify({name, description,start_time,end_time,image }),
-			  })
-	
-			  if (!response.ok) {
-				const errorData = await response.json()
-				throw new Error(errorData.error || "Failed to create event")
-			  }
-	
-			  const data = await response.json()
-			  return { success: true, data }
-			} catch (error) {
-			  console.error("Event Error:", error.message)
-			  return { success: false, error: error.message }
+		  } catch (error) {
+			console.error("Error deleting events:", error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		addEvent: async (name, description, start_time, end_time, image) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/events", {
+			  method: "POST",
+			  headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			  },
+			  body: JSON.stringify({ name, description, start_time, end_time, image }),
+			});
+  
+			if (!response.ok) {
+			  const errorData = await response.json();
+			  throw new Error(errorData.error || "Failed to create event");
 			}
-		  },
-		  updateEvent: async (id, eventData) => {
-			try {
-			  const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
-				method: "PUT",
-				headers: {
-				  "Content-Type": "application/json",
-				},
-				body: JSON.stringify(eventData),
-			  })
-	
-			  if (response.ok) { 
-				const updatedEvent = await response.json()
-				const store = getStore()
-				const updatedEvents = store.events.map((events) => (events.id === id ? updatedEvent : events))
-				setStore({ events: updatedEvents })
-				return updatedEvent
-			  } else {
-				console.error("Error updating event:", response.status)
-			  }
-			} catch (error) {
-			  console.error("Error updating event:", error)
+  
+			const data = await response.json();
+			return { success: true, data };
+		  } catch (error) {
+			console.error("Event Error:", error.message);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		updateEvent: async (id, eventData) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
+			  method: "PUT",
+			  headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			  },
+			  body: JSON.stringify(eventData),
+			});
+  
+			if (response.ok) {
+			  const updatedEvent = await response.json();
+			  const store = getStore();
+			  const updatedEvents = store.events.map((events) =>
+				events.id === id ? updatedEvent : events,
+			  );
+			  setStore({ events: updatedEvents });
+			  return updatedEvent;
+			} else {
+			  console.error("Error updating event:", response.status);
 			}
-		  },
-		  fetchTeachers: async () => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/teachers")
-			  if (response.ok) {
-				const data = await response.json()
-				setStore({ teachers: data })
-				return { success: true, data }
-			  } else {
-				console.error("Error fetching teachers:", response.status)
-				return { success: false, error: "Failed to fetch activities" }
-			  }
-			} catch (error) {
-			  console.error("Error fetching activities:", error)
-			  return { success: false, error: error.message }
+		  } catch (error) {
+			console.error("Error updating event:", error);
+		  }
+		},
+  
+		fetchTeachers: async () => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/teachers", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
+			  const data = await response.json();
+			  setStore({ teachers: data });
+			  return { success: true, data };
+			} else {
+			  console.error("Error fetching teachers:", response.status);
+			  return { success: false, error: "Failed to fetch activities" };
 			}
-		  },
-		  fetchServices: async () => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/services")
-			  if (response.ok) {
-				const data = await response.json()
-				setStore({ services: data })
-				return { success: true, data }
-			  } else {
-				console.error("Error fetching services:", response.status)
-				return { success: false, error: "Failed to fetch services" }
-			  }
-			} catch (error) {
-			  console.error("Error fetching activities:", error)
-			  return { success: false, error: error.message }
+		  } catch (error) {
+			console.error("Error fetching activities:", error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		fetchServices: async () => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/services", {
+			  headers: {
+				Authorization: `Bearer ${token}`,
+			  },
+			});
+			if (response.ok) {
+			  const data = await response.json();
+			  setStore({ services: data });
+			  return { success: true, data };
+			} else {
+			  console.error("Error fetching services:", response.status);
+			  return { success: false, error: "Failed to fetch services" };
 			}
-		  },
-		  addService: async ( name, description,image) => {
-			try {
-			  const response = await fetch(process.env.BACKEND_URL + "/api/services", {
-				method: "POST",
-				headers: {
-				  "Content-Type": "application/json",
-				},
-				body: JSON.stringify({name, description,image }),
-			  })
-	
-			  if (!response.ok) {
-				const errorData = await response.json()
-				throw new Error(errorData.error || "Failed to create event")
-			  }
-	
-			  const data = await response.json()
-			  return { success: true, data }
-			} catch (error) {
-			  console.error("Service Error:", error.message)
-			  return { success: false, error: error.message }
+		  } catch (error) {
+			console.error("Error fetching activities:", error);
+			return { success: false, error: error.message };
+		  }
+		},
+  
+		addService: async (name, description, image) => {
+		  try {
+			const token = getActions().getToken();
+			const response = await fetch(process.env.BACKEND_URL + "/api/services", {
+			  method: "POST",
+			  headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			  },
+			  body: JSON.stringify({ name, description, image }),
+			});
+  
+			if (!response.ok) {
+			  const errorData = await response.json();
+			  throw new Error(errorData.error || "Failed to create event");
+			}
+  
+			const data = await response.json();
+			return { success: true, data };
+		  } catch (error) {
+			console.error("Service Error:", error.message);
+			return { success: false, error: error.message}
 			}
 		  },
 		  updateService: async (id, serviceData) => {
