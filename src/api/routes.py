@@ -651,11 +651,71 @@ def create_program():
     return jsonify(new_program.serialize()), 201
 
 @api.route('/subscriptions', methods=['GET'])
-#@jwt_required()
 def get_subscriptions():
     subscriptions = Subscription.query.all()
-    subscriptions = list(map(lambda x: x.serialize(), subscriptions))
-    return jsonify(subscriptions), 200
+    return jsonify([subscription.serialize() for subscription in subscriptions]), 200
+
+@api.route('/subscriptions/<int:id>', methods=['GET'])
+def get_subscription(id):
+    subscription = Subscription.query.get_or_404(id)
+    return jsonify(subscription.serialize()), 200
+
+@api.route('/subscriptions', methods=['POST'])
+# #@jwt_required()
+def create_subscriptions():
+    
+        data = request.json
+        
+        required_fields = ['parent_id', 'plan_type', 'start_date', 'end_date']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"Missing required field: {field}"}), 400
+
+        new_subscription = Subscription(
+            
+            parent_id= data['parent_id'],
+            plan_type=data['plan_type'],
+            start_date=data['start_date'],
+            end_date=data['end_date'],
+            
+        )
+        
+        db.session.add(new_subscription)
+        db.session.commit()
+        return jsonify(new_subscription.serialize()), 201
+
+    
+@api.route('/subscriptions/<int:id>', methods=['PUT'])
+# #@jwt_required()
+def update_subscription(id):
+    
+        
+        subscription = Subscription.query.get_or_404(id)
+        
+        
+        data = request.get_json()  
+
+        subscription.parent_id = data.get('parent_id', subscription.parent_id)
+        subscription.plan_type = data.get('plan_type', subscription.plan_type)
+        subscription.start_date = data.get('start_date', subscription.start_date)
+        subscription.end_date = data.get('end_date', subscription.end_date)
+    
+        
+        db.session.commit()
+        return jsonify(subscription.serialize()), 200
+        
+
+@api.route('/subscriptions/<int:id>', methods=['DELETE'])
+# #@jwt_required()
+def delete_subscription(id):
+    subscription = Subscription.query.get_or_404(id)
+    try:
+        db.session.delete(subscription)
+        db.session.commit()
+        return '', 204
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 @api.route('/contacts', methods=['GET'])
 #@jwt_required()
