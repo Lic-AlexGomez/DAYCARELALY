@@ -3053,4 +3053,46 @@ def update_settings(id):
     settings.image = data.get('image', settings.image)
 
     db.session.commit()
+
     return jsonify(settings.serialize()), 200
+
+#ruta para crear nuevo usuario admin
+@api.route('/signup/admin', methods=['POST'])
+def signup_admin():
+    data = request.json
+  
+    if not data:
+        raise APIException("No input data provided", status_code=400)
+
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    position = data.get('position')
+    department = data.get('department')
+
+    if not all([username, email, password, position, department]):
+        raise APIException("Missing required fields", status_code=400)
+
+    if User.query.filter_by(email=email).first():
+        raise APIException("User already exists", status_code=400)
+
+    hashed_password = generate_password_hash(password)
+    
+    # Crear el nuevo usuario
+    new_user = User(username=username, email=email, password_hash=hashed_password, role='admin')
+    db.session.add(new_user)
+    db.session.flush()
+
+    # Crear el registro del admin
+    new_admin = AdminD(user_id=new_user.id, position=position, department=department)
+    db.session.add(new_admin)
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Admin user created successfully",
+        "user": new_user.serialize()
+    }), 201
+
+    return jsonify(settings.serialize()), 200
+
