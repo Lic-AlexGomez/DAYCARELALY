@@ -33,6 +33,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		teachers:[],
 		services:[],
 		gallery:[],
+		subscriptions:[],
 
 			//parent dashboard store
 			parentData: null,
@@ -1427,6 +1428,80 @@ fetchUserData: async () => {
 	} catch (error) {
 	  console.error("Service Error:", error.message);
 	  return { success: false, error: error.message };
+	}
+  },addSubscription: async (subscriptionData) => {
+	try {
+	  const response = await fetch(process.env.BACKEND_URL + "/api/subscriptions", {
+		method: "POST",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify(subscriptionData),
+	  })
+
+	  if (response.ok) {
+		const newSubscription = await response.json()
+		const store = getStore()
+		setStore({ subscriptions: [...store.subscriptions, newSubscription] })
+		return newSubscription
+	  } else {
+		console.error("Error adding subscription:", response.status)
+	  }
+	} catch (error) {
+	  console.error("Error adding subscription:", error)
+	}
+  },
+
+  updateSubscription: async (id, subscriptionData) => {
+	try {
+	  const response = await fetch(`${process.env.BACKEND_URL}/api/subscription/${id}`, {
+		method: "PUT",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify(subscriptionData),
+	  })
+
+	  if (response.ok) {
+		const updatedSubscription = await response.json()
+		const store = getStore()
+		const updatedSubscriptions = store.subscriptions.map((subscription) => (subscription.id === id ? updatedSubscription : subscription))
+		setStore({ subscriptions: updatedSubscriptions })
+		return updatedSubscription
+	  } else {
+		console.error("Error updating subscription:", response.status)
+	  }
+	} catch (error) {
+	  console.error("Error updating subscription:", error)
+	}
+  },
+
+  deleteSubscription: async (id) => {
+	try {
+	  const response = await fetch(`${process.env.BACKEND_URL}/api/subscriptions/${id}`, {
+		method: "DELETE",
+	  })
+
+	  if (response.ok) {
+		const store = getStore()
+		const updatedSubscription = store.subscriptions.filter((subscription) => subscription.id !== id)
+		setStore({ subscriptions: updatedSubscription })
+	  } else {
+		console.error("Error deleting subscription:", response.status)
+	  }
+	} catch (error) {
+	  console.error("Error deleting subscription:", error)
+	}
+  },
+  fetchSubscriptions: async () => {
+	try {
+	  const resp = await fetch(`${process.env.BACKEND_URL}/api/subscriptions`)
+	  if (!resp.ok) throw new Error("Failed to fetch subscription")
+	  const data = await resp.json()
+	console.log(data)
+	  setStore({ subscriptions: data })
+	} catch (error) {
+	  console.error("Error fetching messages:", error)
 	}
   },
   

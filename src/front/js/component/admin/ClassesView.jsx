@@ -4,7 +4,7 @@ import { Context } from '../../store/appContext';
 import Swal from "sweetalert2";
 
 const ClassesView = () => {
-  const { actions, store } = useContext(Context);
+  const { store, actions } = useContext(Context)
   const [teachers, setTeachers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClass, setEditingClass] = useState(null);
