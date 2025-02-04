@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
+import { Context } from '../../store/appContext';
 import { Plus, Edit, Trash } from 'lucide-react';
 
 const EnrollmentsView = () => {
+  const{actions,store}=useContext(Context)
   const [enrollments, setEnrollments] = useState([
     {
       id: 1, studentName: 'Luis Martínez', className: 'Clase de Arte', enrollmentDate: '2023-05-01'
@@ -9,6 +11,11 @@ const EnrollmentsView = () => {
     { id: 2, studentName: 'Ana López', className: 'Clase de Música', enrollmentDate: '2023-05-02' },
     { id: 3, studentName: 'Pedro Ramírez', className: 'Clase de Baile', enrollmentDate: '2023-05-03' },
   ]);
+
+  useEffect(() => {
+      actions.fetchSubscriptions();
+    }, []);
+  
 
   const [newEnrollment, setNewEnrollment] = useState({ studentName: '', className: '', enrollmentDate: '' });
 

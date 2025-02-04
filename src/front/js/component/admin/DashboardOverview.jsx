@@ -1,4 +1,4 @@
-import React, { useState,useContext} from 'react';
+import React, { useState,useContext, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { Context } from '../../store/appContext';
 import { Users, BookOpen, FileText, DollarSign, TrendingUp, Calendar } from 'lucide-react';
@@ -10,6 +10,10 @@ import { Actions } from '@cloudinary/url-gen/index';
 const DashboardOverview = () => {
   const { store, actions } = useContext(Context)
   const [activeTab, setActiveTab] = useState('overview');
+
+useEffect(()=>{
+  actions.GetClients()
+},[])
 
 const tabs = [
   { id: 'overview', label: 'Resumen' },
@@ -27,22 +31,22 @@ const stats = [
   { title: 'Eventos Próximos', value: store.events.length, icon: Calendar, color: 'tw-bg-indigo-500', link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
 ];
 
-const monthlyData = [
-  { name: 'Ene', ingresos: 4000, gastos: 2400, inscripciones: 20 },
-  { name: 'Feb', ingresos: 3000, gastos: 1398, inscripciones: 25 },
-  { name: 'Mar', ingresos: 2000, gastos: 9800, inscripciones: 18 },
-  { name: 'Abr', ingresos: 2780, gastos: 3908, inscripciones: 30 },
-  { name: 'May', ingresos: 1890, gastos: 4800, inscripciones: 22 },
-  { name: 'Jun', ingresos: 2390, gastos: 3800, inscripciones: 28 },
-];
+// const monthlyData = [
+//   { name: 'Ene', ingresos: 4000, gastos: 2400, inscripciones: 20 },
+//   { name: 'Feb', ingresos: 3000, gastos: 1398, inscripciones: 25 },
+//   { name: 'Mar', ingresos: 2000, gastos: 9800, inscripciones: 18 },
+//   { name: 'Abr', ingresos: 2780, gastos: 3908, inscripciones: 30 },
+//   { name: 'May', ingresos: 1890, gastos: 4800, inscripciones: 22 },
+//   { name: 'Jun', ingresos: 2390, gastos: 3800, inscripciones: 28 },
+// ];
 
-const classAttendance = [
-  { name: 'Lun', estudiantes: 40 },
-  { name: 'Mar', estudiantes: 35 },
-  { name: 'Mié', estudiantes: 45 },
-  { name: 'Jue', estudiantes: 38 },
-  { name: 'Vie', estudiantes: 42 },
-];
+// const classAttendance = [
+//   { name: 'Lun', estudiantes: 40 },
+//   { name: 'Mar', estudiantes: 35 },
+//   { name: 'Mié', estudiantes: 45 },
+//   { name: 'Jue', estudiantes: 38 },
+//   { name: 'Vie', estudiantes: 42 },
+// ];
 
 // Componentes para el contenido de cada pestaña
 const OverviewTab = () =>
@@ -74,7 +78,7 @@ const OverviewTab = () =>
       </div> 
     ))}
   </div>
-  <div className="tw-mb-8 tw-p-6 tw-bg-white tw-rounded-lg tw-shadow-md">
+  {/* <div className="tw-mb-8 tw-p-6 tw-bg-white tw-rounded-lg tw-shadow-md">
         <h3 className="tw-text-xl  tw-font-semibold tw-mb-4">Estadísticas</h3>
       </div>
       <div className="tw-grid tw-grid-cols-1 tw-lg:grid-cols-2 tw-gap-6">
@@ -118,7 +122,7 @@ const OverviewTab = () =>
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </div> */}
   </>
 );
 
@@ -128,34 +132,52 @@ const ClientsTab = () => (
     <p className="tw-text-lg tw-text-gray-700">
       Aquí puedes gestionar a tus clientes, ver su información, historial y acciones recientes.
     </p>
-    <div className="tw-overflow-x-auto">
-      <table className="tw-min-w-full tw-border tw-rounded-lg tw-shadow-md">
-        <thead className="tw-bg-gray-100">
+    <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
+    <thead className="tw-bg-gray-100">
           <tr>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-sm tw-font-medium tw-text-gray-600">Nombre</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-sm tw-font-medium tw-text-gray-600">Email</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-sm tw-font-medium tw-text-gray-600">Última Actividad</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-sm tw-font-medium tw-text-gray-600">Acciones</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+              ID
+            </th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+              Nombre
+            </th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+              Email
+            </th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+              Teléfono
+            </th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+              Estado
+            </th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+              Acciones
+            </th>
           </tr>
         </thead>
-        <tbody>
-          {[
-            { name: 'Juan Pérez', email: 'juan@example.com', activity: 'Hace 2 días' },
-            { name: 'Ana López', email: 'ana@example.com', activity: 'Hoy' },
-            { name: 'Carlos Gómez', email: 'carlos@example.com', activity: 'Hace 1 semana' },
-          ].map((client, index) => (
-            <tr key={index} className="tw-border-b">
-              <td className="tw-px-6 tw-py-4 tw-text-gray-800">{client.name}</td>
-              <td className="tw-px-6 tw-py-4 tw-text-gray-800">{client.email}</td>
-              <td className="tw-px-6 tw-py-4 tw-text-gray-800">{client.activity}</td>
-              <td className="tw-px-6 tw-py-4">
-                <button className="tw-bg-cyan-500 tw-text-white tw-py-1 tw-px-3 tw-rounded">Ver</button>
+    <tbody className="tw-divide-y tw-divide-gray-200">
+          {store.clients.map((client) => (
+            <tr key={client.id}>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{client.id}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{client.name}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{client.email}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{client.phone}</td>
+              <td className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+                {client.status === "Activo" ? (
+                  <span className="tw-inline-flex tw-items-center tw-justify-center tw-py-1 tw-px-2 tw-rounded-full tw-text-xs tw-font-semibold tw-bg-green-100 tw-text-green-800">
+                    Activo
+                  </span>
+                ) : (
+                  <span className="tw-inline-flex tw-items-center tw-justify-center tw-py-1 tw-px-2 tw-rounded-full tw-text-xs tw-font-semibold tw-bg-red-100 tw-text-red-800">
+                    Inactivo
+                  </span>
+                )}
               </td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap"><button>Ver</button></td>
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+    </table>
   </div>
 );
 
