@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState,useContext} from 'react';
 import { Link } from 'react-router-dom';
+import { Context } from '../../store/appContext';
 import { Users, BookOpen, FileText, DollarSign, TrendingUp, Calendar } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { Actions } from '@cloudinary/url-gen/index';
+
+
+
+const DashboardOverview = () => {
+  const { store, actions } = useContext(Context)
+  const [activeTab, setActiveTab] = useState('overview');
 
 const tabs = [
   { id: 'overview', label: 'Resumen' },
@@ -11,12 +19,12 @@ const tabs = [
 ];
 
 const stats = [
-  { title: 'Total de Clientes', value: '1,234', icon: Users, color: 'tw-bg-blue-500' , link: '/admin-dashboard/clients', linkText: 'Gestionar Clientes' },
-  { title: 'Total Clases Activas', value: '25', icon: BookOpen, color: 'tw-bg-green-500' , link: '/admin-dashboard/classes', linkText: 'Ver Clases' },
+  { title: 'Total de Clientes', value:store.clients.length, icon: Users, color: 'tw-bg-blue-500' , link: '/admin-dashboard/clients', linkText: 'Gestionar Clientes' },
+  { title: 'Total Clases Activas', value:store.classes.length, icon: BookOpen, color: 'tw-bg-green-500' , link: '/admin-dashboard/classes', linkText: 'Ver Clases' },
   { title: 'Nuevas Inscripciones', value: '15', icon: FileText, color: 'tw-bg-yellow-500', link: '/admin-dashboard/enrollments', linkText: 'Ver Inscripciones' },
-  { title: 'Ingresos Mensuales', value: '$45,231', icon: DollarSign, color: 'tw-bg-purple-500', link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
-  { title: 'Tasa de Crecimiento', value: '8.5%', icon: TrendingUp, color: 'tw-bg-red-500' , link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
-  { title: 'Eventos Próximos', value: '3', icon: Calendar, color: 'tw-bg-indigo-500', link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
+  { title: 'Ingresos Mensuales', value: store.events.length*200, icon: DollarSign, color: 'tw-bg-purple-500', link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
+  // { title: 'Tasa de Crecimiento', value: '8.5%', icon: TrendingUp, color: 'tw-bg-red-500' , link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
+  { title: 'Eventos Próximos', value: store.events.length, icon: Calendar, color: 'tw-bg-indigo-500', link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
 ];
 
 const monthlyData = [
@@ -37,7 +45,10 @@ const classAttendance = [
 ];
 
 // Componentes para el contenido de cada pestaña
-const OverviewTab = () => (<>
+const OverviewTab = () =>
+  
+(<>
+   
   <div className="tw-grid tw-grid-cols-6 tw-md:grid-cols-2 tw-lg:grid-cols-3 tw-gap-6 tw-mb-8 tw-my-6" >
     {stats.map((stat, index) => (
       <div key={index} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
@@ -208,8 +219,10 @@ const EnrollmentsTab = () => (
 );
 
 
-const DashboardOverview = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+
+
+  
+  
 
   const renderTabContent = () => {
     switch (activeTab) {

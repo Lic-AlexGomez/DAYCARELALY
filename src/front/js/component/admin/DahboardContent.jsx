@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 const DashboardContent = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
@@ -12,7 +11,7 @@ const DashboardContent = () => {
   ];
 
   const overviewCards = [
-    { title: 'Total de Clientes', value: '1,234', link: '/admin-dashboard/clients', linkText: 'Gestionar Clientes' },
+    { title: 'Total de Clientes', value: '1,', link: '/admin-dashboard/clients', linkText: 'Gestionar Clientes' },
     { title: 'Clases Activas', value: '25', link: '/admin-dashboard/classes', linkText: 'Ver Clases' },
     { title: 'Nuevas Inscripciones', value: '15', link: '/admin-dashboard/enrollments', linkText: 'Ver Inscripciones' },
     { title: 'Ingresos Mensuales', value: '$45,231', link: '/admin-dashboard/reports', linkText: 'Ver Informes' },
