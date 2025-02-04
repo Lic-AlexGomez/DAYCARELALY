@@ -26,11 +26,11 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["JWT_SECRET_KEY"] = "super-secret"  
-
+jwt = JWTManager(app)
 
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
-jwt = JWTManager(app)
+
 setup_admin(app)
 
 setup_commands(app)
