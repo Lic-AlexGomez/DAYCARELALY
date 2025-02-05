@@ -1429,29 +1429,9 @@ fetchUserData: async () => {
 	  console.error("Service Error:", error.message);
 	  return { success: false, error: error.message };
 	}
-  },addSubscription: async (subscriptionData) => {
-	try {
-	  const response = await fetch(process.env.BACKEND_URL + "/api/subscriptions", {
-		method: "POST",
-		headers: {
-		  "Content-Type": "application/json",
-		},
-		body: JSON.stringify(subscriptionData),
-	  })
-
-	  if (response.ok) {
-		const newSubscription = await response.json()
-		const store = getStore()
-		setStore({ subscriptions: [...store.subscriptions, newSubscription] })
-		return newSubscription
-	  } else {
-		console.error("Error adding subscription:", response.status)
-	  }
-	} catch (error) {
-	  console.error("Error adding subscription:", error)
-	}
   },
-
+  
+  
   updateSubscription: async (id, subscriptionData) => {
 	try {
 	  const response = await fetch(`${process.env.BACKEND_URL}/api/subscription/${id}`, {
@@ -1476,34 +1456,74 @@ fetchUserData: async () => {
 	}
   },
 
-  deleteSubscription: async (id) => {
+//   deleteSubscription: async (id) => {
+// 	try {
+// 	  const response = await fetch(`${process.env.BACKEND_URL}/api/subscriptions/${id}`, {
+// 		method: "DELETE",
+// 	  })
+
+// 	  if (response.ok) {
+// 		const store = getStore()
+// 		const updatedSubscription = store.subscriptions.filter((subscription) => subscription.id !== id)
+// 		setStore({ subscriptions: updatedSubscription })
+// 	  } else {
+// 		console.error("Error deleting subscription:", response.status)
+// 	  }
+// 	} catch (error) {
+// 	  console.error("Error deleting subscription:", error)
+// 	}
+//   },
+deleteSubscription: async (id) => {
 	try {
 	  const response = await fetch(`${process.env.BACKEND_URL}/api/subscriptions/${id}`, {
 		method: "DELETE",
-	  })
-
+	  });
+  
 	  if (response.ok) {
-		const store = getStore()
-		const updatedSubscription = store.subscriptions.filter((subscription) => subscription.id !== id)
-		setStore({ subscriptions: updatedSubscription })
+		return { success: true };
 	  } else {
-		console.error("Error deleting subscription:", response.status)
+		console.error("Error deleting subscription:", response.status);
+		return { success: false, error: `Status: ${response.status}` };
 	  }
 	} catch (error) {
-	  console.error("Error deleting subscription:", error)
+	  console.error("Error deleting subscription:", error);
+	  return { success: false, error: error.message };
 	}
   },
   fetchSubscriptions: async () => {
 	try {
 	  const resp = await fetch(`${process.env.BACKEND_URL}/api/subscriptions`)
-	  if (!resp.ok) throw new Error("Failed to fetch subscription")
+	  if (!resp.ok) throw new Error("Failed to fetch subscriptions")
 	  const data = await resp.json()
-	console.log(data)
+	  console.log(data)
 	  setStore({ subscriptions: data })
 	} catch (error) {
-	  console.error("Error fetching messages:", error)
+	  console.error("Error fetching subscriptions:", error)
 	}
   },
+  addSubscription: async ( student_name, class_name,start_date) => {
+	try {
+	  const response = await fetch(process.env.BACKEND_URL + "/api/subscriptions", {
+		method: "POST",
+		headers: {
+		  "Content-Type": "application/json",
+		},
+		body: JSON.stringify({student_name, class_name,start_date }),
+	  })
+
+	  if (!response.ok) {
+		const errorData = await response.json()
+		throw new Error(errorData.error || "Failed to create subscription")
+	  }
+
+	  const data = await response.json()
+	  return { success: true, data }
+	} catch (error) {
+	  console.error("subscription Error:", error.message)
+	  return { success: false, error: error.message }
+	}
+  },
+  
   
 		  
 	  },

@@ -1,65 +1,168 @@
 import React, { useState,useEffect,useContext } from 'react';
 import { Context } from '../../store/appContext';
 import { Plus, Edit, Trash } from 'lucide-react';
+import Swal from "sweetalert2";
 
 const EnrollmentsView = () => {
   const{actions,store}=useContext(Context)
-  const [enrollments, setEnrollments] = useState([
-    {
-      id: 1, studentName: 'Luis Martínez', className: 'Clase de Arte', enrollmentDate: '2023-05-01'
-    },
-    { id: 2, studentName: 'Ana López', className: 'Clase de Música', enrollmentDate: '2023-05-02' },
-    { id: 3, studentName: 'Pedro Ramírez', className: 'Clase de Baile', enrollmentDate: '2023-05-03' },
-  ]);
+
+  const [enrollments, setEnrollments] = useState({
+    
+    student_name:'',
+    class_name:'',
+    start_date:'',
+
+  })
+    // {
+    //   id: 1, studentName: 'Luis Martínez', className: 'Clase de Arte', enrollmentDate: '2023-05-01'
+    // },
+    // { id: 2, studentName: 'Ana López', className: 'Clase de Música', enrollmentDate: '2023-05-02' },
+    // { id: 3, studentName: 'Pedro Ramírez', className: 'Clase de Baile', enrollmentDate: '2023-05-03' },
+  
 
   useEffect(() => {
       actions.fetchSubscriptions();
+      actions.fetchClasses();
+      actions.fetchParentChildren();
     }, []);
   
+  
 
-  const [newEnrollment, setNewEnrollment] = useState({ studentName: '', className: '', enrollmentDate: '' });
-
+  
   const handleInputChange = (e) => {
-    setNewEnrollment({ ...newEnrollment, [e.target.name]: e.target.value });
+    setEnrollments({ ...enrollments, [e.target.name]: e.target.value });
   };
+ 
 
-  const handleAddEnrollment = (e) => {
-    e.preventDefault();
-    setEnrollments([...enrollments, { id: enrollments.length + 1, ...newEnrollment }]);
-    setNewEnrollment({ studentName: '', className: '', enrollmentDate: '' });
-  };
+  const handleAddSubscription = async (e) => {
+      e.preventDefault();
+  
+      
+      const confirmSubmit = await Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want to add this subscriptor?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, add!",
+        cancelButtonText: "No, cancel",
+      });
+  
+      if (!confirmSubmit.isConfirmed) {
+        return;
+      }
+  
+      try {
+        const result = await actions.addSubscription(
+          enrollments.student_name,
+          enrollments.class_name,
+          enrollments.start_date,
+          
+        );
+  
+        if (result) {
+          Swal.fire({
+            icon: "success",
+            title: "Suscriptor Added",
+            text: "A new suscriptor has been added!",
+          });
+          actions.fetchSubscriptions();
+          setEnrollments({
+            student_name: '',
+            class_name: '',
+            start_date: ''
+            
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: `There was an error: ${result.error}`,
+          });
+        }
+      } catch (error) {
+        console.error("Error in handleAddSubscription:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Submission Error",
+          text: "There was an error submitting the form. Please try again.",
+        });
+      }
+    };
+  
 
-  const handleDeleteEnrollment = (id) => {
-    setEnrollments(enrollments.filter(enrollment => enrollment.id !== id));
-  };
+  const handleDeleteEnrollment = async (id) => {
+      const confirmDelete = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+      });
+  
+      if (confirmDelete.isConfirmed) {
+        try {
+          const result = await actions.deleteSubscription(id);
+  
+          if (result) {
+            Swal.fire({
+              icon: 'success',
+              title: 'subscripcion eliminada',
+              text: 'La subscripcion ha sido eliminada con éxito.',
+            });
+            actions.fetchSubscriptions();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un error al eliminar la subscripcion.',
+            });
+          }
+        } catch (error) {
+          console.error("Error en handleDeleteenrollment:", error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un error al intentar eliminar la subscripcion. Intenta nuevamente.',
+          });
+        }
+      }
+    }
 
   return (
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Inscripciones</h2>
       <div className="tw-mb-6">
-        <form onSubmit={handleAddEnrollment} className="tw-flex tw-space-x-4">
-          <input
+        <form  className="tw-flex tw-space-x-4" onSubmit={handleAddSubscription} >
+        <div className='tw-flex-1'>
+            <label htmlFor="class_name" className='tw-block tw-mb-2'> alumno</label>
+            <input
             type="text"
-            name="studentName"
-            value={newEnrollment.studentName}
+            name="student_name"
+            value={enrollments.student_name}
             onChange={handleInputChange}
-            placeholder="Nombre del estudiante"
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
-          <input
+            
+        </div>
+
+          <div className='tw-flex-1'>
+            <label htmlFor="class_name" className='tw-block tw-mb-2'> clase</label>
+            <input
             type="text"
-            name="className"
-            value={newEnrollment.className}
+            name="class_name"
+            value={enrollments.class_name}
             onChange={handleInputChange}
-            placeholder="Nombre de la clase"
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
+          </div>
+
           <input
             type="date"
-            name="enrollmentDate"
-            value={newEnrollment.enrollmentDate}
+            name="start_date"
+            value={enrollments.start_date}
             onChange={handleInputChange}
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
@@ -80,17 +183,15 @@ const EnrollmentsView = () => {
           </tr>
         </thead>
         <tbody className="tw-divide-y tw-divide-gray-200">
-          {enrollments.map((enrollment) => (
+          {store.subscriptions.map((enrollment) => (
             <tr key={enrollment.id}>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.studentName}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.className}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.enrollmentDate}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.student_name}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.class_name}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.start_date}</td>
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">
-                  <Edit className="tw-w-5 tw-h-5" />
-                </button>
-                <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteEnrollment(enrollment.id)}>
-                  <Trash className="tw-w-5 tw-h-5" />
+  
+                <button className="tw-text-red-600 hover:tw-text-red-900" >
+                  <Trash className="tw-w-5 tw-h-5"  onClick={() => handleDeleteEnrollment(enrollment.id)} />
                 </button>
               </td>
             </tr>

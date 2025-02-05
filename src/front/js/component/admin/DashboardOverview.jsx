@@ -25,7 +25,7 @@ const tabs = [
 const stats = [
   { title: 'Total de Clientes', value:store.clients.length, icon: Users, color: 'tw-bg-blue-500' , link: '/admin-dashboard/clients', linkText: 'Gestionar Clientes' },
   { title: 'Total Clases Activas', value:store.classes.length, icon: BookOpen, color: 'tw-bg-green-500' , link: '/admin-dashboard/classes', linkText: 'Ver Clases' },
-  { title: 'Nuevas Inscripciones', value: '15', icon: FileText, color: 'tw-bg-yellow-500', link: '/admin-dashboard/enrollments', linkText: 'Ver Inscripciones' },
+  { title: 'Nuevas Inscripciones', value:store.subscriptions.length, icon: FileText, color: 'tw-bg-yellow-500', link: '/admin-dashboard/enrollments', linkText: 'Ver Inscripciones' },
   { title: 'Total de programas ', value: store.activities.length, icon: DollarSign, color: 'tw-bg-purple-500', link: '/admin-dashboard/activities', linkText: 'Ver programas' },
   { title: 'Servicios Activos', value: store.services.length, icon: TrendingUp, color: 'tw-bg-red-500' , link: '/admin-dashboard/services', linkText: 'Ver Servicios' },
   { title: 'Eventos Próximos', value: store.events.length, icon: Calendar, color: 'tw-bg-indigo-500', link: '/admin-dashboard/events', linkText: 'Ver eventos' },
