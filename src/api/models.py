@@ -194,10 +194,10 @@ class Program(db.Model):
       
 class Subscription(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
-    plan_type = db.Column(db.String(50), nullable=False)
+    class_name = db.Column(db.String(90), nullable=False)
+    student_name = db.Column(db.String(90), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
+
 
     def __repr__(self):
         return f'<Subscription {self.id}>'
@@ -205,10 +205,10 @@ class Subscription(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "parent_id": self.parent_id,
-            "plan_type": self.plan_type,
+            "class_name": self.class_name,
+            "student_name": self.student_name,
             "start_date": self.start_date.isoformat(),
-            "end_date": self.end_date.isoformat()
+            
         }
 
 class ProgressReport(db.Model):

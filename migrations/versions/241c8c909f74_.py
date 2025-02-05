@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 5d3e54146ee3
+Revision ID: 241c8c909f74
 Revises: 
-Create Date: 2025-02-03 14:24:53.884330
+Create Date: 2025-02-05 00:18:06.496485
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5d3e54146ee3'
+revision = '241c8c909f74'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -160,6 +160,13 @@ def upgrade():
     sa.Column('instagram', sa.String(length=120), nullable=False),
     sa.Column('linkedin', sa.String(length=120), nullable=False),
     sa.Column('image', sa.String(length=200), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('subscription',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('class_name', sa.String(length=90), nullable=False),
+    sa.Column('student_name', sa.String(length=90), nullable=False),
+    sa.Column('start_date', sa.Date(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -406,15 +413,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['teacher_id'], ['teacher.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('subscription',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('parent_id', sa.Integer(), nullable=False),
-    sa.Column('plan_type', sa.String(length=50), nullable=False),
-    sa.Column('start_date', sa.Date(), nullable=False),
-    sa.Column('end_date', sa.Date(), nullable=False),
-    sa.ForeignKeyConstraint(['parent_id'], ['parent.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('task',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('teacher_id', sa.Integer(), nullable=False),
@@ -496,7 +494,6 @@ def downgrade():
     op.drop_table('enrollment')
     op.drop_table('attendance')
     op.drop_table('task')
-    op.drop_table('subscription')
     op.drop_table('program')
     op.drop_table('payment')
     op.drop_table('parent_virtual_class')
@@ -522,6 +519,7 @@ def downgrade():
     op.drop_table('admin_d')
     op.drop_table('virtual_class')
     op.drop_table('user')
+    op.drop_table('subscription')
     op.drop_table('settings')
     op.drop_table('service')
     op.drop_table('schedule')

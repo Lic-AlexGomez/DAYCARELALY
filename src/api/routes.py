@@ -665,18 +665,12 @@ def get_subscription(id):
 def create_subscriptions():
     
         data = request.json
-        
-        required_fields = ['parent_id', 'plan_type', 'start_date', 'end_date']
-        for field in required_fields:
-            if field not in data:
-                return jsonify({"error": f"Missing required field: {field}"}), 400
 
         new_subscription = Subscription(
-            
-            parent_id= data['parent_id'],
-            plan_type=data['plan_type'],
+            student_name=data['student_name'] ,
+            class_name= data['class_name'],
             start_date=data['start_date'],
-            end_date=data['end_date'],
+            
             
         )
         
@@ -693,8 +687,10 @@ def update_subscription(id):
         subscription = Subscription.query.get_or_404(id)
         
         
-        data = request.get_json()  
+        data = request.get_json() 
 
+        subscription.class_name = data.get('class_name', subscription.class_name)
+        subscription.student_name = data.get('student_name', subscription.student_name)
         subscription.parent_id = data.get('parent_id', subscription.parent_id)
         subscription.plan_type = data.get('plan_type', subscription.plan_type)
         subscription.start_date = data.get('start_date', subscription.start_date)
@@ -3155,4 +3151,5 @@ def signup_admin():
     }), 201
 
     return jsonify(settings.serialize()), 200
+
 
