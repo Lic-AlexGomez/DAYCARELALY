@@ -56,6 +56,8 @@ const ClientsView = () => {
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Clientes</h2>
       <div className="tw-mb-6">
         <form onSubmit={handleAddClient} className="tw-flex tw-space-x-4">
+          <div className="tw-flex-1">
+            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre</label>
           <input
             type="text"
             name="name"
@@ -65,6 +67,9 @@ const ClientsView = () => {
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
+          </div>
+          <div className="tw-flex-1">
+            <label htmlFor="email" className='tw-block tw-mb-2'>Email</label>
           <input
             type="email"
             name="email"
@@ -74,6 +79,9 @@ const ClientsView = () => {
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
+          </div>
+          <div className="tw-flex-1">
+            <label htmlFor="phone" className='tw-block tw-mb-2'>Telefono</label>
           <input
             type="tel"
             name="phone"
@@ -83,6 +91,9 @@ const ClientsView = () => {
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
+          </div>
+          <div className="tw-flex-1">
+            <label htmlFor="status" className='tw-block tw-mb-2'>Status</label>
           <select
             name="status"
             value={newClient.status}
@@ -93,6 +104,7 @@ const ClientsView = () => {
             <option value="Activo">Activo</option>
             <option value="Inactivo">Inactivo</option>
           </select>
+          </div>
           <button
             type="submit"
             className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"

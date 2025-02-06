@@ -168,75 +168,74 @@ const EventsView = () => {
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Eventos</h2>
       <div className="tw-mb-6">
-        <form className="tw-flex tw-space-x-4" onSubmit={handleAddEvent}>
-          <div className='tw-flex-1'>
-            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del Evento</label>
-            <input
-              type="text"
-              name="name"
-              onChange={handleInputChange}
-              value={newEvent.name}
-              placeholder="Nombre del evento"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
-            <input
-              type="text"
-              name="description"
-              onChange={handleInputChange}
-              value={newEvent.description}
-              placeholder="Descripcion de la clase"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="start_time" className='tw-block tw-mb-2'>Fecha de inicio</label>
-            <input
-              type="datetime-local"
-              name="start_time"
-              onChange={handleInputChange}
-              value={newEvent.start_time}
-              placeholder="fecha de inicio"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="end_time" className='tw-block tw-mb-2'>Fecha de termino</label>
-            <input
-              type="datetime-local"
-              name="end_time"
-              onChange={handleInputChange}
-              value={newEvent.end_time}
-              placeholder="fecha de termino "
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
+  <form className="tw-grid tw-grid-cols-1 tw-gap-6" onSubmit={handleAddEvent}>
+    <div className="tw-mb-4">
+      <label htmlFor="name" className="tw-block tw-mb-2">Nombre del Evento</label>
+      <input
+        type="text"
+        name="name"
+        onChange={handleInputChange}
+        value={newEvent.name}
+        placeholder="Nombre del evento"
+        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+        required
+      />
+    </div>
+    <div className="tw-mb-4">
+      <label htmlFor="description" className="tw-block tw-mb-2">Descripcion</label>
+      <input
+        type="text"
+        name="description"
+        onChange={handleInputChange}
+        value={newEvent.description}
+        placeholder="Descripcion de la clase"
+        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+        required
+      />
+    </div>
+    <div className="tw-mb-4">
+      <label htmlFor="start_time" className="tw-block tw-mb-2">Fecha de inicio</label>
+      <input
+        type="datetime-local"
+        name="start_time"
+        onChange={handleInputChange}
+        value={newEvent.start_time}
+        placeholder="fecha de inicio"
+        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+        required
+      />
+    </div>
+    <div className="tw-mb-4">
+      <label htmlFor="end_time" className="tw-block tw-mb-2">Fecha de término</label>
+      <input
+        type="datetime-local"
+        name="end_time"
+        onChange={handleInputChange}
+        value={newEvent.end_time}
+        placeholder="fecha de término"
+        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+        required
+      />
+    </div>
+    <div className="tw-mb-4">
+      <label htmlFor="image" className="tw-block tw-mb-2">Imagen</label>
+      <input
+        type="file"
+        name="image"
+        onChange={handleImageChange}
+        placeholder="image"
+        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+        required
+      />
+    </div>
 
-          <div className='tw-flex-1'>
-            <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
-            <input
-              type="file"
-              name="image"
-              onChange={handleImageChange}
+    <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-mt-6">
+      <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
+      Agregar Evento
+    </button>
+  </form>
+</div>
 
-              placeholder="image"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-
-          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
-            <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-            Agregar Evento
-          </button>
-        </form>
-      </div>
       <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
         <thead className="tw-bg-gray-100">
           <tr>

@@ -9,7 +9,7 @@ const ClassesView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClass, setEditingClass] = useState(null);
   const [newClass, setNewClass] = useState({
-    teacher_id: 0, 
+    teacher_id: 0,
     name: '',
     description: '',
     capacity: '',
@@ -190,80 +190,87 @@ const ClassesView = () => {
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Clases</h2>
       <div className="tw-mb-6">
-        <form onSubmit={handleAddClass} className="tw-flex tw-space-x-4">
-          <div className='tw-flex-1'>
-            <label htmlFor="teacher_id" className='tw-block tw-mb-2'>Teacher ID</label>
-            <select
-              name="teacher_id"
-              onChange={handleInputChange}
-              value={newClass.teacher_id} // Controla el valor con el estado
-            >
-              <option value={0} disabled>select an option</option>
-              {teachers.map(item => (
-                <option key={`teacher-${item.id}`} value={item.id}>{item.username}</option>
-              ))}
-            </select>
+        <form onSubmit={handleAddClass} className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-6">
+          <div>
+            <div className='tw-flex-1'>
+              <label htmlFor="teacher_id" className='tw-block tw-mb-2'>Teacher ID</label>
+              <select
+                name="teacher_id"
+                onChange={handleInputChange}
+                value={newClass.teacher_id}
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              >
+                <option value={0} disabled>select an option</option>
+                {teachers.map(item => (
+                  <option key={`teacher-${item.id}`} value={item.id}>{item.username}</option>
+                ))}
+              </select>
+            </div>
+            <div className='tw-flex-1'>
+              <label htmlFor="name" className='tw-block tw-mb-2'>Nombre de la clase</label>
+              <input
+                type="text"
+                name="name"
+                value={newClass.name}
+                onChange={handleInputChange}
+                placeholder="Nombre de la clase"
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                required
+              />
+            </div>
+            <div className='tw-flex-1'>
+              <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
+              <input
+                type="text"
+                name="description"
+                value={newClass.description}
+                onChange={handleInputChange}
+                placeholder="Descripcion de la clase"
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                required
+              />
+            </div>
+            <div className='tw-flex-1'>
+              <label htmlFor="capacity" className='tw-block tw-mb-2'>Capacity</label>
+              <input
+                type="number"
+                name="capacity"
+                value={newClass.capacity}
+                onChange={handleInputChange}
+                placeholder="Capacidad"
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                required
+              />
+            </div>
           </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre de la clase</label>
-            <input
-              type="text"
-              name="name"
-              value={newClass.name}
-              onChange={handleInputChange}
-              placeholder="Nombre de la clase"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
-            <input
-              type="text"
-              name="description"
-              value={newClass.description}
-              onChange={handleInputChange}
-              placeholder="Descripcion de la clase"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="Capacity" className='tw-block tw-mb-2'>Capacity</label>
-            <input
-              type="number"
-              name="capacity"
-              value={newClass.capacity}
-              onChange={handleInputChange}
-              placeholder="Capacidad"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
-          <div className='tw-flex-1'>
-            <label htmlFor="Price" className='tw-block tw-mb-2'>Price</label>
+
+          <div>
+            <div className='tw-flex-1'>
+            <label htmlFor="price" className='tw-block tw-mb-2'>Price</label>
             <input
               type="number"
               name="price"
               value={newClass.price}
               onChange={handleInputChange}
               placeholder="Costo"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
             />
           </div>
+
           <div className='tw-flex-1'>
-            <label htmlFor="Age" className='tw-block tw-mb-2'>Rango de Edad</label>
+            <label htmlFor="age" className='tw-block tw-mb-2'>Rango de Edad</label>
             <input
               type="text"
               name="age"
               value={newClass.age}
               onChange={handleInputChange}
-              placeholder="rango de edad"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              placeholder="Rango de edad"
+              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
             />
           </div>
+
           <div className='tw-flex-1'>
             <label htmlFor="time" className='tw-block tw-mb-2'>Horario</label>
             <input
@@ -272,27 +279,36 @@ const ClassesView = () => {
               value={newClass.time}
               onChange={handleInputChange}
               placeholder="Horario"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
             />
           </div>
+
           <div className='tw-flex-1'>
             <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
             <input
               type="file"
               name="image"
               onChange={handleImageChange}
-              placeholder="image"
-              className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               required
             />
           </div>
+          </div>
 
-          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
-            <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-            Agregar Clase
-          </button>
+          <div className='tw-flex'>
+            <button
+              type="submit"
+              className="tw-col-span-2 sm:tw-col-span-1 tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items- tw-justify-start "
+            >
+              <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
+              Agregar Clase
+            </button>
+          </div>
+
+
         </form>
+
       </div>
       <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
         <thead className="tw-bg-gray-100">
@@ -348,7 +364,7 @@ const ClassesView = () => {
                 <select
                   name="teacher_id"
                   onChange={handleInputChange}
-                  value={editingClass.teacher_id} 
+                  value={editingClass.teacher_id}
                 >
                   <option value={0} disabled>select an option</option>
                   {teachers.map(item => (
