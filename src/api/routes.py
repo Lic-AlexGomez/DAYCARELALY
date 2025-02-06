@@ -183,7 +183,7 @@ def signup():
     }), 201
 
 @api.route('/users', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_users():
     users = User.query.all()
     users = list(map(lambda x: x.serialize(), users))
@@ -3160,6 +3160,137 @@ def signup_admin():
     }), 201
 
     return jsonify(settings.serialize()), 200
+
+
+
+
+
+@api.route('/enrolled-classes', methods=['GET'])
+@jwt_required()
+def get_enrolled_classes():
+    user_id = get_jwt_identity()
+    enrollments = Enrollment.query.filter_by(user_id=user_id).all()
+    enrolled_classes = [Class.query.get(e.class_id).serialize() for e in enrollments]
+    return jsonify(enrolled_classes), 200
+
+@api.route('/enroll', methods=['POST'])
+@jwt_required()
+def enroll_in_class():
+    user_id = get_jwt_identity()
+    class_id = request.json.get('classId', None)
+
+    if not class_id:
+        return jsonify({"msg": "Class ID is required"}), 400
+
+    class_to_enroll = Class.query.get(class_id)
+    if not class_to_enroll:
+        return jsonify({"msg": "Class not found"}), 404
+
+    if class_to_enroll.capacity <= 0:
+        return jsonify({"msg": "Class is full"}), 400
+
+    existing_enrollment = Enrollment.query.filter_by(user_id=user_id, class_id=class_id).first()
+    if existing_enrollment:
+        return jsonify({"msg": "Already enrolled in this class"}), 400
+
+    new_enrollment = Enrollment(user_id=user_id, class_id=class_id)
+    class_to_enroll.capacity -= 1
+
+    db.session.add(new_enrollment)
+    db.session.commit()
+
+    return jsonify(class_to_enroll.serialize()), 201
+
+@api.route('/unenroll', methods=['POST'])
+@jwt_required()
+def unenroll_from_class():
+    user_id = get_jwt_identity()
+    class_id = request.json.get('classId', None)
+
+    if not class_id:
+        return jsonify({"msg": "Class ID is required"}), 400
+
+    enrollment = Enrollment.query.filter_by(user_id=user_id, class_id=class_id).first()
+    if not enrollment:
+        return jsonify({"msg": "Not enrolled in this class"}), 400
+
+    class_to_unenroll = Class.query.get(class_id)
+    if not class_to_unenroll:
+        return jsonify({"msg": "Class not found"}), 404
+
+    db.session.delete(enrollment)
+    class_to_unenroll.capacity += 1
+    db.session.commit()
+
+    return jsonify({"msg": "Successfully unenrolled from class"}), 200
+
+@api.route('/my-classes', methods=['GET'])
+@jwt_required()
+def get_my_classes():
+    user_id = get_jwt_identity()
+    enrollments = Enrollment.query.filter_by(user_id=user_id).all()
+    enrolled_classes = [Class.query.get(e.class_id).serialize() for e in enrollments]
+    return jsonify(enrolled_classes), 200
+
+@api.route('/add-class', methods=['POST'])
+@jwt_required()
+def add_class():
+    user = User.query.get(get_jwt_identity())
+    if not user or user.role != 'admin':
+        return jsonify({"msg": "Unauthorized"}), 403
+
+    data = request.json
+    new_class = Class(
+        teacher_id=data.get('teacher_id'),
+        name=data.get('name'),
+        description=data.get('description'),
+        capacity=data.get('capacity'),
+        price=data.get('price'),
+        age=data.get('age'),
+        time=data.get('time'),
+        image=data.get('image')
+    )
+
+    db.session.add(new_class)
+    db.session.commit()
+
+    return jsonify(new_class.serialize()), 201
+
+@api.route('/update-class/<int:class_id>', methods=['PUT'])
+@jwt_required()
+def update_classP(class_id):
+    user = User.query.get(get_jwt_identity())
+    if not user or user.role != 'admin':
+        return jsonify({"msg": "Unauthorized"}), 403
+
+    class_to_update = Class.query.get(class_id)
+    if not class_to_update:
+        return jsonify({"msg": "Class not found"}), 404
+
+    data = request.json
+    for key, value in data.items():
+        setattr(class_to_update, key, value)
+
+    db.session.commit()
+
+    return jsonify(class_to_update.serialize()), 200
+
+@api.route('/delete-class/<int:class_id>', methods=['DELETE'])
+@jwt_required()
+def delete_classP(class_id):
+    user = User.query.get(get_jwt_identity())
+    if not user or user.role != 'admin':
+        return jsonify({"msg": "Unauthorized"}), 403
+
+    class_to_delete = Class.query.get(class_id)
+    if not class_to_delete:
+        return jsonify({"msg": "Class not found"}), 404
+
+    db.session.delete(class_to_delete)
+    db.session.commit()
+
+    return jsonify({"msg": "Class deleted successfully"}), 200
+
 
 @api.route('/teacher/classes', methods=['GET']) 
 @jwt_required()
