@@ -42,17 +42,26 @@ def login():
     if not user:
         return jsonify({"error": "Invalid email or password"}), 401
 
-    
     password_valid = user.check_password(data['password'])
     print("¿Contraseña válida?", password_valid)
 
     if not password_valid:
         return jsonify({"error": "Invalid email or password"}), 401
 
+    # Creación del token de acceso
     access_token = create_access_token(identity=str(user.id))
     print("Token generado:", access_token)
-    return jsonify({"token": access_token, "user": user.serialize()}), 200
+    
+    # Almacenamiento de los datos importantes
+    response = {
+        "token": access_token,
+        "user": user.serialize()
+    }
 
+    # Verificación y registro de lo que se ha almacenado en la respuesta
+    print("Datos de la respuesta:", response)
+
+    return jsonify(response), 200
 
 
 @api.route('/signup', methods=['POST'])
@@ -3283,4 +3292,23 @@ def delete_classP(class_id):
     return jsonify({"msg": "Class deleted successfully"}), 200
 
 
+@api.route('/teacher/classes', methods=['GET']) 
+@jwt_required()
+def get_teacher_classes():
+    try:
+        current_user_id = get_jwt_identity()
+        print(f"User ID from token: {current_user_id}")
+        teacher = Teacher.query.filter_by(user_id=current_user_id).first()
+        if not teacher:
+            return jsonify({"error": "Teacher not found"}), 404
+
+        classes = Class.query.filter_by(teacher_id=teacher.id).all()
+        if not classes:
+            return jsonify({"message": "No classes found"}), 404
+
+        return jsonify({"classes": [cls.serialize() for cls in classes]}), 200 
+
+    except Exception as e:
+        print("Error en get_teacher_classes:", str(e))
+        return jsonify({"error": "An error occurred", "details": str(e)}), 500
 
