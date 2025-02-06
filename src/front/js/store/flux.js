@@ -1,12 +1,8 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			// Primero verifica el token en localStorage, si no existe, asigna null
 			token: localStorage.getItem("token") || null,  
-			// Verifica el user en localStorage, si no existe, asigna null
 			user: JSON.parse(localStorage.getItem("user")) || null,  
-
-			// Otros valores de store
 			message: null,
 			demo: [
 				{
@@ -1533,8 +1529,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			//TEACHER
 			getTeacherClasses: async () => {
-				const store = getStore(); // Obtener el store actual
-				const token = store.token || localStorage.getItem("token"); // Verifica si el token está en el store o localStorage
+				const store = getStore(); 
+				const token = store.token || localStorage.getItem("token");
 
 				if (!token) {
 					console.error("No token found");
@@ -1545,15 +1541,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const response = await fetch(`${process.env.BACKEND_URL}/api/teacher/classes`, {
 						method: "GET",
 						headers: {
-							"Authorization": `Bearer ${token}`,  // Pasamos el token en la cabecera
+							"Authorization": `Bearer ${token}`,  
 						},
 					});
 
 					const data = await response.json();
-					console.log("Clases recibidas:", data);  // Para depurar
+					console.log("Clases recibidas:", data); 
 
 					if (response.ok) {
-						// Si la respuesta es correcta, actualizamos el store con las clases
 						setStore({ teacherClasses: data.classes || [] });
 					} else {
 						console.error("Error al obtener las clases:", data.error);
