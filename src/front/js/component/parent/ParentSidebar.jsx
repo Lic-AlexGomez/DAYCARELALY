@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import { Home, Users, Calendar, Activity, CreditCard, Settings, Video, MessageCircle } from "lucide-react"
+import { Home, Users, Calendar, Activity, CreditCard, Settings, Video, MessageCircle, School } from "lucide-react"
 import React from "react"
 
 const menuItems = [
@@ -10,6 +10,7 @@ const menuItems = [
   { icon: CreditCard, label: "Pagos", path: "/parent-dashboard/payments" },
   { icon: Video, label: "Clases Virtuales", path: "/parent-dashboard/virtual-classes" },
   { icon: MessageCircle, label: "Mensajes", path: "/parent-dashboard/messages" },
+  { icon: School, label: "Clases Enroll", path: "/parent-dashboard/virtual-classes-enroll" },
   { icon: Settings, label: "Configuración", path: "/parent-dashboard/settings" },
 ]
 
