@@ -48,11 +48,20 @@ def login():
     if not password_valid:
         return jsonify({"error": "Invalid email or password"}), 401
 
-    # Convertir el id del usuario a cadena para evitar el error "Subject must be a string"
+    # Creación del token de acceso
     access_token = create_access_token(identity=str(user.id))
     print("Token generado:", access_token)
     
-    return jsonify({"token": access_token, "user": user.serialize()}), 200
+    # Almacenamiento de los datos importantes
+    response = {
+        "token": access_token,
+        "user": user.serialize()
+    }
+
+    # Verificación y registro de lo que se ha almacenado en la respuesta
+    print("Datos de la respuesta:", response)
+
+    return jsonify(response), 200
 
 
 @api.route('/signup', methods=['POST'])
@@ -3152,7 +3161,7 @@ def signup_admin():
 
     return jsonify(settings.serialize()), 200
 
-@api.route('/teacher/classes', methods=['GET'])
+@api.route('/teacher/classes', methods=['GET'])  # Asegúrate de que la ruta coincida
 @jwt_required()
 def get_teacher_classes():
     try:
@@ -3170,9 +3179,9 @@ def get_teacher_classes():
         if not classes:
             return jsonify({"message": "No classes found"}), 404
 
-        return jsonify([cls.serialize() for cls in classes]), 200
+        return jsonify({"classes": [cls.serialize() for cls in classes]}), 200  # Retorna siempre con 'classes'
 
     except Exception as e:
         print("Error en get_teacher_classes:", str(e))
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "An error occurred", "details": str(e)}), 500
 
