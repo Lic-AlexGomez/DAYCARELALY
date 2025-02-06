@@ -44,6 +44,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			parentSettings: null,
 			parentVirtualClasses: [],
 			notifications: [],
+			//teacher dashboard store
+			teacherData: null,
+            teacherClasses: [],
 	  },
 	  actions: {
 		signUp: async (signupData) => {
@@ -1524,6 +1527,8 @@ deleteSubscription: async (id) => {
 	}
   },
   
+
+  //TEACHER
   
 		  
 	  },
