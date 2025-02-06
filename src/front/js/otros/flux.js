@@ -41,6 +41,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		parentVirtualClasses: [],
 		messages: [],
 		notifications: [],
+		enrolledClasses: [],
 	  },
 	  actions: {
 		signUp: async (signupData) => {
@@ -1308,8 +1309,81 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  console.error("Error marking notification as read:", error)
 			}
 		  },
-		  
-	  },
+		  fetchEnrolledClasses: async () => {
+			try {
+			  const token = localStorage.getItem("token")
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/enrolled-classes`, {
+				headers: {
+				  Authorization: `Bearer ${token}`,
+				},
+			  })
+			  if (response.ok) {
+				const data = await response.json()
+				setStore({ enrolledClasses: data })
+			  } else {
+				console.error("Error fetching enrolled classes:", response.status)
+			  }
+			} catch (error) {
+			  console.error("Error fetching enrolled classes:", error)
+			}
+		  },
+		  enrollInClass: async (classId) => {
+			try {
+			  const token = localStorage.getItem("token")
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/enroll`, {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				  Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ classId }),
+			  })
+			  if (response.ok) {
+				const enrolledClass = await response.json()
+				const store = getStore()
+				setStore({
+				  enrolledClasses: [...store.enrolledClasses, enrolledClass],
+				  classes: store.classes.map((c) => (c.id === enrolledClass.id ? { ...c, capacity: c.capacity - 1 } : c)),
+				})
+				return { success: true, enrolledClass }
+			  } else {
+				console.error("Error enrolling in class:", response.status)
+				return { success: false, error: "Failed to enroll in class" }
+			  }
+			} catch (error) {
+			  console.error("Error enrolling in class:", error)
+			  return { success: false, error: "An unexpected error occurred" }
+			}
+		  },
+		  unenrollFromClass: async (classId) => {
+			try {
+			  const token = localStorage.getItem("token")
+			  const response = await fetch(`${process.env.BACKEND_URL}/api/unenroll`, {
+				method: "POST",
+				headers: {
+				  "Content-Type": "application/json",
+				  Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ classId }),
+			  })
+			  if (response.ok) {
+				const store = getStore()
+				setStore({
+				  enrolledClasses: store.enrolledClasses.filter((c) => c.id !== classId),
+				  classes: store.classes.map((c) => (c.id === classId ? { ...c, capacity: c.capacity + 1 } : c)),
+				})
+				return { success: true }
+			  } else {
+				console.error("Error unenrolling from class:", response.status)
+				return { success: false, error: "Failed to unenroll from class" }
+			  }
+			} catch (error) {
+			  console.error("Error unenrolling from class:", error)
+			  return { success: false, error: "An unexpected error occurred" }
+			}
+		  },
+		},
+	  
 	}
   }
   
