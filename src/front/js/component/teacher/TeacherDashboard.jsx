@@ -1,15 +1,16 @@
-import React, { useState } from "react"
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
-import TeacherHeader from "./TeacherHeader"
-import TeacherSidebar from "./TeacherSidebar"
-import TeacherOverview from "./TeacherOverview"
-import TeacherClasses from "./TeacherClasses"
-import TeacherStudents from "./TeacherStudents"
-import TeacherAssignments from "./TeacherAssignments"
-import TeacherSchedule from "./TeacherSchedule"
-import TeacherSettings from "./TeacherSettings"
+import React, { useContext, useEffect } from "react";
+import { Context } from "../../store/appContext";
+import { useNavigate } from "react-router-dom";
 
 const TeacherDashboard = () => {
+  const { store } = useContext(Context);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!store.token) {
+      navigate("/login", { replace: true });
+    }
+  }, [store.token, navigate]);
   return (
     <Router>
       <div className="tw-flex tw-h-screen tw-overflow-hidden tw-bg-gray-100">
