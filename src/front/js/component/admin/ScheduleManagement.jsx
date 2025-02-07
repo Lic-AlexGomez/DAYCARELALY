@@ -193,7 +193,7 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule,tea
       >
         <option value={0} disabled>select an option</option>
         {teachers.map(item => (
-          <option key={`teacher-${item.user}`} value={item.user}>{item.username}</option>
+          <option key={`teacher-${item.id}`} value={item.user}>{item.username}</option>
         ))}
       </select>
 
