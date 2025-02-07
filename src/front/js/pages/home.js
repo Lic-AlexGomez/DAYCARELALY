@@ -1,5 +1,7 @@
 // npm i webpack-dev-server --save-dev --legacy-peer-deps
 // CLOUDINARY_CLOUD_NAME=dac1grfei CLOUDINARY_API_KEY=428724195757672 CLOUDINARY_API_SECRET=KSSKV54mHWSMw9ZFcb7ppnARcDI
+//    'email': "admin@daycare.com",
+// password': "admin123"
 import React , {useEffect} from "react";
 import { FileUploader } from "../component/uploadToCloudinary.jsx";
 import Classes from "../component/Classes.jsx";

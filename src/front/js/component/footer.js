@@ -1,4 +1,4 @@
-import React, { useContext, Component, useState } from "react";
+import React, { useContext, Component, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link } from "react-router-dom";
 import "../../styles/footer.css";
@@ -16,7 +16,7 @@ import location from "../../img/location.png"
 export const Footer = () => {
 	const { store, actions } = useContext(Context);
 	const [email, setEmail] = useState('')
-
+	const [data, setData] = useState([]);
 	const handleChangeEmail = (e) => {
 		setEmail(e.target.value)
 	}
@@ -36,6 +36,10 @@ export const Footer = () => {
 	};
 
 
+useEffect(() => {
+  if (store.settings != undefined) {
+	setData(store.settings);
+  } }, [store.settings]);
 
 
 	return (
@@ -46,7 +50,7 @@ export const Footer = () => {
 				<div className="about-container">
 					<div>
 						<strong>ABOUT COMPANY</strong>
-						<img className="img-arcoiris" src={arcoiris} alt="arcoiris " />
+						<img className="img-arcoiris" src={data.image? data.image : arcoiris} alt="arcoiris " />
 
 					</div>
 
@@ -56,10 +60,10 @@ export const Footer = () => {
 					</div>
 					<div className="socialmedia-container">
 
-						<div className="twitter"> <a href="https://x.com/"><img className="img-twitter" src={twitter} alt="arcoiris " /></a> </div>
-						<div className="facebook"><a href="https://www.facebook.com/Slime-Factory-110104161303552"><img className="img-facebook" src={facebook} alt="arcoiris " /></a></div>
-						<div className="instagram"><a href="https://www.instagram.com/slimefactorycol/"><img className="img-instagram" src={instagram} alt="arcoiris " /></a></div>
-						<div className="linkedin"><a href="https://www.linkedin.com"><img className="img-linkedin" src={linkedin} alt="arcoiris " /></a></div>
+						<div className="twitter"> <a href={data.twitter? data.twitter :"https://x.com/"} ><img className="img-twitter" src={twitter} alt="arcoiris " /></a> </div>
+						<div className="facebook"><a href={data.facebook? data.facebook : "https://www.facebook.com/Slime-Factory-110104161303552"}><img className="img-facebook" src={facebook} alt="arcoiris " /></a></div>
+						<div className="instagram"><a href={data.instagram? data.instagram : "https://www.instagram.com/slimefactorycol/"}><img className="img-instagram" src={instagram} alt="arcoiris " /></a></div>
+						<div className="linkedin"><a href={data.linkedin? data.linkedin : "https://www.linkedin.com" }><img className="img-linkedin" src={linkedin} alt="arcoiris " /></a></div>
 
 					</div>
 				</div>
@@ -87,9 +91,9 @@ export const Footer = () => {
 				<div className="reachus-container">
 					<strong>Reach us</strong>
 					<ul className="list-reach">
-						<li><img className="img-phone" src={phone} alt="arcoiris " /> +1012 3456 789</li>
-						<li><img className="img-gmail" src={mail} alt="arcoiris " /> demo@gmail.com</li>
-						<li><img className="img-location" src={location} alt="arcoiris " /> <p>  132 Dartmouth Street Boston,<br /> Massachusetts 02156 United States </p> </li>
+						<li><img className="img-phone" src={phone} alt="arcoiris " />{data.phone? data.phone : "+1012 3456 789"} </li>
+						<li><img className="img-gmail" src={mail} alt="arcoiris " />{data.admin_email? data.admin_email : "demo@gmail.com"} </li>
+						<li><img className="img-location" src={location} alt="arcoiris " /> <p> {data.address? data.address : <>"132 Dartmouth Street Boston,"<br /> "Massachusetts 02156 United States"</>}  </p> </li>
 					</ul>
 				</div>
 				<div className="newsletter-container">

@@ -3097,31 +3097,51 @@ def get_settings():
 
 
 @api.route('/settings/<int:id>', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 def update_settings(id):
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if not user or user.role != 'admin':
+        return jsonify({"message": "Unauthorized"}), 403
+
     settings = Settings.query.get(id)
-    if settings is None:
-        return jsonify({"error": "Error update settings"}), 404
-    
+    if not settings:
+        return jsonify({"message": "Settings not found"}), 404
+
     data = request.json
-           
-    settings.name_daycare = data.get('name_daycare', settings.name_daycare)
-    settings.admin_email = data.get('admin_email', settings.admin_email)
-    settings.max_capacity = data.get('max_capacity', settings.max_capacity)
-    settings.phone = data.get('phone', settings.phone)
-    settings.address = data.get('address', settings.address)
-    settings.schedule_attention = data.get('schedule_attention', settings.schedule_attention)
-    settings.facebook = data.get('facebook', settings.facebook)
-    settings.twitter = data.get('twitter', settings.twitter)
-    settings.instagram = data.get('instagram', settings.instagram)
-    settings.linkedin= data.get('linkedin', settings.linkedin)
-    settings.image = data.get('image', settings.image)
+    for key, value in data.items():
+        if hasattr(settings, key):
+            setattr(settings, key, value)
 
+    try:
+        db.session.commit()
+        return jsonify(settings.serialize()), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "An error occurred while updating settings", "error": str(e)}), 500
+    
+@api.route('/settings', methods=['POST'])
+@jwt_required()
+def create_settings():
+    data = request.json
+    settings = Settings(
+        name_daycare=data.get('name_daycare'),
+        admin_email=data.get('admin_email'),
+        max_capacity=data.get('max_capacity'),
+        phone=data.get('phone'),
+        address=data.get('address'),
+        schedule_attention=data.get('schedule_attention'),
+        facebook=data.get('facebook'),
+        twitter=data.get('twitter'),
+        instagram=data.get('instagram'),
+        linkedin=data.get('linkedin'),
+        image=data.get('image')
+    )
+    db.session.add(settings)
     db.session.commit()
+    return jsonify(settings.serialize()), 201
 
-    return jsonify(settings.serialize()), 200
 
-#ruta para crear nuevo usuario admin
 @api.route('/signup/admin', methods=['POST'])
 def signup_admin():
     data = request.json
