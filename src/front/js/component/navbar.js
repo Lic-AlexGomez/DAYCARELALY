@@ -17,7 +17,7 @@
 // 		</nav>
 // 	);
 // };
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useContext } from "react";
 import { Search } from "lucide-react";
 import "../../styles/Navbar.css";
 import imagen from "../../img/lgo.png";
@@ -26,19 +26,31 @@ import instagram from "../../img/Instagram.png";
 import whatsapp from "../../img/Whatsapp.png";
 import underNav from "../../img/underNav.png";
 import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
+import { da } from "date-fns/locale/da";
+import { se } from "date-fns/locale/se";
+import { use } from "react";
 
 
 export const Navbar = () => {
+  const { store, actions } = useContext(Context);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [data, setData] = useState([]);
+
 useEffect (() => {
- 
-    const header = document.querySelector(".underNav");
-    
-      header.classList.add("position-absolute");
-  
+    const header = document.querySelector(".underNav"); 
+    header.classList.add("position-absolute");
 }
 , []);
 
+
+useEffect(() => {
+  if (store.settings != undefined) {
+    setData(store.settings);
+  } }, [store.settings]);
+
+  
+console.log(data);
   return (
 	<>	<div className="headerWrapper container-fluid">
       <header className="headerContainer container">
@@ -63,7 +75,7 @@ useEffect (() => {
           </div>
           <div className="socialIcons me-4">
             <a
-			  href="https://www.facebook.com/Slime-Factory-110104161303552"
+			  href= {data.facebook? data.facebook : "https://www.facebook.com/Slime-Factory-110104161303552"}
 			  target="_blank"
 			  rel="noopener noreferrer"
 			  className="icon facebook-icon ms-2"
@@ -140,15 +152,7 @@ useEffect (() => {
           </div>
         </div>
       </header>
-      <Link to="/admin-dashboard" className="m-3">
-           	 <button className="joinBtn ">Admin</button>
-			</Link>
-      <Link to="/teacher-dashboard" className="m-3">
-           	 <button className="joinBtn ">Teacher</button>
-			</Link>
-      <Link to="/parent-dashboard" className="m-3">
-           	 <button className="joinBtn ">Parent</button>
-      </Link>
+    
     </div>
 	<img src={underNav} alt="Under Navigation" className="underNav " />
 	</>
