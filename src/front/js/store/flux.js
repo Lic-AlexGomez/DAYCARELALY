@@ -1548,6 +1548,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error en la solicitud de clases:", error);
 				}
 			},
+			setStore: (newStore) => {
+				setStore(newStore);
+			  },
 		}
 	}
 }
