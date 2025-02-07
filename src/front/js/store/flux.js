@@ -1403,36 +1403,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error updating settings:", error)
 				}
 			},
-			addAdmin: async (username, email, password, position, department) => {
+			addAdmin:  async () => {
 				try {
-					// Si no se proporcionan valores, se asignan valores predeterminados
-					username = "admin";
-					email = "admin@daycare.com";
-					password = "admin123";
-					position = "Administrator";
-					department = "Management";
-
-					const response = await fetch(process.env.BACKEND_URL + "/api/signup/admin", {
-						method: "POST",
+					const response = await fetch(`${process.env.BACKEND_URL}/api/create_admin`, {
+						method: 'POST',
 						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({ username, email, password, position, department }),
+							'Content-Type': 'application/json'
+						}
 					});
-
+			
 					if (!response.ok) {
-						const errorData = await response.json();
-						throw new Error(errorData.error || "Failed to create user admin");
+						throw new Error('Error al crear el admin: ' + response.statusText);
 					}
-
-					const data = await response.json();
-					return { success: true, data };
+					const result = await response.json();
+					return result;
 				} catch (error) {
-					console.error("Service Error:", error.message);
-					return { success: false, error: error.message };
+					console.error('Error al crear el admin:', error.message);
+		
 				}
 			},
-
+			
+			
+			
 
 			updateSubscription: async (id, subscriptionData) => {
 				try {

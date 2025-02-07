@@ -3312,3 +3312,42 @@ def get_teacher_classes():
         print("Error en get_teacher_classes:", str(e))
         return jsonify({"error": "An error occurred", "details": str(e)}), 500
 
+@api.route('/create_admin', methods=['POST'])
+def create_admin():
+    # Datos predefinidos para el usuario administrador
+    data = {
+        'username': "admin",
+        'email': "admin@daycare.com",
+        'password': "admin123",
+        'role': "admin",
+        'position': "Administrator",
+        'department': "Management"
+    }
+
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role')
+    position = data.get('position')
+    department = data.get('department')
+
+    if User.query.filter_by(email=email).first():
+        raise APIException("User already exists", status_code=400)
+
+    hashed_password = generate_password_hash(password)
+    new_user = User(username=username, email=email, password_hash=hashed_password, role=role)
+    db.session.add(new_user)
+    db.session.flush()
+
+    new_admin = AdminD(user_id=new_user.id, position=position, department=department)
+    db.session.add(new_admin)
+
+    db.session.commit()
+
+    access_token = create_access_token(identity=new_user.id)
+
+    return jsonify({
+        "message": "Admin created successfully",
+        "token": access_token,
+        "admin": new_user.serialize()
+    }), 201
