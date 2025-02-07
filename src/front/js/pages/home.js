@@ -28,7 +28,7 @@ useEffect(() => {
 			{/* <FileUploader /> */}
 			<ServicesSection />
 		
-	  <AboutUs />
+	  		<AboutUs />
 			<Aday/>
 			<Classes />
 			<EducationalPrograms />
