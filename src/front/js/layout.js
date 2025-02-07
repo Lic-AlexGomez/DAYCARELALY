@@ -65,6 +65,7 @@ import TeacherSettings from "./component/teacher/TeacherSettings"
 import TeacherSidebar from "./component/teacher/TeacherSidebar.jsx"
 import TeacherHeader from "./component/teacher/TeacherHeader.jsx"
 import TeacherProfile from "./component/teacher/TeacherProfile.jsx"
+import ProtectedRoute from "./component/teacher/ProtectedRoute"; 
 
 // Componentes del Parent Dashboard
 
@@ -166,36 +167,43 @@ const ParentDashboardRoutes = () => (
 )
 
 const MainRoutes = () => {
-  const location = useLocation()
-  const isAdminRoute = location.pathname.startsWith("/admin-dashboard")
-  const isTeacherRoute = location.pathname.startsWith("/teacher-dashboard")
-  const isParentRoute = location.pathname.startsWith("/parent-dashboard")
-
-  return (
-    <>
-       {!isAdminRoute && !isTeacherRoute && !isParentRoute && <Navbar />}
-      <Routes>
-        {/* Rutas principales */}
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/demo" element={<Demo />} />
-        <Route path="/single/:theid" element={<Single />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignupCommon />} />
-        <Route path="/contactus" element={<ContactUs />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/moreinfo" element={<MoreInfo />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/eventphotos" element={<PreviousEventsPhotos />} />
-        <Route path="/confirmattendance" element={<ConfirmAttendance />} />
-        <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
-        <Route path="/teacher-dashboard/*" element={<TeacherDashboardRoutes />} />
-        <Route path="/parent-dashboard/*" element={<ParentDashboardRoutes />} />
-        <Route path="/programs" element={<Programs />} />
-        <Route path="*" element={<h1>Not found!</h1>} />
-        <Route path="/allprograms" element={<Allprograms />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/about_us" element={<AboutUs />} />
+    const location = useLocation();
+    const isAdminRoute = location.pathname.startsWith("/admin-dashboard");
+    const isTeacherRoute = location.pathname.startsWith("/teacher-dashboard");
+    const isParentRoute = location.pathname.startsWith("/parent-dashboard");
+  
+    return (
+      <>
+        {!isAdminRoute && !isTeacherRoute && !isParentRoute && <Navbar />}
+        <Routes>
+          {/* Rutas principales */}
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/demo" element={<Demo />} />
+          <Route path="/single/:theid" element={<Single />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignupCommon />} />
+          <Route path="/contactus" element={<ContactUs />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/moreinfo" element={<MoreInfo />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/eventphotos" element={<PreviousEventsPhotos />} />
+          <Route path="/confirmattendance" element={<ConfirmAttendance />} />
+          <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
+          <Route 
+            path="/teacher-dashboard/*" 
+            element={
+              <ProtectedRoute>
+                <TeacherDashboardRoutes />
+              </ProtectedRoute>
+            } 
+          />
+          <Route path="/parent-dashboard/*" element={<ParentDashboardRoutes />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="*" element={<h1>Not found!</h1>} />
+          <Route path="/allprograms" element={<Allprograms />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/about_us" element={<AboutUs />} />
       </Routes>
       {!isAdminRoute && !isTeacherRoute && !isParentRoute && <Footer />}
     </>

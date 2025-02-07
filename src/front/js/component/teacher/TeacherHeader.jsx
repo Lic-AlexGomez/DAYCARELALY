@@ -1,8 +1,21 @@
-import React from "react"
-import { Bell, User, LogOut } from "lucide-react"
-import { Link } from "react-router-dom"
+import React, { useContext } from "react";
+import { Context } from "../../store/appContext";
+import { useNavigate } from "react-router-dom"; 
+import { Bell, User, LogOut } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const TeacherHeader = ({ user, onLogout }) => {
+const TeacherHeader = () => {
+  const { store, actions } = useContext(Context);
+  const user = store.user;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    actions.setStore({ token: null, user: null });
+    navigate("/"); 
+  };
+
   return (
     <header className="tw-bg-white tw-border-b tw-border-gray-200">
       <div className="tw-container tw-mx-auto tw-px-6 tw-py-3">
@@ -17,10 +30,12 @@ const TeacherHeader = ({ user, onLogout }) => {
               className="tw-flex tw-items-center tw-text-gray-700 hover:tw-text-gray-900"
             >
               <User className="tw-w-6 tw-h-6 tw-mr-2" />
-              Juan Lopez
-              {/* <span>{user.name}</span> */}
+              {user ? user.username : "Profesor"} 
             </Link>
-            <button onClick={onLogout} className="tw-flex tw-items-center tw-text-gray-700 hover:tw-text-gray-900">
+            <button
+              onClick={handleLogout}
+              className="tw-flex tw-items-center tw-text-gray-700 hover:tw-text-gray-900"
+            >
               <LogOut className="tw-w-6 tw-h-6 tw-mr-2" />
               <span>Logout</span>
             </button>
@@ -28,8 +43,7 @@ const TeacherHeader = ({ user, onLogout }) => {
         </div>
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default TeacherHeader
-
+export default TeacherHeader;

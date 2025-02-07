@@ -1548,6 +1548,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error en la solicitud de clases:", error);
 				}
 			},
+			setStore: (newStore) => {
+				setStore(newStore);
+			  },
+			  logout: () => {
+				localStorage.removeItem("token");
+				localStorage.removeItem("user");
+				setStore({ token: null, user: null });
+			  },
 		}
 	}
 }
