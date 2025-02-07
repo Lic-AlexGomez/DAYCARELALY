@@ -11,7 +11,7 @@ const ScheduleManagementPage = () => {
   const [selectedDay, setSelectedDay] = useState("all")
   const [newSchedule, setNewSchedule] = useState({
     class: "",
-    teacher: "",
+    teacher: 0,
     dayOfWeek: "",
     startTime: "",
     endTime: "",
@@ -193,7 +193,7 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule,tea
       >
         <option value={0} disabled>select an option</option>
         {teachers.map(item => (
-          <option key={`teacher-${item.id}`} value={item.id}>{item.username}</option>
+          <option key={`teacher-${item.user}`} value={item.user}>{item.username}</option>
         ))}
       </select>
 
@@ -247,70 +247,77 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule,tea
   </form>
 )
 
-const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSchedule, handleListScheduleModal }) => (
-  <table className="tw-w-full">
-    <thead className="tw-bg-gray-50">
-      <tr>
-        <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-          Clase
-        </th>
-        <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-          Profesor
-        </th>
-        <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-          Día
-        </th>
-        <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-          Horario
-        </th>
-        <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-          Capacidad
-        </th>
-        <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-          Inscritos
-        </th>
-        <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-          Acciones
-        </th>
-      </tr>
-    </thead>
-    <tbody className="tw-bg-white tw-divide-y tw-divide-gray-200">
-      {filteredSchedules.map((schedule) => (
-        <tr key={schedule.id}>
-          <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.class}</td>
-          <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.teacher}</td>
-          <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.dayOfWeek}</td>
-          <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{`${schedule.startTime} - ${schedule.endTime}`}</td>
-          <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.capacity}</td>
-          <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-            <span
-              className={`tw-px-2 tw-inline-flex tw-text-xs tw-leading-5 tw-font-semibold tw-rounded-full ${schedule.enrolled >= schedule.capacity
+const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSchedule, handleListScheduleModal }) => {
+
+  const { store, actions } = useContext(Context)
+
+  return (
+    <table className="tw-w-full">
+      <thead className="tw-bg-gray-50">
+        <tr>
+          <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+            Clase
+          </th>
+          <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+            Profesor
+          </th>
+          <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+            Día
+          </th>
+          <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+            Horario
+          </th>
+          <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+            Capacidad
+          </th>
+          <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+            Inscritos
+          </th>
+          <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody className="tw-bg-white tw-divide-y tw-divide-gray-200">
+        {filteredSchedules.map((schedule) => (
+          <tr key={schedule.id}>
+            <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.class}</td>
+            <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.teacher}</td>
+            <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.dayOfWeek}</td>
+            <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{`${schedule.startTime} - ${schedule.endTime}`}</td>
+            <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{schedule.capacity}</td>
+            <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+              <span
+                className={`tw-px-2 tw-inline-flex tw-text-xs tw-leading-5 tw-font-semibold tw-rounded-full ${schedule.enrolled >= schedule.capacity
                   ? "tw-bg-red-100 tw-text-red-800"
                   : "tw-bg-green-100 tw-text-green-800"
                 }`}
-            >
-              {schedule.enrolled}/{schedule.capacity}
-            </span>
-          </td>
-          <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap tw-text-sm tw-font-medium">
-            <button
-              className="tw-text-indigo-600 hover:tw-text-indigo-900 tw-mr-2"
-              onClick={() => handleEditSchedule(schedule)}
-            >
-              <Edit className="tw-w-5 tw-h-5" />
-            </button>
-            <button className="tw-text-indigo-600 hover:tw-text-indigo-900 tw-mr-2" onClick={() => handleListScheduleModal(schedule)}>
-              <List className="tw-w-5 tw-h-5" />
-            </button>
-            <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteSchedule(schedule.id)}>
-              <Trash className="tw-w-5 tw-h-5" />
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-)
+              >
+                {schedule.enrolled}/{schedule.capacity}
+              </span>
+            </td>
+            <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap tw-text-sm tw-font-medium">
+              <button
+                className="tw-text-indigo-600 hover:tw-text-indigo-900 tw-mr-2"
+                onClick={() => handleEditSchedule(schedule)}
+              >
+                <Edit className="tw-w-5 tw-h-5" />
+              </button>
+              <button className="tw-text-indigo-600 hover:tw-text-indigo-900 tw-mr-2" onClick={() => handleListScheduleModal(schedule)}>
+                <List className="tw-w-5 tw-h-5" />
+              </button>
+              <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteSchedule(schedule.id)}>
+                <Trash className="tw-w-5 tw-h-5" />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+
 
 const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSchedule, setIsModalOpen }) => (
   <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
