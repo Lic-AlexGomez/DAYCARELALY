@@ -1373,8 +1373,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const resp = await fetch(`${process.env.BACKEND_URL}/api/settings`)
 					if (!resp.ok) throw new Error("Failed to fetch settings")
 					const data = await resp.json()
-					console.log(data)
-					setStore({ settings: data })
+					
+					setStore({ settings: data[0] })
 				} catch (error) {
 					console.error("Error fetching messages:", error)
 				}
@@ -1405,6 +1405,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			addAdmin:  async () => {
 				try {
+				
 					const response = await fetch(`${process.env.BACKEND_URL}/api/create_admin`, {
 						method: 'POST',
 						headers: {
@@ -1415,8 +1416,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (!response.ok) {
 						throw new Error('Error al crear el admin: ' + response.statusText);
 					}
-					const result = await response.json();
-					return result;
 				} catch (error) {
 					console.error('Error al crear el admin:', error.message);
 		

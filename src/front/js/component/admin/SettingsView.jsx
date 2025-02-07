@@ -10,17 +10,18 @@ const SettingsPage = () => {
   
   // Inicializa el estado con un objeto vacío o con valores predeterminados vacíos
   const [settings, setSettings] = useState({
-    name_daycare: "Your Daycare name",
-    admin_email: "admin@daycare.com",
-    max_capacity: 20,
-    phone: "123-456-789",
-    schedule_attention: "Lunes a viernes de 9 am a 6 pm ",
-    facebook: "www.facebook.com",
-    twitter: "www.x.com",
-    instagram: "www.instagram.com",
-    linkedin: "www.linkedin.com",
-    image: "https://s1.piq.land/2015/01/01/Dg2koi0aiyokD1XlAGofwVDZ_400x400.png",
-    address: "calle #1300",
+    id: null,
+    name_daycare: "",
+    admin_email: "",
+    max_capacity: 0,
+    phone: "",
+    schedule_attention: "",
+    facebook:"",
+    twitter: "",
+    instagram: "",
+    linkedin: "",
+    image: "",
+    address: "",
   });
   useEffect(() => {
     const fetchData = async () => {
@@ -119,6 +120,7 @@ const SettingsPage = () => {
                     name="name_daycare"
                     value={settings.name_daycare}
                     onChange={handleInputChange}
+                    placeholder="Your Daycare name"
                     className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   />
                 </div>
@@ -132,6 +134,7 @@ const SettingsPage = () => {
                     name="admin_email"
                     value={settings.admin_email}
                     onChange={handleInputChange}
+                    placeholder="admin@daycare.com"
                     className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   />
                 </div>
@@ -145,6 +148,7 @@ const SettingsPage = () => {
                     name="max_capacity"
                     value={settings.max_capacity}
                     onChange={handleInputChange}
+                    placeholder="20"
                     className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   />
                 </div>
@@ -158,6 +162,7 @@ const SettingsPage = () => {
                     name="phone"
                     value={settings.phone}
                     onChange={handleInputChange}
+                    placeholder="123-456-789"
                     className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   />
                 </div>
@@ -171,6 +176,7 @@ const SettingsPage = () => {
                     name="address"
                     value={settings.address}
                     onChange={handleInputChange}
+                    placeholder="calle #1300"
                     className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   />
                 </div>
@@ -184,6 +190,7 @@ const SettingsPage = () => {
                     name="openingHours"
                     value={settings.schedule_attention}
                     onChange={handleInputChange}
+                    placeholder="Lunes a viernes de 9 am a 6 pm"
                     className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   />
                 </div>
@@ -202,6 +209,7 @@ const SettingsPage = () => {
                   name="facebook"
                   value={settings.facebook}
                   onChange={handleInputChange}
+                  placeholder="www.facebook.com"
                   className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 />
               </div>
@@ -215,6 +223,7 @@ const SettingsPage = () => {
                   name="twitter"
                   value={settings.twitter}
                   onChange={handleInputChange}
+                  placeholder="www.x.com"
                   className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 />
               </div>
@@ -228,6 +237,7 @@ const SettingsPage = () => {
                   name="instagram"
                   value={settings.instagram}
                   onChange={handleInputChange}
+                  placeholder="www.instagram.com"
                   className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 />
               </div>
@@ -241,6 +251,7 @@ const SettingsPage = () => {
                   name="linkedin"
                   value={settings.linkedin}
                   onChange={handleInputChange}
+                  placeholder="www.linkedin.com"
                   className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 />
               </div>
