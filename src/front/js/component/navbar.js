@@ -140,15 +140,7 @@ useEffect (() => {
           </div>
         </div>
       </header>
-      <Link to="/admin-dashboard" className="m-3">
-           	 <button className="joinBtn ">Admin</button>
-			</Link>
-      <Link to="/teacher-dashboard" className="m-3">
-           	 <button className="joinBtn ">Teacher</button>
-			</Link>
-      <Link to="/parent-dashboard" className="m-3">
-           	 <button className="joinBtn ">Parent</button>
-      </Link>
+    
     </div>
 	<img src={underNav} alt="Under Navigation" className="underNav " />
 	</>
