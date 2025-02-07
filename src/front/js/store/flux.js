@@ -154,20 +154,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 			
 					const data = await response.json();
-					console.log("DATOS RECIBIDOS EN LOGIN:", data);  // 👀 Verifica si `data.token` existe
+					console.log("DATOS RECIBIDOS EN LOGIN:", data);  
 			
 					if (response.ok) {
-						// Aquí almacenamos el token y el user en localStorage y en el store
+					
 						localStorage.setItem("token", data.token);
 						localStorage.setItem("user", JSON.stringify(data.user));
 						
-						// Asegúrate de utilizar setStore correctamente para actualizar el estado
+	
 						setStore({ 
 							token: data.token, 
 							user: data.user 
 						});
 			
-						console.log("TOKEN GUARDADO EN STORE:", getStore().token);  // 👀 Verifica si se guarda correctamente
+						console.log("TOKEN GUARDADO EN STORE:", getStore().token);  
 			
 						return data;
 					} else {
@@ -1379,30 +1379,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Error fetching messages:", error)
 				}
 			},
-			updateSettings: async (id, settingsData) => {
+			updateSettings: async (id, updatedSettings) => {
 				try {
-					const response = await fetch(`${process.env.BACKEND_URL}/api/settings/${id}`, {
-						method: "PUT",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify(settingsData),
+				  const token = getStore().token || localStorage.getItem("token")
+				  const response = await fetch(`${process.env.BACKEND_URL}/api/settings/${id}`, {
+					method: "PUT",
+					headers: {
+					  "Content-Type": "application/json",
+					  Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify(updatedSettings),
+				  })
+				  
+				  console.log(response.ok)
+				  if (response.ok) {
+					const data = await response.json()
+					const store = getStore()
+					setStore({
+					  settings: store.settings.map((setting) => (setting.id === id ? data : setting)),
 					})
-
-					if (response.ok) {
-						const updatedSettings = await response.json()
-						console.log('Respuesta de la API:', updatedSettings);
-						const store = getStore()
-						const updatedSetting = store.settings.map((settings) => (settings.id === id ? updatedSettings : settings))
-						setStore({ settings: updatedSetting })
-						return updatedSettings
-					} else {
-						console.error("Error updating settings:", response.status)
-					}
+					return  true
+				  } else {
+					console.error("Error updating settings:", response.status)
+					return { success: false, error: "Failed to update settings" }
+				  }
 				} catch (error) {
-					console.error("Error updating settings:", error)
+				  console.error("Error updating settings:", error)
+				  return { success: false, error: "An unexpected error occurred" }
 				}
-			},
+			  },
 			addAdmin:  async () => {
 				try {
 				

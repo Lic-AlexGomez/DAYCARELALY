@@ -27,9 +27,6 @@ import whatsapp from "../../img/Whatsapp.png";
 import underNav from "../../img/underNav.png";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
-import { da } from "date-fns/locale/da";
-import { se } from "date-fns/locale/se";
-import { use } from "react";
 
 
 export const Navbar = () => {
@@ -49,8 +46,6 @@ useEffect(() => {
     setData(store.settings);
   } }, [store.settings]);
 
-  
-console.log(data);
   return (
 	<>	<div className="headerWrapper container-fluid">
       <header className="headerContainer container">
@@ -58,7 +53,7 @@ console.log(data);
         <div className="topRow">
           <div className="logoContainer">
             <img
-              src={imagen}
+              src={data.image? data.image : imagen}
               alt="Logo"
               className="logo"
             />
@@ -85,7 +80,7 @@ console.log(data);
 			</a>
 
 			<a
-				href="https://www.instagram.com/slimefactorycol/"
+				href  = {data.instagram? data.instagram : "https://www.instagram.com/slimefactorycolombia/"}  
 				target="_blank"
 				rel="noopener noreferrer"
 				className="icon instagram-icon ms-2"
@@ -96,7 +91,7 @@ console.log(data);
 															
 
             <a
-              href="https://wa.me/573113028888"
+              href={data.whatsapp? data.whatsapp : "https://wa.me/573104000000"}
               target="_blank"
               rel="noopener noreferrer"
               className="icon whatsapp-icon ms-2"
