@@ -28,15 +28,15 @@ const TeacherOverview = () => {
         ))}
       </div>
       <div className="tw-mt-8">
-        <h4 className="tw-text-lg tw-font-semibold tw-mb-4">Próximas Clases</h4>
+        <h4 className="tw-text-lg tw-font-semibold tw-mb-4">Upcoming Classes</h4>
         <ul className="tw-space-y-2">
           <li className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-            <p className="tw-font-semibold">Clase de Arte</p>
-            <p className="tw-text-sm tw-text-gray-600">Hoy, 10:00 AM - 11:30 AM</p>
+            <p className="tw-font-semibold">Art Class</p>
+            <p className="tw-text-sm tw-text-gray-600">Today, 10:00 AM - 11:30 AM</p>
           </li>
           <li className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-            <p className="tw-font-semibold">Clase de Música</p>
-            <p className="tw-text-sm tw-text-gray-600">Mañana, 2:00 PM - 3:30 PM</p>
+            <p className="tw-font-semibold">Music Class</p>
+            <p className="tw-text-sm tw-text-gray-600">Morning, 2:00 PM - 3:30 PM</p>
           </li>
         </ul>
       </div>

@@ -20,17 +20,17 @@ const TeacherSettings = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Aquí iría la lógica para guardar la configuración
+   
     alert("Configuración guardada")
   }
 
   return (
     <div>
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Configuración</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Configuration</h3>
       <form onSubmit={handleSubmit} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
         <div className="tw-mb-4">
           <label htmlFor="name" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-            Nombre
+            Name
           </label>
           <input
             type="text"
@@ -43,7 +43,7 @@ const TeacherSettings = () => {
         </div>
         <div className="tw-mb-4">
           <label htmlFor="email" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-            Correo Electrónico
+            Email
           </label>
           <input
             type="email"
@@ -56,7 +56,7 @@ const TeacherSettings = () => {
         </div>
         <div className="tw-mb-4">
           <label htmlFor="phone" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-            Teléfono
+            Phone
           </label>
           <input
             type="tel"
@@ -76,12 +76,12 @@ const TeacherSettings = () => {
               onChange={handleInputChange}
               className="tw-mr-2"
             />
-            <span className="tw-text-sm tw-text-gray-700">Recibir notificaciones</span>
+            <span className="tw-text-sm tw-text-gray-700">Receive notifications</span>
           </label>
         </div>
         <div className="tw-mb-4">
           <label htmlFor="theme" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-            Tema
+          Theme
           </label>
           <select
             id="theme"
@@ -90,8 +90,8 @@ const TeacherSettings = () => {
             onChange={handleInputChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
           >
-            <option value="light">Claro</option>
-            <option value="dark">Oscuro</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
           </select>
         </div>
         <button
@@ -99,7 +99,7 @@ const TeacherSettings = () => {
           className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
         >
           <Save className="tw-w-5 tw-h-5 tw-mr-2" />
-          Guardar Cambios
+          Save Changes
         </button>
       </form>
     </div>
