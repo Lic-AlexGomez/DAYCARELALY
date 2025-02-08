@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import "../../styles/Hero.css";
 import underNav from "../../img/RectangleBoth.png";
 import image4 from "../../img/image-4.png"
@@ -6,14 +6,22 @@ import image5 from "../../img/image-5.png";
 import image6 from "../../img/image-6.png";
 import image7 from "../../img/image-7.png"
 import { Link } from "react-router-dom";
+import {Context} from "../store/appContext";
 const Hero = () => {
+  const {store, actions} = React.useContext(Context);
+  const [data, setData] = useState({})
+    useEffect(() => {
+      if (store.settings !== undefined) {
+        setData(store.settings)
+      }
+    }, [store.settings])
   return (
     <>
       <div className="home-container d-flex justify-content-space-between align-items-start">
         <section className="hero  flex-row justify-content-center align-items-start">
           <div className="hero-content ">
             <div className="styled-text">
-              Welcome to Alex <br />
+              Welcome to  {data.name_daycare? data.name_daycare :"Alex" } <br />
               Rainbow Slime CO.
             </div>
 
