@@ -1561,6 +1561,50 @@ const getState = ({ getStore, getActions, setStore }) => {
 				localStorage.removeItem("user");
 				setStore({ token: null, user: null });
 			  },
+			  
+			  //PAYPAL
+			  processPayment: async (order) => {
+				try {
+				  const store = getStore();
+				  const user = store.user || JSON.parse(localStorage.getItem("user"));
+				  if (!user) {
+					console.error("No hay usuario logueado");
+					return;
+				  }
+			
+				  const paymentData = {
+					parent_id: user.id,
+					amount: order.purchase_units[0].amount.value,
+					concept: "Pago Mensualidad",
+					status: "Completado",
+					due_date: new Date().toISOString().split("T")[0],
+					paypal_order_id: order.id,
+					payer_email: order.payer.email_address,
+				  };
+			
+				  console.log("Enviando pago al backend:", paymentData);
+			
+				  const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/parent_payments`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(paymentData),
+				  });
+			
+				  if (!response.ok) throw new Error(`Error en la solicitud: ${response.statusText}`);
+			
+				  const data = await response.json();
+				  console.log("Pago guardado en backend:", data);
+			
+				  // Opcional: actualizar pagos en store
+				  setStore({ parentPayments: [...store.parentPayments, data] });
+			
+				  return data;
+				} catch (error) {
+				  console.error("Error al procesar pago:", error);
+				}
+			  },
+			
+			
 		}
 	}
 }

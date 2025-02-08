@@ -14,6 +14,7 @@ import ServicesSection from "../component/services-section.jsx";
 import AboutUs from "../component/AboutUs.jsx";
 import EducationalPrograms from "../component/EducationalPrograms.jsx";
 import Statistics from "../component/Statistics.jsx";
+import PayPalButton from "../component/PayPalButton.jsx";
 
 
 export const Home = () => {
@@ -35,6 +36,7 @@ useEffect(() => {
 			
 			
 			<Statistics />
+			<PayPalButton />
 			<Getintouch />
 		</div>
 	);

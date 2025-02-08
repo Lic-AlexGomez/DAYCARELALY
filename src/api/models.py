@@ -739,11 +739,14 @@ class ParentSchedule(db.Model):
 
 class ParentPayment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=True)  # Ahora permite NULL
+    parent = db.relationship('Parent', backref=db.backref('payments', lazy=True))
     amount = db.Column(db.Float, nullable=False)
     concept = db.Column(db.String(120), nullable=False)
     status = db.Column(db.String(20), nullable=False)
     due_date = db.Column(db.Date, nullable=False)
+    paypal_order_id = db.Column(db.String(50), nullable=False) 
+    payer_email = db.Column(db.String(100), nullable=False)  
 
     def __repr__(self):
         return f'<ParentPayment {self.concept}>'
@@ -755,7 +758,9 @@ class ParentPayment(db.Model):
             "amount": self.amount,
             "concept": self.concept,
             "status": self.status,
-            "due_date": self.due_date.isoformat()
+            "due_date": self.due_date.isoformat(),
+            "paypal_order_id": self.paypal_order_id,
+            "payer_email": self.payer_email
         }
 
 class ParentSetting(db.Model):
