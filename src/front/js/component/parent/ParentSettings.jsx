@@ -40,7 +40,7 @@ const ParentSettings = () => {
 console.log(store.parentSettings)
   return (
     <div>
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Configuración</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Configuration</h3>
       <form onSubmit={handleSubmit} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
         <div className="tw-mb-4">
           <label htmlFor="name" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
@@ -57,7 +57,7 @@ console.log(store.parentSettings)
         </div>
         <div className="tw-mb-4">
           <label htmlFor="email" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-            Correo Electrónico
+          Email
           </label>
           <input
             type="email"
@@ -70,7 +70,7 @@ console.log(store.parentSettings)
         </div>
         <div className="tw-mb-4">
           <label htmlFor="phone" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-            Teléfono
+          Phone
           </label>
           <input
             type="tel"
@@ -90,12 +90,12 @@ console.log(store.parentSettings)
               onChange={handleInputChange}
               className="tw-mr-2"
             />
-            <span className="tw-text-sm tw-text-gray-700">Recibir notificaciones</span>
+            <span className="tw-text-sm tw-text-gray-700">Receive notifications</span>
           </label>
         </div>
         <div className="tw-mb-4">
           <label htmlFor="language" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-            Idioma
+          Language
           </label>
           <select
             id="language"
@@ -113,7 +113,7 @@ console.log(store.parentSettings)
           className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
         >
           <Save className="tw-w-5 tw-h-5 tw-mr-2" />
-          Guardar Cambios
+          Save Changes
         </button>
       </form>
     </div>

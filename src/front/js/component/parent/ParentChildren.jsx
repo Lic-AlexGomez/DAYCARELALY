@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react"
 import { Context } from "../../store/appContext"
 import { AlertCircle, Plus, X } from "lucide-react"
 
-// UI Components with enhanced styling
 const Card = ({ className, children, ...props }) => (
   <div
     className={`tw-bg-white tw-shadow-lg tw-rounded-xl tw-border tw-border-purple-200 tw-overflow-hidden ${className}`}

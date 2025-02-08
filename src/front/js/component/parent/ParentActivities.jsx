@@ -12,7 +12,7 @@ const ParentActivities = () => {
       setIsLoading(false)
     }
     loadActivities()
-  }, [actions.fetchParentActivities]) // Added actions.fetchParentActivities to dependencies
+  }, [actions.fetchParentActivities]) 
 
   if (isLoading) {
     return <div>Loading activities...</div>
@@ -20,7 +20,7 @@ const ParentActivities = () => {
 
   return (
     <div>
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Actividades</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Activities</h3>
       <div className="tw-space-y-4">
         {store.parentActivities.map((activity) => (
           <div key={activity.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
@@ -32,7 +32,7 @@ const ParentActivities = () => {
             <div className="tw-flex tw-items-center tw-mb-2">
               <Clock className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
               <span>
-                {activity.time} - Duración: {activity.duration}
+                {activity.time} - Duration: {activity.duration}
               </span>
             </div>
             <div className="tw-flex tw-items-center tw-mb-2">

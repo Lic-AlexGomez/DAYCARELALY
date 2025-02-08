@@ -8,7 +8,6 @@ const ParentPayments = () => {
   const [selectedPayments, setSelectedPayments] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
 
-  // Eliminar el fetch de los pagos para esta vista
 
   const handlePaymentSelection = (payment) => {
     const isSelected = selectedPayments.some((p) => p.id === payment.id);
@@ -26,19 +25,19 @@ const ParentPayments = () => {
   };
 
   const handlePaymentSuccess = async (order) => {
-    console.log("Pago exitoso:", order);
+    console.log("Successful payment:", order);
 
     const paymentData = {
       parent_id: store.user.id - 1, 
       amount: order.purchase_units[0].amount.value,
-      concept: "Pago Mensualidad",
-      status: "Completado",
+      concept: "Monthly Payment",
+      status: "Filled",
       due_date: new Date().toISOString().split("T")[0],
       paypal_order_id: order.id,
       payer_email: order.payer.email_address,
     };
 
-    console.log("Datos estructurados para el backend:", paymentData);
+    console.log("Structured data for the backend:", paymentData);
 
     try {
       const response = await fetch(process.env.BACKEND_URL + "api/parent_payments", {
@@ -65,7 +64,7 @@ const ParentPayments = () => {
 
   return (
     <div>
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Pagos pendientes</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Pending payments</h3>
       <div className="tw-space-y-4">
         {[testPayment].map((payment) => (
           <div key={payment.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
@@ -108,7 +107,7 @@ const ParentPayments = () => {
       </div>
       {totalAmount > 0 && (
         <div className="tw-mt-6 tw-text-xl">
-          <h4 className="tw-font-semibold">Total seleccionado: ${totalAmount}</h4>
+          <h4 className="tw-font-semibold">Selected total: ${totalAmount}</h4>
         </div>
       )}
       {totalAmount > 0 && (

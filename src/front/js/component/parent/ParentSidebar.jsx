@@ -3,22 +3,22 @@ import { Home, Users, Calendar, Activity, CreditCard, Settings, Video, MessageCi
 import React from "react"
 
 const menuItems = [
-  { icon: Home, label: "Inicio", path: "/parent-dashboard" },
-  { icon: Users, label: "Mis Hijos", path: "/parent-dashboard/children" },
-  { icon: Calendar, label: "Horario", path: "/parent-dashboard/schedule" },
-  { icon: Activity, label: "Actividades", path: "/parent-dashboard/activities" },
-  { icon: CreditCard, label: "Pagos", path: "/parent-dashboard/payments" },
-  { icon: Video, label: "Clases Virtuales", path: "/parent-dashboard/virtual-classes" },
-  { icon: MessageCircle, label: "Mensajes", path: "/parent-dashboard/messages" },
-  { icon: School, label: "Clases Enroll", path: "/parent-dashboard/virtual-classes-enroll" },
-  { icon: Settings, label: "Configuración", path: "/parent-dashboard/settings" },
+  { icon: Home, label: "Home", path: "/parent-dashboard" },
+  { icon: Users, label: "My Children", path: "/parent-dashboard/children" },
+  { icon: Calendar, label: "Schedule", path: "/parent-dashboard/schedule" },
+  { icon: Activity, label: "Activities", path: "/parent-dashboard/activities" },
+  { icon: CreditCard, label: "Payments", path: "/parent-dashboard/payments" },
+  { icon: Video, label: "Virtual Classes", path: "/parent-dashboard/virtual-classes" },
+  { icon: MessageCircle, label: "Messages", path: "/parent-dashboard/messages" },
+  { icon: School, label: "Enroll Classes", path: "/parent-dashboard/virtual-classes-enroll" },
+  { icon: Settings, label: "Configuration", path: "/parent-dashboard/settings" },
 ]
 
 const ParentSidebar = () => {
   return (
     <nav className="tw-bg-white tw-w-64 tw-h-full tw-border-r tw-border-gray-200">
       <div className="tw-flex tw-items-center tw-justify-center tw-h-16 tw-border-b tw-border-gray-200">
-        <span className="tw-text-xl tw-font-semibold tw-text-gray-800">Daycare Rainbow Slime Co.</span>
+        <span className="tw-text-xl tw-font-semibold tw-text-gray-800">Daycare  Slime Co.</span>
       </div>
       <div className="tw-p-4">
         <ul className="tw-space-y-2">
