@@ -3,18 +3,18 @@ import { Calendar, Clock } from "lucide-react"
 
 const TeacherSchedule = () => {
   const [schedule, setSchedule] = useState([
-    { id: 1, day: "Lunes", time: "09:00 - 10:30", class: "Clase de Arte" },
-    { id: 2, day: "Martes", time: "11:00 - 12:30", class: "Clase de Música" },
-    { id: 3, day: "Miércoles", time: "09:00 - 10:30", class: "Clase de Arte" },
-    { id: 4, day: "Jueves", time: "11:00 - 12:30", class: "Clase de Música" },
-    { id: 5, day: "Viernes", time: "14:00 - 15:30", class: "Clase de Baile" },
+    { id: 1, day: "Monday", time: "09:00 - 10:30", class: "Art Class" },
+    { id: 2, day: "Tuesday", time: "11:00 - 12:30", class: "Music Class" },
+    { id: 3, day: "Wednesday", time: "09:00 - 10:30", class: "Art Class" },
+    { id: 4, day: "Thursday", time: "11:00 - 12:30", class: "Music Class" },
+    { id: 5, day: "Friday", time: "14:00 - 15:30", class: "Dance Class" },
   ])
 
-  const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
   return (
     <div>
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Mi Horario</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">My Schedule</h3>
       <div className="tw-grid tw-grid-cols-5 tw-gap-4">
         {days.map((day) => (
           <div key={day} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
