@@ -62,10 +62,10 @@ const MaintenanceView = () => {
 
   return (
     <div>
-      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Mantenimiento</h2>
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Maintenance</h2>
 
       <div className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-mb-6">
-        <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Modo de Mantenimiento</h3>
+        <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Maintenance Mode</h3>
         <div className="tw-flex tw-items-center tw-space-x-2 tw-mb-4">
           <input
             type="checkbox"
@@ -80,7 +80,7 @@ const MaintenanceView = () => {
         </div>
         <div className="tw-mb-4">
           <label htmlFor="maintenance-message" className="tw-text-gray-800">
-            Mensaje de Mantenimiento
+          Maintenance Message
           </label>
           <textarea
             id="maintenance-message"
@@ -94,7 +94,7 @@ const MaintenanceView = () => {
           onClick={updateMaintenanceMessage}
           className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md"
         >
-          Actualizar Mensaje
+          Update Message
         </button>
       </div>
 
@@ -105,7 +105,7 @@ const MaintenanceView = () => {
             name="task"
             value={newTask.task}
             onChange={handleInputChange}
-            placeholder="Nueva tarea de mantenimiento"
+            placeholder="New maintenance task"
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
@@ -122,7 +122,7 @@ const MaintenanceView = () => {
             className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
           >
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-            Agregar Tarea
+            Add Task
           </button>
         </form>
       </div>
@@ -146,7 +146,7 @@ const MaintenanceView = () => {
             <div className="tw-flex tw-justify-between tw-items-start">
               <div>
                 <h3 className="tw-text-lg tw-font-semibold tw-mb-2">{task.task}</h3>
-                <p className="tw-text-gray-600 tw-mb-2">Fecha límite: {task.dueDate}</p>
+                <p className="tw-text-gray-600 tw-mb-2">Deadline: {task.dueDate}</p>
                 <span
                   className={`tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold ${getStatusColor(task.status)}`}
                 >

@@ -108,12 +108,12 @@ const GalleryView = () => {
     };
     const handleDeleteGallery = async (id) => {
         const confirmDelete = await Swal.fire({
-          title: '¿Estás seguro?',
-          text: "Esta acción no se puede deshacer.",
+          title: '¿You are sure?',
+          text: "This action cannot be undone.",
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Sí, eliminar',
-          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Yes, delete',
+          cancelButtonText: 'Cancel',
         });
     
         if (confirmDelete.isConfirmed) {
@@ -123,15 +123,15 @@ const GalleryView = () => {
             if (result) {
               Swal.fire({
                 icon: 'success',
-                title: 'Imagen eliminada',
-                text: 'La imagen ha sido eliminada con éxito.',
+                title: 'Deleted image',
+                text: 'The image has been successfully deleted.',
               });
               actions.fetchGallery();
             } else {
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Hubo un error al eliminar la imagen.',
+                text: 'There was an error deleting the image.',
               });
             }
           } catch (error) {
@@ -139,7 +139,7 @@ const GalleryView = () => {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'Hubo un error al intentar eliminar la imagen. Intenta nuevamente.',
+              text: 'There was an error trying to delete the image. Try again.',
             });
           }
         }
@@ -147,12 +147,12 @@ const GalleryView = () => {
 
   return (
     <div>
-      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Imagenes</h2>
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Image Management</h2>
       <div className="tw-mb-6">
         <form  className="tw-flex tw-space-x-4" onSubmit={handleAddGallery} >
          
           <div className='tw-flex-1'>
-            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre de la imagen</label>
+            <label htmlFor="name" className='tw-block tw-mb-2'>Image name</label>
             <input
               type="text"
               name="name"
@@ -165,7 +165,7 @@ const GalleryView = () => {
           </div>
 
           <div className='tw-flex-1'>
-            <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
+            <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
             <input
               type="file"
               name="image"
@@ -177,7 +177,7 @@ const GalleryView = () => {
 
           <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-            Agregar Imagen
+            Add Image
           </button>
         </form>
       </div>
@@ -185,9 +185,9 @@ const GalleryView = () => {
         <thead className="tw-bg-gray-100">
           <tr>
             
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Nombre</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Imagen</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Name</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody className="tw-divide-y tw-divide-gray-200">
@@ -213,7 +213,7 @@ const GalleryView = () => {
         <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
           <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-              <h3 className="tw-text-xl tw-font-semibold">Editar Imagen</h3>
+              <h3 className="tw-text-xl tw-font-semibold">Edit Image</h3>
               <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
                 <X className="tw-w-6 tw-h-6" />
               </button>
@@ -221,7 +221,7 @@ const GalleryView = () => {
             <form  className="tw-space-y-4" onSubmit={handleUpdateGallery}>
               
               <div className='tw-flex-1'>
-                <label htmlFor="name" className='tw-block tw-mb-2'>Nombre de la imagen</label>
+                <label htmlFor="name" className='tw-block tw-mb-2'>Image name</label>
                 <input
                   type="text"
                   name="name"
@@ -235,13 +235,13 @@ const GalleryView = () => {
 
               {editingGallery.image && ( 
                 <div className="tw-mb-4">
-                  <h4 className="tw-text-sm">Imagen Actual:</h4>
+                  <h4 className="tw-text-sm">Current Image:</h4>
                   <img src={editingGallery.image} alt="Imagen del Servicio" className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md" />
                 </div>
             )}
 
               <div className='tw-flex-1'>
-                <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
+                <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
                 <input
                   type="file"
                   name="image"
@@ -256,13 +256,13 @@ const GalleryView = () => {
                   onClick={() => setIsModalOpen(false)}
                   className="tw-bg-gray-200 tw-text-gray-700 tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-gray-300"
                 >
-                  Cancelar
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
                 >
-                  Guardar Cambios
+                  Save Changes
                 </button>
               </div>
             </form>
