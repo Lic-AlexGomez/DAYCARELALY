@@ -1,9 +1,9 @@
 import React from "react"
 import { ArrowRight } from "lucide-react"
-import img8 from "../../img/8.png"
-import img9 from "../../img/9.png"
-import img10 from "../../img/10.png"
-import img11 from "../../img/11.png"
+import img8 from "../../../img/8.png"
+import img9 from "../../../img/9.png"
+import img10 from "../../../img/10.png"
+import img11 from "../../../img/11.png"
 
 const EducationalPrograms = () => {
   const programs = [
@@ -35,15 +35,12 @@ const EducationalPrograms = () => {
 
   return (
     <div className="tw-border-none tw-z-10 tw-min-h-screen tw-bg-gradient-to-b tw-from-purple-100 tw-to-purple-200 tw-py-16 tw-px-4 tw-relative tw-overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="tw-absolute tw-left-8 tw-top-8 tw-animate-float">       
-          <img src={img11} alt="Decorative Element" /> 
+      <div className="tw-absolute tw-left-8 tw-top-8 tw-animate-float">
+        <img src={img11} alt="Decorative Element" />
       </div>
-            <div className="tw-absolute tw-right-8 tw-top-8 tw-animate-float-delayed">
+      <div className="tw-absolute tw-right-8 tw-top-8 tw-animate-float-delayed">
         <img src={img10} alt="Decorative Element" />
       </div>
-
-      {/* Content */}
       <div className="tw-max-w-6xl tw-mx-auto">
         <div className="tw-text-center tw-mb-12">
           <p className="tw-text-purple-600 tw-mb-2">Educational Programs</p>
@@ -71,7 +68,7 @@ const EducationalPrograms = () => {
                   <h3 className="tw-text-xl tw-font-semibold tw-text-gray-800 tw-mb-2">{program.title}</h3>
                   <p className="tw-text-gray-600 tw-mb-4">{program.description}</p>
                   <a
-                    href="#"
+                    href="about_us"
                     className="tw-inline-flex tw-items-center tw-text-purple-600 
                       hover:tw-text-purple-700 tw-font-medium tw-transition-colors"
                   >
@@ -84,21 +81,7 @@ const EducationalPrograms = () => {
           ))}
         </div>
       </div>
- 
-      {/* Bottom Wave */}
-      {/* <div className="tw-absolute tw-bottom-0 tw-left-0 tw-right-0">
-      <svg
-          className="tw-w-full tw-h-32"
-          viewBox="0 0 1440 120"
-          preserveAspectRatio="none"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M0 0C480 80 960 80 1440 0V120H0V0Z" fill="white" />
-        </svg>
-      </div> */}
       <div className="tw-absolute tw-mt-20 tw-bottom-0 tw-left-0 tw-right-0 edu">
-
       </div>
     </div>
   )

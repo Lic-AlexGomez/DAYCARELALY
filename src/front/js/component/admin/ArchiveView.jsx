@@ -77,11 +77,9 @@ const ArchivePage = () => {
         setSelectedFile(file)
         break
       case "download":
-        // Implement download logic here
         console.log(`Downloading file: ${file.name}`)
         break
       case "print":
-        // Implement print logic here
         console.log(`Printing file: ${file.name}`)
         break
       default:
@@ -90,9 +88,6 @@ const ArchivePage = () => {
   }
 
   const handleGenerateFile = () => {
-    // Implement file generation logic here
-    console.log("Generating new file")
-    // For demonstration, let's add a new file to the list
     const newFile = {
       id: Date.now(),
       name: `Nuevo Archivo ${archivedItems.length + 1}`,
@@ -151,28 +146,28 @@ const ArchivePage = () => {
 
   return (
     <div className="tw-flex tw-h-screen tw-overflow-hidden">
-  
+
       <div className="tw-flex-1 tw-overflow-auto">
         <header className="tw-flex tw-items-center tw-justify-between tw-p-4 tw-border-b">
-          <h1 className="tw-text-2xl tw-font-bold">Archivo</h1>
-      
+          <h1 className="tw-text-2xl tw-font-bold">Files</h1>
+
         </header>
         <main className="tw-p-6">
           <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-              <h2 className="tw-text-xl tw-font-semibold">Elementos Archivados</h2>
+              <h2 className="tw-text-xl tw-font-semibold">Archived Items</h2>
               <div className="tw-flex tw-space-x-2">
                 <button
                   className={`tw-px-3 tw-py-1 tw-rounded ${view === "list" ? "tw-bg-blue-500 tw-text-white" : "tw-bg-gray-200"}`}
                   onClick={() => setView("list")}
                 >
-                  Lista
+                  List
                 </button>
                 <button
                   className={`tw-px-3 tw-py-1 tw-rounded ${view === "tree" ? "tw-bg-blue-500 tw-text-white" : "tw-bg-gray-200"}`}
                   onClick={() => setView("tree")}
                 >
-                  Árbol
+                  Tree
                 </button>
               </div>
             </div>
@@ -192,17 +187,17 @@ const ArchivePage = () => {
                 onChange={(e) => setFilter(e.target.value)}
                 className="tw-border tw-rounded-md tw-px-3 tw-py-2 tw-w-48"
               >
-                <option value="all">Todos</option>
-                <option value="Clase">Clases</option>
-                <option value="Evento">Eventos</option>
-                <option value="Programa">Programas</option>
+                <option value="all">All</option>
+                <option value="Clase">Classes</option>
+                <option value="Evento">Events</option>
+                <option value="Programa">Programs</option>
               </select>
               <button
                 onClick={handleGenerateFile}
                 className="tw-bg-green-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
               >
                 <FilePlus className="tw-w-5 tw-h-5 tw-mr-2" />
-                Generar Archivo
+                Generate File
               </button>
             </div>
             {view === "list" ? (
@@ -210,16 +205,16 @@ const ArchivePage = () => {
                 <thead className="tw-bg-gray-50">
                   <tr>
                     <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                      Nombre
+                      Name
                     </th>
                     <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                      Tipo
+                      Type
                     </th>
                     <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                      Fecha de Archivo
+                      File Date
                     </th>
                     <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                      Acciones
+                      Actions
                     </th>
                   </tr>
                 </thead>
@@ -263,26 +258,26 @@ const ArchivePage = () => {
         <div className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center">
           <div className="tw-bg-white tw-rounded-lg tw-p-6 tw-w-3/4 tw-h-3/4 tw-overflow-auto">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-4">
-              <h2 className="tw-text-xl tw-font-semibold">Vista previa del archivo: {selectedFile.name}</h2>
+              <h2 className="tw-text-xl tw-font-semibold">File preview: {selectedFile.name}</h2>
               <button onClick={() => setSelectedFile(null)} className="tw-text-gray-500 hover:tw-text-gray-700">
                 <X className="tw-w-5 tw-h-5" />
               </button>
             </div>
             <div className="tw-space-y-2">
               <p>
-                <strong>Nombre:</strong> {selectedFile.name}
+                <strong>Name:</strong> {selectedFile.name}
               </p>
               <p>
-                <strong>Tipo:</strong> {selectedFile.type}
+                <strong>Type:</strong> {selectedFile.type}
               </p>
               <p>
-                <strong>Fecha de archivo:</strong> {selectedFile.archivedDate}
+                <strong>File date:</strong> {selectedFile.archivedDate}
               </p>
-             
-             
+
+
               <div className="tw-mt-4 tw-p-4 tw-border tw-rounded">
-                <p>Contenido del archivo (simulado)</p>
-                <p>Este es un ejemplo de cómo se vería el contenido del archivo {selectedFile.name}.</p>
+                <p>File content (simulated)</p>
+                <p>This is an example of what the contents of the file would look like {selectedFile.name}.</p>
               </div>
             </div>
           </div>

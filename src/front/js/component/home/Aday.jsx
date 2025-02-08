@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 const Aday = () => {
     return (
         <>
@@ -72,8 +71,6 @@ const Aday = () => {
 
             </section>
         </>
-
-
     )
 }
 

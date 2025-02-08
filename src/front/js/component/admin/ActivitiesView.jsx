@@ -29,9 +29,9 @@ const ActivitiesView = () => {
       const file = files[0]
       setFormData((prev) => ({
         ...prev,
-        [name]: file,  // Guardamos el archivo en el estado formData
+        [name]: file,  
       }))
-      setImagePreview(URL.createObjectURL(file)) // Establecemos la vista previa de la imagen
+      setImagePreview(URL.createObjectURL(file)) 
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -61,7 +61,6 @@ const ActivitiesView = () => {
       }
     };
   
-  
     useEffect(() => {
       getTeachers();
     }, []);
@@ -87,13 +86,13 @@ const ActivitiesView = () => {
     setFormData({
       name: activity.name,
       description: activity.description,
-      image: activity.image, // Al editar, conservamos la imagen actual de la actividad
+      image: activity.image, 
       age_range: activity.age_range,
       time: activity.time,
       capacity: activity.capacity,
       price: activity.price,
     })
-    setImagePreview(activity.image)  // Si la actividad ya tiene imagen, la mostramos como vista previa
+    setImagePreview(activity.image)  
     setShowModal(true)
   }
   
@@ -108,7 +107,6 @@ const ActivitiesView = () => {
     }
   }
 
-  
 
   return (
     <div className="tw-p-4">
@@ -126,14 +124,14 @@ const ActivitiesView = () => {
               <thead className="tw-bg-gray-100">
                 <tr>
                
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Programa</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Descripcion</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Edad</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Horario</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacidad</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Precio</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Program</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Age</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Schedule</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacity</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Price</th>
                   <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
+                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="tw-divide-y tw-divide-gray-200">

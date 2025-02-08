@@ -6,7 +6,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { Actions } from '@cloudinary/url-gen/index';
 
 
-
 const DashboardOverview = () => {
   const { store, actions } = useContext(Context)
   const [activeTab, setActiveTab] = useState('overview');
@@ -17,9 +16,6 @@ useEffect(()=>{
 
 const tabs = [
   { id: 'overview', label: 'Resumen' },
-//   { id: 'clients', label: 'Clientes' },
-//   { id: 'classes', label: 'Clases y Servicios' },
-//   { id: 'enrollments', label: 'Inscripciones' },
 ];
 
 const stats = [
@@ -48,7 +44,7 @@ const stats = [
 //   { name: 'Vie', estudiantes: 42 },
 // ];
 
-// Componentes para el contenido de cada pestaña
+
 const OverviewTab = () =>
   
 (<>
@@ -237,11 +233,6 @@ const OverviewTab = () =>
   
 // );
 
-
-
-
-  
-  
 
   const renderTabContent = () => {
     switch (activeTab) {

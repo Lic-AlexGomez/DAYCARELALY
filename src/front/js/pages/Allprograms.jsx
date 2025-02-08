@@ -3,15 +3,15 @@ import { Context } from "../store/appContext";
 import kids4C from "../../img/kids4C.png";
 import { useNavigate } from "react-router-dom";
 import { defaultPrograms } from "./Programs.jsx";
-import ProgramModal from "../component/ProgramsModal.jsx"
+import ProgramModal from "../component/home/ProgramsModal.jsx"
 
 export const Allprograms = () => {
     const { store, actions } = useContext(Context);
 
     const [selectedAge, setSelectedAge] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedProgram, setSelectedProgram] = useState(null); 
-    const [isModalOpen, setIsModalOpen] = useState(false); 
+    const [selectedProgram, setSelectedProgram] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const allPrograms = [...defaultPrograms, ...(store.programs || [])];
 

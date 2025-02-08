@@ -4,7 +4,7 @@ import worker from "../../img/Daycare-worker.jpg"
 import kids from "../../img/kids-playing.jpg"
 import playground from "../../img/playground.jpg"
 import { Link } from "react-router-dom";
-import Getintouch from "./Getintouch";
+import Getintouch from "../component/home/Getintouch";
 
 const AboutUs = () => {
     const [selectedAge, setSelectedAge] = useState("Infant");
@@ -63,11 +63,11 @@ const AboutUs = () => {
                             prepares them for life.
                         </p>
                         <Link to="/contactus">
-                        <div className="tw-flex tw-gap-4">
-                            <button className="tw-bg-secondary tw-text-primary tw-font-bold tw-py-3 tw-px-6 tw-rounded-lg tw-bg-[#ffc909]">
-                                REQUEST INFORMATION
-                            </button>
-                        </div>
+                            <div className="tw-flex tw-gap-4">
+                                <button className="tw-bg-secondary tw-text-primary tw-font-bold tw-py-3 tw-px-6 tw-rounded-lg tw-bg-[#ffc909]">
+                                    REQUEST INFORMATION
+                                </button>
+                            </div>
                         </Link>
                     </div>
                     <div className="md:tw-w-1/2 tw-mt-6 md:tw-mt-0">
@@ -177,9 +177,9 @@ const AboutUs = () => {
                         Let’s build a bright future together!
                     </p>
                     <Link to="/contactus">
-                    <button className="tw-bg-primary tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded-lg tw-bg-[#ffc909]">
-                        Contact Us Today
-                    </button>
+                        <button className="tw-bg-primary tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded-lg tw-bg-[#ffc909]">
+                            Contact Us Today
+                        </button>
                     </Link>
                 </div>
             </div>
