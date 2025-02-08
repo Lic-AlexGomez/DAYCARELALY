@@ -1,7 +1,7 @@
 import React, { useContext,useEffect, useState } from "react"
 import { Bell, User,ShoppingBag } from "lucide-react"
 import { Context } from "../../store/appContext"
-import ParentVirtualClassesEnroll from "./ParentVirtualClassesEnroll"
+import { Link } from "react-router-dom"
 
 const ParentHeader = () => {
   
@@ -26,11 +26,13 @@ const ParentHeader = () => {
               <User className="tw-w-6 tw-h-6 tw-text-gray-700" />
               <span className="tw-text-gray-700">{store.user?.username || "Cargando..."}</span>
             </div>
-              <button  className="tw-text-red-500 " >
-              <ShoppingBag className="tw-w-6 tw-h-6" />
+              <Link to={"/parent-dashboard/payments"}><button  className="tw-text-red-500 " >
+                <ShoppingBag className="tw-w-6 tw-h-6" />
               {store.enrolledClasses.length > 0 ? <span className="tw-absolute tw-top-2  tw-right-2 tw-w-6 tw-h-6 tw-bg-blue-500 tw-text-white tw-rounded-full tw-flex tw-items-center tw-justify-center tw-text-xs">{store.enrolledClasses.length }</span> 
               : null} 
-            </button>
+            </button></Link>
+              
+              
           </div>
         </div>
       </div>

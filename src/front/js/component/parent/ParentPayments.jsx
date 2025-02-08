@@ -66,10 +66,11 @@ const ParentPayments = () => {
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Pending payments</h3>
       <div className="tw-space-y-4">
-        {[testPayment].map((payment) => (
+      {console.log(store.enrolledClasses)}
+        {store.enrolledClasses.map((payment) => (
           <div key={payment.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-2">
-              <h4 className="tw-text-lg tw-font-semibold">{payment.concept}</h4>
+              <h4 className="tw-text-lg tw-font-semibold">{payment.name}</h4>
               <span
                 className={`tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold ${
                   payment.status === "Pagado"
@@ -82,11 +83,11 @@ const ParentPayments = () => {
             </div>
             <div className="tw-flex tw-items-center tw-mb-2">
               <DollarSign className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
-              <span>${payment.amount}</span>
+              <span>${payment.price}</span>
             </div>
             <div className="tw-flex tw-items-center tw-mb-4">
               <Calendar className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
-              <span>Fecha límite: {payment.dueDate}</span>
+              <span>Fecha límite: {new Date().toLocaleDateString()}</span>
             </div>
             {payment.status !== "Pagado" && (
               <button
