@@ -110,12 +110,12 @@ const ServicesView = () => {
     };
     const handleDeleteService = async (id) => {
         const confirmDelete = await Swal.fire({
-          title: '¿Estás seguro?',
-          text: "Esta acción no se puede deshacer.",
+          title: '¿You are sure?',
+          text: "This action cannot be undone.",
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Sí, eliminar',
-          cancelButtonText: 'Cancelar',
+          confirmButtonText: 'Yes, delete',
+          cancelButtonText: 'Cancel',
         });
     
         if (confirmDelete.isConfirmed) {
@@ -125,15 +125,15 @@ const ServicesView = () => {
             if (result) {
               Swal.fire({
                 icon: 'success',
-                title: 'Clase eliminada',
-                text: 'La clase ha sido eliminada con éxito.',
+                title: 'Removed class',
+                text: 'The class has been successfully deleted.',
               });
               actions.fetchServices();
             } else {
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Hubo un error al eliminar la clase.',
+                text: 'There was an error deleting the class.',
               });
             }
           } catch (error) {
@@ -141,7 +141,7 @@ const ServicesView = () => {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'Hubo un error al intentar eliminar el servicio. Intenta nuevamente.',
+              text: 'There was an error trying to delete the service. Try again.',
             });
           }
         }
@@ -149,12 +149,12 @@ const ServicesView = () => {
 
   return (
     <div>
-      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Servicios</h2>
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Service Management</h2>
       <div className="tw-mb-6">
-        <form  className="tw-flex tw-space-x-4" onSubmit={handleAddService}>
+        <form  className="tw-flex tw-items-end tw-space-x-4" onSubmit={handleAddService}>
          
           <div className='tw-flex-1'>
-            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del serivico</label>
+            <label htmlFor="name" className='tw-block tw-mb-2'>Service name</label>
             <input
               type="text"
               name="name"
@@ -166,7 +166,7 @@ const ServicesView = () => {
             />
           </div>
           <div className='tw-flex-1'>
-            <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
+            <label htmlFor="description" className='tw-block tw-mb-2'>Description</label>
             <input
               type="text"
               name="description"
@@ -179,7 +179,7 @@ const ServicesView = () => {
           </div>
 
           <div className='tw-flex-1'>
-            <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
+            <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
             <input
               type="file"
               name="image"
@@ -189,9 +189,9 @@ const ServicesView = () => {
             />
           </div>
 
-          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
-            <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-            Agregar Servicio
+          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 -py-5 tw-rounded-md tw-flex tw-items-center tw-h-10 ">
+            <Plus className="tw-w-5 tw-h-5 tw-mr-2 -tw-my-5" />
+            Add Service
           </button>
         </form>
       </div>
@@ -199,10 +199,10 @@ const ServicesView = () => {
         <thead className="tw-bg-gray-100">
           <tr>
             
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Nombre</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Descripcion</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Imagen</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Name</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Imagn</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody className="tw-divide-y tw-divide-gray-200">
@@ -229,7 +229,7 @@ const ServicesView = () => {
         <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
           <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-              <h3 className="tw-text-xl tw-font-semibold">Editar Servicio</h3>
+              <h3 className="tw-text-xl tw-font-semibold">Edit Service</h3>
               <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
                 <X className="tw-w-6 tw-h-6" />
               </button>
@@ -237,7 +237,7 @@ const ServicesView = () => {
             <form  className="tw-space-y-4" onSubmit={handleUpdateService}>
               
               <div className='tw-flex-1'>
-                <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del Servicio</label>
+                <label htmlFor="name" className='tw-block tw-mb-2'>Service Name</label>
                 <input
                   type="text"
                   name="name"
@@ -249,7 +249,7 @@ const ServicesView = () => {
                 />
               </div>
               <div className='tw-flex-1'>
-                <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
+                <label htmlFor="description" className='tw-block tw-mb-2'>Description</label>
                 <input
                   type="text"
                   name="description"
@@ -263,13 +263,13 @@ const ServicesView = () => {
               
               {editingService.image && (
                 <div className="tw-mb-4">
-                  <h4 className="tw-text-sm">Imagen Actual:</h4>
+                  <h4 className="tw-text-sm">Current Image:</h4>
                   <img src={editingService.image} alt="Imagen del Servicio" className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md" />
                 </div>
               )}
 
               <div className='tw-flex-1'>
-                <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
+                <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
                 <input
                   type="file"
                   name="image"
@@ -290,7 +290,7 @@ const ServicesView = () => {
                   type="submit"
                   className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
                 >
-                  Guardar Cambios
+                  Save Changes
                 </button>
               </div>
             </form>

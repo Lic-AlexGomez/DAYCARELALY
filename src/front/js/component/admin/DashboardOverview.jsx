@@ -15,15 +15,15 @@ useEffect(()=>{
 },[])
 
 const tabs = [
-  { id: 'overview', label: 'Resumen' },
+  { id: 'overview', label: 'Summary' },
 ];
 
 const stats = [
-  { title: 'Total Clients', value:store.clients.length, icon: Users, color: 'tw-bg-blue-500' , link: '/admin-dashboard/clients', linkText: 'Gestionar Clientes' },
-  { title: 'Total Active Classes', value:store.classes.length, icon: BookOpen, color: 'tw-bg-green-500' , link: '/admin-dashboard/classes', linkText: 'Ver Clases' },
-  { title: 'New Registrations', value:store.subscriptions.length, icon: FileText, color: 'tw-bg-yellow-500', link: '/admin-dashboard/enrollments', linkText: 'Ver Inscripciones' },
-  { title: 'Total programs ', value: store.activities.length, icon: DollarSign, color: 'tw-bg-purple-500', link: '/admin-dashboard/activities', linkText: 'Ver programas' },
-  { title: 'Active Services', value: store.services.length, icon: TrendingUp, color: 'tw-bg-red-500' , link: '/admin-dashboard/services', linkText: 'Ver Servicios' },
+  { title: 'Total Clients', value:store.clients.length, icon: Users, color: 'tw-bg-blue-500' , link: '/admin-dashboard/clients', linkText: 'Manage Clients' },
+  { title: 'Total Active Classes', value:store.classes.length, icon: BookOpen, color: 'tw-bg-green-500' , link: '/admin-dashboard/classes', linkText: 'See Classes' },
+  { title: 'New Registrations', value:store.subscriptions.length, icon: FileText, color: 'tw-bg-yellow-500', link: '/admin-dashboard/enrollments', linkText: 'See Registrations' },
+  { title: 'Total programs ', value: store.activities.length, icon: DollarSign, color: 'tw-bg-purple-500', link: '/admin-dashboard/activities', linkText: 'See programs' },
+  { title: 'Active Services', value: store.services.length, icon: TrendingUp, color: 'tw-bg-red-500' , link: '/admin-dashboard/services', linkText: 'See Services' },
   { title: 'Upcoming Events', value: store.events.length, icon: Calendar, color: 'tw-bg-indigo-500', link: '/admin-dashboard/events', linkText: 'Ver eventos' },
 ];
 

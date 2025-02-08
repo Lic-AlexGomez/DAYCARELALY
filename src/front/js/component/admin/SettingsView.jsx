@@ -4,7 +4,7 @@ import React, { useState, useEffect,useContext } from "react"
 import { Save, Loader2 } from "lucide-react"
 import { Context } from "../../store/appContext"
 
-// UI Components
+
 const Card = ({ className, children, ...props }) => (
   <div className={`tw-bg-white tw-rounded-lg tw-border tw-border-gray-200 tw-shadow-sm ${className}`} {...props}>
     {children}
@@ -82,8 +82,8 @@ const SettingsView = () => {
       try {
         actions.fetchSettings()
       } catch (error) {
-        console.error("Error al cargar las configuraciones:", error)
-        setError("No se pudo cargar la configuración. Por favor, intente de nuevo más tarde.")
+        console.error("Error loading configurations:", error)
+        setError("Configuration could not be loaded. Please try again later.")
       } finally {
         setIsLoading(false)
       }
@@ -118,11 +118,11 @@ const SettingsView = () => {
             image: result.url,
           }))
         } else {
-          throw new Error(result.error || "Error al subir la imagen")
+          throw new Error(result.error || "Error uploading image")
         }
       } catch (error) {
-        console.error("Error al subir la imagen:", error)
-        setError("No se pudo subir la imagen. Por favor, intente de nuevo.")
+        console.error("Error uploading image:", error)
+        setError("Could not upload image. Please try again.")
       }
     }
   }
@@ -165,7 +165,7 @@ const SettingsView = () => {
 
   return (
     <div className="tw-container tw-mx-auto tw-p-4">
-      <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Configuración del Sistema</h1>
+      <h1 className="tw-text-3xl tw-font-bold tw-mb-6">System Configuration</h1>
       {error && (
         <div
           className="tw-bg-red-100 tw-border tw-border-red-400 tw-text-red-700 tw-px-4 tw-py-3 tw-rounded tw-relative tw-mb-4"
@@ -178,12 +178,12 @@ const SettingsView = () => {
       <form onSubmit={handleSubmit} className="tw-space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Configuración General</CardTitle>
+            <CardTitle>General Settings</CardTitle>
           </CardHeader>
           <CardContent className="tw-grid tw-grid-cols-1 tw-md:grid-cols-2 tw-gap-6">
             <div>
               <label htmlFor="name_daycare" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-                Nombre del Centro
+              Daycere Name
               </label>
               <Input
                 type="text"
@@ -195,7 +195,7 @@ const SettingsView = () => {
             </div>
             <div>
               <label htmlFor="admin_email" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-                Email del Administrador
+              Administrator Email
               </label>
               <Input
                 type="email"
@@ -207,7 +207,7 @@ const SettingsView = () => {
             </div>
             <div>
               <label htmlFor="max_capacity" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-                Capacidad Máxima
+              Maximum daycare capacity
               </label>
               <Input
                 type="number"
@@ -219,13 +219,13 @@ const SettingsView = () => {
             </div>
             <div>
               <label htmlFor="phone" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-                Teléfono
+                Phone
               </label>
               <Input type="tel" id="phone" name="phone" value={settings.phone || ""} onChange={handleInputChange} />
             </div>
             <div>
               <label htmlFor="address" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-                Dirección
+                Address
               </label>
               <Input
                 type="text"
@@ -240,7 +240,7 @@ const SettingsView = () => {
                 htmlFor="schedule_attention"
                 className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1"
               >
-                Horario de Atención
+                Daycare Schedule
               </label>
               <Input
                 type="text"
@@ -255,7 +255,7 @@ const SettingsView = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Redes Sociales</CardTitle>
+            <CardTitle>Social networks</CardTitle>
           </CardHeader>
           <CardContent className="tw-grid tw-grid-cols-1 tw-md:grid-cols-2 tw-gap-6">
             <div>
@@ -325,7 +325,7 @@ const SettingsView = () => {
             )}
             <div>
               <label htmlFor="image" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-                Subir nuevo logo
+              Upload new logo
               </label>
               <Input type="file" id="image" name="image" onChange={handleImageChange} accept="image/*" />
             </div>
@@ -337,12 +337,12 @@ const SettingsView = () => {
             {isLoading ? (
               <>
                 <Loader2 className="tw-mr-2 tw-h-4 tw-w-4 tw-animate-spin" />
-                Guardando...
+                Saving...
               </>
             ) : (
               <>
                 <Save className="tw-mr-2 tw-h-4 tw-w-4" />
-                Guardar Cambios
+                Save Changes
               </>
             )}
           </Button>

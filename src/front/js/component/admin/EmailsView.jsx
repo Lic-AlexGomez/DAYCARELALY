@@ -65,20 +65,19 @@ const EmailManagementPage = () => {
 
       Swal.fire({
         icon: 'success',
-        title: 'Correo enviado!',
-        text: 'El correo ha sido enviado correctamente.',
-        confirmButtonText: 'Aceptar'
+        title: 'Email sent!',
+        text: 'The email has been sent correctly.',
+        confirmButtonText: 'Accept'
       });
 
-      console.log('Correo enviado exitosamente y agregado a la base de datos!');
     } catch (error) {
-      console.error('Error al enviar el correo o agregar a la base de datos:', error);
+      console.error('Error sending email or adding to database:', error);
 
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Hubo un error al enviar el correo o agregarlo a la base de datos. Por favor, inténtalo de nuevo.',
-        confirmButtonText: 'Cerrar'
+        text: 'There was an error sending the email or adding it to the database. Please try again.',
+        confirmButtonText: 'close'
       });
     }
   };
@@ -89,7 +88,7 @@ const EmailManagementPage = () => {
   }
 
   const handleDeleteEmail = async (id) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este correo?")) {
+    if (window.confirm("¿Are you sure you want to delete this email?")) {
       await actions.deleteEmail(id);
     }
   }
@@ -146,7 +145,7 @@ const EmailManagementPage = () => {
                 className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
               >
                 <Send className="tw-w-5 tw-h-5 tw-mr-2" />
-                {newEmail.scheduledDate ? "Programar Correo" : "Enviar Correo"}
+                {newEmail.scheduledDate ? "Schedule Email" : "Send Email"}
               </button>
             </form>
 
@@ -174,7 +173,7 @@ const EmailManagementPage = () => {
                   <ChevronLeft size={20} />
                 </button>
                 <span className="tw-text-sm tw-text-gray-600">
-                  Page {currentPage} de {pageCount}
+                  Page {currentPage} of {pageCount}
                 </span>
                 <button
                   onClick={() => setCurrentPage(currentPage + 1)}
@@ -237,10 +236,10 @@ const EmailManagementPage = () => {
               <h3 className="tw-text-lg tw-leading-6 tw-font-medium tw-text-gray-900">{selectedEmail.subject}</h3>
               <div className="tw-mt-2 tw-px-7 tw-py-3">
                 <p className="tw-text-sm tw-text-gray-500">
-                  <strong>Para:</strong> {selectedEmail.to}
+                  <strong>For:</strong> {selectedEmail.to}
                 </p>
                 <p className="tw-text-sm tw-text-gray-500">
-                  <strong>Fecha:</strong> {new Date(selectedEmail.date).toLocaleString()}
+                  <strong>Date:</strong> {new Date(selectedEmail.date).toLocaleString()}
                 </p>
                 <p className="tw-text-sm tw-text-gray-700 tw-mt-4">{selectedEmail.content}</p>
               </div>
