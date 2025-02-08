@@ -9,15 +9,12 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData)
-    // store the user data in localStorage or a secure cookie
   }
 
   const logout = () => {
     setUser(null)
-    // clear the user data from localStorage or the secure cookie
     navigate("/login")
   }
-
   return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>
 }
 

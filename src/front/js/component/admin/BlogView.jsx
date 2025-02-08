@@ -25,7 +25,7 @@ const BlogView = () => {
 
   return (
     <div>
-      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión del Blog</h2>
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Blog Management</h2>
       <div className="tw-mb-6">
         <form onSubmit={handleAddPost} className="tw-space-y-4">
           <input
@@ -47,7 +47,7 @@ const BlogView = () => {
           ></textarea>
           <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-            Agregar Post
+            Add Post
           </button>
         </form>
       </div>
@@ -59,7 +59,7 @@ const BlogView = () => {
             <div className="tw-flex tw-justify-between tw-items-center">
               <span className="tw-text-sm tw-text-gray-500">{post.date}</span>
               <div className="tw-flex tw-items-center">
-                <span className="tw-mr-3">Autor: {post.Author}</span>
+                <span className="tw-mr-3">Author: {post.Author}</span>
                 </div>              <div>
                 <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">
                   <Edit className="tw-w-5 tw-h-5" />

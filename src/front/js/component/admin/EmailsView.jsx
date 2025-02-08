@@ -34,7 +34,7 @@ const EmailManagementPage = () => {
   //     // Reseteo del formulario
   //     setNewEmail({ to: "", subject: "", content: "", scheduledDate: "" });
 
-      
+
   //     actions.AddSentEmail(emailToSend);
 
   //     console.log('Correo enviado exitosamente!');
@@ -53,19 +53,16 @@ const EmailManagementPage = () => {
         delete emailToSend.scheduledDate;
       }
 
-      // Enviar el correo usando emailjs
       await emailjs.sendForm('service_9mrx7p7', 'template_vrpdmwj', form.current, {
         publicKey: 'DXp2MF0wEeq9kKBK2',
       });
 
-      // Intentar agregar a la base de datos
       const response = await actions.sendEmail(emailToSend);
       console.log("Respuesta de la API:", response);
 
-      // Reseteo del formulario
+
       setNewEmail({ to_name: "", user_email: "", message: "", scheduledDate: "" });
 
-      // Mostrar mensaje de éxito usando SweetAlert
       Swal.fire({
         icon: 'success',
         title: 'Correo enviado!',
@@ -77,7 +74,6 @@ const EmailManagementPage = () => {
     } catch (error) {
       console.error('Error al enviar el correo o agregar a la base de datos:', error);
 
-      // Mostrar mensaje de error usando SweetAlert
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -86,7 +82,7 @@ const EmailManagementPage = () => {
       });
     }
   };
-  
+
 
   const handleInputChange = (e) => {
     setNewEmail({ ...newEmail, [e.target.name]: e.target.value });
@@ -112,14 +108,14 @@ const EmailManagementPage = () => {
     <div className="tw-flex tw-h-screen tw-overflow-hidden">
       <div className="tw-flex-1 tw-overflow-auto">
         <header className="tw-flex tw-items-center tw-justify-between tw-p-4 tw-border-b">
-          <h1 className="tw-text-2xl tw-font-bold">Gestión de Correos</h1>
+          <h1 className="tw-text-2xl tw-font-bold">Mail Management</h1>
         </header>
         <main className="tw-p-6">
           <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6 tw-mb-6">
-            <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Crear Nuevo Correo</h2>
+            <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Create New Email</h2>
 
             <form ref={form} onSubmit={handleSendEmail} className="tw-space-y-4">
-              <label>Nombre</label>
+              <label>Name</label>
               <input
                 type="text"
                 name="to_name"
@@ -137,7 +133,7 @@ const EmailManagementPage = () => {
                 className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 required
               />
-              <label>Mensaje</label>
+              <label>Message</label>
               <textarea
                 name="message"
                 value={newEmail.message}
@@ -157,12 +153,12 @@ const EmailManagementPage = () => {
           </div>
 
           <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6">
-            <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Correos Enviados</h2>
+            <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Emails Sent</h2>
             <div className="tw-mb-4 tw-flex tw-justify-between tw-items-center">
               <div className="tw-relative">
                 <input
                   type="text"
-                  placeholder="Buscar correos..."
+                  placeholder="Search email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="tw-pl-10 tw-pr-4 tw-py-2 tw-border tw-border-gray-300 tw-rounded-md"
@@ -178,7 +174,7 @@ const EmailManagementPage = () => {
                   <ChevronLeft size={20} />
                 </button>
                 <span className="tw-text-sm tw-text-gray-600">
-                  Página {currentPage} de {pageCount}
+                  Page {currentPage} de {pageCount}
                 </span>
                 <button
                   onClick={() => setCurrentPage(currentPage + 1)}
@@ -198,28 +194,25 @@ const EmailManagementPage = () => {
                       <p className="tw-text-sm tw-text-gray-500">{email.user_email}</p>
                     </div>
                     <div>
-                      <span className="tw-font-bold">Nombre</span>
+                      <span className="tw-font-bold">Name</span>
                       <p className="tw-text-sm tw-text-gray-500">{email.to_name}</p>
                     </div>
-                     <div>
-                      <span className="tw-font-bold">Mensaje</span>
+                    <div>
+                      <span className="tw-font-bold">Message</span>
                       <p className="tw-text-sm tw-text-gray-500">{email.message}</p>
-                     </div>
-                     <div>
-                      <span className="tw-font-bold">Fecha</span>
+                    </div>
+                    <div>
+                      <span className="tw-font-bold">Date</span>
                       <p className="tw-text-sm tw-text-gray-500">{new Date(email.date).toLocaleString()}</p>
-                     </div>
-                    
-                    
+                    </div>
                   </div>
-    
                   <div className="tw-flex tw-justify-between tw-items-center">
                     <button
                       className="tw-text-blue-600 hover:tw-text-blue-800 tw-flex tw-items-center"
                       onClick={() => setSelectedEmail(email)}
                     >
                       <Eye className="tw-w-5 tw-h-5 tw-mr-1" />
-                      Ver completo
+                      See complete
                     </button>
                     <button
                       className="tw-text-red-600 hover:tw-text-red-800"
@@ -257,7 +250,7 @@ const EmailManagementPage = () => {
                   className="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-text-base tw-font-medium tw-rounded-md tw-w-full tw-shadow-sm hover:tw-bg-blue-600 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-300"
                   onClick={() => setSelectedEmail(null)}
                 >
-                  Cerrar
+                  close
                 </button>
               </div>
             </div>

@@ -53,17 +53,17 @@ const ClientsView = () => {
 
   return (
     <div className="tw-relative">
-      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Clientes</h2>
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Customer Management</h2>
       <div className="tw-mb-6">
         <form onSubmit={handleAddClient} className="tw-flex tw-space-x-4">
           <div className="tw-flex-1">
-            <label htmlFor="name" className='tw-block tw-mb-2'>Nombre</label>
+            <label htmlFor="name" className='tw-block tw-mb-2'>Name</label>
           <input
             type="text"
             name="name"
             value={newClient.name}
             onChange={handleInputChange}
-            placeholder="Nombre"
+            placeholder="Name"
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
@@ -81,13 +81,13 @@ const ClientsView = () => {
           />
           </div>
           <div className="tw-flex-1">
-            <label htmlFor="phone" className='tw-block tw-mb-2'>Telefono</label>
+            <label htmlFor="phone" className='tw-block tw-mb-2'>Phone</label>
           <input
             type="tel"
             name="phone"
             value={newClient.phone}
             onChange={handleInputChange}
-            placeholder="Teléfono"
+            placeholder="Phone"
             className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
@@ -101,8 +101,8 @@ const ClientsView = () => {
             className="tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           >
-            <option value="Activo">Activo</option>
-            <option value="Inactivo">Inactivo</option>
+            <option value="Activo">Active</option>
+            <option value="Inactivo">Inactive</option>
           </select>
           </div>
           <button
@@ -110,7 +110,7 @@ const ClientsView = () => {
             className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
           >
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-            Agregar Cliente
+            Add Client
           </button>
         </form>
       </div>
@@ -133,19 +133,19 @@ const ClientsView = () => {
               ID
             </th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-              Nombre
+              Name
             </th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
               Email
             </th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-              Teléfono
+              Phone
             </th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-              Estado
+            State
             </th>
             <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-              Acciones
+              Actions
             </th>
           </tr>
         </thead>
@@ -159,11 +159,11 @@ const ClientsView = () => {
               <td className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
                 {client.status === "Activo" ? (
                   <span className="tw-inline-flex tw-items-center tw-justify-center tw-py-1 tw-px-2 tw-rounded-full tw-text-xs tw-font-semibold tw-bg-green-100 tw-text-green-800">
-                    Activo
+                    Active
                   </span>
                 ) : (
                   <span className="tw-inline-flex tw-items-center tw-justify-center tw-py-1 tw-px-2 tw-rounded-full tw-text-xs tw-font-semibold tw-bg-red-100 tw-text-red-800">
-                    Inactivo
+                    Inactive
                   </span>
                 )}
               </td>
@@ -187,7 +187,7 @@ const ClientsView = () => {
         <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
           <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-              <h3 className="tw-text-xl tw-font-semibold">Editar Cliente</h3>
+              <h3 className="tw-text-xl tw-font-semibold">Edit Client</h3>
               <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
                 <X className="tw-w-6 tw-h-6" />
               </button>
@@ -195,7 +195,7 @@ const ClientsView = () => {
             <form onSubmit={handleUpdateClient} className="tw-space-y-4">
               <div>
                 <label htmlFor="name" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-                  Nombre
+                  Name
                 </label>
                 <input
                   type="text"
@@ -223,7 +223,7 @@ const ClientsView = () => {
               </div>
               <div>
                 <label htmlFor="phone" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-                  Teléfono
+                  Phone
                 </label>
                 <input
                   type="tel"
@@ -237,7 +237,7 @@ const ClientsView = () => {
               </div>
               <div>
                 <label htmlFor="status" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-                  Estado
+                State
                 </label>
                 <select
                   name="status"
@@ -247,8 +247,8 @@ const ClientsView = () => {
                   className="tw-mt-1 tw-block tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-py-2 tw-px-3 focus:tw-outline-none focus:tw-ring-indigo-500 focus:tw-border-indigo-500"
                   required
                 >
-                  <option value="Activo">Activo</option>
-                  <option value="Inactivo">Inactivo</option>
+                  <option value="Activo">Active</option>
+                  <option value="Inactivo">Inactive</option>
                 </select>
               </div>
               <div className="tw-flex tw-justify-end tw-space-x-3">
@@ -263,7 +263,7 @@ const ClientsView = () => {
                   type="submit"
                   className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
                 >
-                  Guardar Cambios
+                 Save Changes
                 </button>
               </div>
             </form>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react"
-import { Context } from "../store/appContext"
-import book from "../../img/books.png"
+import { Context } from "../../store/appContext"
+import book from "../../../img/books.png"
 
 export const Classes = () => {
   const { store, actions } = useContext(Context)
@@ -8,12 +8,11 @@ export const Classes = () => {
 
   useEffect(() => {
     actions.fetchClasses()
-  }, []) // Added actions as a dependency
+  }, [])
 
   const handleShowMore = () => {
     setVisibleClasses((prev) => prev + 4)
   }
-
   return (
     <div className="tw-bg-white tw-py-12">
       <div className="tw-container tw-mx-auto tw-px-4 tw-text-center tw-mb-12">
@@ -25,7 +24,6 @@ export const Classes = () => {
           Learning From Today
         </h2>
       </div>
-
       <div className="tw-container tw-mx-auto tw-px-4">
         <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-6">
           {store.classes.slice(0, visibleClasses).map((classItem) => (
@@ -71,7 +69,6 @@ export const Classes = () => {
             </div>
           ))}
         </div>
-
         {visibleClasses < store.classes.length && (
           <div className="tw-text-center tw-mt-8">
             <button

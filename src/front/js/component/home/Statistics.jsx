@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useInView } from "react-intersection-observer";
-import img12 from "../../img/12.png";
-import img13 from "../../img/13.png";
-import img14 from "../../img/14.png";
-import img15 from "../../img/15.png";
+import img12 from "../../../img/12.png";
+import img13 from "../../../img/13.png";
+import img14 from "../../../img/14.png";
+import img15 from "../../../img/15.png";
 
 const Statistics = () => {
   const { ref, inView } = useInView({
@@ -38,7 +38,6 @@ const Statistics = () => {
     },
   ];
 
-  // Background letters and numbers for decoration
   const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   const decorations = Array.from({ length: 50 }, () => ({
     char: characters[Math.floor(Math.random() * characters.length)],
@@ -51,17 +50,15 @@ const Statistics = () => {
 
   return (
     <div className="tw-relative tw-overflow-hidden tw-mt-[-4rem] tw-border-none tw-pb-5 tw-bg-black">
-      {/* Main content section with background image and oval curve at the bottom */}
-     
       <div
         className="tw-relative tw-bg-cover tw-bg-center tw-bg-no-repeat "
         style={{
           backgroundImage: `url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/bg-5WSo4W6yJfhGPdcu0EKkjXOacK5cdG.png')`,
-          paddingTop: "8rem", // Added extra padding to account for overlap
-         
+          paddingTop: "8rem",
+
         }}
       >
-         <div className="tw-absolute  tw-top-0 tw-left-0 tw-right-0 ">
+        <div className="tw-absolute  tw-top-0 tw-left-0 tw-right-0 ">
           <svg
             className="tw-w-full tw-h-42 tw-transform tw-rotate-180"
             viewBox="0 0 1440 120"
@@ -72,7 +69,6 @@ const Statistics = () => {
             <path d="M0 0C480 80 960 80 1440 0V120H0V0Z" fill="#EAD7FF" />
           </svg>
         </div>
-        {/* Background Decorations */}
         <div className="tw-absolute tw-inset-0 tw-overflow-hidden">
           {decorations.map((dec, i) => (
             <span
@@ -90,16 +86,13 @@ const Statistics = () => {
             </span>
           ))}
         </div>
-
-        {/* Stats Content */}
         <div className="tw-relative tw-z-10 tw-pt-20 tw-pb-52">
           <div ref={ref} className="tw-max-w-6xl tw-mx-auto tw-px-4 tw-grid tw-grid-cols-2 tw-gap-8">
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className={`tw-text-center tw-transform tw-transition-all tw-duration-700 ${
-                  inView ? "tw-translate-y-0 tw-opacity-100" : "tw-translate-y-10 tw-opacity-0"
-                }`}
+                className={`tw-text-center tw-transform tw-transition-all tw-duration-700 ${inView ? "tw-translate-y-0 tw-opacity-100" : "tw-translate-y-10 tw-opacity-0"
+                  }`}
                 style={{ transitionDelay: `${index * 150}ms` }}
               >
                 <div className="tw-w-40 tw-h-40  tw-mx-auto tw-mb-6 tw-shadow-lg">
@@ -113,12 +106,9 @@ const Statistics = () => {
             ))}
           </div>
         </div>
-
-        {/* Oval curve at the bottom */}
-     
       </div>
       <div className="tw-absolute tw-bottom-0 tw-left-0 tw-right-0">
-      <svg
+        <svg
           className="tw-w-full tw-h-42"
           viewBox="0 0 1440 120"
           preserveAspectRatio="none"
@@ -132,7 +122,6 @@ const Statistics = () => {
   );
 };
 
-// Counter animation component
 const CountUp = ({ end, suffix = "" }) => {
   const [count, setCount] = useState(0);
   const countRef = useRef(count);

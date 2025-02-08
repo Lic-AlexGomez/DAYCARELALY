@@ -7,7 +7,7 @@ import dancing from "../../img/dancing.jpg";
 import Scientists from "../../img/LittleScientist.jpg";
 import kids4C from "../../img/kids4C.png";
 import { useNavigate } from 'react-router-dom';
-import ProgramModal from "../component/ProgramsModal.jsx"
+import ProgramModal from "../component/home/ProgramsModal.jsx"
 
 
 export const defaultPrograms = [
@@ -100,7 +100,7 @@ export const Programs = () => {
     const [selectedProgram, setSelectedProgram] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const allPrograms = [ ...(store.activities || [])];
+    const allPrograms = [...(store.activities || [])];
 
     const programsPerPage = 3;
 
@@ -215,11 +215,11 @@ export const Programs = () => {
                                 </div>
 
                                 <button
-                                onClick={() => openModal(programItem)}
-                                className="tw-w-full tw-py-2 tw-border tw-border-[#FFC909] tw-rounded-full tw-bg-[#FFC909] tw-text-[#9C29B2] tw-font-bold hover:tw-bg-[#FFE57A] tw-transition-colors"
-                            >
-                                Read More
-                            </button>
+                                    onClick={() => openModal(programItem)}
+                                    className="tw-w-full tw-py-2 tw-border tw-border-[#FFC909] tw-rounded-full tw-bg-[#FFC909] tw-text-[#9C29B2] tw-font-bold hover:tw-bg-[#FFE57A] tw-transition-colors"
+                                >
+                                    Read More
+                                </button>
                             </div>
                         </div>
                     ))}
@@ -244,11 +244,11 @@ export const Programs = () => {
                     Discover All Programs
                 </button>
             </div>
-              <ProgramModal
-                                        program={selectedProgram}
-                                        isOpen={isModalOpen}
-                                        onClose={closeModal}
-                                    />
+            <ProgramModal
+                program={selectedProgram}
+                isOpen={isModalOpen}
+                onClose={closeModal}
+            />
         </div>
     );
 };
