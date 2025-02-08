@@ -1,5 +1,5 @@
 import React, { useContext,useEffect } from "react"
-import { Bell, User } from "lucide-react"
+import { Bell, User,ShoppingBag } from "lucide-react"
 import { Context } from "../../store/appContext"
 
 const ParentHeader = () => {
@@ -22,6 +22,9 @@ const ParentHeader = () => {
               <User className="tw-w-6 tw-h-6 tw-text-gray-700" />
               <span className="tw-text-gray-700">{store.user?.username || "Cargando..."}</span>
             </div>
+            <button className="tw-text-red-500 ">
+              <ShoppingBag className="tw-w-6 tw-h-6" />
+            </button>
           </div>
         </div>
       </div>
