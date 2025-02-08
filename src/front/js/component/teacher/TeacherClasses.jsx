@@ -20,7 +20,7 @@ const TeacherClasses = () => {
 
   return (
     <div>
-  <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Mis Clases</h3>
+  <h3 className="tw-text-xl tw-font-semibold tw-mb-4">My Classes</h3>
   <div className="tw-mb-4">
     <div className="tw-relative">
       <input
@@ -38,16 +38,16 @@ const TeacherClasses = () => {
       <thead className="tw-bg-gray-50">
         <tr>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Nombre de la Clase
+          Class Name
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Edad
+            Age
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Hora
+            Time
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Capacidad
+            Capacity
           </th>
         </tr>
       </thead>

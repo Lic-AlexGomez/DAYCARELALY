@@ -3,9 +3,9 @@ import { Plus, Edit, Trash, Check } from "lucide-react"
 
 const TeacherAssignments = () => {
   const [assignments, setAssignments] = useState([
-    { id: 1, title: "Dibujo de la familia", class: "Clase de Arte", dueDate: "2023-06-15", status: "Pendiente" },
-    { id: 2, title: "Práctica de flauta", class: "Clase de Música", dueDate: "2023-06-20", status: "Completada" },
-    { id: 3, title: "Coreografía grupal", class: "Clase de Baile", dueDate: "2023-06-25", status: "Pendiente" },
+    { id: 1, title: "Family drawing", class: "Art Class", dueDate: "2023-06-15", status: "Pending " },
+    { id: 2, title: "Flute practice", class: "Music Class", dueDate: "2023-06-20", status: "Complete" },
+    { id: 3, title: "Group choreography", class: "Dance class", dueDate: "2023-06-25", status: "Pending " },
   ])
 
   const [newAssignment, setNewAssignment] = useState({ title: "", class: "", dueDate: "" })
@@ -27,7 +27,7 @@ const TeacherAssignments = () => {
     setAssignments(
       assignments.map((assignment) =>
         assignment.id === id
-          ? { ...assignment, status: assignment.status === "Pendiente" ? "Completada" : "Pendiente" }
+          ? { ...assignment, status: assignment.status === "Pending" ? "Complete" : "Pending" }
           : assignment,
       ),
     )
@@ -36,13 +36,13 @@ const TeacherAssignments = () => {
   return (
     <div>
       <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-        <h3 className="tw-text-xl tw-font-semibold">Tareas</h3>
+        <h3 className="tw-text-xl tw-font-semibold">Homework</h3>
         <button
           className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
           onClick={() => document.getElementById("addAssignmentForm").classList.toggle("tw-hidden")}
         >
           <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-          Agregar Tarea
+          Add Homework
         </button>
       </div>
       <form id="addAssignmentForm" className="tw-mb-6 tw-hidden">
@@ -52,7 +52,7 @@ const TeacherAssignments = () => {
             name="title"
             value={newAssignment.title}
             onChange={handleInputChange}
-            placeholder="Título de la tarea"
+            placeholder="Task title"
             className="tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
@@ -61,7 +61,7 @@ const TeacherAssignments = () => {
             name="class"
             value={newAssignment.class}
             onChange={handleInputChange}
-            placeholder="Clase"
+            placeholder="Class"
             className="tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           />
@@ -79,7 +79,7 @@ const TeacherAssignments = () => {
           className="tw-mt-4 tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md"
           onClick={handleAddAssignment}
         >
-          Agregar Tarea
+          Add Homework
         </button>
       </form>
       <div className="tw-space-y-4">
@@ -91,7 +91,7 @@ const TeacherAssignments = () => {
             <div>
               <h4 className="tw-font-semibold">{assignment.title}</h4>
               <p className="tw-text-sm tw-text-gray-600">{assignment.class}</p>
-              <p className="tw-text-sm tw-text-gray-600">Fecha límite: {assignment.dueDate}</p>
+              <p className="tw-text-sm tw-text-gray-600">Deadline: {assignment.dueDate}</p>
             </div>
             <div className="tw-flex tw-items-center">
               <button

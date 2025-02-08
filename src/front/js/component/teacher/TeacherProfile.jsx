@@ -3,19 +3,13 @@ import React, { useState } from "react"
 // import { useAuth } from "../Auth"
 
 const TeacherProfile = () => {
-//   const { user, login } = useAuth()
+
   const [name, setName] = useState("alex")
   const [email, setEmail] = useState("alex@gmail.com")
-//   const [name, setName] = useState(user.name)
-//   const [email, setEmail] = useState(user.email)
   const [subject, setSubject] = useState("N/A" || "")
-//   const [subject, setSubject] = useState(user.subject || "")
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    //  send this data to your backend
-    // login({ ...user, name, email, subject })
-
     alert("Profile updated successfully!")
   }
 

@@ -3,9 +3,9 @@ import { Search, Edit, Trash } from "lucide-react"
 
 const TeacherStudents = () => {
   const [students, setStudents] = useState([
-    { id: 1, name: "Ana García", age: 5, class: "Clase de Arte" },
-    { id: 2, name: "Carlos Rodríguez", age: 6, class: "Clase de Música" },
-    { id: 3, name: "Laura Martínez", age: 4, class: "Clase de Baile" },
+    { id: 1, name: "Ana García", age: 5, class: "Art Class" },
+    { id: 2, name: "Carlos Rodríguez", age: 6, class: "Music Class" },
+    { id: 3, name: "Laura Martínez", age: 4, class: "Dance Class" },
   ])
 
   const [searchTerm, setSearchTerm] = useState("")
@@ -22,12 +22,12 @@ const TeacherStudents = () => {
 
   return (
     <div>
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Estudiantes</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Students</h3>
       <div className="tw-mb-6">
         <div className="tw-relative">
           <input
             type="text"
-            placeholder="Buscar estudiantes..."
+            placeholder="Search students..."
             value={searchTerm}
             onChange={handleSearchChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-pl-10 tw-pr-4 tw-py-2"
