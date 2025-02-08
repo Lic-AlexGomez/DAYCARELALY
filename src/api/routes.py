@@ -1594,55 +1594,6 @@ def delete_parent_schedule(id):
     db.session.commit()
     return jsonify({"message": "Schedule deleted"}), 200
 
-@api.route('/parent_payments', methods=['GET'])
-def get_parent_payments():
-    payments = ParentPayment.query.all()
-    return jsonify([payment.serialize() for payment in payments]), 200
-
-@api.route('/parent_payments/<int:id>', methods=['GET'])
-def get_parent_payment(id):
-    payment = ParentPayment.query.get(id)
-    if payment is None:
-        return jsonify({"error": "Payment not found"}), 404
-    return jsonify(payment.serialize()), 200
-
-@api.route('/parent_payments', methods=['POST'])
-def create_parent_payment():
-    data = request.get_json()
-    new_payment = ParentPayment(
-        parent_id=data['parent_id'],
-        amount=data['amount'],
-        concept=data['concept'],
-        status=data['status'],
-        due_date=datetime.strptime(data['due_date'], "%Y-%m-%d").date()
-    )
-    db.session.add(new_payment)
-    db.session.commit()
-    return jsonify(new_payment.serialize()), 201
-
-@api.route('/parent_payments/<int:id>', methods=['PUT'])
-def update_parent_payment(id):
-    payment = ParentPayment.query.get(id)
-    if payment is None:
-        return jsonify({"error": "Payment not found"}), 404
-    data = request.get_json()
-    payment.parent_id = data.get('parent_id', payment.parent_id)
-    payment.amount = data.get('amount', payment.amount)
-    payment.concept = data.get('concept', payment.concept)
-    payment.status = data.get('status', payment.status)
-    payment.due_date = datetime.strptime(data.get('due_date', payment.due_date.isoformat()), "%Y-%m-%d").date()
-    db.session.commit()
-    return jsonify(payment.serialize()), 200
-
-@api.route('/parent_payments/<int:id>', methods=['DELETE'])
-def delete_parent_payment(id):
-    payment = ParentPayment.query.get(id)
-    if payment is None:
-        return jsonify({"error": "Payment not found"}), 404
-    db.session.delete(payment)
-    db.session.commit()
-    return jsonify({"message": "Payment deleted"}), 200
-
 @api.route('/parent_settings', methods=['GET'])
 def get_parent_settings():
     settings = ParentSetting.query.all()
@@ -3371,3 +3322,87 @@ def create_admin():
         "token": access_token,
         "admin": new_user.serialize()
     }), 201
+
+@api.route('/parent_payments', methods=['GET'])
+def get_parent_payments():
+    payments = ParentPayment.query.all()
+    return jsonify([payment.serialize() for payment in payments]), 200
+
+@api.route('/parent_payments/<int:id>', methods=['GET'])
+def get_parent_payment(id):
+    payment = ParentPayment.query.get(id)
+    if payment is None:
+        return jsonify({"error": "Payment not found"}), 404
+    return jsonify(payment.serialize()), 200
+
+
+
+
+
+# Crear un nuevo pago desde PayPal
+@api.route('/parent_payments', methods=['POST'])
+def create_parent_payment():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No se recibieron datos"}), 400
+
+    try:
+        parent_id = data.get('parent_id')
+
+        # Verificar que el parent_id no sea None
+        if not parent_id:
+            return jsonify({"error": "El parent_id es obligatorio"}), 400
+
+        # Verificar si el parent_id existe en la base de datos
+        parent = Parent.query.get(parent_id)
+        if not parent:
+            return jsonify({"error": "El parent_id no existe"}), 400
+
+        new_payment = ParentPayment(
+            parent_id=parent_id,
+            amount=float(data['amount']),
+            concept=data['concept'],
+            status=data['status'],
+            due_date=datetime.strptime(data['due_date'], "%Y-%m-%d").date(),
+            paypal_order_id=data['paypal_order_id'],
+            payer_email=data['payer_email']
+        )
+
+        db.session.add(new_payment)
+        db.session.commit()
+
+        return jsonify({"message": "Pago registrado exitosamente", "payment": new_payment.serialize()}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Error al procesar el pago: {str(e)}"}), 500
+
+
+
+
+
+
+
+@api.route('/parent_payments/<int:id>', methods=['PUT'])
+def update_parent_payment(id):
+    payment = ParentPayment.query.get(id)
+    if payment is None:
+        return jsonify({"error": "Payment not found"}), 404
+    data = request.get_json()
+    payment.parent_id = data.get('parent_id', payment.parent_id)
+    payment.amount = data.get('amount', payment.amount)
+    payment.concept = data.get('concept', payment.concept)
+    payment.status = data.get('status', payment.status)
+    payment.due_date = datetime.strptime(data.get('due_date', payment.due_date.isoformat()), "%Y-%m-%d").date()
+    db.session.commit()
+    return jsonify(payment.serialize()), 200
+
+@api.route('/parent_payments/<int:id>', methods=['DELETE'])
+def delete_parent_payment(id):
+    payment = ParentPayment.query.get(id)
+    if payment is None:
+        return jsonify({"error": "Payment not found"}), 404
+    db.session.delete(payment)
+    db.session.commit()
+    return jsonify({"message": "Payment deleted"}), 200
