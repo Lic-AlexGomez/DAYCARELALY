@@ -19,7 +19,7 @@ const menuItems = [
   // { icon: SquareCheckBig, label: 'Tareas', path: '/admin-dashboard/tasks' },
   { icon: Activity, label: 'Programs', path: '/admin-dashboard/activities' },
   // { icon: Video, label: 'Videos', path: '/admin-dashboard/videos' },
-  // { icon: UserX, label: 'Cuentas Inactivas', path: '/admin-dashboard/inactive-accounts' },
+  { icon: UserX, label: 'Cuentas Inactivas', path: '/admin-dashboard/inactive-accounts' },
   { icon: UserX, label: 'Services', path: '/admin-dashboard/services' },
   { icon: UserX, label: 'Gallery', path: '/admin-dashboard/gallery' },
   // { icon: UserX, label: 'Acerca', path: '/admin-dashboard/about' },

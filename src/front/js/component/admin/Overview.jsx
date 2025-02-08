@@ -59,7 +59,7 @@ const Overview = () => {
       </div>
       <div className="tw-grid tw-grid-cols-1 tw-lg:grid-cols-2 tw-gap-6">
         <div className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
-          <h3 className="tw-text-lg tw-font-semibold tw-mb-4">Ingresos vs Gastos</h3>
+          <h3 className="tw-text-lg tw-font-semibold tw-mb-4">Income vs Expenses</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -73,7 +73,7 @@ const Overview = () => {
           </ResponsiveContainer>
         </div>
         <div className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
-          <h3 className="tw-text-lg tw-font-semibold tw-mb-4">Inscripciones Mensuales</h3>
+          <h3 className="tw-text-lg tw-font-semibold tw-mb-4">Monthly Registrations</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -86,7 +86,7 @@ const Overview = () => {
           </ResponsiveContainer>
         </div>
         <div className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
-          <h3 className="tw-text-lg tw-font-semibold tw-mb-4">Asistencia Semanal</h3>
+          <h3 className="tw-text-lg tw-font-semibold tw-mb-4">Weekly Attendance</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={classAttendance}>
               <CartesianGrid strokeDasharray="3 3" />

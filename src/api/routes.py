@@ -37,29 +37,23 @@ def login():
         return jsonify({"error": "Invalid payload"}), 400
 
     user = User.query.filter_by(email=data['email']).first()
-    print("Usuario encontrado:", user)
 
     if not user:
         return jsonify({"error": "Invalid email or password"}), 401
 
     password_valid = user.check_password(data['password'])
-    print("¿Contraseña válida?", password_valid)
-
+    
     if not password_valid:
         return jsonify({"error": "Invalid email or password"}), 401
 
     # Creación del token de acceso
     access_token = create_access_token(identity=str(user.id))
-    print("Token generado:", access_token)
     
     # Almacenamiento de los datos importantes
     response = {
         "token": access_token,
         "user": user.serialize()
     }
-
-    # Verificación y registro de lo que se ha almacenado en la respuesta
-    print("Datos de la respuesta:", response)
 
     return jsonify(response), 200
 

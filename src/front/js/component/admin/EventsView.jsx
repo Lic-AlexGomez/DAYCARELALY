@@ -3,7 +3,6 @@ import { Plus, Edit, Trash, X } from 'lucide-react';
 import { Context } from '../../store/appContext';
 import Swal from "sweetalert2";
 
-
 const EventsView = () => {
   const { actions, store } = useContext(Context)
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,8 +56,6 @@ const EventsView = () => {
   const handleAddEvent = async (e) => {
     e.preventDefault();
 
-
-
     const confirmSubmit = await Swal.fire({
       title: "Are you sure?",
       text: "Do you want to add this event?",
@@ -81,8 +78,7 @@ const EventsView = () => {
         newEvent.image,
 
       );
-
-      if (result) {
+    if (result) {
         Swal.fire({
           icon: "success",
           title: "Event Added",
@@ -115,12 +111,12 @@ const EventsView = () => {
   };
   const handleDeleteEvent = async (id) => {
     const confirmDelete = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: "Esta acción no se puede deshacer.",
+      title: 'You are sure?',
+      text: "This action cannot be undone.",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'Cancel',
     });
 
     if (confirmDelete.isConfirmed) {
@@ -130,15 +126,15 @@ const EventsView = () => {
         if (result) {
           Swal.fire({
             icon: 'success',
-            title: 'Evento eliminado',
-            text: 'El evento ha sido eliminada con éxito.',
+            title: 'Deleted event',
+            text: 'The event has been successfully deleted.',
           });
           actions.fetchEvents();
         } else {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Hubo un error al eliminar el evento .',
+            text: 'There was an error deleting the event .',
           });
         }
       } catch (error) {
@@ -146,7 +142,7 @@ const EventsView = () => {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Hubo un error al intentar eliminar el evento. Intenta nuevamente.',
+          text: 'There was an error trying to delete the event. Try again.',
         });
       }
     }
@@ -166,59 +162,59 @@ const EventsView = () => {
 
   return (
     <div>
-      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Gestión de Eventos</h2>
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Event Management</h2>
       <div className="tw-mb-6">
   <form className="tw-grid tw-grid-cols-1 tw-gap-6" onSubmit={handleAddEvent}>
     <div className="tw-mb-4">
-      <label htmlFor="name" className="tw-block tw-mb-2">Nombre del Evento</label>
+      <label htmlFor="name" className="tw-block tw-mb-2">Event Name</label>
       <input
         type="text"
         name="name"
         onChange={handleInputChange}
         value={newEvent.name}
-        placeholder="Nombre del evento"
+        placeholder="Event Name"
         className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
         required
       />
     </div>
     <div className="tw-mb-4">
-      <label htmlFor="description" className="tw-block tw-mb-2">Descripcion</label>
+      <label htmlFor="description" className="tw-block tw-mb-2">Description</label>
       <input
         type="text"
         name="description"
         onChange={handleInputChange}
         value={newEvent.description}
-        placeholder="Descripcion de la clase"
+        placeholder="Descripcion del evento"
         className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
         required
       />
     </div>
     <div className="tw-mb-4">
-      <label htmlFor="start_time" className="tw-block tw-mb-2">Fecha de inicio</label>
+      <label htmlFor="start_time" className="tw-block tw-mb-2">Start date</label>
       <input
         type="datetime-local"
         name="start_time"
         onChange={handleInputChange}
         value={newEvent.start_time}
-        placeholder="fecha de inicio"
+        placeholder="Start date"
         className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
         required
       />
     </div>
     <div className="tw-mb-4">
-      <label htmlFor="end_time" className="tw-block tw-mb-2">Fecha de término</label>
+      <label htmlFor="end_time" className="tw-block tw-mb-2">End date</label>
       <input
         type="datetime-local"
         name="end_time"
         onChange={handleInputChange}
         value={newEvent.end_time}
-        placeholder="fecha de término"
+        placeholder="End date"
         className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
         required
       />
     </div>
     <div className="tw-mb-4">
-      <label htmlFor="image" className="tw-block tw-mb-2">Imagen</label>
+      <label htmlFor="image" className="tw-block tw-mb-2">Image</label>
       <input
         type="file"
         name="image"
@@ -231,7 +227,7 @@ const EventsView = () => {
 
     <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-mt-6">
       <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-      Agregar Evento
+      Add Event
     </button>
   </form>
 </div>
@@ -240,12 +236,12 @@ const EventsView = () => {
         <thead className="tw-bg-gray-100">
           <tr>
 
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Titulo</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Descripcion</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Fecha de inicio</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Fecha de termino</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Imagen</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Acciones</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Title</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Start date</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">End date</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody className="tw-divide-y tw-divide-gray-200">
@@ -274,7 +270,7 @@ const EventsView = () => {
         <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
           <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-              <h3 className="tw-text-xl tw-font-semibold">Editar Clase</h3>
+              <h3 className="tw-text-xl tw-font-semibold">Edit Class</h3>
               <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
                 <X className="tw-w-6 tw-h-6" />
               </button>
@@ -282,49 +278,49 @@ const EventsView = () => {
             <form onSubmit={handleUpdateEvent} className="tw-space-y-4">
 
               <div className='tw-flex-1'>
-                <label htmlFor="name" className='tw-block tw-mb-2'>Nombre del Evento</label>
+                <label htmlFor="name" className='tw-block tw-mb-2'>Event Name</label>
                 <input
                   type="text"
                   name="name"
                   onChange={handleInputChange}
                   value={editingEvent.name}
-                  placeholder="Nombre del evento"
+                  placeholder="Event Name"
                   className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
               <div className='tw-flex-1'>
-                <label htmlFor="description" className='tw-block tw-mb-2'>Descripcion</label>
+                <label htmlFor="description" className='tw-block tw-mb-2'>Description</label>
                 <input
                   type="text"
                   name="description"
                   onChange={handleInputChange}
                   value={editingEvent.description}
-                  placeholder="Descripcion de la clase"
+                  placeholder="Description of the event"
                   className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
               <div className='tw-flex-1'>
-                <label htmlFor="start_time" className='tw-block tw-mb-2'>Fecha de inicio</label>
+                <label htmlFor="start_time" className='tw-block tw-mb-2'>Start date</label>
                 <input
                   type="datetime-local"
                   name="start_time"
                   onChange={handleInputChange}
                   value={editingEvent.start_time}
-                  placeholder="fecha de inicio"
+                  placeholder="Start date"
                   className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
               <div className='tw-flex-1'>
-                <label htmlFor="end_time" className='tw-block tw-mb-2'>Fecha de termino</label>
+                <label htmlFor="end_time" className='tw-block tw-mb-2'>End date</label>
                 <input
                   type="datetime-local"
                   name="end_time"
                   onChange={handleInputChange}
                   value={editingEvent.end_time}
-                  placeholder="fecha de termino "
+                  placeholder="End date "
                   className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
@@ -333,14 +329,14 @@ const EventsView = () => {
 
               {editingEvent.image && (
                 <div className="tw-mb-4">
-                  <h4 className="tw-text-sm">Imagen Actual:</h4>
+                  <h4 className="tw-text-sm">Current Image:</h4>
                   <img src={editingEvent.image} alt="Imagen del Evento" className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md" />
                 </div>
               )}
 
 
               <div className='tw-flex-1'>
-                <label htmlFor="image" className='tw-block tw-mb-2'>Imagen</label>
+                <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
                 <input
                   type="file"
                   name="image"
@@ -355,13 +351,13 @@ const EventsView = () => {
                   onClick={() => setIsModalOpen(false)}
                   className="tw-bg-gray-200 tw-text-gray-700 tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-gray-300"
                 >
-                  Cancelar
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
                 >
-                  Guardar Cambios
+                 Save Changes
                 </button>
               </div>
             </form>

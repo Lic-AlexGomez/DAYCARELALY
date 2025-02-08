@@ -48,17 +48,17 @@ const NotificationsPage = () => {
     
       <div className="tw-flex-1 tw-overflow-auto">
         <header className="tw-flex tw-items-center tw-justify-between tw-p-4 tw-border-b">
-          <h1 className="tw-text-2xl tw-font-bold">Gestión de Notificaciones</h1>
+          <h1 className="tw-text-2xl tw-font-bold">Notification Management</h1>
 
         </header>
         <main className="tw-p-6">
           <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6 tw-mb-6">
-            <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Configuración de Notificaciones</h2>
+            <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Notification Settings</h2>
             <div className="tw-space-y-4">
               {Object.entries(notificationPreferences).map(([type, isEnabled]) => (
                 <div key={type} className="tw-flex tw-items-center tw-justify-between">
                   <label htmlFor={`${type}-switch`} className="tw-font-medium">
-                    Notificaciones de {type}
+                  Notifications of {type}
                   </label>
                   <div
                     className={`tw-w-14 tw-h-7 tw-flex tw-items-center tw-rounded-full tw-p-1 tw-cursor-pointer ${
@@ -77,7 +77,7 @@ const NotificationsPage = () => {
             </div>
           </div>
           <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6">
-            <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Historial de Notificaciones</h2>
+            <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Notification History</h2>
             <div className="tw-mb-4 tw-flex tw-justify-between">
               <div className="tw-relative">
                 <input
@@ -94,26 +94,26 @@ const NotificationsPage = () => {
                 onChange={(e) => setFilter(e.target.value)}
                 className="tw-border tw-rounded-md tw-px-3 tw-py-2 tw-w-48"
               >
-                <option value="all">Todos</option>
-                <option value="Inscripción">Inscripción</option>
-                <option value="Pago">Pago</option>
-                <option value="Evento">Evento</option>
+                <option value="all">All</option>
+                <option value="Inscripción">Registration</option>
+                <option value="Pago">Pay</option>
+                <option value="Evento">Event</option>
               </select>
             </div>
             <table className="tw-w-full">
               <thead className="tw-bg-gray-50">
                 <tr>
                   <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                    Tipo
+                    Type
                   </th>
                   <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                    Mensaje
+                  Message
                   </th>
                   <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                    Fecha
+                  Date
                   </th>
                   <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                    Acciones
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -160,20 +160,20 @@ const NotificationsPage = () => {
         <div className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center">
           <div className="tw-bg-white tw-rounded-lg tw-p-6 tw-w-96">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-4">
-              <h2 className="tw-text-xl tw-font-semibold">Detalles de la Notificación</h2>
+              <h2 className="tw-text-xl tw-font-semibold">Notification Details</h2>
               <button onClick={handleCloseModal} className="tw-text-gray-500 hover:tw-text-gray-700">
                 <X className="tw-w-5 tw-h-5" />
               </button>
             </div>
             <div className="tw-space-y-2">
               <p>
-                <strong>Tipo:</strong> {selectedNotification.type}
+                <strong>Type:</strong> {selectedNotification.type}
               </p>
               <p>
-                <strong>Mensaje:</strong> {selectedNotification.message}
+                <strong>Message:</strong> {selectedNotification.message}
               </p>
               <p>
-                <strong>Fecha:</strong> {selectedNotification.date}
+                <strong>Date:</strong> {selectedNotification.date}
               </p>
             </div>
           </div>

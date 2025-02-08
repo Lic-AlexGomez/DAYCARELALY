@@ -25,7 +25,7 @@ const Header = () => {
     <header className="tw-bg-white tw-border-b tw-border-gray-200">
       <div className="tw-container tw-mx-auto tw-px-6 tw-py-3">
         <div className="tw-flex tw-items-center tw-justify-between">
-          <h1 className="tw-text-2xl tw-font-semibold tw-text-gray-800">Panel de Administración</h1>
+          <h1 className="tw-text-2xl tw-font-semibold tw-text-gray-800">Administration Panel</h1>
           <div className="tw-flex tw-items-center tw-space-x-4">
             <button className="tw-text-gray-500 hover:tw-text-gray-700" aria-label="Notifications">
               <Bell className="tw-w-6 tw-h-6" />
@@ -47,20 +47,20 @@ const Header = () => {
                     className="tw-flex tw-items-center tw-px-4 tw-py-2 tw-text-sm tw-text-gray-700 hover:tw-bg-gray-100 tw-w-full tw-text-left" 
                   >
                     <UserCircle className="tw-w-4 tw-h-4 tw-mr-2" />
-                    Configurar Perfil
+                    Configure Profile
                   </Link>
                   <Link to="/admin-dashboard/settings"
                     className="tw-flex tw-items-center tw-px-4 tw-py-2 tw-text-sm tw-text-gray-700 hover:tw-bg-gray-100 tw-w-full tw-text-left"
                   >
                     <Settings className="tw-w-4 tw-h-4 tw-mr-2" />
-                    Configuración
+                    Configuration
                   </Link>
                   <button
                     className="tw-flex tw-items-center tw-px-4 tw-py-2 tw-text-sm tw-text-gray-700 hover:tw-bg-gray-100 tw-w-full tw-text-left"
                     onClick={handleLogout}
                   >
                     <LogOut className="tw-w-4 tw-h-4 tw-mr-2" />
-                    Cerrar Sesión
+                    Sign Out
                   </button>
                 </div>
               )}

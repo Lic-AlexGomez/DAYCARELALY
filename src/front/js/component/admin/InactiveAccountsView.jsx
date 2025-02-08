@@ -47,7 +47,7 @@ const InactiveAccountsView = () => {
 
   return (
     <div>
-      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Cuentas Inactivas</h2>
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Inactive Accounts</h2>
       <div className="tw-mb-4">
         <input
           type="text"
@@ -62,22 +62,22 @@ const InactiveAccountsView = () => {
           <thead className="tw-bg-gray-50">
             <tr>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                Nombre
+                Name
               </th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
                 Email
               </th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                Última Actividad
+              Latest Activity
               </th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                Tipo
+                Type
               </th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                Razón
+              Reason
               </th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-                Acciones
+                Actions
               </th>
             </tr>
           </thead>
