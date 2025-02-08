@@ -9,12 +9,10 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 from flask_bcrypt import Bcrypt # type: ignore
 from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash # type: ignore
-from sqlalchemy.exc import SQLAlchemyError # type: ignore
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError# type: ignore
 from werkzeug.security import generate_password_hash # type: ignore
 from faker import Faker # type: ignore
 import random
-
-
 
 
 api = Blueprint('api', __name__)
@@ -45,11 +43,7 @@ def login():
     
     if not password_valid:
         return jsonify({"error": "Invalid email or password"}), 401
-
-    # Creación del token de acceso
     access_token = create_access_token(identity=str(user.id))
-    
-    # Almacenamiento de los datos importantes
     response = {
         "token": access_token,
         "user": user.serialize()
@@ -57,11 +51,9 @@ def login():
 
     return jsonify(response), 200
 
-
 @api.route('/signup', methods=['POST'])
 def signup():
     data = request.json
-  
     if not data:
         raise APIException("No input data provided", status_code=400)
 
@@ -70,11 +62,9 @@ def signup():
     password = data.get('password')
     role = data.get('role')
     profile_picture = data.get('profilePicture')
-
   
     if not all([username, email, password, role]):
         raise APIException("Missing required fields", status_code=400)
-
     
     if User.query.filter_by(email=email).first():
         raise APIException("User already exists", status_code=400)
@@ -84,13 +74,11 @@ def signup():
     elif profile_picture and not isinstance(profile_picture, str):
         raise APIException("Invalid profile picture format", status_code=400)
 
-    
     hashed_password = generate_password_hash(password)
     new_user = User(username=username, email=email, password_hash=hashed_password, role=role, profile_picture=profile_picture)
     db.session.add(new_user)
     db.session.flush()
 
-    
     if role == 'parent':
         child_name = data.get('childName')
         child_dob = data.get('childDateOfBirth')
@@ -167,9 +155,7 @@ def signup():
         raise APIException("Invalid role", status_code=400)
 
     db.session.commit()
-
     access_token = create_access_token(identity=new_user.id)
-
     return jsonify({
         "message": "User created successfully",
         "token": access_token,
@@ -184,7 +170,7 @@ def get_users():
     return jsonify(users), 200
 
 @api.route('/users/<int:id>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_user(id):
     user = User.query.get(id)
     if not user:
@@ -192,7 +178,7 @@ def get_user(id):
     return jsonify(user.serialize()), 200
 
 @api.route('/users/<int:id>', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 def update_user(id):
     user = User.query.get(id)
     if not user:
@@ -207,7 +193,7 @@ def update_user(id):
     return jsonify(user.serialize()), 200
 
 @api.route('/users/<int:id>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_user(id):
     user = User.query.get(id)
     if not user:
@@ -218,14 +204,14 @@ def delete_user(id):
     return jsonify({"message": "User deleted"}), 200
 
 @api.route('/parents', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_parents():
     parents = Parent.query.all()
     parents = list(map(lambda x: x.serialize(), parents))
     return jsonify(parents), 200
 
 @api.route('/parents/<int:id>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_parent(id):
     parent = Parent.query.get(id)
     if not parent:
@@ -233,7 +219,7 @@ def get_parent(id):
     return jsonify(parent.serialize()), 200
 
 @api.route('/parents', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_parent():
     data = request.json
     new_parent = Parent(
@@ -250,20 +236,21 @@ def create_parent():
     return jsonify(new_parent.serialize()), 201
 
 @api.route('/teachers', methods=['GET'])
+@jwt_required()
 def get_teachers():
     teachers = Teacher.query.all()
     teachers = list(map(lambda x: x.serialize(), teachers))
     return jsonify(teachers), 200
 
 @api.route('/teachers/classes', methods=['GET'])
+@jwt_required()
 def get_teachers_classes():
     teachers = Teacher.query.all()
     teachers = list(map(lambda x: x.serialize_classes(), teachers))
     return jsonify(teachers), 200
 
-
-
 @api.route('/teachers/<int:id>', methods=['GET'])
+@jwt_required()
 def get_teacher(id):
     teacher = Teacher.query.get(id)
     if not teacher:
@@ -271,7 +258,7 @@ def get_teacher(id):
     return jsonify(teacher.serialize()), 200
 
 @api.route('/teachers', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_teacher():
     data = request.json
     print(data)
@@ -299,117 +286,6 @@ def create_teacher():
     db.session.commit()
     return jsonify(new_teacher.serialize()), 201
 
-@api.route('/add_simple_data_user', methods=['POST'])
-def add_simple_data_user():
-    try:
-        # Verificar si ya existen datos en la tabla User
-        if User.query.count() > 0:
-            return jsonify({"message": "La tabla User ya contiene datos."}), 200
-
-        # Crear datos simples de usuarios
-        simple_users = [
-            {
-                "id": 1,
-                "username": "johndoe",
-                "email": "johndoe@example.com",
-                "password_hash": "hashed_password_1"
-            },
-            {
-                "id": 2,
-                "username": "janesmith",
-                "email": "janesmith@example.com",
-                "password_hash": "hashed_password_2"
-            },
-            {
-                "id": 3,
-                "username": "alicejohnson",
-                "email": "alicejohnson@example.com",
-                "password_hash": "hashed_password_3"
-            }
-        ]
-
-        # Insertar los datos en la base de datos
-        for user_data in simple_users:
-            new_user = User(
-                id=user_data["id"],
-                username=user_data["username"],
-                email=user_data["email"],
-                password_hash=user_data["password_hash"]
-            )
-            db.session.add(new_user)
-
-        db.session.commit()
-
-        return jsonify({"message": "Datos simples de usuarios agregados exitosamente."}), 201
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-@api.route('/add_simple_data_teacher', methods=['POST'])
-def add_simple_data_teacher():
-    print("dd")
-    try:
-        # Verificar si ya existen datos en la tabla Teacher
-        if Teacher.query.count() > 0:
-            return jsonify({"message": "La tabla Teacher ya contiene datos."}), 200
-
-        # Crear datos simples de profesores
-        simple_teachers = [
-            {
-                "user_id": 1,
-                "full_name": "John Doe",
-                "specialization": "Mathematics",
-                "qualifications": "PhD in Mathematics",
-                "teaching_experience": "10 years",
-                "certifications_url": "https://example.com/certifications/johndoe",
-                "background_check_url": "https://example.com/background/johndoe"
-            },
-            {
-                "user_id": 2,
-                "full_name": "Jane Smith",
-                "specialization": "Physics",
-                "qualifications": "MSc in Physics",
-                "teaching_experience": "5 years",
-                "certifications_url": "https://example.com/certifications/janesmith",
-                "background_check_url": "https://example.com/background/janesmith"
-            },
-            {
-                "user_id": 3,
-                "full_name": "Alice Johnson",
-                "specialization": "Chemistry",
-                "qualifications": "BSc in Chemistry",
-                "teaching_experience": "3 years",
-                "certifications_url": "https://example.com/certifications/alicejohnson",
-                "background_check_url": "https://example.com/background/alicejohnson"
-            }
-        ]
-
-        # Insertar los datos en la base de datos
-        for teacher_data in simple_teachers:
-            # Verificar si el usuario existe
-            user = User.query.get(teacher_data["user_id"])
-            print(user)
-            if not user:
-                return jsonify({"error": f"User with ID {teacher_data['user_id']} not found."}), 404
-
-            new_teacher = Teacher(
-                user_id=teacher_data["user_id"],
-                full_name=teacher_data["full_name"],
-                specialization=teacher_data["specialization"],
-                qualifications=teacher_data["qualifications"],
-                teaching_experience=teacher_data["teaching_experience"],
-                certifications_url=teacher_data["certifications_url"],
-                background_check_url=teacher_data["background_check_url"]
-            )
-            db.session.add(new_teacher)
-
-        db.session.commit()
-
-        return jsonify({"message": "Datos simples de profesores agregados exitosamente."}), 201
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
 
 @api.route('/classes', methods=['GET'])
 def get_classes():
@@ -425,7 +301,7 @@ def get_class(id):
     return jsonify(class_instance.serialize()), 200
 
 @api.route('/classes', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_class():
     data = request.json
     new_class = Class(
@@ -443,7 +319,7 @@ def create_class():
     return jsonify(new_class.serialize()), 201
 
 @api.route('/classes/<int:id>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_class(id):
     classes = Class.query.get(id)
     if not classes:
@@ -454,7 +330,7 @@ def delete_class(id):
     return jsonify({"message": "class deleted"}), 200
 
 @api.route('/classes/<int:id>', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 def update_class(id):
     classes = Class.query.get(id)
     if classes is None:
@@ -488,7 +364,7 @@ def get_event(id):
     return jsonify(event.serialize()), 200
 
 @api.route('/events', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_event():
     data = request.json
     new_event = Event(
@@ -503,7 +379,7 @@ def create_event():
     return jsonify(new_event.serialize()), 201
 
 @api.route('/events/<int:id>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_event(id):
     event = Event.query.get(id)
     if not event:
@@ -514,7 +390,7 @@ def delete_event(id):
     return jsonify({"message": "Event deleted"}), 200
 
 @api.route('/events/<int:id>', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 def update_event(id):
     events = Event.query.get(id)
     if events is None:
@@ -531,14 +407,14 @@ def update_event(id):
     return jsonify(events.serialize()), 200
 
 @api.route('/progress_reports', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_progress_reports():
     progress_reports = ProgressReport.query.all()
     progress_reports = list(map(lambda x: x.serialize(), progress_reports))
     return jsonify(progress_reports), 200
 
 @api.route('/progress_reports/<int:id>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_progress_report(id):
     report = ProgressReport.query.get(id)
     if not report:
@@ -546,7 +422,7 @@ def get_progress_report(id):
     return jsonify(report.serialize()), 200
 
 @api.route('/progress_reports', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_progress_report():
     data = request.json
     new_report = ProgressReport(
@@ -560,14 +436,14 @@ def create_progress_report():
     return jsonify(new_report.serialize()), 201
 
 @api.route('/children', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_children():
     children = Child.query.all()
     children = list(map(lambda x: x.serialize(), children))
     return jsonify(children), 200
 
 @api.route('/children/<int:id>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_child(id):
     child = Child.query.get(id)
     if not child:
@@ -575,6 +451,7 @@ def get_child(id):
     return jsonify(child.serialize()), 200
 
 @api.route('/children', methods=['POST'])
+@jwt_required()
 def create_child():
     data = request.json
     print(data)
@@ -592,14 +469,14 @@ def create_child():
     return jsonify(new_child.serialize()), 201
 
 @api.route('/enrollments', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_enrollments():
     enrollments = Enrollment.query.all()
     enrollments = list(map(lambda x: x.serialize(), enrollments))
     return jsonify(enrollments), 200
 
 @api.route('/enrollments/<int:id>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_enrollment(id):
     enrollment = Enrollment.query.get(id)
     if not enrollment:
@@ -607,7 +484,7 @@ def get_enrollment(id):
     return jsonify(enrollment.serialize()), 200
 
 @api.route('/enrollments', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_enrollment():
     data = request.json
     new_enrollment = Enrollment(
@@ -633,7 +510,7 @@ def get_program(id):
     return jsonify(program.serialize()), 200
 
 @api.route('/programs', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_program():
     data = request.json
     required_fields = ['name', 'capacity', 'price', 'age', 'time']
@@ -664,7 +541,7 @@ def get_subscription(id):
     return jsonify(subscription.serialize()), 200
 
 @api.route('/subscriptions', methods=['POST'])
-# #@jwt_required()
+@jwt_required()
 def create_subscriptions():
     
         data = request.json
@@ -683,7 +560,7 @@ def create_subscriptions():
 
     
 @api.route('/subscriptions/<int:id>', methods=['PUT'])
-# #@jwt_required()
+@jwt_required()
 def update_subscription(id):
     
         
@@ -705,7 +582,7 @@ def update_subscription(id):
         
 
 @api.route('/subscriptions/<int:id>', methods=['DELETE'])
-# #@jwt_required()
+@jwt_required()
 def delete_subscription(id):
     subscription = Subscription.query.get_or_404(id)
     try:
@@ -717,14 +594,14 @@ def delete_subscription(id):
         return jsonify({"error": str(e)}), 500
 
 @api.route('/contacts', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_contacts():
     contacts = Contact.query.all()
     contacts = list(map(lambda x: x.serialize(), contacts))
     return jsonify(contacts), 200
 
 @api.route('/contacts/<int:id>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_contact(id):
     contact = Contact.query.get(id)
     if not contact:
@@ -782,14 +659,14 @@ def create_newsletter():
     return jsonify(new_subscription.serialize()), 201
 
 @api.route('/getintouch', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_contactus():
     getintouch = Getintouch.query.all()
     getintouch = list(map(lambda x: x.serialize(), getintouch))
     return jsonify(getintouch), 200
 
 @api.route('/getintouch/<int:id>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_contactu(id):
     getintouch = Getintouch.query.get(id)
     if not getintouch:
@@ -810,15 +687,15 @@ def create_contactus():
     db.session.commit()
     return jsonify(new_contactus.serialize()), 201
 
-# Admin Dashboard routes
+
 @api.route('/clients', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_clients():
     clients = Client.query.all()
     return jsonify(list(map(lambda x: x.serialize(), clients))), 200
 
 @api.route('/clients', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_client():
     data = request.json
     new_client = Client(
@@ -832,7 +709,7 @@ def create_client():
     return jsonify(new_client.serialize()), 201
 
 @api.route('/clients/<int:id>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_client(id):
     client = Client.query.get(id)
     if client is None:
@@ -840,7 +717,7 @@ def get_client(id):
     return jsonify(client.serialize()), 200
 
 @api.route('/clients/<int:id>', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 def update_client(id):
     client = Client.query.get(id)
     if client is None:
@@ -856,7 +733,7 @@ def update_client(id):
     return jsonify(client.serialize()), 200
 
 @api.route('/clients/<int:id>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_client(id):
     client = Client.query.get(id)
     if client is None:
@@ -867,13 +744,13 @@ def delete_client(id):
     return jsonify({"message": "Client deleted successfully"}), 200
 
 @api.route('/schedules', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_schedules():
     schedules = Schedule.query.all()
     return jsonify([schedule.serialize() for schedule in schedules]), 200
 
 @api.route('/schedules', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_schedule():
     data = request.json
     new_schedule = Schedule(
@@ -890,7 +767,7 @@ def create_schedule():
     return jsonify(new_schedule.serialize()), 201
 
 @api.route('/schedules/<int:id>', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_schedule(id):
     schedule = Schedule.query.get(id)
     if schedule is None:
@@ -898,7 +775,7 @@ def get_schedule(id):
     return jsonify(schedule.serialize()), 200
 
 @api.route('/schedules/<int:id>', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 def update_schedule(id):
     schedule = Schedule.query.get(id)
     if schedule is None:
@@ -917,7 +794,7 @@ def update_schedule(id):
     return jsonify(schedule.serialize()), 200
 
 @api.route('/schedules/<int:id>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_schedule(id):
     schedule = Schedule.query.get(id)
     if schedule is None:
@@ -928,13 +805,13 @@ def delete_schedule(id):
     return jsonify({"message": "Schedule deleted successfully"}), 200
 
 @api.route('/emails', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_emails():
     emails = Email.query.all()
     return jsonify([email.serialize() for email in emails]), 200
 
 @api.route('/emails', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_email():
     data = request.json
     if data.get('scheduledDate'):
@@ -951,7 +828,7 @@ def create_email():
     return jsonify(new_email.serialize()), 201
 
 @api.route('/emails/<int:id>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_email(id):
     email = Email.query.get(id)
     if email is None:
@@ -1000,7 +877,7 @@ def upload_video():
         return jsonify(new_video.serialize()), 201
 
 @api.route('/videos/<int:id>', methods=['DELETE'])
-# #@jwt_required()
+@jwt_required()
 def delete_video(id):
     video = Video.query.get(id)
     if video is None:
@@ -1011,12 +888,14 @@ def delete_video(id):
     return jsonify({"message": "Video deleted successfully"}), 200
 
 @api.route('/inactive-accounts', methods=['GET'])
+@jwt_required()
 def get_inactive_accounts():
     accounts = InactiveAccount.query.all()
     account = list(map(lambda x: x.serialize(), accounts))
     return jsonify(account), 200
 
 @api.route('/inactive-accounts/<int:id>/reactivate', methods=['POST'])
+@jwt_required()
 def reactivate_account(id):
     try:
         inactive_account = InactiveAccount.query.get_or_404(id)
@@ -1049,52 +928,22 @@ def reactivate_account(id):
 
 
 @api.route('/inactive-accounts/<int:id>/send-reminder', methods=['POST'])
+@jwt_required()
 def send_reminder(id):
     account = InactiveAccount.query.get_or_404(id)
     return jsonify({'message': f'Reminder sent to {account.email}'}), 200
 
 @api.route('/inactive-accounts/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_inactive_account(id):
     account = InactiveAccount.query.get_or_404(id)
     db.session.delete(account)
     db.session.commit()
     return '', 204
 
-    # Add sample data to the InactiveAccount table, for testing purposes, do in postman
-@api.route('/add-sample-data', methods=['POST'])
-def add_sample_data():
-    sample_data = [
-        {
-            'name': "Juan Pérez",
-            'email': "juan@example.com",
-            'last_active': datetime(2023, 1, 15),
-            'type': "Padre",
-            'reason': "No completó registro",
-        },
-        {
-            'name': "María García",
-            'email': "maria@example.com",
-            'last_active': datetime(2023, 2, 20),
-            'type': "Profesor",
-            'reason': "Baja temporal",
-        },
-        {
-            'name': "Carlos Rodríguez",
-            'email': "carlos@example.com",
-            'last_active': datetime(2023, 3, 10),
-            'type': "Padre",
-            'reason': "Inactividad prolongada",
-        },
-    ]
-
-    for data in sample_data:
-        account = InactiveAccount(**data)
-        db.session.add(account)
-
-    db.session.commit()
-    return jsonify({'message': 'Sample data added successfully'}), 201
-
+    
 @api.route('/approvals', methods=['GET'])
+@jwt_required()
 def get_approvals():
     approvals = Approval.query.all()
     approval = list(map(lambda x: x.serialize(), approvals))
@@ -1102,6 +951,7 @@ def get_approvals():
 
 
 @api.route('/approvals/<int:id>', methods=['PATCH'])
+@jwt_required()
 def update_approval_status(id):
     try:
         approval = Approval.query.filter_by(id=id).first()
@@ -1109,17 +959,14 @@ def update_approval_status(id):
             return jsonify({'error': f'Approval with id {id} not found'}), 404
 
         data = request.json
-
         if 'status' not in data:
             return jsonify({'error': 'Status field is required'}), 400
-
         
         if data['status'] not in ['pending', 'approved', 'rejected']:
             return jsonify({'error': 'Invalid status value'}), 400
 
         approval.status = data['status']
         db.session.commit()
-
         return jsonify(approval.serialize()), 200
 
     except SQLAlchemyError as e:
@@ -1128,54 +975,20 @@ def update_approval_status(id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@api.route('approvals/data', methods=['POST'])
-def add_sample_approvals_data():
-    sample_data = [
-        {
-            'type': 'Inscripción',
-            'name': 'Ana Martínez',
-            'details': 'Solicitud de inscripción para el programa de verano',
-            'status': 'pending',
-            'date': datetime(2025, 10, 1).date(),
-        },
-        {
-            'type': 'Cambio de Horario',
-            'name': 'Luis Sánchez',
-            'details': 'Solicitud de cambio de horario de tarde a mañana',
-            'status': 'pending',
-            'date': datetime(2025, 10, 1).date(),
-        },
-        {
-            'type': 'Actividad Especial',
-            'name': 'Sofía Rodríguez',
-            'details': 'Propuesta de actividad de pintura al aire libre',
-            'status': 'pending',
-            'date': datetime(2025, 10, 1).date(),
-        },
-    ]
-
-    for data in sample_data:
-        approval = Approval(**data)
-        db.session.add(approval)
-
-    db.session.commit()
-    return jsonify({'message': 'Sample approvals data added successfully'}), 201
-
-
-
-
 @api.route('/activities', methods=['GET'])
+#@jwt_required()
 def get_activities():
     activities = Activity.query.all()
     return jsonify([activity.serialize() for activity in activities]), 200
 
 @api.route('/activities/<int:id>', methods=['GET'])
+@jwt_required()
 def get_activity(id):
     activity = Activity.query.get_or_404(id)
     return jsonify(activity.serialize()), 200
 
 @api.route('/activities', methods=['POST'])
-# #@jwt_required()
+@jwt_required()
 def create_activity():
     try:
         image = None  
@@ -1214,13 +1027,11 @@ def create_activity():
         return jsonify({"error": str(e)}), 500
     
 @api.route('/activities/<int:id>', methods=['PUT'])
-# #@jwt_required()
+@jwt_required()
 def update_activity(id):
     try:
         
         activity = Activity.query.get_or_404(id)
-        
-        
         data = request.get_json()  
         print("Data received:", data)
 
@@ -1248,7 +1059,7 @@ def update_activity(id):
         return jsonify({"error": str(e)}), 500
 
 @api.route('/activities/<int:id>', methods=['DELETE'])
-# #@jwt_required()
+@jwt_required()
 def delete_activity(id):
     activity = Activity.query.get_or_404(id)
     try:
@@ -1260,9 +1071,8 @@ def delete_activity(id):
         return jsonify({"error": str(e)}), 500
 
 
-# Virtual Class routes
 @api.route('/virtual-classes', methods=['GET'])
-# @jwt_required()
+@jwt_required()
 def get_virtual_classes():
     virtual_classes = VirtualClass.query.all()
     return jsonify([vc.serialize() for vc in virtual_classes]), 200
@@ -1274,7 +1084,7 @@ def get_virtual_class(id):
     return jsonify(virtual_class.serialize()), 200
 
 @api.route('/virtual-classes', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def create_virtual_class():
    
     try:
@@ -1333,58 +1143,6 @@ def delete_virtual_class(id):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-
-@api.route('/virtual-classes/sample-data', methods=['POST'])
-def add_sample_virtual_classes():
-    sample_data = [
-                {
-                    'name': 'Yoga for Kids',
-                    'description': 'A fun and engaging yoga class for children.',
-                    'date': '2023-11-01',
-                    'time': '10:00',
-                    'duration': '1',
-                    'teacher': 'John Doe',
-                    'capacity': 20,
-                    'price': 15.0
-                },
-                {
-                    'name': 'Art and Craft',
-                    'description': 'Creative art and craft activities for kids.',
-                    'date': '2023-11-02',
-                    'time': '14:00',
-                    'duration': '2 hours',
-                    'teacher': 'Jane Smith',
-                    'capacity': 15,
-                    'price': 20.0
-                },
-                {
-                    'name': 'Science Experiments',
-                    'description': 'Exciting science experiments for young minds.',
-                    'date': '2023-11-03',
-                    'time': '16:00',
-                    'duration': '1.5 hours',
-                    'teacher': 'Albert Einstein',
-                    'capacity': 25,
-                    'price': 25.0
-                }
-            ]
-
-    for data in sample_data:
-        new_virtual_class = VirtualClass(
-            name=data['name'],
-            description=data['description'],
-            date=datetime.fromisoformat(data['date']),
-            time=data['time'],
-            duration=data['duration'],
-            teacher=data['teacher'],
-            capacity=data['capacity'],
-            price=data['price']
-        )
-        db.session.add(new_virtual_class)
-
-    db.session.commit()
-    return jsonify({'message': 'Sample virtual classes added successfully'}), 201
-
 @api.route('/services', methods=['GET'])
 def get_services():
     services = Service.query.all()
@@ -1392,6 +1150,7 @@ def get_services():
     return jsonify(services), 200
 
 @api.route('/services/<int:id>', methods=['GET'])
+@jwt_required()
 def get_service(id):
     service = Service.query.get(id)
     if not service:
@@ -1399,7 +1158,7 @@ def get_service(id):
     return jsonify(service.serialize()), 200
 
 @api.route('/services', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_service():
     data = request.json
     new_service = Service(
@@ -1412,7 +1171,7 @@ def create_service():
     return jsonify(new_service.serialize()), 201
 
 @api.route('/services/<int:id>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_service(id):
     service = Service.query.get(id)
     if not service:
@@ -1423,7 +1182,7 @@ def delete_service(id):
     return jsonify({"message": "Service deleted"}), 200
 
 @api.route('/services/<int:id>', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 def update_services(id):
     service = Service.query.get(id)
     if service is None:
@@ -1452,7 +1211,7 @@ def get_image(id):
     return jsonify(images.serialize()), 200
 
 @api.route('/gallery', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_image():
     data = request.json
     new_image = Gallery(
@@ -1464,7 +1223,7 @@ def create_image():
     return jsonify(new_image.serialize()), 201
 
 @api.route('/gallery/<int:id>', methods=['DELETE'])
-#@jwt_required()
+@jwt_required()
 def delete_image(id):
     image = Gallery.query.get(id)
     if not image:
@@ -1475,7 +1234,7 @@ def delete_image(id):
     return jsonify({"message": "Image deleted"}), 200
 
 @api.route('/gallery/<int:id>', methods=['PUT'])
-#@jwt_required()
+@jwt_required()
 def update_image(id):
     image = Gallery.query.get(id)
     if image is None:
@@ -1488,14 +1247,14 @@ def update_image(id):
     db.session.commit()
     return jsonify(image.serialize()), 200
 
-# PARENT ROUTES CRUD
-# ParentActivity, ParentCourse,ParentAttendance,ParentEvent,ParentGrade,ParentNotification,ParentPayment,ParentPaymentHistory,ParentSchedule,ParentService,ParentSubscription,ParentSetting,ParentTask,ParentVirtualClass,MessageP
 @api.route('/parent_activities', methods=['GET'])
+@jwt_required()
 def get_parent_activities():
     activities = ParentActivity.query.all()
     return jsonify([activity.serialize() for activity in activities]), 200
 
 @api.route('/parent_activities/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_activity(id):
     activity = ParentActivity.query.get(id)
     if activity is None:
@@ -1503,6 +1262,7 @@ def get_parent_activity(id):
     return jsonify(activity.serialize()), 200
 
 @api.route('/parent_activities', methods=['POST'])
+@jwt_required()
 def create_parent_activity():
     data = request.get_json()
     new_activity = ParentActivity(
@@ -1519,6 +1279,7 @@ def create_parent_activity():
     return jsonify(new_activity.serialize()), 201
 
 @api.route('/parent_activities/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_activity(id):
     activity = ParentActivity.query.get(id)
     if activity is None:
@@ -1535,6 +1296,7 @@ def update_parent_activity(id):
     return jsonify(activity.serialize()), 200
 
 @api.route('/parent_activities/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_activity(id):
     activity = ParentActivity.query.get(id)
     if activity is None:
@@ -1544,11 +1306,13 @@ def delete_parent_activity(id):
     return jsonify({"message": "Activity deleted"}), 200
 
 @api.route('/parent_schedules', methods=['GET'])
+@jwt_required()
 def get_parent_schedules():
     schedules = ParentSchedule.query.all()
     return jsonify([schedule.serialize() for schedule in schedules]), 200
 
 @api.route('/parent_schedules/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_schedule(id):
     schedule = ParentSchedule.query.get(id)
     if schedule is None:
@@ -1556,6 +1320,7 @@ def get_parent_schedule(id):
     return jsonify(schedule.serialize()), 200
 
 @api.route('/parent_schedules', methods=['POST'])
+@jwt_required()
 def create_parent_schedule():
     data = request.get_json()
     new_schedule = ParentSchedule(
@@ -1568,6 +1333,7 @@ def create_parent_schedule():
     return jsonify(new_schedule.serialize()), 201
 
 @api.route('/parent_schedules/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_schedule(id):
     schedule = ParentSchedule.query.get(id)
     if schedule is None:
@@ -1580,6 +1346,7 @@ def update_parent_schedule(id):
     return jsonify(schedule.serialize()), 200
 
 @api.route('/parent_schedules/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_schedule(id):
     schedule = ParentSchedule.query.get(id)
     if schedule is None:
@@ -1589,11 +1356,13 @@ def delete_parent_schedule(id):
     return jsonify({"message": "Schedule deleted"}), 200
 
 @api.route('/parent_settings', methods=['GET'])
+@jwt_required()
 def get_parent_settings():
     settings = ParentSetting.query.all()
     return jsonify([setting.serialize() for setting in settings]), 200
 
 @api.route('/parent_settings/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_setting(id):
     setting = ParentSetting.query.get(id)
     if setting is None:
@@ -1601,6 +1370,7 @@ def get_parent_setting(id):
     return jsonify(setting.serialize()), 200
 
 @api.route('/parent_settings', methods=['POST'])
+@jwt_required()
 def create_parent_setting():
     data = request.get_json()
     new_setting = ParentSetting(
@@ -1613,6 +1383,7 @@ def create_parent_setting():
     return jsonify(new_setting.serialize()), 201
 
 @api.route('/parent_settings/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_setting(id):
     setting = ParentSetting.query.get(id)
     if setting is None:
@@ -1625,6 +1396,7 @@ def update_parent_setting(id):
     return jsonify(setting.serialize()), 200
 
 @api.route('/parent_settings/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_setting(id):
     setting = ParentSetting.query.get(id)
     if setting is None:
@@ -1634,11 +1406,13 @@ def delete_parent_setting(id):
     return jsonify({"message": "Setting deleted"}), 200
 
 @api.route('/parent_virtual_classes', methods=['GET'])
+@jwt_required()
 def get_parent_virtual_classes():
     classes = ParentVirtualClass.query.all()
     return jsonify([cls.serialize() for cls in classes]), 200
 
 @api.route('/parent_virtual_classes/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_virtual_class(id):
     cls = ParentVirtualClass.query.get(id)
     if cls is None:
@@ -1646,6 +1420,7 @@ def get_parent_virtual_class(id):
     return jsonify(cls.serialize()), 200
 
 @api.route('/parent_virtual_classes', methods=['POST'])
+@jwt_required()
 def create_parent_virtual_class():
     data = request.get_json()
     new_class = ParentVirtualClass(
@@ -1660,6 +1435,7 @@ def create_parent_virtual_class():
     return jsonify(new_class.serialize()), 201
 
 @api.route('/parent_virtual_classes/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_virtual_class(id):
     cls = ParentVirtualClass.query.get(id)
     if cls is None:
@@ -1674,6 +1450,7 @@ def update_parent_virtual_class(id):
     return jsonify(cls.serialize()), 200
 
 @api.route('/parent_virtual_classes/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_virtual_class(id):
     cls = ParentVirtualClass.query.get(id)
     if cls is None:
@@ -1681,52 +1458,17 @@ def delete_parent_virtual_class(id):
     db.session.delete(cls)
     db.session.commit()
     return jsonify({"message": "Virtual class deleted"}), 200
-# fill data virtual class
-@api.route('/parent_virtual_classes/sample-data', methods=['POST'])
-def add_sample_parent_virtual_classes():
-    sample_data = [
-                {
-                    'parent_id': 1,
-                    'name': 'Yoga for Kids',
-                    'date': '2023-11-01',
-                    'time': '10:00:00',
-                    'link': 'https://example.com/yoga'
-                },
-                {
-                    'parent_id': 2,
-                    'name': 'Art and Craft',
-                    'date': '2023-11-02',
-                    'time': '14:00:00',
-                    'link': 'https://example.com/art'
-                },
-                {
-                    'parent_id': 1,
-                    'name': 'Science Experiments',
-                    'date': '2023-11-03',
-                    'time': '16:00:00',
-                    'link': 'https://example.com/science'
-                }
-            ]
 
-    for data in sample_data:
-        new_class = ParentVirtualClass(
-            parent_id=data['parent_id'],
-            name=data['name'],
-            date=datetime.fromisoformat(data['date']),
-            time=datetime.strptime(data['time'], "%H:%M:%S").time(),
-            link=data['link']
-        )
-        db.session.add(new_class)
 
-    db.session.commit()
-    return jsonify({'message': 'Sample parent virtual classes added successfully'}), 201
 
 @api.route('/messagesP', methods=['GET'])
+@jwt_required()
 def get_messages():
     messages = MessageP.query.all()
     return jsonify([message.serialize() for message in messages]), 200
 
 @api.route('/messages/<int:id>', methods=['GET'])
+@jwt_required()
 def get_message(id):
     message = MessageP.query.get(id)
     if message is None:
@@ -1734,6 +1476,7 @@ def get_message(id):
     return jsonify(message.serialize()), 200
 
 @api.route('/messages', methods=['POST'])
+@jwt_required()
 def create_message():
     data = request.get_json()
     new_message = MessageP(
@@ -1746,6 +1489,7 @@ def create_message():
     return jsonify(new_message.serialize()), 201
 
 @api.route('/messages/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_message(id):
     message = MessageP.query.get(id)
     if message is None:
@@ -1758,6 +1502,7 @@ def update_message(id):
     return jsonify(message.serialize()), 200
 
 @api.route('/messages/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_message(id):
     message = MessageP.query.get(id)
     if message is None:
@@ -1767,11 +1512,13 @@ def delete_message(id):
     return jsonify({"message": "Message deleted"}), 200
 
 @api.route('/parent_notifications', methods=['GET'])
+@jwt_required()
 def get_parent_notifications():
     notifications = ParentNotification.query.all()
     return jsonify([notification.serialize() for notification in notifications]), 200
 
 @api.route('/parent_notifications/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_notification(id):
     notification = ParentNotification.query.get(id)
     if notification is None:
@@ -1779,6 +1526,7 @@ def get_parent_notification(id):
     return jsonify(notification.serialize()), 200
 
 @api.route('/parent_notifications', methods=['POST'])
+@jwt_required()
 def create_parent_notification():
     data = request.get_json()
     new_notification = ParentNotification(
@@ -1791,6 +1539,7 @@ def create_parent_notification():
     return jsonify(new_notification.serialize()), 201
 
 @api.route('/parent_notifications/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_notification(id):
     notification = ParentNotification.query.get(id)
     if notification is None:
@@ -1803,6 +1552,7 @@ def update_parent_notification(id):
     return jsonify(notification.serialize()), 200
 
 @api.route('/parent_notifications/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_notification(id):
     notification = ParentNotification.query.get(id)
     if notification is None:
@@ -1812,11 +1562,13 @@ def delete_parent_notification(id):
     return jsonify({"message": "Notification deleted"}), 200
 
 @api.route('/parent_tasks', methods=['GET'])
+@jwt_required()
 def get_parent_tasks():
     tasks = ParentTask.query.all()
     return jsonify([task.serialize() for task in tasks]), 200
 
 @api.route('/parent_tasks/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_task(id):
     task = ParentTask.query.get(id)
     if task is None:
@@ -1824,6 +1576,7 @@ def get_parent_task(id):
     return jsonify(task.serialize()), 200
 
 @api.route('/parent_tasks', methods=['POST'])
+@jwt_required()
 def create_parent_task():
     data = request.get_json()
     new_task = ParentTask(
@@ -1838,6 +1591,7 @@ def create_parent_task():
     return jsonify(new_task.serialize()), 201
 
 @api.route('/parent_tasks/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_task(id):
     task = ParentTask.query.get(id)
     if task is None:
@@ -1852,6 +1606,7 @@ def update_parent_task(id):
     return jsonify(task.serialize()), 200
 
 @api.route('/parent_tasks/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_task(id):
     task = ParentTask.query.get(id)
     if task is None:
@@ -1861,11 +1616,13 @@ def delete_parent_task(id):
     return jsonify({"message": "Task deleted"}), 200
 
 @api.route('/parent_attendances', methods=['GET'])
+@jwt_required()
 def get_parent_attendances():
     attendances = ParentAttendance.query.all()
     return jsonify([attendance.serialize() for attendance in attendances]), 200
 
 @api.route('/parent_attendances/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_attendance(id):
     attendance = ParentAttendance.query.get(id)
     if attendance is None:
@@ -1873,6 +1630,7 @@ def get_parent_attendance(id):
     return jsonify(attendance.serialize()), 200
 
 @api.route('/parent_attendances', methods=['POST'])
+@jwt_required()
 def create_parent_attendance():
     data = request.get_json()
     new_attendance = ParentAttendance(
@@ -1886,6 +1644,7 @@ def create_parent_attendance():
     return jsonify(new_attendance.serialize()), 201
 
 @api.route('/parent_attendances/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_attendance(id):
     attendance = ParentAttendance.query.get(id)
     if attendance is None:
@@ -1899,6 +1658,7 @@ def update_parent_attendance(id):
     return jsonify(attendance.serialize()), 200
 
 @api.route('/parent_attendances/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_attendance(id):
     attendance = ParentAttendance.query.get(id)
     if attendance is None:
@@ -1909,11 +1669,13 @@ def delete_parent_attendance(id):
 
 
 @api.route('/parent_grades', methods=['GET'])
+@jwt_required()
 def get_parent_grades():
     parent_grades = ParentGrade.query.all()
     return jsonify([pg.serialize() for pg in parent_grades])
 
 @api.route('/parent_grades/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_grade(id):
     parent_grade = ParentGrade.query.get(id)
     if parent_grade is None:
@@ -1921,6 +1683,7 @@ def get_parent_grade(id):
     return jsonify(parent_grade.serialize())
 
 @api.route('/parent_grades', methods=['POST'])
+@jwt_required()
 def create_parent_grade():
     data = request.get_json()
     new_parent_grade = ParentGrade(
@@ -1934,6 +1697,7 @@ def create_parent_grade():
     return jsonify(new_parent_grade.serialize()), 201
 
 @api.route('/parent_grades/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_grade(id):
     parent_grade = ParentGrade.query.get(id)
     if parent_grade is None:
@@ -1947,6 +1711,7 @@ def update_parent_grade(id):
     return jsonify(parent_grade.serialize())
 
 @api.route('/parent_grades/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_grade(id):
     parent_grade = ParentGrade.query.get(id)
     if parent_grade is None:
@@ -1956,11 +1721,13 @@ def delete_parent_grade(id):
     return jsonify({"message": "ParentGrade deleted"}), 200
 
 @api.route('/parent_payment_histories', methods=['GET'])
+@jwt_required()
 def get_parent_payment_histories():
     parent_payment_histories = ParentPaymentHistory.query.all()
     return jsonify([pph.serialize() for pph in parent_payment_histories])
 
 @api.route('/parent_payment_histories/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_payment_history(id):
     parent_payment_history = ParentPaymentHistory.query.get(id)
     if parent_payment_history is None:
@@ -1968,6 +1735,7 @@ def get_parent_payment_history(id):
     return jsonify(parent_payment_history.serialize())
 
 @api.route('/parent_payment_histories', methods=['POST'])
+@jwt_required()
 def create_parent_payment_history():
     data = request.get_json()
     new_parent_payment_history = ParentPaymentHistory(
@@ -1982,6 +1750,7 @@ def create_parent_payment_history():
     return jsonify(new_parent_payment_history.serialize()), 201
 
 @api.route('/parent_payment_histories/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_payment_history(id):
     parent_payment_history = ParentPaymentHistory.query.get(id)
     if parent_payment_history is None:
@@ -1996,6 +1765,7 @@ def update_parent_payment_history(id):
     return jsonify(parent_payment_history.serialize())
 
 @api.route('/parent_payment_histories/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_payment_history(id):
     parent_payment_history = ParentPaymentHistory.query.get(id)
     if parent_payment_history is None:
@@ -2005,11 +1775,13 @@ def delete_parent_payment_history(id):
     return jsonify({"message": "ParentPaymentHistory deleted"}), 200
 
 @api.route('/parent_subscriptions', methods=['GET'])
+@jwt_required()
 def get_parent_subscriptions():
     parent_subscriptions = ParentSubscription.query.all()
     return jsonify([ps.serialize() for ps in parent_subscriptions])
 
 @api.route('/parent_subscriptions/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_subscription(id):
     parent_subscription = ParentSubscription.query.get(id)
     if parent_subscription is None:
@@ -2017,6 +1789,7 @@ def get_parent_subscription(id):
     return jsonify(parent_subscription.serialize())
 
 @api.route('/parent_subscriptions', methods=['POST'])
+@jwt_required()
 def create_parent_subscription():
     data = request.get_json()
     new_parent_subscription = ParentSubscription(
@@ -2030,6 +1803,7 @@ def create_parent_subscription():
     return jsonify(new_parent_subscription.serialize()), 201
 
 @api.route('/parent_subscriptions/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_subscription(id):
     parent_subscription = ParentSubscription.query.get(id)
     if parent_subscription is None:
@@ -2043,6 +1817,7 @@ def update_parent_subscription(id):
     return jsonify(parent_subscription.serialize())
 
 @api.route('/parent_subscriptions/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_subscription(id):
     parent_subscription = ParentSubscription.query.get(id)
     if parent_subscription is None:
@@ -2052,11 +1827,13 @@ def delete_parent_subscription(id):
     return jsonify({"message": "ParentSubscription deleted"}), 200
 
 @api.route('/parent_courses', methods=['GET'])
+@jwt_required()
 def get_parent_courses():
     parent_courses = ParentCourse.query.all()
     return jsonify([pc.serialize() for pc in parent_courses])
 
 @api.route('/parent_courses/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_course(id):
     parent_course = ParentCourse.query.get(id)
     if parent_course is None:
@@ -2064,6 +1841,7 @@ def get_parent_course(id):
     return jsonify(parent_course.serialize())
 
 @api.route('/parent_courses', methods=['POST'])
+@jwt_required()
 def create_parent_course():
     data = request.get_json()
     new_parent_course = ParentCourse(
@@ -2076,6 +1854,7 @@ def create_parent_course():
     return jsonify(new_parent_course.serialize()), 201
 
 @api.route('/parent_courses/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_course(id):
     parent_course = ParentCourse.query.get(id)
     if parent_course is None:
@@ -2088,6 +1867,7 @@ def update_parent_course(id):
     return jsonify(parent_course.serialize())
 
 @api.route('/parent_courses/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_course(id):
     parent_course = ParentCourse.query.get(id)
     if parent_course is None:
@@ -2097,11 +1877,13 @@ def delete_parent_course(id):
     return jsonify({"message": "ParentCourse deleted"}), 200
 
 @api.route('/parent_services', methods=['GET'])
+@jwt_required()
 def get_parent_services():
     parent_services = ParentService.query.all()
     return jsonify([ps.serialize() for ps in parent_services])
 
 @api.route('/parent_services/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_service(id):
     parent_service = ParentService.query.get(id)
     if parent_service is None:
@@ -2109,6 +1891,7 @@ def get_parent_service(id):
     return jsonify(parent_service.serialize())
 
 @api.route('/parent_services', methods=['POST'])
+@jwt_required()
 def create_parent_service():
     data = request.get_json()
     new_parent_service = ParentService(
@@ -2121,6 +1904,7 @@ def create_parent_service():
     return jsonify(new_parent_service.serialize()), 201
 
 @api.route('/parent_services/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_service(id):
     parent_service = ParentService.query.get(id)
     if parent_service is None:
@@ -2133,6 +1917,7 @@ def update_parent_service(id):
     return jsonify(parent_service.serialize())
 
 @api.route('/parent_services/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_service(id):
     parent_service = ParentService.query.get(id)
     if parent_service is None:
@@ -2142,11 +1927,13 @@ def delete_parent_service(id):
     return jsonify({"message": "ParentService deleted"}), 200
 
 @api.route('/parent_events', methods=['GET'])
+@jwt_required()
 def get_parent_events():
     parent_events = ParentEvent.query.all()
     return jsonify([pe.serialize() for pe in parent_events])
 
 @api.route('/parent_events/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_event(id):
     parent_event = ParentEvent.query.get(id)
     if parent_event is None:
@@ -2154,6 +1941,7 @@ def get_parent_event(id):
     return jsonify(parent_event.serialize())
 
 @api.route('/parent_events', methods=['POST'])
+@jwt_required()
 def create_parent_event():
     data = request.get_json()
     new_parent_event = ParentEvent(
@@ -2166,6 +1954,7 @@ def create_parent_event():
     return jsonify(new_parent_event.serialize()), 201
 
 @api.route('/parent_events/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_event(id):
     parent_event = ParentEvent.query.get(id)
     if parent_event is None:
@@ -2178,6 +1967,7 @@ def update_parent_event(id):
     return jsonify(parent_event.serialize())
 
 @api.route('/parent_events/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_event(id):
     parent_event = ParentEvent.query.get(id)
     if parent_event is None:
@@ -2185,861 +1975,13 @@ def delete_parent_event(id):
     db.session.delete(parent_event)
     db.session.commit()
     return jsonify({"message": "ParentEvent deleted"}), 200
-
-
-
-
-@api.route('/fill-database', methods=['POST'])
-def fill_database():
-    try:
-        # Crear usuarios de prueba
-        for _ in range(20):
-            user = User(
-                username=fake.user_name(),
-                email=fake.email(),
-                password_hash=generate_password_hash('password'),
-                role=fake.random_element(elements=('parent', 'teacher', 'admin')),
-                profile_picture=fake.image_url(),
-                created_at=datetime.utcnow()
-            )
-            db.session.add(user)
-        db.session.commit()
-
-        # Crear padres de prueba
-        users = User.query.filter_by(role='parent').all()
-        for user in users:
-            parent = Parent(
-                user_id=user.id,
-                emergency_contact=fake.phone_number(),
-            )
-            db.session.add(parent)
-        db.session.commit()
-
-        # Crear niños de prueba
-        parents = Parent.query.all()
-        for parent in parents:
-            for _ in range(random.randint(1, 3)):  # Cada padre tiene entre 1 y 3 hijos
-                child = Child(
-                    parent_id=parent.id,
-                    name=fake.first_name(),
-                    date_of_birth=fake.date_of_birth(minimum_age=1, maximum_age=10),
-                    allergies=fake.text(max_nb_chars=200),
-                    birth_certificate=fake.file_name(),
-                    immunization_records=fake.file_name()
-                )
-                db.session.add(child)
-        db.session.commit()
-
-        # Crear profesores de prueba
-        users = User.query.filter_by(role='teacher').all()
-        for user in users:
-            teacher = Teacher(
-                user_id=user.id,
-                qualifications=fake.text(max_nb_chars=200),
-                teaching_experience=fake.text(max_nb_chars=200),
-                certifications=fake.file_name(),
-                background_check=fake.file_name()
-            )
-            db.session.add(teacher)
-        db.session.commit()
-
-        # Crear clases de prueba
-        teachers = Teacher.query.all()
-        for _ in range(10):
-            class_ = Class(
-                teacher_id=random.choice(teachers).id if teachers else None,
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                capacity=random.randint(10, 30),
-                price=random.uniform(50, 200),
-                age=fake.random_element(elements=('3-5', '6-8', '9-12')),
-                time=fake.time(),
-                image=fake.image_url()
-            )
-            db.session.add(class_)
-        db.session.commit()
-
-        # Crear inscripciones de prueba
-        children = Child.query.all()
-        classes = Class.query.all()
-        for child in children:
-            enrollment = Enrollment(
-                child_id=child.id,
-                class_id=random.choice(classes).id,
-                enrollment_date=fake.date_this_year()
-            )
-            db.session.add(enrollment)
-        db.session.commit()
-
-        # Crear programas de prueba
-        for _ in range(5):
-            program = Program(
-                teacher_id=random.choice(teachers).id if teachers else None,
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                capacity=random.randint(10, 30),
-                price=random.uniform(50, 200),
-                age=random.randint(3, 12),
-                time=fake.time()
-            )
-            db.session.add(program)
-        db.session.commit()
-
-        # Crear suscripciones de prueba
-        parents = Parent.query.all()
-        for parent in parents:
-            subscription = Subscription(
-                parent_id=parent.id,
-                plan_type=fake.random_element(elements=('basic', 'premium', 'gold')),
-                start_date=fake.date_this_year(),
-                end_date=fake.date_between(start_date='+30d', end_date='+1y')
-            )
-            db.session.add(subscription)
-        db.session.commit()
-
-        # Crear informes de progreso de prueba
-        children = Child.query.all()
-        teachers = Teacher.query.all()
-        for child in children:
-            progress_report = ProgressReport(
-                child_id=child.id,
-                teacher_id=random.choice(teachers).id,
-                report_date=fake.date_this_year(),
-                content=fake.text(max_nb_chars=500)
-            )
-            db.session.add(progress_report)
-        db.session.commit()
-
-        # Crear eventos de prueba
-        for _ in range(5):
-            event = Event(
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                start_time=fake.date_time_this_year(),
-                end_time=fake.date_time_this_year(),
-                image=fake.image_url()
-            )
-            db.session.add(event)
-        db.session.commit()
-
-        # Crear mensajes de prueba
-        users = User.query.all()
-        for _ in range(50):
-            sender = random.choice(users)
-            receiver = random.choice(users)
-            while receiver.id == sender.id:  # Asegurarse de que el remitente y el receptor no sean el mismo
-                receiver = random.choice(users)
-            message = Message(
-                sender_id=sender.id,
-                receiver_id=receiver.id,
-                content=fake.text(max_nb_chars=200),
-                timestamp=fake.date_time_this_year()
-            )
-            db.session.add(message)
-        db.session.commit()
-
-        # Crear tareas de prueba
-        teachers = Teacher.query.all()
-        for teacher in teachers:
-            for _ in range(random.randint(1, 5)):
-                task = Task(
-                    teacher_id=teacher.id,
-                    title=fake.sentence(),
-                    description=fake.text(max_nb_chars=200),
-                    due_date=fake.date_this_year(),
-                    status=fake.random_element(elements=('pending', 'completed', 'in progress'))
-                )
-                db.session.add(task)
-        db.session.commit()
-
-        # Crear asistencias de prueba
-        children = Child.query.all()
-        classes = Class.query.all()
-        for child in children:
-            for _ in range(random.randint(1, 5)):
-                attendance = Attendance(
-                    child_id=child.id,
-                    class_id=random.choice(classes).id,
-                    date=fake.date_this_year(),
-                    status=fake.random_element(elements=('present', 'absent', 'late'))
-                )
-                db.session.add(attendance)
-        db.session.commit()
-
-        # Crear calificaciones de prueba
-        for child in children:
-            for _ in range(random.randint(1, 5)):
-                grade = Grade(
-                    child_id=child.id,
-                    class_id=random.choice(classes).id,
-                    grade=fake.random_element(elements=('A', 'B', 'C', 'D', 'F')),
-                    date=fake.date_this_year()
-                )
-                db.session.add(grade)
-        db.session.commit()
-
-        # Crear pagos de prueba
-        parents = Parent.query.all()
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                payment = Payment(
-                    parent_id=parent.id,
-                    amount=random.uniform(50, 500),
-                    date=fake.date_this_year()
-                )
-                db.session.add(payment)
-        db.session.commit()
-
-        # Crear cursos de prueba
-        for _ in range(5):
-            course = Course(
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                price=random.uniform(50, 200),
-                age=random.randint(3, 12)
-            )
-            db.session.add(course)
-        db.session.commit()
-
-        # Crear notificaciones de prueba
-        users = User.query.all()
-        for user in users:
-            for _ in range(random.randint(1, 5)):
-                notification = Notification(
-                    user_id=user.id,
-                    content=fake.text(max_nb_chars=200),
-                    date=fake.date_time_this_year(),
-                    status=fake.random_element(elements=('unread', 'read'))
-                )
-                db.session.add(notification)
-        db.session.commit()
-
-        # Crear contactos de prueba
-        for _ in range(10):
-            contact = Contact(
-            first_name=fake.first_name(),
-            last_name=fake.last_name(),
-            email=fake.email(),
-            subject=fake.sentence(),
-            phone_number=fake.numerify(text='###########'),  # Número de 11 dígitos
-            message=fake.text(max_nb_chars=200)
-        )
-            db.session.add(contact)
-        db.session.commit()
-
-        # Crear suscripciones a boletines de prueba
-        for _ in range(10):
-            newsletter = Newsletter(
-                email=fake.email()
-            )
-            db.session.add(newsletter)
-        db.session.commit()
-
-        # Crear actividades de prueba
-        for _ in range(10):
-            activity = Activity(
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                image=fake.image_url(),
-                age_range=fake.random_element(elements=('3-5', '6-8', '9-12')),
-                time=fake.time(),
-                capacity=random.randint(10, 30),
-                price=random.uniform(50, 200)
-            )
-            db.session.add(activity)
-        db.session.commit()
-
-        # Crear clases virtuales de prueba
-        teachers = Teacher.query.all()
-        for _ in range(5):
-            virtual_class = VirtualClass(
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                date=fake.date_this_year(),
-                time=fake.time(),
-                duration=fake.random_element(elements=('1 hour', '2 hours', '3 hours')),
-                teacher=random.choice(teachers).user.username,
-                capacity=random.randint(10, 30),
-                price=random.uniform(50, 200)
-            )
-            db.session.add(virtual_class)
-        db.session.commit()
-
-        return jsonify({"message": "Database filled with test data successfully!"}), 200
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
-
-
-
-
-
-
-
-@api.route('/fill-all-models', methods=['POST'])
-def fill_all_models():
-    parent_ids = [parent.id for parent in db.session.query(Parent).all()]
-    try:
-        # Crear usuarios de prueba (necesarios para relaciones)
-        for _ in range(20):
-            user = User(
-                username=fake.user_name(),
-                email=fake.email(),
-                password_hash=generate_password_hash('password'),
-                role=fake.random_element(elements=('parent', 'teacher', 'admin')),
-                profile_picture=fake.image_url(),
-                created_at=datetime.utcnow()
-            )
-            db.session.add(user)
-        db.session.commit()
-
-        # Crear padres de prueba
-        users = User.query.filter_by(role='parent').all()
-        for user in users:
-            parent = Parent(
-                user_id=user.id,
-                emergency_contact=fake.phone_number(),
-            )
-            db.session.add(parent)
-        db.session.commit()
-
-        # Crear niños de prueba
-        parents = Parent.query.all()
-        for parent in parents:
-            for _ in range(random.randint(1, 3)):  # Cada padre tiene entre 1 y 3 hijos
-                child = Child(
-                    parent_id=parent.id,
-                    name=fake.first_name(),
-                    date_of_birth=fake.date_of_birth(minimum_age=1, maximum_age=10),
-                    allergies=fake.text(max_nb_chars=200),
-                    birth_certificate=fake.file_name(),
-                    immunization_records=fake.file_name()
-                )
-                db.session.add(child)
-        db.session.commit()
-
-        # Crear profesores de prueba
-        users = User.query.filter_by(role='teacher').all()
-        for user in users:
-            teacher = Teacher(
-                user_id=user.id,
-                qualifications=fake.text(max_nb_chars=200),
-                teaching_experience=fake.text(max_nb_chars=200),
-                certifications=fake.file_name(),
-                background_check=fake.file_name()
-            )
-            db.session.add(teacher)
-        db.session.commit()
-
-        # Crear clases de prueba
-        teachers = Teacher.query.all()
-        for _ in range(10):
-            class_ = Class(
-                teacher_id=random.choice(teachers).id if teachers else None,
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                capacity=random.randint(10, 30),
-                price=random.uniform(50, 200),
-                age=fake.random_element(elements=('3-5', '6-8', '9-12')),
-                time=fake.time(),
-                image=fake.image_url()
-            )
-            db.session.add(class_)
-        db.session.commit()
-
-        # Crear inscripciones de prueba
-        children = Child.query.all()
-        classes = Class.query.all()
-        for child in children:
-            enrollment = Enrollment(
-                child_id=child.id,
-                class_id=random.choice(classes).id,
-                enrollment_date=fake.date_this_year()
-            )
-            db.session.add(enrollment)
-        db.session.commit()
-
-        # Crear programas de prueba
-        for _ in range(5):
-            program = Program(
-                teacher_id=random.choice(teachers).id if teachers else None,
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                capacity=random.randint(10, 30),
-                price=random.uniform(50, 200),
-                age=random.randint(3, 12),
-                time=fake.time()
-            )
-            db.session.add(program)
-        db.session.commit()
-
-        # Crear suscripciones de prueba
-        parents = Parent.query.all()
-        for parent in parents:
-            subscription = Subscription(
-                parent_id=parent.id,
-                plan_type=fake.random_element(elements=('basic', 'premium', 'gold')),
-                start_date=fake.date_this_year(),
-                end_date=fake.date_between(start_date='+30d', end_date='+1y')
-            )
-            db.session.add(subscription)
-        db.session.commit()
-
-        # Crear informes de progreso de prueba
-        children = Child.query.all()
-        teachers = Teacher.query.all()
-        for child in children:
-            progress_report = ProgressReport(
-                child_id=child.id,
-                teacher_id=random.choice(teachers).id,
-                report_date=fake.date_this_year(),
-                content=fake.text(max_nb_chars=500)
-            )
-            db.session.add(progress_report)
-        db.session.commit()
-
-        # Crear eventos de prueba
-        for _ in range(5):
-            event = Event(
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                start_time=fake.date_time_this_year(),
-                end_time=fake.date_time_this_year(),
-                image=fake.image_url()
-            )
-            db.session.add(event)
-        db.session.commit()
-
-        # Crear mensajes de prueba
-        users = User.query.all()
-        for _ in range(50):
-            sender = random.choice(users)
-            receiver = random.choice(users)
-            while receiver.id == sender.id:  # Asegurarse de que el remitente y el receptor no sean el mismo
-                receiver = random.choice(users)
-            message = Message(
-                sender_id=sender.id,
-                receiver_id=receiver.id,
-                content=fake.text(max_nb_chars=200),
-                timestamp=fake.date_time_this_year()
-            )
-            db.session.add(message)
-        db.session.commit()
-
-        # Crear tareas de prueba
-        teachers = Teacher.query.all()
-        for teacher in teachers:
-            for _ in range(random.randint(1, 5)):
-                task = Task(
-                    teacher_id=teacher.id,
-                    title=fake.sentence(),
-                    description=fake.text(max_nb_chars=200),
-                    due_date=fake.date_this_year(),
-                    status=fake.random_element(elements=('pending', 'completed', 'in progress'))
-                )
-                db.session.add(task)
-        db.session.commit()
-
-        # Crear asistencias de prueba
-        children = Child.query.all()
-        classes = Class.query.all()
-        for child in children:
-            for _ in range(random.randint(1, 5)):
-                attendance = Attendance(
-                    child_id=child.id,
-                    class_id=random.choice(classes).id,
-                    date=fake.date_this_year(),
-                    status=fake.random_element(elements=('present', 'absent', 'late'))
-                )
-                db.session.add(attendance)
-        db.session.commit()
-
-        # Crear calificaciones de prueba
-        for child in children:
-            for _ in range(random.randint(1, 5)):
-                grade = Grade(
-                    child_id=child.id,
-                    class_id=random.choice(classes).id,
-                    grade=fake.random_element(elements=('A', 'B', 'C', 'D', 'F')),
-                    date=fake.date_this_year()
-                )
-                db.session.add(grade)
-        db.session.commit()
-
-        # Crear pagos de prueba
-        parents = Parent.query.all()
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                payment = Payment(
-                    parent_id=parent.id,
-                    amount=random.uniform(50, 500),
-                    date=fake.date_this_year()
-                )
-                db.session.add(payment)
-        db.session.commit()
-
-        # Crear cursos de prueba
-        for _ in range(5):
-            course = Course(
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                price=random.uniform(50, 200),
-                age=random.randint(3, 12)
-            )
-            db.session.add(course)
-        db.session.commit()
-
-        # Crear notificaciones de prueba
-        users = User.query.all()
-        for user in users:
-            for _ in range(random.randint(1, 5)):
-                notification = Notification(
-                    user_id=user.id,
-                    content=fake.text(max_nb_chars=200),
-                    date=fake.date_time_this_year(),
-                    status=fake.random_element(elements=('unread', 'read'))
-                )
-                db.session.add(notification)
-        db.session.commit()
-
-        # Crear contactos de prueba
-        for _ in range(10):
-            contact = Contact(
-                first_name=fake.first_name(),
-                last_name=fake.last_name(),
-                email=fake.email(),
-                subject=fake.sentence(),
-                phone_number=fake.numerify(text='###########'),  # Número de 11 dígitos
-                message=fake.text(max_nb_chars=200)
-            )
-            db.session.add(contact)
-        db.session.commit()
-
-        # Crear suscripciones a boletines de prueba
-        for _ in range(10):
-            newsletter = Newsletter(
-                email=fake.email()
-            )
-            db.session.add(newsletter)
-        db.session.commit()
-
-        # Crear actividades de prueba
-        for _ in range(10):
-            activity = Activity(
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                image=fake.image_url(),
-                age_range=fake.random_element(elements=('3-5', '6-8', '9-12')),
-                time=fake.time(),
-                capacity=random.randint(10, 30),
-                price=random.uniform(50, 200)
-            )
-            db.session.add(activity)
-        db.session.commit()
-
-        # Crear clases virtuales de prueba
-        teachers = Teacher.query.all()
-        for _ in range(5):
-            virtual_class = VirtualClass(
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                date=fake.date_this_year(),
-                time=fake.time(),
-                duration=fake.random_element(elements=('1 hour', '2 hours', '3 hours')),
-                teacher=random.choice(teachers).user.username,
-                capacity=random.randint(10, 30),
-                price=random.uniform(50, 200)
-            )
-            db.session.add(virtual_class)
-        db.session.commit()
-
-        # Crear horarios de prueba
-        for _ in range(10):
-            schedule = Schedule(
-                class_name=fake.word(),
-                teacher=fake.name(),
-                dayOfWeek=fake.random_element(elements=('Mon', 'Tue', 'Wed', 'Thu', 'Fri')),
-                startTime=fake.time(),
-                endTime=fake.time(),
-                capacity=random.randint(10, 30),
-                enrolled=random.randint(0, 30),
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            db.session.add(schedule)
-        db.session.commit()
-
-        # Crear GetInTouch de prueba
-        for _ in range(10):
-            getintouch = Getintouch(
-                name=fake.name(),
-                email=fake.email(),
-                subject=fake.sentence(),
-                phone_number=fake.numerify(text='###########'),  # Número de 11 dígitos
-                message=fake.text(max_nb_chars=200)
-            )
-            db.session.add(getintouch)
-        db.session.commit()
-
-        # Crear clientes de prueba
-        for _ in range(10):
-            client = Client(
-                name=fake.name(),
-                email=fake.email(),
-                phone=fake.numerify(text='###########'),  # Número de 11 dígitos
-                status=fake.random_element(elements=('Active', 'Inactive')),
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            db.session.add(client)
-        db.session.commit()
-
-        # Crear correos electrónicos de prueba
-        for _ in range(10):
-            email = Email(
-                to_name=fake.name(),
-                user_email=fake.email(),
-                message=fake.text(max_nb_chars=200),
-                date=fake.date_time_this_year(),
-                scheduled_date=fake.date_time_this_year()
-            )
-            db.session.add(email)
-        db.session.commit()
-
-        # Crear suscripciones a eventos de prueba
-        for _ in range(10):
-            eventsuscription = Eventsuscriptions(
-                full_name=fake.name(),
-                events_selection=fake.word(),
-                parent_name=fake.name(),
-                special_request=fake.text(max_nb_chars=200)
-            )
-            db.session.add(eventsuscription)
-        db.session.commit()
-
-        # Crear videos de prueba
-        users = User.query.all()
-        for _ in range(10):
-            video = Video(
-                title=fake.word(),
-                url=fake.url(),
-                user_id=random.choice(users).id,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            db.session.add(video)
-        db.session.commit()
-
-        # Crear cuentas inactivas de prueba
-        for _ in range(10):
-            inactive_account = InactiveAccount(
-                name=fake.name(),
-                email=fake.email(),
-                last_active=fake.date_time_this_year(),
-                type=fake.random_element(elements=('parent', 'teacher', 'admin')),
-                reason=fake.text(max_nb_chars=200),
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            db.session.add(inactive_account)
-        db.session.commit()
-
-        # Crear aprobaciones de prueba
-        for _ in range(10):
-            approval = Approval(
-                type=fake.word(),
-                name=fake.name(),
-                details=fake.text(max_nb_chars=200),
-                status=fake.random_element(elements=('pending', 'approved', 'rejected')),
-                date=fake.date_this_year(),
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            db.session.add(approval)
-        db.session.commit()
-
-        # Crear administradores de prueba
-        users = User.query.filter_by(role='admin').all()
-        for user in users:
-            admin = AdminD(
-                user_id=user.id,
-                position=fake.job(),
-                department=fake.word()
-            )
-            db.session.add(admin)
-        db.session.commit()
-
-        # Crear servicios de prueba
-        for _ in range(10):
-            service = Service(
-                name=fake.word(),
-                description=fake.text(max_nb_chars=200),
-                image=fake.image_url()
-            )
-            db.session.add(service)
-        db.session.commit()
-
-        # Crear actividades de padres de prueba
-        parents = Parent.query.all()
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                parent_activity = ParentActivity(
-                    parent_id=parent.id,
-                    name=fake.word(),
-                    date=fake.date_this_year(),
-                    time=fake.time(),
-                    duration=fake.random_element(elements=('1 hour', '2 hours', '3 hours')),
-                    status=fake.random_element(elements=('pending', 'completed', 'in progress')),
-                    location=fake.address()
-                )
-                db.session.add(parent_activity)
-        db.session.commit()
-
-        # Crear cursos de padres de prueba
-        courses = Course.query.all()
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                parent_course = ParentCourse(
-                    parent_id=parent.id,
-                    course_id=random.choice(courses).id,
-                    enrollment_date=fake.date_this_year()
-                )
-                db.session.add(parent_course)
-        db.session.commit()
-
-        # Crear asistencias de padres de prueba
-        classes = Class.query.all()
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                parent_attendance = ParentAttendance(
-                    parent_id=parent.id,
-                    class_id=random.choice(classes).id,
-                    date=fake.date_this_year(),
-                    status=fake.random_element(elements=('present', 'absent', 'late'))
-                )
-                db.session.add(parent_attendance)
-        db.session.commit()
-
-        # Crear eventos de padres de prueba
-        events = Event.query.all()
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                parent_event = ParentEvent(
-                    parent_id=parent.id,
-                    event_id=random.choice(events).id,
-                    enrollment_date=fake.date_this_year()
-                )
-                db.session.add(parent_event)
-        db.session.commit()
-
-        # Crear calificaciones de padres de prueba
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                parent_grade = ParentGrade(
-                    parent_id=parent.id,
-                    class_id=random.choice(classes).id,
-                    grade=fake.random_element(elements=('A', 'B', 'C', 'D', 'F')),
-                    date=fake.date_this_year()
-                )
-                db.session.add(parent_grade)
-        db.session.commit()
-
-        # Crear notificaciones de padres de prueba
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                parent_notification = ParentNotification(
-                    parent_id=parent.id,
-                    content=fake.text(max_nb_chars=200),
-                    date=fake.date_time_this_year(),
-                    status=fake.random_element(elements=('unread', 'read'))
-                )
-                db.session.add(parent_notification)
-        db.session.commit()
-
-        # Crear pagos de padres de prueba
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                parent_payment = ParentPayment(
-                    parent_id=parent.id,
-                    amount=random.uniform(50, 500),
-                    concept=fake.word(),
-                    status=fake.random_element(elements=('pending', 'completed', 'failed')),
-                    due_date=fake.date_this_year()
-                )
-                db.session.add(parent_payment)
-        db.session.commit()
-
-        # Crear historial de pagos de padres de prueba
-        for parent in parents:
-            for _ in range(random.randint(1, 5)):
-                parent_payment_history = ParentPaymentHistory(
-                    parent_id=parent.id,
-                    amount=random.uniform(50, 500),
-                    concept=fake.word(),
-                    status=fake.random_element(elements=('pending', 'completed', 'failed')),
-                    due_date=fake.date_this_year()
-                )
-                db.session.add(parent_payment_history)
-        db.session.commit()
-        # Crear datos de prueba para MessageP
-        for _ in range(10):
-            if not parent_ids:
-                break  # Salir si no hay IDs de padres disponibles
-
-            parent_id = random.choice(parent_ids)  # Elegir un ID de padre existente aleatoriamente
-            message = MessageP(
-                parent_id=parent_id,
-                content=fake.sentence(),
-                sender=fake.name()
-            )
-            db.session.add(message)
-        db.session.commit()
-       
-        # Crear datos de prueba para Schedule
-        for _ in range(10):
-            schedule = Schedule(
-                class_name=fake.word(),
-                teacher=fake.name(),
-                dayOfWeek=fake.random_element(elements=('Mon', 'Tue', 'Wed', 'Thu', 'Fri')),
-                startTime=fake.time(),
-                endTime=fake.time(),
-                capacity=random.randint(10, 30),
-                enrolled=random.randint(0, 30),
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
-            )
-            db.session.add(schedule)
-        db.session.commit()
-
-    # Crear datos de prueba para ParentSchedule
-        for _ in range(10):
-            if not parent_ids:
-                break  # Salir si no hay IDs de padres disponibles
-
-            parent_id = random.choice(parent_ids)  # Elegir un ID de padre existente aleatoriamente
-            parent_schedule = ParentSchedule(
-                parent_id=parent_id,
-                day=fake.random_element(elements=('Mon', 'Tue', 'Wed', 'Thu', 'Fri')),
-                activities=', '.join(fake.words(nb=5))
-            )
-            db.session.add(parent_schedule)
-        db.session.commit()
-        # Crear datos de prueba para MessageP
-  
-                    
-        return jsonify({"message": "All models filled with test data successfully!"}), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
     
 @api.route('/settings', methods=['GET'])
+@jwt_required()
 def get_settings():
     settings = Settings.query.all()
     settings = list(map(lambda x: x.serialize(), settings))
     return jsonify(settings), 200
-
 
 @api.route('/settings/<int:id>', methods=['PUT'])
 @jwt_required()
@@ -3125,9 +2067,6 @@ def signup_admin():
     }), 201
 
     return jsonify(settings.serialize()), 200
-
-
-
 
 
 @api.route('/enrolled-classes', methods=['GET'])
@@ -3277,82 +2216,35 @@ def get_teacher_classes():
         print("Error en get_teacher_classes:", str(e))
         return jsonify({"error": "An error occurred", "details": str(e)}), 500
 
-@api.route('/create_admin', methods=['POST'])
-def create_admin():
-    # Datos predefinidos para el usuario administrador
-    data = {
-        'username': "admin",
-        'email': "admin@daycare.com",
-        'password': "admin123",
-        'role': "admin",
-        'position': "Administrator",
-        'department': "Management"
-    }
-
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
-    role = data.get('role')
-    position = data.get('position')
-    department = data.get('department')
-
-    if User.query.filter_by(email=email).first():
-        raise APIException("User already exists", status_code=400)
-
-    hashed_password = generate_password_hash(password)
-    new_user = User(username=username, email=email, password_hash=hashed_password, role=role)
-    db.session.add(new_user)
-    db.session.flush()
-
-    new_admin = AdminD(user_id=new_user.id, position=position, department=department)
-    db.session.add(new_admin)
-
-    db.session.commit()
-
-    access_token = create_access_token(identity=new_user.id)
-
-    return jsonify({
-        "message": "Admin created successfully",
-        "token": access_token,
-        "admin": new_user.serialize()
-    }), 201
 
 @api.route('/parent_payments', methods=['GET'])
+@jwt_required()
 def get_parent_payments():
     payments = ParentPayment.query.all()
     return jsonify([payment.serialize() for payment in payments]), 200
 
 @api.route('/parent_payments/<int:id>', methods=['GET'])
+@jwt_required()
 def get_parent_payment(id):
     payment = ParentPayment.query.get(id)
     if payment is None:
         return jsonify({"error": "Payment not found"}), 404
     return jsonify(payment.serialize()), 200
 
-
-
-
-
-# Crear un nuevo pago desde PayPal
 @api.route('/parent_payments', methods=['POST'])
+@jwt_required()
 def create_parent_payment():
     data = request.get_json()
-
     if not data:
         return jsonify({"error": "No se recibieron datos"}), 400
-
     try:
         parent_id = data.get('parent_id')
-
-        # Verificar que el parent_id no sea None
         if not parent_id:
             return jsonify({"error": "El parent_id es obligatorio"}), 400
 
-        # Verificar si el parent_id existe en la base de datos
         parent = Parent.query.get(parent_id)
         if not parent:
             return jsonify({"error": "El parent_id no existe"}), 400
-
         new_payment = ParentPayment(
             parent_id=parent_id,
             amount=float(data['amount']),
@@ -3365,20 +2257,13 @@ def create_parent_payment():
 
         db.session.add(new_payment)
         db.session.commit()
-
         return jsonify({"message": "Pago registrado exitosamente", "payment": new_payment.serialize()}), 201
-
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Error al procesar el pago: {str(e)}"}), 500
 
-
-
-
-
-
-
 @api.route('/parent_payments/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_parent_payment(id):
     payment = ParentPayment.query.get(id)
     if payment is None:
@@ -3393,6 +2278,7 @@ def update_parent_payment(id):
     return jsonify(payment.serialize()), 200
 
 @api.route('/parent_payments/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_parent_payment(id):
     payment = ParentPayment.query.get(id)
     if payment is None:
@@ -3400,3 +2286,1083 @@ def delete_parent_payment(id):
     db.session.delete(payment)
     db.session.commit()
     return jsonify({"message": "Payment deleted"}), 200
+
+
+
+
+@api.route('/fill-database', methods=['POST'])
+def fill_database():
+    try:
+        # Verificar si ya existen datos en las tablas
+        if User.query.count() > 0:
+            return jsonify({"message": "La base de datos ya contiene datos."}), 200
+
+        # Crear usuarios de prueba
+        simple_users = [
+            {
+                "username": "johndoe",
+                "email": "johndoe@example.com",
+                "password_hash": generate_password_hash("password1"),
+                "role": "parent",
+                "profile_picture": None,
+                "created_at": datetime.utcnow()
+            },
+            {
+                "username": "janesmith",
+                "email": "janesmith@example.com",
+                "password_hash": generate_password_hash("password2"),
+                "role": "teacher",
+                "profile_picture": None,
+                "created_at": datetime.utcnow()
+            },
+            {
+                "username": "adminuser",
+                "email": "admin@example.com",
+                "password_hash": generate_password_hash("admin123"),
+                "role": "admin",
+                "profile_picture": None,
+                "created_at": datetime.utcnow()
+            }
+        ]
+
+        for user_data in simple_users:
+            new_user = User(
+                username=user_data["username"],
+                email=user_data["email"],
+                password_hash=user_data["password_hash"],
+                role=user_data["role"],
+                profile_picture=user_data["profile_picture"],
+                created_at=user_data["created_at"]
+            )
+            db.session.add(new_user)
+
+        db.session.commit()
+
+        # Crear padres de prueba
+        parents = [
+            {
+                "user_id": 1,  # johndoe
+                "emergency_contact": "123-456-7890"
+            }
+        ]
+
+        for parent_data in parents:
+            new_parent = Parent(
+                user_id=parent_data["user_id"],
+                emergency_contact=parent_data["emergency_contact"]
+            )
+            db.session.add(new_parent)
+
+        db.session.commit()
+
+        # Crear profesores de prueba
+        teachers = [
+            {
+                "user_id": 2,  # janesmith
+                "qualifications": "PhD in Mathematics",
+                "teaching_experience": "10 years",
+                "certifications": "https://example.com/certifications/janesmith",
+                "background_check": "https://example.com/background/janesmith"
+            }
+        ]
+
+        for teacher_data in teachers:
+            new_teacher = Teacher(
+                user_id=teacher_data["user_id"],
+                qualifications=teacher_data["qualifications"],
+                teaching_experience=teacher_data["teaching_experience"],
+                certifications=teacher_data["certifications"],
+                background_check=teacher_data["background_check"]
+            )
+            db.session.add(new_teacher)
+
+        db.session.commit()
+
+        # Crear niños de prueba
+        children = [
+            {
+                "parent_id": 1,  # johndoe
+                "name": "Alice Doe",
+                "date_of_birth": datetime(2018, 5, 12),
+                "allergies": "None",
+                "birth_certificate": "https://example.com/birth_certificate",
+                "immunization_records": "https://example.com/immunization_records"
+            }
+        ]
+
+        for child_data in children:
+            new_child = Child(
+                parent_id=child_data["parent_id"],
+                name=child_data["name"],
+                date_of_birth=child_data["date_of_birth"],
+                allergies=child_data["allergies"],
+                birth_certificate=child_data["birth_certificate"],
+                immunization_records=child_data["immunization_records"]
+            )
+            db.session.add(new_child)
+
+        db.session.commit()
+
+        # Crear clases de prueba
+        classes = [
+            {
+                "teacher_id": 1,  # janesmith
+                "name": "Math 101",
+                "description": "Introduction to Mathematics",
+                "capacity": 20,
+                "price": 100.0,
+                "age": "6-8",
+                "time": "10:00",
+                "image": "https://example.com/math101.jpg"
+            }
+        ]
+
+        for class_data in classes:
+            new_class = Class(
+                teacher_id=class_data["teacher_id"],
+                name=class_data["name"],
+                description=class_data["description"],
+                capacity=class_data["capacity"],
+                price=class_data["price"],
+                age=class_data["age"],
+                time=class_data["time"],
+                image=class_data["image"]
+            )
+            db.session.add(new_class)
+
+        db.session.commit()
+
+        # Crear inscripciones de prueba
+        enrollments = [
+            {
+                "user_id": 1,  # johndoe
+                "class_id": 1,  # Math 101
+                "enrolled_at": datetime.utcnow()
+            }
+        ]
+
+        for enrollment_data in enrollments:
+            new_enrollment = Enrollment(
+                user_id=enrollment_data["user_id"],
+                class_id=enrollment_data["class_id"],
+                enrolled_at=enrollment_data["enrolled_at"]
+            )
+            db.session.add(new_enrollment)
+
+        db.session.commit()
+
+        # Crear programas de prueba
+        programs = [
+            {
+                "teacher_id": 1,  # janesmith
+                "name": "Science Program",
+                "description": "Hands-on science experiments",
+                "capacity": 15,
+                "price": 150.0,
+                "age": 8,
+                "time": "14:00"
+            }
+        ]
+
+        for program_data in programs:
+            new_program = Program(
+                teacher_id=program_data["teacher_id"],
+                name=program_data["name"],
+                description=program_data["description"],
+                capacity=program_data["capacity"],
+                price=program_data["price"],
+                age=program_data["age"],
+                time=program_data["time"]
+            )
+            db.session.add(new_program)
+
+        db.session.commit()
+
+        # Crear suscripciones de prueba
+        subscriptions = [
+            {
+                "class_name": "Math 101",
+                "student_name": "Alice Doe",
+                "start_date": datetime.utcnow()
+            }
+        ]
+
+        for subscription_data in subscriptions:
+            new_subscription = Subscription(
+                class_name=subscription_data["class_name"],
+                student_name=subscription_data["student_name"],
+                start_date=subscription_data["start_date"]
+            )
+            db.session.add(new_subscription)
+
+        db.session.commit()
+
+        # Crear informes de progreso de prueba
+        progress_reports = [
+            {
+                "child_id": 1,  # Alice Doe
+                "teacher_id": 1,  # janesmith
+                "report_date": datetime.utcnow(),
+                "content": "Alice is doing great in Math!"
+            }
+        ]
+
+        for report_data in progress_reports:
+            new_report = ProgressReport(
+                child_id=report_data["child_id"],
+                teacher_id=report_data["teacher_id"],
+                report_date=report_data["report_date"],
+                content=report_data["content"]
+            )
+            db.session.add(new_report)
+
+        db.session.commit()
+
+        # Crear eventos de prueba
+        events = [
+            {
+                "name": "School Festival",
+                "description": "Annual school festival",
+                "start_time": datetime.utcnow() + timedelta(days=10),
+                "end_time": datetime.utcnow() + timedelta(days=11),
+                "image": "https://example.com/festival.jpg"
+            }
+        ]
+
+        for event_data in events:
+            new_event = Event(
+                name=event_data["name"],
+                description=event_data["description"],
+                start_time=event_data["start_time"],
+                end_time=event_data["end_time"],
+                image=event_data["image"]
+            )
+            db.session.add(new_event)
+
+        db.session.commit()
+
+        # Crear mensajes de prueba
+        messages = [
+            {
+                "sender_id": 1,  # johndoe
+                "receiver_id": 2,  # janesmith
+                "content": "Hello, how is Alice doing?",
+                "timestamp": datetime.utcnow()
+            }
+        ]
+
+        for message_data in messages:
+            new_message = Message(
+                sender_id=message_data["sender_id"],
+                receiver_id=message_data["receiver_id"],
+                content=message_data["content"],
+                timestamp=message_data["timestamp"]
+            )
+            db.session.add(new_message)
+
+        db.session.commit()
+
+        # Crear tareas de prueba
+        tasks = [
+            {
+                "teacher_id": 1,  # janesmith
+                "title": "Prepare lesson plan",
+                "description": "Prepare lesson plan for next week",
+                "due_date": datetime.utcnow() + timedelta(days=7),
+                "status": "pending"
+            }
+        ]
+
+        for task_data in tasks:
+            new_task = Task(
+                teacher_id=task_data["teacher_id"],
+                title=task_data["title"],
+                description=task_data["description"],
+                due_date=task_data["due_date"],
+                status=task_data["status"]
+            )
+            db.session.add(new_task)
+
+        db.session.commit()
+
+        # Crear asistencias de prueba
+        attendances = [
+            {
+                "child_id": 1,  # Alice Doe
+                "class_id": 1,  # Math 101
+                "date": datetime.utcnow(),
+                "status": "present"
+            }
+        ]
+
+        for attendance_data in attendances:
+            new_attendance = Attendance(
+                child_id=attendance_data["child_id"],
+                class_id=attendance_data["class_id"],
+                date=attendance_data["date"],
+                status=attendance_data["status"]
+            )
+            db.session.add(new_attendance)
+
+        db.session.commit()
+
+        # Crear calificaciones de prueba
+        grades = [
+            {
+                "child_id": 1,  # Alice Doe
+                "class_id": 1,  # Math 101
+                "grade": "A",
+                "date": datetime.utcnow()
+            }
+        ]
+
+        for grade_data in grades:
+            new_grade = Grade(
+                child_id=grade_data["child_id"],
+                class_id=grade_data["class_id"],
+                grade=grade_data["grade"],
+                date=grade_data["date"]
+            )
+            db.session.add(new_grade)
+
+        db.session.commit()
+
+        # Crear pagos de prueba
+        payments = [
+            {
+                "parent_id": 1,  # johndoe
+                "amount": 100.0,
+                "date": datetime.utcnow()
+            }
+        ]
+
+        for payment_data in payments:
+            new_payment = Payment(
+                parent_id=payment_data["parent_id"],
+                amount=payment_data["amount"],
+                date=payment_data["date"]
+            )
+            db.session.add(new_payment)
+
+        db.session.commit()
+
+        # Crear cursos de prueba
+        courses = [
+            {
+                "name": "Art Class",
+                "description": "Introduction to Art",
+                "price": 50.0,
+                "age": 6
+            }
+        ]
+
+        for course_data in courses:
+            new_course = Course(
+                name=course_data["name"],
+                description=course_data["description"],
+                price=course_data["price"],
+                age=course_data["age"]
+            )
+            db.session.add(new_course)
+
+        db.session.commit()
+
+        # Crear notificaciones de prueba
+        notifications = [
+            {
+                "user_id": 1,  # johndoe
+                "content": "Your payment was received.",
+                "date": datetime.utcnow(),
+                "status": "unread"
+            }
+        ]
+
+        for notification_data in notifications:
+            new_notification = Notification(
+                user_id=notification_data["user_id"],
+                content=notification_data["content"],
+                date=notification_data["date"],
+                status=notification_data["status"]
+            )
+            db.session.add(new_notification)
+
+        db.session.commit()
+
+        # Crear contactos de prueba
+        contacts = [
+            {
+                "first_name": "John",
+                "last_name": "Doe",
+                "email": "johndoe@example.com",
+                "subject": "Inquiry",
+                "phone_number": "123-456-7890",
+                "message": "I have a question about the program."
+            }
+        ]
+
+        for contact_data in contacts:
+            new_contact = Contact(
+                first_name=contact_data["first_name"],
+                last_name=contact_data["last_name"],
+                email=contact_data["email"],
+                subject=contact_data["subject"],
+                phone_number=contact_data["phone_number"],
+                message=contact_data["message"]
+            )
+            db.session.add(new_contact)
+
+        db.session.commit()
+
+        # Crear suscripciones a boletines de prueba
+        newsletters = [
+            {
+                "email": "johndoe@example.com"
+            }
+        ]
+
+        for newsletter_data in newsletters:
+            new_newsletter = Newsletter(
+                email=newsletter_data["email"]
+            )
+            db.session.add(new_newsletter)
+
+        db.session.commit()
+
+        # Crear GetInTouch de prueba
+        getintouch_entries = [
+            {
+                "name": "John Doe",
+                "email": "johndoe@example.com",
+                "subject": "Inquiry",
+                "phone_number": "123-456-7890",
+                "message": "I have a question about the program."
+            }
+        ]
+
+        for getintouch_data in getintouch_entries:
+            new_getintouch = Getintouch(
+                name=getintouch_data["name"],
+                email=getintouch_data["email"],
+                subject=getintouch_data["subject"],
+                phone_number=getintouch_data["phone_number"],
+                message=getintouch_data["message"]
+            )
+            db.session.add(new_getintouch)
+
+        db.session.commit()
+
+        # Crear clientes de prueba
+        clients = [
+            {
+                "name": "John Doe",
+                "email": "johndoe@example.com",
+                "phone": "123-456-7890",
+                "status": "Active"
+            }
+        ]
+
+        for client_data in clients:
+            new_client = Client(
+                name=client_data["name"],
+                email=client_data["email"],
+                phone=client_data["phone"],
+                status=client_data["status"]
+            )
+            db.session.add(new_client)
+
+        db.session.commit()
+
+        # Crear horarios de prueba
+        schedules = [
+            {
+                "class_name": "Math 101",
+                "teacher": "Jane Smith",
+                "dayOfWeek": "Monday",
+                "startTime": "10:00",
+                "endTime": "11:00",
+                "capacity": 20,
+                "enrolled": 15
+            }
+        ]
+
+        for schedule_data in schedules:
+            new_schedule = Schedule(
+                class_name=schedule_data["class_name"],
+                teacher=schedule_data["teacher"],
+                dayOfWeek=schedule_data["dayOfWeek"],
+                startTime=schedule_data["startTime"],
+                endTime=schedule_data["endTime"],
+                capacity=schedule_data["capacity"],
+                enrolled=schedule_data["enrolled"]
+            )
+            db.session.add(new_schedule)
+
+        db.session.commit()
+
+        # Crear correos electrónicos de prueba
+        emails = [
+            {
+                "to_name": "John Doe",
+                "user_email": "johndoe@example.com",
+                "message": "Your payment was received.",
+                "date": datetime.utcnow(),
+                "scheduled_date": datetime.utcnow() + timedelta(days=1)
+            }
+        ]
+
+        for email_data in emails:
+            new_email = Email(
+                to_name=email_data["to_name"],
+                user_email=email_data["user_email"],
+                message=email_data["message"],
+                date=email_data["date"],
+                scheduled_date=email_data["scheduled_date"]
+            )
+            db.session.add(new_email)
+
+        db.session.commit()
+
+        # Crear suscripciones a eventos de prueba
+        eventsuscriptions = [
+            {
+                "full_name": "John Doe",
+                "events_selection": "School Festival",
+                "parent_name": "John Doe",
+                "special_request": "No special requests"
+            }
+        ]
+
+        for eventsuscription_data in eventsuscriptions:
+            new_eventsuscription = Eventsuscriptions(
+                full_name=eventsuscription_data["full_name"],
+                events_selection=eventsuscription_data["events_selection"],
+                parent_name=eventsuscription_data["parent_name"],
+                special_request=eventsuscription_data["special_request"]
+            )
+            db.session.add(new_eventsuscription)
+
+        db.session.commit()
+
+        # Crear videos de prueba
+        videos = [
+            {
+                "title": "Math Lesson 1",
+                "url": "https://example.com/math_lesson_1",
+                "user_id": 2  # janesmith
+            }
+        ]
+
+        for video_data in videos:
+            new_video = Video(
+                title=video_data["title"],
+                url=video_data["url"],
+                user_id=video_data["user_id"]
+            )
+            db.session.add(new_video)
+
+        db.session.commit()
+
+        # Crear cuentas inactivas de prueba
+        inactive_accounts = [
+            {
+                "name": "John Doe",
+                "email": "johndoe@example.com",
+                "last_active": datetime.utcnow() - timedelta(days=30),
+                "type": "parent",
+                "reason": "Inactivity"
+            }
+        ]
+
+        for inactive_account_data in inactive_accounts:
+            new_inactive_account = InactiveAccount(
+                name=inactive_account_data["name"],
+                email=inactive_account_data["email"],
+                last_active=inactive_account_data["last_active"],
+                type=inactive_account_data["type"],
+                reason=inactive_account_data["reason"]
+            )
+            db.session.add(new_inactive_account)
+
+        db.session.commit()
+
+        # Crear aprobaciones de prueba
+        approvals = [
+            {
+                "type": "Inscripción",
+                "name": "John Doe",
+                "details": "Solicitud de inscripción para el programa de verano",
+                "status": "pending",
+                "date": datetime.utcnow()
+            }
+        ]
+
+        for approval_data in approvals:
+            new_approval = Approval(
+                type=approval_data["type"],
+                name=approval_data["name"],
+                details=approval_data["details"],
+                status=approval_data["status"],
+                date=approval_data["date"]
+            )
+            db.session.add(new_approval)
+
+        db.session.commit()
+
+        # Crear actividades de prueba
+        activities = [
+            {
+                "name": "Art Class",
+                "description": "Introduction to Art",
+                "image": "https://example.com/art_class.jpg",
+                "age_range": "6-8",
+                "time": "14:00",
+                "capacity": 15,
+                "price": 50.0
+            }
+        ]
+
+        for activity_data in activities:
+            new_activity = Activity(
+                name=activity_data["name"],
+                description=activity_data["description"],
+                image=activity_data["image"],
+                age_range=activity_data["age_range"],
+                time=activity_data["time"],
+                capacity=activity_data["capacity"],
+                price=activity_data["price"]
+            )
+            db.session.add(new_activity)
+
+        db.session.commit()
+
+        # Crear clases virtuales de prueba
+        virtual_classes = [
+            {
+                "name": "Yoga for Kids",
+                "description": "A fun and engaging yoga class for children.",
+                "date": datetime.utcnow() + timedelta(days=5),
+                "time": datetime.strptime("10:00", "%H:%M").time(),
+                "duration": "1 hour",
+                "teacher": "Jane Smith",
+                "capacity": 20,
+                "price": 15.0
+            }
+        ]
+
+        for virtual_class_data in virtual_classes:
+            new_virtual_class = VirtualClass(
+                name=virtual_class_data["name"],
+                description=virtual_class_data["description"],
+                date=virtual_class_data["date"],
+                time=virtual_class_data["time"],
+                duration=virtual_class_data["duration"],
+                teacher=virtual_class_data["teacher"],
+                capacity=virtual_class_data["capacity"],
+                price=virtual_class_data["price"]
+            )
+            db.session.add(new_virtual_class)
+
+        db.session.commit()
+
+        # Crear servicios de prueba
+        services = [
+            {
+                "name": "Daycare Service",
+                "description": "Full-day daycare service",
+                "image": "https://example.com/daycare_service.jpg"
+            }
+        ]
+
+        for service_data in services:
+            new_service = Service(
+                name=service_data["name"],
+                description=service_data["description"],
+                image=service_data["image"]
+            )
+            db.session.add(new_service)
+
+        db.session.commit()
+
+        # Crear galerías de prueba
+        galleries = [
+            {
+                "name": "School Festival 2023",
+                "image": "https://example.com/festival_2023.jpg"
+            }
+        ]
+
+        for gallery_data in galleries:
+            new_gallery = Gallery(
+                name=gallery_data["name"],
+                image=gallery_data["image"]
+            )
+            db.session.add(new_gallery)
+
+        db.session.commit()
+
+        # Crear actividades de padres de prueba
+        parent_activities = [
+            {
+                "parent_id": 1,  # johndoe
+                "name": "Parent-Teacher Meeting",
+                "date": datetime.utcnow() + timedelta(days=7),
+                "time": datetime.strptime("18:00", "%H:%M").time(),
+                "duration": "1 hour",
+                "status": "pending",
+                "location": "School Office"
+            }
+        ]
+
+        for parent_activity_data in parent_activities:
+            new_parent_activity = ParentActivity(
+                parent_id=parent_activity_data["parent_id"],
+                name=parent_activity_data["name"],
+                date=parent_activity_data["date"],
+                time=parent_activity_data["time"],
+                duration=parent_activity_data["duration"],
+                status=parent_activity_data["status"],
+                location=parent_activity_data["location"]
+            )
+            db.session.add(new_parent_activity)
+
+        db.session.commit()
+
+        # Crear horarios de padres de prueba
+        parent_schedules = [
+            {
+                "parent_id": 1,  # johndoe
+                "day": "Monday",
+                "activities": "Parent-Teacher Meeting, Yoga Class"
+            }
+        ]
+
+        for parent_schedule_data in parent_schedules:
+            new_parent_schedule = ParentSchedule(
+                parent_id=parent_schedule_data["parent_id"],
+                day=parent_schedule_data["day"],
+                activities=parent_schedule_data["activities"]
+            )
+            db.session.add(new_parent_schedule)
+
+        db.session.commit()
+
+        # Crear pagos de padres de prueba
+        parent_payments = [
+            {
+                "parent_id": 1,  # johndoe
+                "amount": 100.0,
+                "concept": "Daycare Fee",
+                "status": "completed",
+                "due_date": datetime.utcnow() + timedelta(days=30),
+                "paypal_order_id": "PAYPAL12345",
+                "payer_email": "johndoe@example.com"
+            }
+        ]
+
+        for parent_payment_data in parent_payments:
+            new_parent_payment = ParentPayment(
+                parent_id=parent_payment_data["parent_id"],
+                amount=parent_payment_data["amount"],
+                concept=parent_payment_data["concept"],
+                status=parent_payment_data["status"],
+                due_date=parent_payment_data["due_date"],
+                paypal_order_id=parent_payment_data["paypal_order_id"],
+                payer_email=parent_payment_data["payer_email"]
+            )
+            db.session.add(new_parent_payment)
+
+        db.session.commit()
+
+        # Crear configuraciones de padres de prueba
+        parent_settings = [
+            {
+                "parent_id": 1,  # johndoe
+                "notifications": True,
+                "language": "es"
+            }
+        ]
+
+        for parent_setting_data in parent_settings:
+            new_parent_setting = ParentSetting(
+                parent_id=parent_setting_data["parent_id"],
+                notifications=parent_setting_data["notifications"],
+                language=parent_setting_data["language"]
+            )
+            db.session.add(new_parent_setting)
+
+        db.session.commit()
+
+        # Crear clases virtuales de padres de prueba
+        parent_virtual_classes = [
+            {
+                "parent_id": 1,  # johndoe
+                "name": "Yoga for Kids",
+                "date": datetime.utcnow() + timedelta(days=5),
+                "time": datetime.strptime("10:00", "%H:%M").time(),
+                "link": "https://example.com/yoga_class"
+            }
+        ]
+
+        for parent_virtual_class_data in parent_virtual_classes:
+            new_parent_virtual_class = ParentVirtualClass(
+                parent_id=parent_virtual_class_data["parent_id"],
+                name=parent_virtual_class_data["name"],
+                date=parent_virtual_class_data["date"],
+                time=parent_virtual_class_data["time"],
+                link=parent_virtual_class_data["link"]
+            )
+            db.session.add(new_parent_virtual_class)
+
+        db.session.commit()
+
+        # Crear mensajes de padres de prueba
+        parent_messages = [
+            {
+                "parent_id": 1,  # johndoe
+                "content": "Hello, how is Alice doing?",
+                "sender": "teacher",
+                "timestamp": datetime.utcnow()
+            }
+        ]
+
+        for parent_message_data in parent_messages:
+            new_parent_message = MessageP(
+                parent_id=parent_message_data["parent_id"],
+                content=parent_message_data["content"],
+                sender=parent_message_data["sender"],
+                timestamp=parent_message_data["timestamp"]
+            )
+            db.session.add(new_parent_message)
+
+        db.session.commit()
+
+        # Crear notificaciones de padres de prueba
+        parent_notifications = [
+            {
+                "parent_id": 1,  # johndoe
+                "content": "Your payment was received.",
+                "date": datetime.utcnow(),
+                "status": "unread"
+            }
+        ]
+
+        for parent_notification_data in parent_notifications:
+            new_parent_notification = ParentNotification(
+                parent_id=parent_notification_data["parent_id"],
+                content=parent_notification_data["content"],
+                date=parent_notification_data["date"],
+                status=parent_notification_data["status"]
+            )
+            db.session.add(new_parent_notification)
+
+        db.session.commit()
+
+        # Crear tareas de padres de prueba
+        parent_tasks = [
+            {
+                "parent_id": 1,  # johndoe
+                "title": "Prepare lunch",
+                "description": "Prepare lunch for Alice",
+                "due_date": datetime.utcnow() + timedelta(days=1),
+                "status": "pending"
+            }
+        ]
+
+        for parent_task_data in parent_tasks:
+            new_parent_task = ParentTask(
+                parent_id=parent_task_data["parent_id"],
+                title=parent_task_data["title"],
+                description=parent_task_data["description"],
+                due_date=parent_task_data["due_date"],
+                status=parent_task_data["status"]
+            )
+            db.session.add(new_parent_task)
+
+        db.session.commit()
+
+        # Crear asistencias de padres de prueba
+        parent_attendances = [
+            {
+                "parent_id": 1,  # johndoe
+                "class_id": 1,  # Math 101
+                "date": datetime.utcnow(),
+                "status": "present"
+            }
+        ]
+
+        for parent_attendance_data in parent_attendances:
+            new_parent_attendance = ParentAttendance(
+                parent_id=parent_attendance_data["parent_id"],
+                class_id=parent_attendance_data["class_id"],
+                date=parent_attendance_data["date"],
+                status=parent_attendance_data["status"]
+            )
+            db.session.add(new_parent_attendance)
+
+        db.session.commit()
+
+        # Crear calificaciones de padres de prueba
+        parent_grades = [
+            {
+                "parent_id": 1,  # johndoe
+                "class_id": 1,  # Math 101
+                "grade": "A",
+                "date": datetime.utcnow()
+            }
+        ]
+
+        for parent_grade_data in parent_grades:
+            new_parent_grade = ParentGrade(
+                parent_id=parent_grade_data["parent_id"],
+                class_id=parent_grade_data["class_id"],
+                grade=parent_grade_data["grade"],
+                date=parent_grade_data["date"]
+            )
+            db.session.add(new_parent_grade)
+
+        db.session.commit()
+
+        # Crear historial de pagos de padres de prueba
+        parent_payment_histories = [
+            {
+                "parent_id": 1,  # johndoe
+                "amount": 100.0,
+                "concept": "Daycare Fee",
+                "status": "completed",
+                "due_date": datetime.utcnow() + timedelta(days=30)
+            }
+        ]
+
+        for parent_payment_history_data in parent_payment_histories:
+            new_parent_payment_history = ParentPaymentHistory(
+                parent_id=parent_payment_history_data["parent_id"],
+                amount=parent_payment_history_data["amount"],
+                concept=parent_payment_history_data["concept"],
+                status=parent_payment_history_data["status"],
+                due_date=parent_payment_history_data["due_date"]
+            )
+            db.session.add(new_parent_payment_history)
+
+        db.session.commit()
+
+        # Crear suscripciones de padres de prueba
+        parent_subscriptions = [
+            {
+                "parent_id": 1,  # johndoe
+                "plan_type": "premium",
+                "start_date": datetime.utcnow(),
+                "end_date": datetime.utcnow() + timedelta(days=365)
+            }
+        ]
+
+        for parent_subscription_data in parent_subscriptions:
+            new_parent_subscription = ParentSubscription(
+                parent_id=parent_subscription_data["parent_id"],
+                plan_type=parent_subscription_data["plan_type"],
+                start_date=parent_subscription_data["start_date"],
+                end_date=parent_subscription_data["end_date"]
+            )
+            db.session.add(new_parent_subscription)
+
+        db.session.commit()
+
+        # Crear cursos de padres de prueba
+        parent_courses = [
+            {
+                "parent_id": 1,  # johndoe
+                "course_id": 1,  # Art Class
+                "enrollment_date": datetime.utcnow()
+            }
+        ]
+
+        for parent_course_data in parent_courses:
+            new_parent_course = ParentCourse(
+                parent_id=parent_course_data["parent_id"],
+                course_id=parent_course_data["course_id"],
+                enrollment_date=parent_course_data["enrollment_date"]
+            )
+            db.session.add(new_parent_course)
+
+        db.session.commit()
+
+        # Crear servicios de padres de prueba
+        parent_services = [
+            {
+                "parent_id": 1,  # johndoe
+                "service_id": 1,  # Daycare Service
+                "enrollment_date": datetime.utcnow()
+            }
+        ]
+
+        for parent_service_data in parent_services:
+            new_parent_service = ParentService(
+                parent_id=parent_service_data["parent_id"],
+                service_id=parent_service_data["service_id"],
+                enrollment_date=parent_service_data["enrollment_date"]
+            )
+            db.session.add(new_parent_service)
+
+        db.session.commit()
+
+        # Crear eventos de padres de prueba
+        parent_events = [
+            {
+                "parent_id": 1,  # johndoe
+                "event_id": 1,  # School Festival
+                "enrollment_date": datetime.utcnow()
+            }
+        ]
+
+        for parent_event_data in parent_events:
+            new_parent_event = ParentEvent(
+                parent_id=parent_event_data["parent_id"],
+                event_id=parent_event_data["event_id"],
+                enrollment_date=parent_event_data["enrollment_date"]
+            )
+            db.session.add(new_parent_event)
+
+        db.session.commit()
+
+        # Crear configuraciones de prueba
+        settings = [
+            {
+                "name_daycare": "Happy Kids Daycare",
+                "admin_email": "admin@example.com",
+                "max_capacity": "100",
+                "phone": "123-456-7890",
+                "address": "123 Main St, City, Country",
+                "schedule_attention": "Mon-Fri 8:00 AM - 6:00 PM",
+                "facebook": "https://facebook.com/happykids",
+                "twitter": "https://twitter.com/happykids",
+                "instagram": "https://instagram.com/happykids",
+                "linkedin": "https://linkedin.com/company/happykids",
+                "image": "https://example.com/daycare_logo.jpg"
+            }
+        ]
+
+        for setting_data in settings:
+            new_setting = Settings(
+                name_daycare=setting_data["name_daycare"],
+                admin_email=setting_data["admin_email"],
+                max_capacity=setting_data["max_capacity"],
+                phone=setting_data["phone"],
+                address=setting_data["address"],
+                schedule_attention=setting_data["schedule_attention"],
+                facebook=setting_data["facebook"],
+                twitter=setting_data["twitter"],
+                instagram=setting_data["instagram"],
+                linkedin=setting_data["linkedin"],
+                image=setting_data["image"]
+            )
+            db.session.add(new_setting)
+
+        db.session.commit()
+
+        return jsonify({"message": "Base de datos llenada exitosamente con datos de prueba."}), 201
+
+    except IntegrityError as e:
+        db.session.rollback()
+        return jsonify({"error": f"Error de integridad en la base de datos: {str(e)}"}), 500
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"Error: {str(e)}"}), 500

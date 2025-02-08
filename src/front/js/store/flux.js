@@ -3,19 +3,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 			token: localStorage.getItem("token") || null,  
 			user: JSON.parse(localStorage.getItem("user")) || null,  
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white",
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white",
-				},
-			],
+			message: null,	
 			uploadedFileUrl: null,
 			error: null,
 			classes: [],
