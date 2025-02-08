@@ -65,7 +65,7 @@ const Button = ({ className, variant = "default", size = "default", children, ..
   )
 }
 
-// Badge component
+
 const Badge = ({ className, variant = "default", children, ...props }) => {
   const baseStyles =
     "tw-inline-flex tw-items-center tw-rounded-full tw-border tw-px-2.5 tw-py-0.5 tw-text-xs tw-font-semibold tw-transition-colors focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-ring focus:tw-ring-offset-2"

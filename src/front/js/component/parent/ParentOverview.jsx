@@ -38,7 +38,7 @@ const ParentOverview = () => {
 
   return (
     <div>
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Resumen de Padres</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Parent Summary</h3>
       <div className="tw-grid tw-grid-cols-1 tw-md:grid-cols-2 tw-lg:grid-cols-4 tw-gap-4">
         {stats.map((stat, index) => (
           <div key={index} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
@@ -55,7 +55,7 @@ const ParentOverview = () => {
         ))}
       </div>
       <div className="tw-mt-8">
-        <h4 className="tw-text-lg tw-font-semibold tw-mb-4">Actividades Recientes</h4>
+        <h4 className="tw-text-lg tw-font-semibold tw-mb-4">Recent Activities</h4>
         <ul className="tw-space-y-2">
           {store.parentActivities.slice(0, 3).map((activity, index) => (
             <li key={index} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">

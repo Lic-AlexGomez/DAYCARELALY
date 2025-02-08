@@ -20,7 +20,7 @@ const ParentSchedule = () => {
 
   return (
     <div>
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Horario Semanal</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Weekly Schedule</h3>
       <div className="tw-grid tw-grid-cols-1 tw-md:grid-cols-5 tw-gap-4">
         {store.parentSchedule.map((day) => (
           <div key={day.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">

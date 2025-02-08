@@ -11,7 +11,7 @@ const ParentVirtualClasses = () => {
 
   return (
     <div>
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Clases Virtuales</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Virtual Classes</h3>
       <div className="tw-space-y-4">
         {store.parentVirtualClasses.map((virtualClass) => (
           <div key={virtualClass.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
@@ -33,7 +33,7 @@ const ParentVirtualClasses = () => {
                 rel="noopener noreferrer"
                 className="tw-text-blue-500 hover:tw-underline tw-pointer-events-auto tw-cursor-pointer"
               >
-                Unirse a la clase virtual
+                Join virtual class
               </a>
             </div>
           </div>
