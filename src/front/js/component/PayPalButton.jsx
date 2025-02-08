@@ -2,7 +2,7 @@ import React from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 export default function PayPalButton() {
-  const parentId = 2; // ⚡ ID estático de prueba
+  const parentId = 2;
   const clientId = process.env.REACT_APP_CLIENT_ID;
 
   return (
@@ -18,7 +18,7 @@ export default function PayPalButton() {
           console.log("Datos recibidos de PayPal:", order);
 
           const paymentData = {
-            parent_id: parentId, // 🔹 Sigue siendo estático
+            parent_id: parentId, 
             amount: order.purchase_units[0].amount.value,
             concept: "Pago Mensualidad",
             status: "Completado",
