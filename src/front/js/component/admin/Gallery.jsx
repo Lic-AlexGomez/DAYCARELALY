@@ -149,7 +149,7 @@ const GalleryView = () => {
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Image Management</h2>
       <div className="tw-mb-6">
-        <form  className="tw-flex tw-space-x-4" onSubmit={handleAddGallery} >
+        <form  className="tw-flex tw-items-end tw-space-x-4" onSubmit={handleAddGallery} >
          
           <div className='tw-flex-1'>
             <label htmlFor="name" className='tw-block tw-mb-2'>Image name</label>
@@ -175,7 +175,7 @@ const GalleryView = () => {
             />
           </div>
 
-          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center">
+          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-h-10 ">
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
             Add Image
           </button>
@@ -260,7 +260,7 @@ const GalleryView = () => {
                 </button>
                 <button
                   type="submit"
-                  className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
+                  className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600 "
                 >
                   Save Changes
                 </button>

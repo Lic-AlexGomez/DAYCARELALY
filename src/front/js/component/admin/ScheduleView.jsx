@@ -6,36 +6,36 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 
 const localizer = momentLocalizer(moment)
 
-const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
 const SchedulePage = () => {
   const [events, setEvents] = useState([
     {
       id: 1,
-      title: "Clase de Arte",
+      title: "Art Class",
       start: new Date(2025, 0, 20, 9, 0),
       end: new Date(2025, 0, 20, 10, 30),
-      day: "Lunes",
+      day: "Monday",
     },
     {
       id: 2,
-      title: "Hora del Cuento",
+      title: "Story Time",
       start: new Date(2025, 0, 4, 11, 0),
       end: new Date(2025, 0, 4, 12, 0),
-      day: "Martes",
+      day: "Tuesday",
     },
     {
       id: 3,
-      title: "Juegos al Aire Libre",
+      title: "Outdoor Games",
       start: new Date(2025, 0, 5, 14, 0),
       end: new Date(2025, 0, 5, 15, 30),
-      day: "Miércoles",
+      day: "Wednesday",
     },
   ])
 
   const [newEvent, setNewEvent] = useState({ title: "", start: "", end: "", day: "" })
   const [selectedEvent, setSelectedEvent] = useState(null)
-  const [view, setView] = useState("calendar") // 'calendar' or 'weekly'
+  const [view, setView] = useState("calendar") 
 
   const handleInputChange = (e) => {
     setNewEvent({ ...newEvent, [e.target.name]: e.target.value })
@@ -67,7 +67,7 @@ const SchedulePage = () => {
   return (
     <div className="tw-p-6">
       <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-        <h1 className="tw-text-2xl tw-font-bold">Programación</h1>
+        <h1 className="tw-text-2xl tw-font-bold">Programming</h1>
         <button
           onClick={() => setView(view === "calendar" ? "weekly" : "calendar")}
           className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md"
@@ -77,7 +77,7 @@ const SchedulePage = () => {
       </div>
 
       <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6 tw-mb-6">
-        <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Agregar Nuevo Evento</h2>
+        <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Add New Event</h2>
         <form onSubmit={handleAddEvent} className="tw-flex tw-space-x-4">
           <input
             type="text"
@@ -111,7 +111,7 @@ const SchedulePage = () => {
             className="tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
             required
           >
-            <option value="">Seleccionar día</option>
+            <option value="">Select day</option>
             {days.map((day) => (
               <option key={day} value={day}>
                 {day}
@@ -123,14 +123,14 @@ const SchedulePage = () => {
             className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
           >
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-            Agregar Evento
+            Add Event
           </button>
         </form>
       </div>
 
       {view === "calendar" ? (
         <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6">
-          <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Calendario de Actividades</h2>
+          <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Activities Calendar</h2>
           <div style={{ height: "500px" }}>
             <Calendar
               localizer={localizer}
@@ -143,7 +143,7 @@ const SchedulePage = () => {
         </div>
       ) : (
         <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6">
-          <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Horario Semanal</h2>
+          <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Weekly Schedule</h2>
           <div className="tw-grid tw-grid-cols-5 tw-gap-4">
             {days.map((day) => (
               <div key={day} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
@@ -172,7 +172,7 @@ const SchedulePage = () => {
 
       {selectedEvent && (
         <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6 tw-mt-6">
-          <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Detalles del Evento</h2>
+          <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Event Details</h2>
           <p>
             <strong>Título:</strong> {selectedEvent.title}
           </p>
@@ -186,12 +186,12 @@ const SchedulePage = () => {
             <strong>Fin:</strong> {moment(selectedEvent.end).format("LLLL")}
           </p>
           <div className="tw-mt-4">
-            <button className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-mr-2">Editar</button>
+            <button className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-mr-2">Edit</button>
             <button
               onClick={() => handleDeleteEvent(selectedEvent.id)}
               className="tw-bg-red-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md"
             >
-              Eliminar
+              Eliminate
             </button>
           </div>
         </div>

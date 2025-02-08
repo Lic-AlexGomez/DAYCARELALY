@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react"
 import { Plus, Edit, Trash, List, Search, Calendar, X } from "lucide-react"
 import { Context } from "../../store/appContext"
 
-const daysOfWeek = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]
+const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
 const ScheduleManagementPage = () => {
   const { store, actions } = useContext(Context)
@@ -134,14 +134,14 @@ const ScheduleManagementPage = () => {
 
 const Header = () => (
   <header className="tw-flex tw-items-center tw-justify-between tw-p-4 tw-border-b">
-    <h1 className="tw-text-2xl tw-font-bold">Gestión de Horarios</h1>
+    <h1 className="tw-text-2xl tw-font-bold">Schedule Management</h1>
   </header>
 )
 
 const PageTitle = () => (
   <div className="tw-mb-6">
-    <h2 className="tw-text-xl tw-font-semibold tw-mb-2">Horarios de Clases</h2>
-    <p className="tw-text-gray-600">Administrar horarios y asignaciones</p>
+    <h2 className="tw-text-xl tw-font-semibold tw-mb-2">Class Schedules</h2>
+    <p className="tw-text-gray-600">Manage schedules and assignments</p>
   </div>
 )
 
@@ -150,7 +150,7 @@ const SearchAndFilter = ({ searchTerm, setSearchTerm, selectedDay, setSelectedDa
     <div className="tw-relative">
       <input
         type="text"
-        placeholder="Buscar clases..."
+        placeholder="Search classes..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="tw-border tw-rounded-md tw-pl-10 tw-pr-3 tw-py-2 tw-w-64"
@@ -190,6 +190,7 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule,tea
         name="teacher"
         onChange={handleInputChange}
         value={newSchedule.teacher} 
+        className="tw-border tw-rounded-md tw-px-3 tw-py-2"
       >
         <option value={0} disabled>select an option</option>
         {teachers.map(item => (
@@ -205,7 +206,7 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule,tea
       required
       className="tw-border tw-rounded-md tw-px-3 tw-py-2"
     >
-      <option value="">Seleccionar día</option>
+      <option value="">Select day</option>
       {daysOfWeek.map((day) => (
         <option key={day} value={day}>
           {day}
@@ -256,25 +257,25 @@ const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSch
       <thead className="tw-bg-gray-50">
         <tr>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Clase
+            Class
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Profesor
+          Teacher
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Día
+            Day
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Horario
+            Schedule
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Capacidad
+            Capacity
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Inscritos
+          Registered
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-            Acciones
+            Actions
           </th>
         </tr>
       </thead>
@@ -323,7 +324,7 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
   <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
     <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
       <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-        <h3 className="tw-text-xl tw-font-semibold">Editar Horario</h3>
+        <h3 className="tw-text-xl tw-font-semibold">Edit Schedule</h3>
         <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
           <X className="tw-w-6 tw-h-6" />
         </button>
@@ -378,7 +379,7 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
         </div>
         <div>
           <label htmlFor="startTime" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-            Hora de inicio
+          Start time
           </label>
           <input
             type="time"
@@ -392,7 +393,7 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
         </div>
         <div>
           <label htmlFor="endTime" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-            Hora de fin
+          End time
           </label>
           <input
             type="time"
@@ -406,7 +407,7 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
         </div>
         <div>
           <label htmlFor="capacity" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-            Capacidad
+            Capacity
           </label>
           <input
             type="number"
@@ -420,7 +421,7 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
         </div>
         <div>
           <label htmlFor="enrolled" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-            Inscritos
+          Registered
           </label>
           <input
             type="number"
@@ -438,13 +439,13 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
             onClick={() => setIsModalOpen(false)}
             className="tw-bg-gray-200 tw-text-gray-700 tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-gray-300"
           >
-            Cancelar
+            Cancel
           </button>
           <button
             type="submit"
             className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
           >
-            Guardar Cambios
+            Save Changes
           </button>
         </div>
       </form>
