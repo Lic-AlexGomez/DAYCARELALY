@@ -24,6 +24,7 @@ bcrypt = "*"
 flask-bcrypt = "*"
 faker = "*"
 flask-mail = "*"
+datetime = "*"
 
 [requires]
 python_version = "3.10"

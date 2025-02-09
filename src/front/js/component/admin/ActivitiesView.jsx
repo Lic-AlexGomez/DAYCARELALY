@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useContext } from "react"
-import { Context } from "../../store/appContext"
-import { Plus, Edit, Trash, X } from "lucide-react"
+import React, { useState, useEffect, useContext } from "react";
+import { Context } from "../../store/appContext";
+import { Plus, Edit, Trash, X } from "lucide-react";
 
 const ActivitiesView = () => {
-  const { store, actions } = useContext(Context)
-  const [selectedActivity, setSelectedActivity] = useState(null)
+  const { store, actions } = useContext(Context);
+  const [selectedActivity, setSelectedActivity] = useState(null);
   const [teachers, setTeachers] = useState([]);
-  const [showModal, setShowModal] = useState(false)
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    
     name: "",
     description: "",
     image: null,
@@ -16,61 +15,59 @@ const ActivitiesView = () => {
     time: "",
     capacity: "",
     price: "",
-  })
-  const [imagePreview, setImagePreview] = useState(null)
+  });
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    actions.fetchActivities()
-  }, [])
+    actions.fetchActivities();
+  }, []);
 
   const handleInputChange = (e) => {
-    const { name, value, type, files } = e.target
+    const { name, value, type, files } = e.target;
     if (type === "file") {
-      const file = files[0]
+      const file = files[0];
       setFormData((prev) => ({
         ...prev,
-        [name]: file,  
-      }))
-      setImagePreview(URL.createObjectURL(file)) 
+        [name]: file,
+      }));
+      setImagePreview(URL.createObjectURL(file));
     } else {
       setFormData((prev) => ({
         ...prev,
         [name]: value,
-      }))
+      }));
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    console.log("handleSubmit");
+    e.preventDefault();
     const result = selectedActivity
       ? await actions.updateActivity(selectedActivity.id, formData)
-      : await actions.createActivity(formData)
+      : await actions.createActivity(formData);
 
     if (result.success) {
-      handleCloseModal()
-      actions.fetchActivities()
+      handleCloseModal();
+      actions.fetchActivities();
     } else {
-      alert(result.error || "An error occurred while saving the program.")
+      alert(result.error || "An error occurred while saving the program.");
     }
-  }
+  };
+
   const getTeachers = async () => {
-      const response = await fetch(`${process.env.BACKEND_URL}api/teachers/classes`);
-      if (response.ok) {
-        const data = await response.json();
-        setTeachers(data);
-      }
-    };
-  
-    useEffect(() => {
-      getTeachers();
-    }, []);
+      await actions.fetchTeachersClasses();  
+      setTeachers(store.teachersClasses);
+  };
+
+  useEffect(() => {
+    getTeachers();
+  }, []);
 
   const handleCloseModal = () => {
-    setShowModal(false)
-    setSelectedActivity(null)
-    setImagePreview(null)
+    setShowModal(false);
+    setSelectedActivity(null);
+    setImagePreview(null);
     setFormData({
-      
       name: "",
       description: "",
       image: null,
@@ -78,35 +75,34 @@ const ActivitiesView = () => {
       time: "",
       capacity: "",
       price: "",
-    })
-  }
+    });
+  };
 
   const handleEditActivity = (activity) => {
-    setSelectedActivity(activity)
+    setSelectedActivity(activity);
     setFormData({
-      name: activity.name,
-      description: activity.description,
-      image: activity.image, 
-      age_range: activity.age_range,
-      time: activity.time,
-      capacity: activity.capacity,
-      price: activity.price,
-    })
-    setImagePreview(activity.image)  
-    setShowModal(true)
-  }
-  
+      name: activity.name || "",
+      description: activity.description || "",
+      image: activity.image || null,
+      age_range: activity.age_range || "",
+      time: activity.time || "",
+      capacity: activity.capacity || "",
+      price: activity.price || "",
+    });
+    setImagePreview(activity.image || null);
+    setShowModal(true);
+  };
+
   const handleDeleteActivity = async (id) => {
     if (window.confirm("Are you sure you want to delete this activity?")) {
-      const result = await actions.deleteActivity(id)
+      const result = await actions.deleteActivity(id);
       if (result.success) {
-        actions.fetchActivities()
+        actions.fetchActivities();
       } else {
-        alert(result.error || "An error occurred while deleting the activity.")
+        alert(result.error || "An error occurred while deleting the activity.");
       }
     }
-  }
-
+  };
 
   return (
     <div className="tw-p-4">
@@ -121,45 +117,42 @@ const ActivitiesView = () => {
         </button>
       </div>
       <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
-              <thead className="tw-bg-gray-100">
-                <tr>
-               
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Program</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Age</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Schedule</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacity</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Price</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
-                  <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="tw-divide-y tw-divide-gray-200">
-                {store.activities.map((activity) => (
-                  <tr key={activity.id}>
-          
-                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.name}</td>
-                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.description}</td>
-                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.age_range}</td>
-                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.time}</td>
-                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.capacity}</td>
-                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.price}</td>
-                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                      {activity.image ? <img src={activity.image} alt="Event" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
-                    </td>
-                    <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                      <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3 " >
-                        <Edit className="tw-w-5 tw-h-5" onClick={() => handleEditActivity(activity)} />
-                      </button>
-                      <button className="tw-text-red-600 hover:tw-text-red-900" >
-                        <Trash className="tw-w-5 tw-h-5" onClick={() => handleDeleteActivity(activity.id)} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+        <thead className="tw-bg-gray-100">
+          <tr>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Program</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Age</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Schedule</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacity</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Price</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
+            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody className="tw-divide-y tw-divide-gray-200">
+          {store.activities.map((activity) => (
+            <tr key={activity.id}>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.name}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.description}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.age_range}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.time}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.capacity}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.price}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                {activity.image ? <img src={activity.image} alt="Event" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
+              </td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3">
+                  <Edit className="tw-w-5 tw-h-5" onClick={() => handleEditActivity(activity)} />
+                </button>
+                <button className="tw-text-red-600 hover:tw-text-red-900">
+                  <Trash className="tw-w-5 tw-h-5" onClick={() => handleDeleteActivity(activity.id)} />
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
-            </table>
-      
+      </table>
 
       {showModal && (
         <div className="tw-fixed tw-inset-0 tw-bg-black/50 tw-flex tw-items-center tw-justify-center tw-p-4 tw-z-50">
@@ -175,7 +168,6 @@ const ActivitiesView = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="tw-space-y-4">
-            
                 <div>
                   <label htmlFor="name" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
                     Name
@@ -289,7 +281,6 @@ const ActivitiesView = () => {
                   </div>
                 </div>
 
-                
                 <div className="tw-flex tw-justify-end tw-gap-4">
                   <button
                     type="button"
@@ -311,8 +302,7 @@ const ActivitiesView = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ActivitiesView
-
+export default ActivitiesView;

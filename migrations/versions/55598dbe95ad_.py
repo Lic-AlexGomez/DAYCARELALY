@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 4666c34a2ba4
+Revision ID: 55598dbe95ad
 Revises: 
-Create Date: 2025-02-08 23:31:59.665030
+Create Date: 2025-02-09 18:59:33.743907
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4666c34a2ba4'
+revision = '55598dbe95ad'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -226,6 +226,16 @@ def upgrade():
     sa.Column('emergency_contact', sa.String(length=120), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('password_reset',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('token', sa.String(length=100), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('expires_at', sa.DateTime(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('token')
     )
     op.create_table('teacher',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -515,6 +525,7 @@ def downgrade():
     op.drop_table('child')
     op.drop_table('video')
     op.drop_table('teacher')
+    op.drop_table('password_reset')
     op.drop_table('parent')
     op.drop_table('notification')
     op.drop_table('message')

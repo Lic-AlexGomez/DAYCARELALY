@@ -9,23 +9,23 @@ const ParentOverview = () => {
   useEffect(() => {
     const loadOverviewData = async () => {
       try {
-        // Esperar a que todas las solicitudes se completen
+       
         await Promise.all([
-          actions.fetchParentChildren(),
-          actions.fetchParentActivities(),
-          actions.fetchParentPayments(),
-          actions.fetchParentVirtualClasses(),
+         await actions.fetchParentChildren(),
+         await actions.fetchParentActivities(),
+         await actions.fetchParentPayments(),
+         await actions.fetchParentVirtualClasses(),
         ]);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        // Desactivar el estado de carga
+        
         setIsLoading(false);
       }
     };
 
     loadOverviewData();
-  }, [store]);
+  }, [store, actions.fetchParentChildren, actions.fetchParentActivities, actions.fetchParentPayments, actions.fetchParentVirtualClasses]);
 
   if (isLoading) {
     return (
