@@ -4,7 +4,7 @@ import { Context } from '../../store/appContext';
 import Swal from "sweetalert2";
 
 const ClassesView = () => {
-  const { store, actions } = useContext(Context)
+  const { store, actions } = useContext(Context);
   const [teachers, setTeachers] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClass, setEditingClass] = useState(null);
@@ -38,6 +38,7 @@ const ClassesView = () => {
       setNewClass({ ...newClass, image: result.url });
     }
   };
+
   const handleImageEditChange = async (e) => {
     const result = await actions.uploadToCloudinary(e.target.files[0]);
     if (result.success) {
@@ -54,7 +55,7 @@ const ClassesView = () => {
   const handleAddClass = async (e) => {
     e.preventDefault();
 
-    // Validar que teacher_id no sea 0
+  
     if (newClass.teacher_id === 0) {
       Swal.fire({
         icon: 'error',
@@ -175,8 +176,8 @@ const ClassesView = () => {
   };
 
   const getTeachers = async () => {
-        await actions.fetchTeachersClasses();  
-      setTeachers(store.teachersClasses);
+    await actions.fetchTeachersClasses();
+    setTeachers(store.teachersClasses);
   };
 
   useEffect(() => {
@@ -184,20 +185,20 @@ const ClassesView = () => {
   }, []);
 
   return (
-    <div>
+    <div className="tw-p-4">
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Class Management</h2>
       <div className="tw-mb-6">
         <form onSubmit={handleAddClass} className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-6">
           <div>
             <div className='tw-flex-1'>
-              <label htmlFor="teacher_id" className='tw-block tw-mb-2'>Teacher ID</label>
+              <label htmlFor="teacher_id" className='tw-block tw-mb-2'>Teacher</label>
               <select
                 name="teacher_id"
                 onChange={handleInputChange}
                 value={newClass.teacher_id}
                 className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               >
-                <option value={0} disabled>Select an option</option>
+                <option value={0} disabled>Select an Teacher</option>
                 {teachers.map(item => (
                   <option key={`teacher-${item.id}`} value={item.id}>{item.username}</option>
                 ))}
@@ -243,112 +244,111 @@ const ClassesView = () => {
 
           <div>
             <div className='tw-flex-1'>
-            <label htmlFor="price" className='tw-block tw-mb-2'>Price</label>
-            <input
-              type="number"
-              name="price"
-              value={newClass.price}
-              onChange={handleInputChange}
-              placeholder="Price"
-              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
+              <label htmlFor="price" className='tw-block tw-mb-2'>Price</label>
+              <input
+                type="number"
+                name="price"
+                value={newClass.price}
+                onChange={handleInputChange}
+                placeholder="Price"
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                required
+              />
+            </div>
 
-          <div className='tw-flex-1'>
-            <label htmlFor="age" className='tw-block tw-mb-2'>Age Range</label>
-            <input
-              type="text"
-              name="age"
-              value={newClass.age}
-              onChange={handleInputChange}
-              placeholder="Age Range"
-              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
+            <div className='tw-flex-1'>
+              <label htmlFor="age" className='tw-block tw-mb-2'>Age Range</label>
+              <input
+                type="text"
+                name="age"
+                value={newClass.age}
+                onChange={handleInputChange}
+                placeholder="Age Range"
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                required
+              />
+            </div>
 
-          <div className='tw-flex-1'>
-            <label htmlFor="time" className='tw-block tw-mb-2'>Schedule</label>
-            <input
-              type="text"
-              name="time"
-              value={newClass.time}
-              onChange={handleInputChange}
-              placeholder="Schedule"
-              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
+            <div className='tw-flex-1'>
+              <label htmlFor="time" className='tw-block tw-mb-2'>Schedule</label>
+              <input
+                type="text"
+                name="time"
+                value={newClass.time}
+                onChange={handleInputChange}
+                placeholder="Schedule"
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                required
+              />
+            </div>
 
-          <div className='tw-flex-1'>
-            <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
-            <input
-              type="file"
-              name="image"
-              onChange={handleImageChange}
-              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-              required
-            />
-          </div>
+            <div className='tw-flex-1'>
+              <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
+              <input
+                type="file"
+                name="image"
+                onChange={handleImageChange}
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                required
+              />
+            </div>
           </div>
 
           <div className='tw-flex'>
             <button
               type="submit"
-              className="tw-col-span-2 sm:tw-col-span-1 tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items- tw-justify-start "
+              className="tw-col-span-2 sm:tw-col-span-1 tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-justify-center"
             >
               <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
               Add Class
             </button>
           </div>
-
-
         </form>
-
       </div>
-      <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
-        <thead className="tw-bg-gray-100">
-          <tr>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Teacher</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Name</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacity</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Price</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Age</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Schedule</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="tw-divide-y tw-divide-gray-200">
-          {store.classes.map((classItem) => (
-            <tr key={classItem.id}>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.teacher_id}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.description}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.capacity}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.price}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.age}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.time}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                {classItem.image ? <img src={classItem.image} alt="Class" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
-              </td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3" onClick={() => handleEditClass(classItem)}>
-                  <Edit className="tw-w-5 tw-h-5" />
-                </button>
-                <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteClass(classItem.id)}>
-                  <Trash className="tw-w-5 tw-h-5" />
-                </button>
-              </td>
+      <div className="tw-overflow-x-auto">
+        <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
+          <thead className="tw-bg-gray-100">
+            <tr>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Teacher</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Name</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacity</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Price</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Age</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Schedule</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="tw-divide-y tw-divide-gray-200">
+            {store.classes.map((classItem) => (
+              <tr key={classItem.id}>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.teacher_id}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.description}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.capacity}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.price}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.age}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.time}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                  {classItem.image ? <img src={classItem.image} alt="Class" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
+                </td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                  <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3" onClick={() => handleEditClass(classItem)}>
+                    <Edit className="tw-w-5 tw-h-5" />
+                  </button>
+                  <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteClass(classItem.id)}>
+                    <Trash className="tw-w-5 tw-h-5" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {isModalOpen && (
         <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
-          <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
+          <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-full md:tw-w-1/2 lg:tw-w-1/3">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
               <h3 className="tw-text-xl tw-font-semibold">Edit Class</h3>
               <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
@@ -362,6 +362,7 @@ const ClassesView = () => {
                   name="teacher_id"
                   onChange={handleInputChange}
                   value={editingClass.teacher_id}
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 >
                   <option value={0} disabled>Select an option</option>
                   {teachers.map(item => (
@@ -377,7 +378,7 @@ const ClassesView = () => {
                   value={editingClass.name}
                   onChange={handleInputChange}
                   placeholder="Name of the class"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
@@ -389,7 +390,7 @@ const ClassesView = () => {
                   value={editingClass.description}
                   onChange={handleInputChange}
                   placeholder="Description of the class"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
@@ -401,7 +402,7 @@ const ClassesView = () => {
                   value={editingClass.capacity}
                   onChange={handleInputChange}
                   placeholder="Capacity"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
@@ -413,7 +414,7 @@ const ClassesView = () => {
                   value={editingClass.price}
                   onChange={handleInputChange}
                   placeholder="price"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
@@ -425,7 +426,7 @@ const ClassesView = () => {
                   value={editingClass.age}
                   onChange={handleInputChange}
                   placeholder="Age Range"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
@@ -437,7 +438,7 @@ const ClassesView = () => {
                   value={editingClass.time}
                   onChange={handleInputChange}
                   placeholder="Schedule"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
@@ -448,14 +449,13 @@ const ClassesView = () => {
                 </div>
               )}
 
-
               <div className='tw-flex-1'>
                 <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
                 <input
                   type="file"
                   name="image"
                   onChange={handleImageEditChange}
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 />
               </div>
 
@@ -471,7 +471,7 @@ const ClassesView = () => {
                   type="submit"
                   className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
                 >
-                 Save Changes
+                  Save Changes
                 </button>
               </div>
             </form>
@@ -479,9 +479,7 @@ const ClassesView = () => {
         </div>
       )}
     </div>
-
   );
 };
 
 export default ClassesView;
-
