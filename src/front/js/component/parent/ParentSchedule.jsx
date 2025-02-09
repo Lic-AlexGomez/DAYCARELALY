@@ -22,17 +22,11 @@ const ParentSchedule = () => {
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Weekly Schedule</h3>
       <div className="tw-grid tw-grid-cols-1 tw-md:grid-cols-5 tw-gap-4">
-        {store.parentSchedule.map((day) => (
-          <div key={day.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-            <h4 className="tw-text-lg tw-font-semibold tw-mb-2">{day.day}</h4>
-            <ul className="tw-space-y-2">
-              {day.activities.map((activity, index) => (
-                <li key={index} className="tw-flex tw-items-center">
-                  <Clock className="tw-w-4 tw-h-4 tw-mr-2 tw-text-gray-500" />
-                  <span>{activity}</span>
-                </li>
-              ))}
-            </ul>
+        {console.log(store.enrolledClasses)}
+        {store.enrolledClasses.map((schedule) => (
+          <div key={schedule.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
+            <h4 className="tw-text-lg tw-font-semibold tw-mb-2">Class:</h4> <span>{schedule.name}</span> 
+            <h4 className="tw-text-lg tw-font-semibold tw-mb-2">Schedule:</h4> <span>{schedule.time}</span> 
           </div>
         ))}
       </div>

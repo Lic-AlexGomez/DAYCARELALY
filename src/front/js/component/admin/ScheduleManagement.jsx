@@ -8,9 +8,10 @@ const ScheduleManagementPage = () => {
   const { store, actions } = useContext(Context)
   const [searchTerm, setSearchTerm] = useState("")
   const [teachers, setTeachers] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [selectedDay, setSelectedDay] = useState("all")
   const [newSchedule, setNewSchedule] = useState({
-    class: "",
+    class: 0,
     teacher: 0,
     dayOfWeek: "",
     startTime: "",
@@ -23,6 +24,7 @@ const ScheduleManagementPage = () => {
 
   useEffect(() => {
     actions.GetSchedules()
+    actions.fetchClasses()
   }, [])
 
   const filteredSchedules = store.schedules.filter(
@@ -107,7 +109,7 @@ const ScheduleManagementPage = () => {
               newSchedule={newSchedule}
               handleInputChange={handleInputChange}
               handleAddSchedule={handleAddSchedule}
-              teachers={teachers} 
+              teachers={teachers}
             />
             <SchedulesTable
               filteredSchedules={filteredSchedules}
@@ -175,78 +177,106 @@ const SearchAndFilter = ({ searchTerm, setSearchTerm, selectedDay, setSelectedDa
   </div>
 )
 
-const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule,teachers }) => (
-  <form onSubmit={handleAddSchedule} className="tw-mb-6 tw-grid tw-grid-cols-7 tw-gap-4">
-    <input
-      name="class"
-      value={newSchedule.class}
-      onChange={handleInputChange}
-      placeholder="Clase"
-      required
-      className="tw-border tw-rounded-md tw-px-3 tw-py-2"
-    />
-    <div className='tw-flex-1'>
-      <select
-        name="teacher"
-        onChange={handleInputChange}
-        value={newSchedule.teacher} 
-        className="tw-border tw-rounded-md tw-px-3 tw-py-2"
-      >
-        <option value={0} disabled>select an option</option>
-        {teachers.map(item => (
-          <option key={`teacher-${item.id}`} value={item.user}>{item.username}</option>
-        ))}
-      </select>
+const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule, teachers, }) => {
+  const { store, actions } = useContext(Context)
 
-    </div>
-    <select
-      name="dayOfWeek"
-      value={newSchedule.dayOfWeek}
-      onChange={handleInputChange}
-      required
-      className="tw-border tw-rounded-md tw-px-3 tw-py-2"
-    >
-      <option value="">Select day</option>
-      {daysOfWeek.map((day) => (
-        <option key={day} value={day}>
-          {day}
-        </option>
-      ))}
-    </select>
-    <input
-      type="time"
-      name="startTime"
-      value={newSchedule.startTime}
-      onChange={handleInputChange}
-      required
-      className="tw-border tw-rounded-md tw-px-3 tw-py-2"
-    />
-    <input
-      type="time"
-      name="endTime"
-      value={newSchedule.endTime}
-      onChange={handleInputChange}
-      required
-      className="tw-border tw-rounded-md tw-px-3 tw-py-2"
-    />
-    <input
-      name="capacity"
-      type="number"
-      value={newSchedule.capacity}
-      onChange={handleInputChange}
-      placeholder="Capacidad"
-      required
-      className="tw-border tw-rounded-md tw-px-3 tw-py-2"
-    />
-    <button
-      type="submit"
-      className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-justify-center hover:tw-bg-blue-600"
-    >
-      <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-      Agregar Horario
-    </button>
-  </form>
-)
+
+  return (
+    <form onSubmit={handleAddSchedule} className="tw-mb-6 tw-grid tw-grid-cols-5 tw-gap-4">
+      <div >
+        <label htmlFor="classes">Class</label>
+        <select
+          name="classes"
+          onChange={handleInputChange}
+          value={newSchedule.class}
+          className="tw-border tw-rounded-md tw-px-3 tw-py-2"
+        >
+          <option value={0} disabled>select an option</option>
+          {store.classes.map(item => (
+            <option key={`teacher-${item.id}`} value={item.name}>{item.name}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className='tw-ml-12 '>
+        <label htmlFor="teacher">Teacher</label>
+        <select
+          name="teacher"
+          onChange={handleInputChange}
+          value={newSchedule.teacher}
+          className="tw-border tw-rounded-md tw-px-3 tw-py-2"
+        >
+          <option value={0} disabled>select an option</option>
+          {teachers.map(item => (
+            <option key={`teacher-${item.id}`} value={item.user}>{item.username}</option>
+          ))}
+        </select>
+      </div>
+      <div className="tw-ml-12">
+        <label htmlFor="dayOfWeek">Day of Week</label>
+        <select
+          name="dayOfWeek"
+          value={newSchedule.dayOfWeek}
+          onChange={handleInputChange}
+          required
+          className="tw-border tw-rounded-md tw-px-3 tw-py-2 "
+        >
+          <option value="">Select day</option>
+          {daysOfWeek.map((day) => (
+            <option key={day} value={day}>
+              {day}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div tw-ml-12>
+        <label htmlFor="startTime">Start time</label>
+        <input
+          type="time"
+          name="startTime"
+          value={newSchedule.startTime}
+          onChange={handleInputChange}
+          required
+          className="tw-border tw-rounded-md tw-px-3 tw-py-2"
+        />
+      </div>
+      <div>
+        <label htmlFor="endTime">End time</label>
+        <input
+          type="time"
+          name="endTime"
+          value={newSchedule.endTime}
+          onChange={handleInputChange}
+          required
+          className="tw-border tw-rounded-md tw-px-3 tw-py-2"
+        />
+      </div>
+      <div>
+        <label htmlFor="capacity">Capacity</label>
+        <input
+          name="capacity"
+          type="number"
+          value={newSchedule.capacity}
+          onChange={handleInputChange}
+          placeholder="Capacidad"
+          required
+          className="tw-border tw-rounded-md tw-px-3 tw-py-2"
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-justify-center hover:tw-bg-blue-600"
+      >
+        <Plus className="tw-w-5 tw-h-5 tw-mr-2 " />
+        Add Schedule
+      </button>
+    </form>
+  )
+}
+
+
 
 const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSchedule, handleListScheduleModal }) => {
 
@@ -260,7 +290,7 @@ const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSch
             Class
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-          Teacher
+            Teacher
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
             Day
@@ -272,7 +302,7 @@ const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSch
             Capacity
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
-          Registered
+            Registered
           </th>
           <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">
             Actions
@@ -292,7 +322,7 @@ const SchedulesTable = ({ filteredSchedules, handleDeleteSchedule, handleEditSch
                 className={`tw-px-2 tw-inline-flex tw-text-xs tw-leading-5 tw-font-semibold tw-rounded-full ${schedule.enrolled >= schedule.capacity
                   ? "tw-bg-red-100 tw-text-red-800"
                   : "tw-bg-green-100 tw-text-green-800"
-                }`}
+                  }`}
               >
                 {schedule.enrolled}/{schedule.capacity}
               </span>
@@ -379,7 +409,7 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
         </div>
         <div>
           <label htmlFor="startTime" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-          Start time
+            Start time
           </label>
           <input
             type="time"
@@ -393,7 +423,7 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
         </div>
         <div>
           <label htmlFor="endTime" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-          End time
+            End time
           </label>
           <input
             type="time"
@@ -421,7 +451,7 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
         </div>
         <div>
           <label htmlFor="enrolled" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700">
-          Registered
+            Registered
           </label>
           <input
             type="number"
@@ -443,7 +473,7 @@ const EditScheduleModal = ({ editingSchedule, handleInputChange, handleUpdateSch
           </button>
           <button
             type="submit"
-            className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
+            className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2  tw-rounded-md hover:tw-bg-blue-600"
           >
             Save Changes
           </button>
