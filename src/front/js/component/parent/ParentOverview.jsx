@@ -9,16 +9,19 @@ const ParentOverview = () => {
   useEffect(() => {
     const loadOverviewData = async () => {
       await Promise.all([
-        actions.fetchParentData(),
-        actions.fetchParentChildren(),
-        actions.fetchParentActivities(),
-        actions.fetchParentPayments(),
-        actions.fetchParentVirtualClasses(),
+        actions.fetchParentData()
       ])
       setIsLoading(false)
     }
     loadOverviewData()
-  }, [])
+  }, [store])
+
+useEffect(() => {
+  actions.fetchParentChildren(),
+  actions.fetchParentActivities(),
+  actions.fetchParentPayments(),
+  actions.fetchParentVirtualClasses()
+}, [store])
 
   if (isLoading) {
     return <div>Loading overview...</div>
@@ -35,7 +38,6 @@ const ParentOverview = () => {
     },
     { title: "Clases Virtuales", value: store.parentVirtualClasses.length, icon: Video, color: "tw-bg-purple-500" },
   ]
-
   return (
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Parent Summary</h3>

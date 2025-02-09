@@ -1212,12 +1212,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Datos del padre
       fetchParentData: async () => {
+
+        const store = getStore()
+      
         try {
-          const resp = await fetch(process.env.BACKEND_URL + "/api/parents", {
+          const resp = await fetch(process.env.BACKEND_URL + "/api/parents/"+store.user.id, {
             headers: getActions().getAuthHeaders(),
           })
           const data = await resp.json()
-
+         
+          localStorage.setItem("parent_id", JSON.stringify(data.id))
           setStore({ parentData: data })
         } catch (error) {
           console.error("Error fetching parent data:", error)
@@ -1226,11 +1230,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Hijos
       fetchParentChildren: async () => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(process.env.BACKEND_URL + "/api/children", {
+          const resp = await fetch(process.env.BACKEND_URL + "/api/children/" + id, {
             headers: getActions().getAuthHeaders(),
           })
           const data = await resp.json()
+          
           setStore({ parentChildren: data })
         } catch (error) {
           console.error("Error fetching parent children:", error)
@@ -1238,8 +1245,10 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       addChild: async (childData) => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/children`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/children/${id}`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(childData),
@@ -1257,8 +1266,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Horario
       fetchParentSchedule: async () => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_schedules`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_schedules/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch parent schedule")
@@ -1271,8 +1282,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Pagos
       fetchParentPayments: async () => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_payments`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_payments/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch parent payments")
@@ -1285,8 +1298,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Actividades
       fetchParentActivities: async () => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_activities`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_activities/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
 
@@ -1299,8 +1314,10 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       addParentActivity: async (activityData) => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(process.env.BACKEND_URL + "/api/add_parent_activity", {
+          const resp = await fetch(process.env.BACKEND_URL + "/api/add_parent_activity/"+id, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(activityData),
@@ -1315,8 +1332,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Configuración
       fetchParentSettings: async () => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch parent settings")
@@ -1329,8 +1348,10 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       updateParentSettings: async (settings) => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(settings),
@@ -1345,12 +1366,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Clases virtuales
       fetchParentVirtualClasses: async () => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_virtual_classes`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_virtual_classes/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
+        
           if (!resp.ok) throw new Error("Failed to fetch parent virtual classes")
           const data = await resp.json()
+          console.log(data)
           setStore({ parentVirtualClasses: data })
         } catch (error) {
           console.error("Error fetching parent virtual classes:", error)
@@ -1359,8 +1384,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Mensajes
       fetchMessages: async () => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/messagesP`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/messagesP/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch messages")
@@ -1373,8 +1400,10 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       sendMessage: async (message) => {
+        const id= localStorage.getItem("parent_id")
+       
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/messages`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/messages/${id}`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(message),

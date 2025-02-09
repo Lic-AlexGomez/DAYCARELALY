@@ -96,9 +96,9 @@ const ParentChildren = () => {
       try {
         const birthCertificateUrl = await actions.uploadToCloudinary(newChild.birth_certificate)
         const immunizationRecordsUrl = await actions.uploadToCloudinary(newChild.immunization_records)
-
+        const id= localStorage.getItem("parent_id")
         const childData = {
-          parent_id: store.user.id,
+          parent_id: id,
           name: newChild.name,
           date_of_birth: newChild.date_of_birth,
           allergies: newChild.allergies,
@@ -136,6 +136,9 @@ const ParentChildren = () => {
       </div>
     )
   }
+console.log(store)
+
+
 
   return (
     <div className="tw-max-w-6xl tw-mx-auto tw-p-6">

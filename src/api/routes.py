@@ -210,10 +210,10 @@ def get_parents():
     parents = list(map(lambda x: x.serialize(), parents))
     return jsonify(parents), 200
 
-@api.route('/parents/<int:id>', methods=['GET'])
+@api.route('/parents/<int:user_id>', methods=['GET'])
 @jwt_required()
-def get_parent(id):
-    parent = Parent.query.get(id)
+def get_parent(user_id):
+    parent = Parent.query.filter_by(user_id=user_id).first()
     if not parent:
         return jsonify({"error": "Parent not found"}), 404
     return jsonify(parent.serialize()), 200
@@ -445,10 +445,14 @@ def get_children():
 @api.route('/children/<int:id>', methods=['GET'])
 @jwt_required()
 def get_child(id):
-    child = Child.query.get(id)
-    if not child:
+    # Buscar todos los children asociados al parent_id
+    children = Child.query.filter_by(parent_id=id).all()
+    if not children:
         return jsonify({"error": "Child not found"}), 404
-    return jsonify(child.serialize()), 200
+    
+    # Serializar cada child individualmente
+    serialized_children = [child.serialize() for child in children]
+    return jsonify(serialized_children), 200
 
 @api.route('/children', methods=['POST'])
 @jwt_required()
@@ -1255,10 +1259,12 @@ def get_parent_activities():
 @api.route('/parent_activities/<int:id>', methods=['GET'])
 @jwt_required()
 def get_parent_activity(id):
-    activity = ParentActivity.query.get(id)
-    if activity is None:
-        return jsonify({"error": "Activity not found"}), 404
-    return jsonify(activity.serialize()), 200
+    activity = ParentActivity.query.filter_by(parent_id=id).all()
+    if not activity:
+        return jsonify({"error": "activity not found"}), 404
+    
+    serialized_activity = [activit.serialize() for activit in activity]
+    return jsonify(serialized_activity), 200
 
 @api.route('/parent_activities', methods=['POST'])
 @jwt_required()
@@ -1413,10 +1419,11 @@ def get_parent_virtual_classes():
 @api.route('/parent_virtual_classes/<int:id>', methods=['GET'])
 @jwt_required()
 def get_parent_virtual_class(id):
-    cls = ParentVirtualClass.query.get(id)
+    cls = ParentVirtualClass.query.filter_by(parent_id=id).all()
     if cls is None:
-        return jsonify({"error": "Virtual class not found"}), 404
-    return jsonify(cls.serialize()), 200
+        return jsonify({"error": "Virtual Class not found"}), 404
+    serialized_cls = [cl.serialize() for cl in cls]
+    return jsonify(serialized_cls), 200
 
 @api.route('/parent_virtual_classes', methods=['POST'])
 @jwt_required()
@@ -2225,10 +2232,14 @@ def get_parent_payments():
 @api.route('/parent_payments/<int:id>', methods=['GET'])
 @jwt_required()
 def get_parent_payment(id):
-    payment = ParentPayment.query.get(id)
+    payment = ParentPayment.query.filter_by(parent_id=id).all()
     if payment is None:
         return jsonify({"error": "Payment not found"}), 404
-    return jsonify(payment.serialize()), 200
+   
+    serialized_payment = [payments.serialize() for payments in payment]
+    return jsonify(serialized_payment), 200
+
+
 
 @api.route('/parent_payments', methods=['POST'])
 @jwt_required()
