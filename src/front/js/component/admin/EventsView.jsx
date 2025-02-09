@@ -4,7 +4,7 @@ import { Context } from '../../store/appContext';
 import Swal from "sweetalert2";
 
 const EventsView = () => {
-  const { actions, store } = useContext(Context)
+  const { actions, store } = useContext(Context);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [newEvent, setNewEvent] = useState({
@@ -28,7 +28,6 @@ const EventsView = () => {
     }
   };
 
-
   const handleImageChange = async (e) => {
     const result = await actions.uploadToCloudinary(e.target.files[0]);
     if (result.success) {
@@ -51,7 +50,6 @@ const EventsView = () => {
       });
     }
   };
-  
 
   const handleAddEvent = async (e) => {
     e.preventDefault();
@@ -76,17 +74,16 @@ const EventsView = () => {
         newEvent.start_time,
         newEvent.end_time,
         newEvent.image,
-
       );
-    if (result) {
+
+      if (result) {
         Swal.fire({
           icon: "success",
           title: "Event Added",
-          text: "A new class has been added!",
+          text: "A new event has been added!",
         });
         actions.fetchEvents();
         setNewEvent({
-
           name: '',
           description: '',
           start_time: '',
@@ -109,6 +106,7 @@ const EventsView = () => {
       });
     }
   };
+
   const handleDeleteEvent = async (id) => {
     const confirmDelete = await Swal.fire({
       title: 'You are sure?',
@@ -134,11 +132,11 @@ const EventsView = () => {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'There was an error deleting the event .',
+            text: 'There was an error deleting the event.',
           });
         }
       } catch (error) {
-        console.error("Error en handleDeleteEvent:", error);
+        console.error("Error in handleDeleteEvent:", error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -146,7 +144,8 @@ const EventsView = () => {
         });
       }
     }
-  }
+  };
+
   const handleEditEvent = (event) => {
     setEditingEvent(event);
     setIsModalOpen(true);
@@ -159,124 +158,122 @@ const EventsView = () => {
     setEditingEvent(null);
   };
 
-
   return (
-    <div>
+    <div className="tw-p-4">
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Event Management</h2>
       <div className="tw-mb-6">
-  <form className="tw-grid tw-grid-cols-1 tw-gap-6" onSubmit={handleAddEvent}>
-    <div className="tw-mb-4">
-      <label htmlFor="name" className="tw-block tw-mb-2">Event Name</label>
-      <input
-        type="text"
-        name="name"
-        onChange={handleInputChange}
-        value={newEvent.name}
-        placeholder="Event Name"
-        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-        required
-      />
-    </div>
-    <div className="tw-mb-4">
-      <label htmlFor="description" className="tw-block tw-mb-2">Description</label>
-      <input
-        type="text"
-        name="description"
-        onChange={handleInputChange}
-        value={newEvent.description}
-        placeholder="Descripcion del evento"
-        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-        required
-      />
-    </div>
-    <div className="tw-mb-4">
-      <label htmlFor="start_time" className="tw-block tw-mb-2">Start date</label>
-      <input
-        type="datetime-local"
-        name="start_time"
-        onChange={handleInputChange}
-        value={newEvent.start_time}
-        placeholder="Start date"
-        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-        required
-      />
-    </div>
-    <div className="tw-mb-4">
-      <label htmlFor="end_time" className="tw-block tw-mb-2">End date</label>
-      <input
-        type="datetime-local"
-        name="end_time"
-        onChange={handleInputChange}
-        value={newEvent.end_time}
-        placeholder="End date"
-        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-        required
-      />
-    </div>
-    <div className="tw-mb-4">
-      <label htmlFor="image" className="tw-block tw-mb-2">Image</label>
-      <input
-        type="file"
-        name="image"
-        onChange={handleImageChange}
-        placeholder="image"
-        className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-        required
-      />
-    </div>
+        <form className="tw-grid tw-grid-cols-1 tw-gap-6" onSubmit={handleAddEvent}>
+          <div className="tw-mb-4">
+            <label htmlFor="name" className="tw-block tw-mb-2">Event Name</label>
+            <input
+              type="text"
+              name="name"
+              onChange={handleInputChange}
+              value={newEvent.name}
+              placeholder="Event Name"
+              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className="tw-mb-4">
+            <label htmlFor="description" className="tw-block tw-mb-2">Description</label>
+            <input
+              type="text"
+              name="description"
+              onChange={handleInputChange}
+              value={newEvent.description}
+              placeholder="Description of the event"
+              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className="tw-mb-4">
+            <label htmlFor="start_time" className="tw-block tw-mb-2">Start date</label>
+            <input
+              type="datetime-local"
+              name="start_time"
+              onChange={handleInputChange}
+              value={newEvent.start_time}
+              placeholder="Start date"
+              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className="tw-mb-4">
+            <label htmlFor="end_time" className="tw-block tw-mb-2">End date</label>
+            <input
+              type="datetime-local"
+              name="end_time"
+              onChange={handleInputChange}
+              value={newEvent.end_time}
+              placeholder="End date"
+              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
+          <div className="tw-mb-4">
+            <label htmlFor="image" className="tw-block tw-mb-2">Image</label>
+            <input
+              type="file"
+              name="image"
+              onChange={handleImageChange}
+              placeholder="image"
+              className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+              required
+            />
+          </div>
 
-    <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-mt-6">
-      <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
-      Add Event
-    </button>
-  </form>
-</div>
-
-      <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
-        <thead className="tw-bg-gray-100">
-          <tr>
-
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Title</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Start date</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">End date</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
-            <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="tw-divide-y tw-divide-gray-200">
-          {store.events.map((event) => (
-            <tr key={event.id}>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.name}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.description}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.start_time}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.end_time}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                {event.image ? <img src={event.image} alt="Event" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
-              </td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3 " >
-                  <Edit className="tw-w-5 tw-h-5" onClick={() => handleEditEvent(event)} />
-                </button>
-                <button className="tw-text-red-600 hover:tw-text-red-900" >
-                  <Trash className="tw-w-5 tw-h-5" onClick={() => handleDeleteEvent(event.id)} />
-                </button>
-              </td>
+          <button type="submit" className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-mt-6">
+            <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
+            Add Event
+          </button>
+        </form>
+      </div>
+      <div className="tw-overflow-x-auto">
+        <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
+          <thead className="tw-bg-gray-100">
+            <tr>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Title</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Start date</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">End date</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="tw-divide-y tw-divide-gray-200">
+            {store.events.map((event) => (
+              <tr key={event.id}>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.name}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.description}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.start_time}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{event.end_time}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                  {event.image ? <img src={event.image} alt="Event" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
+                </td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                  <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3" onClick={() => handleEditEvent(event)}>
+                    <Edit className="tw-w-5 tw-h-5" />
+                  </button>
+                  <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteEvent(event.id)}>
+                    <Trash className="tw-w-5 tw-h-5" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {isModalOpen && (
         <div className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full tw-flex tw-items-center tw-justify-center">
-          <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-1/2">
+          <div className="tw-bg-white tw-p-8 tw-rounded-md tw-shadow-lg tw-w-full md:tw-w-1/2 lg:tw-w-1/3">
             <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
-              <h3 className="tw-text-xl tw-font-semibold">Edit Class</h3>
+              <h3 className="tw-text-xl tw-font-semibold">Edit Event</h3>
               <button onClick={() => setIsModalOpen(false)} className="tw-text-gray-500 hover:tw-text-gray-700">
                 <X className="tw-w-6 tw-h-6" />
               </button>
             </div>
             <form onSubmit={handleUpdateEvent} className="tw-space-y-4">
-
               <div className='tw-flex-1'>
                 <label htmlFor="name" className='tw-block tw-mb-2'>Event Name</label>
                 <input
@@ -285,7 +282,7 @@ const EventsView = () => {
                   onChange={handleInputChange}
                   value={editingEvent.name}
                   placeholder="Event Name"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
@@ -297,7 +294,7 @@ const EventsView = () => {
                   onChange={handleInputChange}
                   value={editingEvent.description}
                   placeholder="Description of the event"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
@@ -309,7 +306,7 @@ const EventsView = () => {
                   onChange={handleInputChange}
                   value={editingEvent.start_time}
                   placeholder="Start date"
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
@@ -320,20 +317,18 @@ const EventsView = () => {
                   name="end_time"
                   onChange={handleInputChange}
                   value={editingEvent.end_time}
-                  placeholder="End date "
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  placeholder="End date"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                   required
                 />
               </div>
 
-
               {editingEvent.image && (
                 <div className="tw-mb-4">
                   <h4 className="tw-text-sm">Current Image:</h4>
-                  <img src={editingEvent.image} alt="Imagen del Evento" className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md" />
+                  <img src={editingEvent.image} alt="Event" className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md" />
                 </div>
               )}
-
 
               <div className='tw-flex-1'>
                 <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
@@ -341,7 +336,7 @@ const EventsView = () => {
                   type="file"
                   name="image"
                   onChange={handleImageEditChange}
-                  className="tw-flex-1 tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 />
               </div>
 
@@ -357,7 +352,7 @@ const EventsView = () => {
                   type="submit"
                   className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md hover:tw-bg-blue-600"
                 >
-                 Save Changes
+                  Save Changes
                 </button>
               </div>
             </form>
@@ -365,10 +360,7 @@ const EventsView = () => {
         </div>
       )}
     </div>
-
-
   );
 };
 
 export default EventsView;
-
