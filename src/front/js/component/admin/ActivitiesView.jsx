@@ -20,7 +20,6 @@ const ActivitiesView = () => {
   useEffect(() => {
     actions.fetchActivities()
   }, [store])
-
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target
     if (type === "file") {
@@ -40,9 +39,26 @@ const ActivitiesView = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    // Verificar que el nombre no esté vacío
+    if (!formData.name.trim()) {
+      alert("Name is required")
+      return
+    }
+
+    // Crear un nuevo objeto FormData para manejar la imagen
+    const formDataToSend = new FormData()
+    for (const key in formData) {
+      if (key === "image" && formData[key] instanceof File) {
+        formDataToSend.append(key, formData[key])
+      } else {
+        formDataToSend.append(key, formData[key])
+      }
+    }
+
     const result = selectedActivity
-      ? await actions.updateActivity(selectedActivity.id, formData)
-      : await actions.createActivity(formData)
+      ? await actions.updateActivity(selectedActivity.id, formDataToSend)
+      : await actions.createActivity(formDataToSend)
 
     if (result.success) {
       handleCloseModal()
@@ -92,6 +108,7 @@ const ActivitiesView = () => {
       }
     }
   }
+
 
   return (
     <div className="tw-p-4">
