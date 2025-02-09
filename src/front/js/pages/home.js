@@ -3,7 +3,6 @@
 // admin@daycare.com
 // admin123
 import React, { useEffect } from "react";
-import { FileUploader } from "../component/uploadToCloudinary.jsx";
 import Classes from "../component/home/Classes.jsx";
 import "../../styles/home.css";
 import "../../styles/Hero.css";
@@ -14,7 +13,7 @@ import ServicesSection from "../component/home/services-section.jsx";
 import AboutUs from "../component/home/AboutUs.jsx";
 import EducationalPrograms from "../component/home/EducationalPrograms.jsx";
 import Statistics from "../component/home/Statistics.jsx";
-import PayPalButton from "../component/PayPalButton.jsx";
+
 
 
 export const Home = () => {
@@ -26,14 +25,13 @@ export const Home = () => {
 		<div className="text-center ">
 
 			<Hero />
-			{/* <FileUploader /> */}
+	
 			<ServicesSection />
 			<AboutUs />
 			<Aday />
 			<Classes />
 			<EducationalPrograms />
 			<Statistics />
-			<PayPalButton />
 			<Getintouch />
 		</div>
 	);

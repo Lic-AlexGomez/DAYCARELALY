@@ -210,10 +210,10 @@ def get_parents():
     parents = list(map(lambda x: x.serialize(), parents))
     return jsonify(parents), 200
 
-@api.route('/parents/<int:id>', methods=['GET'])
+@api.route('/parents/<int:user_id>', methods=['GET'])
 @jwt_required()
-def get_parent(id):
-    parent = Parent.query.get(id)
+def get_parent(user_id):
+    parent = Parent.query.filter_by(user_id=user_id).first()
     if not parent:
         return jsonify({"error": "Parent not found"}), 404
     return jsonify(parent.serialize()), 200
@@ -445,10 +445,14 @@ def get_children():
 @api.route('/children/<int:id>', methods=['GET'])
 @jwt_required()
 def get_child(id):
-    child = Child.query.get(id)
-    if not child:
+    # Buscar todos los children asociados al parent_id
+    children = Child.query.filter_by(parent_id=id).all()
+    if not children:
         return jsonify({"error": "Child not found"}), 404
-    return jsonify(child.serialize()), 200
+    
+    # Serializar cada child individualmente
+    serialized_children = [child.serialize() for child in children]
+    return jsonify(serialized_children), 200
 
 @api.route('/children', methods=['POST'])
 @jwt_required()
@@ -647,7 +651,6 @@ def upload_img():
     if file:
         upload_result = upload(file)
         return jsonify({"url": upload_result['secure_url']}), 200
-
 @api.route('/newsletter', methods=['POST'])
 def create_newsletter():
     data = request.json
@@ -1256,10 +1259,12 @@ def get_parent_activities():
 @api.route('/parent_activities/<int:id>', methods=['GET'])
 @jwt_required()
 def get_parent_activity(id):
-    activity = ParentActivity.query.get(id)
-    if activity is None:
-        return jsonify({"error": "Activity not found"}), 404
-    return jsonify(activity.serialize()), 200
+    activity = ParentActivity.query.filter_by(parent_id=id).all()
+    if not activity:
+        return jsonify({"error": "activity not found"}), 404
+    
+    serialized_activity = [activit.serialize() for activit in activity]
+    return jsonify(serialized_activity), 200
 
 @api.route('/parent_activities', methods=['POST'])
 @jwt_required()
@@ -1414,10 +1419,11 @@ def get_parent_virtual_classes():
 @api.route('/parent_virtual_classes/<int:id>', methods=['GET'])
 @jwt_required()
 def get_parent_virtual_class(id):
-    cls = ParentVirtualClass.query.get(id)
+    cls = ParentVirtualClass.query.filter_by(parent_id=id).all()
     if cls is None:
-        return jsonify({"error": "Virtual class not found"}), 404
-    return jsonify(cls.serialize()), 200
+        return jsonify({"error": "Virtual Class not found"}), 404
+    serialized_cls = [cl.serialize() for cl in cls]
+    return jsonify(serialized_cls), 200
 
 @api.route('/parent_virtual_classes', methods=['POST'])
 @jwt_required()
@@ -1977,7 +1983,7 @@ def delete_parent_event(id):
     return jsonify({"message": "ParentEvent deleted"}), 200
     
 @api.route('/settings', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def get_settings():
     settings = Settings.query.all()
     settings = list(map(lambda x: x.serialize(), settings))
@@ -2226,10 +2232,14 @@ def get_parent_payments():
 @api.route('/parent_payments/<int:id>', methods=['GET'])
 @jwt_required()
 def get_parent_payment(id):
-    payment = ParentPayment.query.get(id)
+    payment = ParentPayment.query.filter_by(parent_id=id).all()
     if payment is None:
         return jsonify({"error": "Payment not found"}), 404
-    return jsonify(payment.serialize()), 200
+   
+    serialized_payment = [payments.serialize() for payments in payment]
+    return jsonify(serialized_payment), 200
+
+
 
 @api.route('/parent_payments', methods=['POST'])
 @jwt_required()
@@ -3366,3 +3376,42 @@ def fill_database():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Error: {str(e)}"}), 500
+    
+@api.route('/create_admin', methods=['POST'])
+def create_admin():
+    data = {
+        'username': "admin",
+        'email': "admin@daycare.com",
+        'password': "admin123",
+        'role': "admin",
+        'position': "Administrator",
+        'department': "Management"
+    }
+
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role')
+    position = data.get('position')
+    department = data.get('department')
+
+    if User.query.filter_by(email=email).first():
+        raise APIException("User already exists", status_code=400)
+
+    hashed_password = generate_password_hash(password)
+    new_user = User(username=username, email=email, password_hash=hashed_password, role=role)
+    db.session.add(new_user)
+    db.session.flush()
+
+    new_admin = AdminD(user_id=new_user.id, position=position, department=department)
+    db.session.add(new_admin)
+
+    db.session.commit()
+
+    access_token = create_access_token(identity=new_user.id)
+
+    return jsonify({
+        "message": "Admin created successfully",
+        "token": access_token,
+        "admin": new_user.serialize()
+    }), 201
