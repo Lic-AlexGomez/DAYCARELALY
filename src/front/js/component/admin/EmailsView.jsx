@@ -1,48 +1,21 @@
-import React, { useState, useEffect, useContext, useRef } from "react"
+import React, { useState, useEffect, useContext, useRef } from "react";
 import emailjs from '@emailjs/browser';
-import { Context } from "../../store/appContext"
-import { Send, Trash, Edit, Calendar, Search, ChevronLeft, ChevronRight, Eye } from "lucide-react"
+import { Context } from "../../store/appContext";
+import { Send, Trash, Edit, Calendar, Search, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import Swal from "sweetalert2";
 
 const EmailManagementPage = () => {
   const form = useRef();
-  const { store, actions } = useContext(Context)
-  const [newEmail, setNewEmail] = useState({ to_name: "", user_email: "", message: "", scheduledDate: "" })
-  const [searchTerm, setSearchTerm] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [selectedEmail, setSelectedEmail] = useState(null)
-  const itemsPerPage = 5
+  const { store, actions } = useContext(Context);
+  const [newEmail, setNewEmail] = useState({ to_name: "", user_email: "", message: "", scheduledDate: "" });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedEmail, setSelectedEmail] = useState(null);
+  const itemsPerPage = 5;
 
   useEffect(() => {
-    actions.GetEmails()
-  }, [])
-
-  // const handleSendEmail = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const emailToSend = { ...newEmail };
-  //     if (!emailToSend.scheduledDate) {
-  //       delete emailToSend.scheduledDate;
-  //     }
-
-  //     // Enviar el correo usando emailjs
-  //     await emailjs.sendForm('service_9mrx7p7', 'template_vrpdmwj', form.current, {
-  //       publicKey: 'DXp2MF0wEeq9kKBK2',
-  //     });
-
-  //     // Reseteo del formulario
-  //     setNewEmail({ to: "", subject: "", content: "", scheduledDate: "" });
-
-
-  //     actions.AddSentEmail(emailToSend);
-
-  //     console.log('Correo enviado exitosamente!');
-  //   } catch (error) {
-  //     console.error('Error al enviar el correo:', error);
-  //     alert('Hubo un error al enviar el correo. Por favor, inténtalo de nuevo.');
-  //   }
-  // };
+    actions.GetEmails();
+  }, []);
 
   const handleSendEmail = async (e) => {
     e.preventDefault();
@@ -59,7 +32,6 @@ const EmailManagementPage = () => {
 
       const response = await actions.sendEmail(emailToSend);
       console.log("Respuesta de la API:", response);
-
 
       setNewEmail({ to_name: "", user_email: "", message: "", scheduledDate: "" });
 
@@ -82,16 +54,15 @@ const EmailManagementPage = () => {
     }
   };
 
-
   const handleInputChange = (e) => {
     setNewEmail({ ...newEmail, [e.target.name]: e.target.value });
-  }
+  };
 
   const handleDeleteEmail = async (id) => {
     if (window.confirm("¿Are you sure you want to delete this email?")) {
       await actions.deleteEmail(id);
     }
-  }
+  };
 
   const filteredEmails = store.emails.filter((email) =>
     email.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -114,53 +85,58 @@ const EmailManagementPage = () => {
             <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Create New Email</h2>
 
             <form ref={form} onSubmit={handleSendEmail} className="tw-space-y-4">
-              <label>Name</label>
-              <input
-                type="text"
-                name="to_name"
-                value={newEmail.to_name}
-                onChange={handleInputChange}
-                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                required
-              />
-              <label>Email</label>
-              <input
-                type="email"
-                name="user_email"
-                value={newEmail.user_email}
-                onChange={handleInputChange}
-                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                required
-              />
-              <label>Message</label>
-              <textarea
-                name="message"
-                value={newEmail.message}
-                onChange={handleInputChange}
-                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                required
-              />
+              <div>
+                <label className="tw-block tw-mb-2">Name</label>
+                <input
+                  type="text"
+                  name="to_name"
+                  value={newEmail.to_name}
+                  onChange={handleInputChange}
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="tw-block tw-mb-2">Email</label>
+                <input
+                  type="email"
+                  name="user_email"
+                  value={newEmail.user_email}
+                  onChange={handleInputChange}
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="tw-block tw-mb-2">Message</label>
+                <textarea
+                  name="message"
+                  value={newEmail.message}
+                  onChange={handleInputChange}
+                  className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                  required
+                />
+              </div>
               <button
                 type="submit"
-                className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
+                className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-justify-center"
               >
                 <Send className="tw-w-5 tw-h-5 tw-mr-2" />
                 {newEmail.scheduledDate ? "Schedule Email" : "Send Email"}
               </button>
             </form>
-
           </div>
 
           <div className="tw-bg-white tw-shadow-md tw-rounded-lg tw-p-6">
             <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Emails Sent</h2>
-            <div className="tw-mb-4 tw-flex tw-justify-between tw-items-center">
-              <div className="tw-relative">
+            <div className="tw-mb-4 tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-items-center tw-gap-4">
+              <div className="tw-relative tw-w-full md:tw-w-auto">
                 <input
                   type="text"
                   placeholder="Search email..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="tw-pl-10 tw-pr-4 tw-py-2 tw-border tw-border-gray-300 tw-rounded-md"
+                  className="tw-pl-10 tw-pr-4 tw-py-2 tw-border tw-border-gray-300 tw-rounded-md tw-w-full"
                 />
                 <Search className="tw-absolute tw-left-3 tw-top-2.5 tw-text-gray-400" size={20} />
               </div>
@@ -187,25 +163,25 @@ const EmailManagementPage = () => {
             <div className="tw-space-y-4">
               {currentEmails.map((email) => (
                 <div key={email.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-                  <div className="tw-flex tw-justify-between tw-items-center tw-mb-2">
-                    <div>
+                  <div className="tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-items-center tw-mb-2 tw-gap-4">
+                    <div className="tw-text-center md:tw-text-left">
                       <span className="tw-font-bold">Email</span>
                       <p className="tw-text-sm tw-text-gray-500">{email.user_email}</p>
                     </div>
-                    <div>
+                    <div className="tw-text-center md:tw-text-left">
                       <span className="tw-font-bold">Name</span>
                       <p className="tw-text-sm tw-text-gray-500">{email.to_name}</p>
                     </div>
-                    <div>
+                    <div className="tw-text-center md:tw-text-left">
                       <span className="tw-font-bold">Message</span>
                       <p className="tw-text-sm tw-text-gray-500">{email.message}</p>
                     </div>
-                    <div>
+                    <div className="tw-text-center md:tw-text-left">
                       <span className="tw-font-bold">Date</span>
                       <p className="tw-text-sm tw-text-gray-500">{new Date(email.date).toLocaleString()}</p>
                     </div>
                   </div>
-                  <div className="tw-flex tw-justify-between tw-items-center">
+                  <div className="tw-flex tw-justify-between tw-items-center tw-mt-4">
                     <button
                       className="tw-text-blue-600 hover:tw-text-blue-800 tw-flex tw-items-center"
                       onClick={() => setSelectedEmail(email)}
@@ -231,7 +207,7 @@ const EmailManagementPage = () => {
           className="tw-fixed tw-inset-0 tw-bg-gray-600 tw-bg-opacity-50 tw-overflow-y-auto tw-h-full tw-w-full"
           id="my-modal"
         >
-          <div className="tw-relative tw-top-20 tw-mx-auto tw-p-5 tw-border tw-w-96 tw-shadow-lg tw-rounded-md tw-bg-white">
+          <div className="tw-relative tw-top-20 tw-mx-auto tw-p-5 tw-border tw-w-full md:tw-w-96 tw-shadow-lg tw-rounded-md tw-bg-white">
             <div className="tw-mt-3 tw-text-center">
               <h3 className="tw-text-lg tw-leading-6 tw-font-medium tw-text-gray-900">{selectedEmail.subject}</h3>
               <div className="tw-mt-2 tw-px-7 tw-py-3">
@@ -249,7 +225,7 @@ const EmailManagementPage = () => {
                   className="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-text-base tw-font-medium tw-rounded-md tw-w-full tw-shadow-sm hover:tw-bg-blue-600 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-blue-300"
                   onClick={() => setSelectedEmail(null)}
                 >
-                  close
+                  Close
                 </button>
               </div>
             </div>
@@ -257,7 +233,7 @@ const EmailManagementPage = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default EmailManagementPage;
