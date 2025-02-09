@@ -39,7 +39,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       teacherClasses: [],
     },
     actions: {
-      // Helper function to get auth headers
+    
       getAuthHeaders: () => {
         const token = localStorage.getItem("token")
         return {
@@ -162,6 +162,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.log("DATOS RECIBIDOS EN LOGIN:", data)
 
           if (response.ok) {
+            localStorage.setItem("token", "")
             localStorage.setItem("token", data.token)
             localStorage.setItem("user", JSON.stringify(data.user))
 
@@ -778,40 +779,44 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       createActivity: async (formData) => {
         try {
-          const form = new FormData()
-
+          // Validate formData
+          if (!formData || typeof formData !== "object") {
+            throw new Error("Invalid form data");
+          }
+      
+          // Create FormData
+          const form = new FormData();
           for (const key in formData) {
-            if (key === "image" && typeof formData[key] === "string") {
-              form.append("image", formData[key])
-            } else if (key === "image" && formData[key] instanceof File) {
-              form.append("image", formData[key])
-            } else {
-              form.append(key, formData[key])
+            if (formData[key] !== undefined && formData[key] !== null) {
+              form.append(key, formData[key]);
             }
           }
-
-          const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
+          console.log("FORM DATA:", form);
+      
+          // Make the API request
+          const response = await fetch(`${process.env.BACKEND_URL}/api/activities`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: form,
-          })
-
-          if (response.ok) {
-            const newActivity = await response.json()
-            const store = getStore()
-            setStore({ activities: [...store.activities, newActivity] })
-            return { success: true, data: newActivity }
-          } else {
-            const error = await response.json()
-            console.error("Error response:", error)
-            return { success: false, error: error.error || "Failed to create activity" }
+          });
+      
+          // Handle the response
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error response:", errorData);
+            throw new Error(errorData.error || "Failed to create activity");
           }
+      
+          const newActivity = await response.json();
+          const store = getStore();
+          setStore({ activities: [...store.activities, newActivity] });
+      
+          return { success: true, data: newActivity };
         } catch (error) {
-          console.error("Error creating activity:", error)
-          return { success: false, error: error.message }
+          console.error("Error creating activity:", error);
+          return { success: false, error: error.message };
         }
       },
-
       updateActivity: async (id, activityData) => {
         try {
           const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
@@ -1037,7 +1042,7 @@ const getState = ({ getStore, getActions, setStore }) => {
     
       fetchTeachersClasses: async () => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/teachers/classes", {
+          const response = await fetch(process.env.BACKEND_URL + "api/teachers/classes", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {

@@ -8,13 +8,14 @@ from api.utils import APIException
 from flask_cors import CORS# type: ignore
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager# type: ignore
 from flask_bcrypt import Bcrypt # type: ignore
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from werkzeug.security import check_password_hash # type: ignore
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError# type: ignore
 from werkzeug.security import generate_password_hash # type: ignore
 from faker import Faker # type: ignore
 import random
-import datetime
+
+
 from flask_mail import Mail, Message
 
 api = Blueprint('api', __name__)
@@ -910,14 +911,14 @@ def reactivate_account(id):
         if user:
 
             user.name = inactive_account.name
-            user.last_active = datetime.utcnow()
+            user.last_active = datetime.now(datetime.timezone.utc)
             user.is_active = True
         else:
             user = User(
                 name=inactive_account.name,
                 email=inactive_account.email,
                 type=inactive_account.type,
-                last_active=datetime.utcnow(),
+                last_active= datetime.now(datetime.timezone.utc),
                 is_active=True
             )
             db.session.add(user)
@@ -2313,7 +2314,7 @@ def reset_password_request():
         reset = PasswordReset(
             user_id=user.id,
             token=token,
-            expires_at=datetime.utcnow() + timedelta(hours=1)
+            expires_at=datetime.now(timezone.utc) + timedelta(hours=1)
         )
         db.session.add(reset)
         db.session.commit()
@@ -2332,7 +2333,7 @@ def reset_password_request():
 @api.route('/reset-password/<token>', methods=['POST'])
 def reset_password(token):
     reset = PasswordReset.query.filter_by(token=token).first()
-    if reset and reset.expires_at > datetime.utcnow():
+    if reset and reset.expires_at > datetime.now(timezone.utc):
         user = User.query.get(reset.user_id)
         user.set_password(request.json['new_password'])
         db.session.delete(reset)
@@ -2357,7 +2358,7 @@ def fill_database():
                 "password_hash": generate_password_hash("password1"),
                 "role": "parent",
                 "profile_picture": None,
-                "created_at": datetime.utcnow()
+                "created_at": datetime.now(timezone.utc)
             },
             {
                 "username": "janesmith",
@@ -2365,7 +2366,7 @@ def fill_database():
                 "password_hash": generate_password_hash("password2"),
                 "role": "teacher",
                 "profile_picture": None,
-                "created_at": datetime.utcnow()
+                "created_at": datetime.now(timezone.utc)
             },
             {
                 "username": "adminuser",
@@ -2373,7 +2374,7 @@ def fill_database():
                 "password_hash": generate_password_hash("admin123"),
                 "role": "admin",
                 "profile_picture": None,
-                "created_at": datetime.utcnow()
+                "created_at": datetime.now(timezone.utc)
             }
         ]
 
@@ -2489,7 +2490,7 @@ def fill_database():
             {
                 "user_id": 1,  # johndoe
                 "class_id": 1,  # Math 101
-                "enrolled_at": datetime.utcnow()
+                "enrolled_at": datetime.now(timezone.utc)
             }
         ]
 
@@ -2535,7 +2536,7 @@ def fill_database():
             {
                 "class_name": "Math 101",
                 "student_name": "Alice Doe",
-                "start_date": datetime.utcnow()
+                "start_date": datetime.now(timezone.utc)
             }
         ]
 
@@ -2554,7 +2555,7 @@ def fill_database():
             {
                 "child_id": 1,  # Alice Doe
                 "teacher_id": 1,  # janesmith
-                "report_date": datetime.utcnow(),
+                "report_date": datetime.now(timezone.utc),
                 "content": "Alice is doing great in Math!"
             }
         ]
@@ -2575,8 +2576,8 @@ def fill_database():
             {
                 "name": "School Festival",
                 "description": "Annual school festival",
-                "start_time": datetime.utcnow() + timedelta(days=10),
-                "end_time": datetime.utcnow() + timedelta(days=11),
+                "start_time": datetime.now(timezone.utc) + timedelta(days=10),
+                "end_time": datetime.now(timezone.utc) + timedelta(days=11),
                 "image": "https://example.com/festival.jpg"
             }
         ]
@@ -2593,26 +2594,7 @@ def fill_database():
 
         db.session.commit()
 
-        # Crear mensajes de prueba
-        messages = [
-            {
-                "sender_id": 1,  # johndoe
-                "receiver_id": 2,  # janesmith
-                "content": "Hello, how is Alice doing?",
-                "timestamp": datetime.utcnow()
-            }
-        ]
-
-        for message_data in messages:
-            new_message = Message(
-                sender_id=message_data["sender_id"],
-                receiver_id=message_data["receiver_id"],
-                content=message_data["content"],
-                timestamp=message_data["timestamp"]
-            )
-            db.session.add(new_message)
-
-        db.session.commit()
+       
 
         # Crear tareas de prueba
         tasks = [
@@ -2620,7 +2602,7 @@ def fill_database():
                 "teacher_id": 1,  # janesmith
                 "title": "Prepare lesson plan",
                 "description": "Prepare lesson plan for next week",
-                "due_date": datetime.utcnow() + timedelta(days=7),
+                "due_date": datetime.now(timezone.utc) + timedelta(days=7),
                 "status": "pending"
             }
         ]
@@ -2642,7 +2624,7 @@ def fill_database():
             {
                 "child_id": 1,  # Alice Doe
                 "class_id": 1,  # Math 101
-                "date": datetime.utcnow(),
+                "date": datetime.now(timezone.utc),
                 "status": "present"
             }
         ]
@@ -2664,7 +2646,7 @@ def fill_database():
                 "child_id": 1,  # Alice Doe
                 "class_id": 1,  # Math 101
                 "grade": "A",
-                "date": datetime.utcnow()
+                "date": datetime.now(timezone.utc)
             }
         ]
 
@@ -2684,7 +2666,7 @@ def fill_database():
             {
                 "parent_id": 1,  # johndoe
                 "amount": 100.0,
-                "date": datetime.utcnow()
+                "date": datetime.now(timezone.utc)
             }
         ]
 
@@ -2724,7 +2706,7 @@ def fill_database():
             {
                 "user_id": 1,  # johndoe
                 "content": "Your payment was received.",
-                "date": datetime.utcnow(),
+                "date": datetime.now(timezone.utc),
                 "status": "unread"
             }
         ]
@@ -2857,8 +2839,8 @@ def fill_database():
                 "to_name": "John Doe",
                 "user_email": "johndoe@example.com",
                 "message": "Your payment was received.",
-                "date": datetime.utcnow(),
-                "scheduled_date": datetime.utcnow() + timedelta(days=1)
+                "date": datetime.now(timezone.utc),
+                "scheduled_date": datetime.now(timezone.utc) + timedelta(days=1)
             }
         ]
 
@@ -2919,7 +2901,7 @@ def fill_database():
             {
                 "name": "John Doe",
                 "email": "johndoe@example.com",
-                "last_active": datetime.utcnow() - timedelta(days=30),
+                "last_active": datetime.now(timezone.utc) - timedelta(days=30),
                 "type": "parent",
                 "reason": "Inactivity"
             }
@@ -2944,7 +2926,7 @@ def fill_database():
                 "name": "John Doe",
                 "details": "Solicitud de inscripción para el programa de verano",
                 "status": "pending",
-                "date": datetime.utcnow()
+                "date": datetime.now(timezone.utc)
             }
         ]
 
@@ -2992,7 +2974,7 @@ def fill_database():
             {
                 "name": "Yoga for Kids",
                 "description": "A fun and engaging yoga class for children.",
-                "date": datetime.utcnow() + timedelta(days=5),
+                "date": datetime.now(timezone.utc) + timedelta(days=5),
                 "time": datetime.strptime("10:00", "%H:%M").time(),
                 "duration": "1 hour",
                 "teacher": "Jane Smith",
@@ -3057,7 +3039,7 @@ def fill_database():
             {
                 "parent_id": 1,  # johndoe
                 "name": "Parent-Teacher Meeting",
-                "date": datetime.utcnow() + timedelta(days=7),
+                "date": datetime.now(timezone.utc) + timedelta(days=7),
                 "time": datetime.strptime("18:00", "%H:%M").time(),
                 "duration": "1 hour",
                 "status": "pending",
@@ -3105,7 +3087,7 @@ def fill_database():
                 "amount": 100.0,
                 "concept": "Daycare Fee",
                 "status": "completed",
-                "due_date": datetime.utcnow() + timedelta(days=30),
+                "due_date": datetime.now(timezone.utc) + timedelta(days=30),
                 "paypal_order_id": "PAYPAL12345",
                 "payer_email": "johndoe@example.com"
             }
@@ -3149,7 +3131,7 @@ def fill_database():
             {
                 "parent_id": 1,  # johndoe
                 "name": "Yoga for Kids",
-                "date": datetime.utcnow() + timedelta(days=5),
+                "date": datetime.now(timezone.utc) + timedelta(days=5),
                 "time": datetime.strptime("10:00", "%H:%M").time(),
                 "link": "https://example.com/yoga_class"
             }
@@ -3173,7 +3155,7 @@ def fill_database():
                 "parent_id": 1,  # johndoe
                 "content": "Hello, how is Alice doing?",
                 "sender": "teacher",
-                "timestamp": datetime.utcnow()
+                "timestamp": datetime.now(timezone.utc)
             }
         ]
 
@@ -3193,7 +3175,7 @@ def fill_database():
             {
                 "parent_id": 1,  # johndoe
                 "content": "Your payment was received.",
-                "date": datetime.utcnow(),
+                "date": datetime.now(timezone.utc),
                 "status": "unread"
             }
         ]
@@ -3215,7 +3197,7 @@ def fill_database():
                 "parent_id": 1,  # johndoe
                 "title": "Prepare lunch",
                 "description": "Prepare lunch for Alice",
-                "due_date": datetime.utcnow() + timedelta(days=1),
+                "due_date": datetime.now(timezone.utc) + timedelta(days=1),
                 "status": "pending"
             }
         ]
@@ -3237,7 +3219,7 @@ def fill_database():
             {
                 "parent_id": 1,  # johndoe
                 "class_id": 1,  # Math 101
-                "date": datetime.utcnow(),
+                "date": datetime.now(timezone.utc),
                 "status": "present"
             }
         ]
@@ -3259,7 +3241,7 @@ def fill_database():
                 "parent_id": 1,  # johndoe
                 "class_id": 1,  # Math 101
                 "grade": "A",
-                "date": datetime.utcnow()
+                "date": datetime.now(timezone.utc)
             }
         ]
 
@@ -3281,7 +3263,7 @@ def fill_database():
                 "amount": 100.0,
                 "concept": "Daycare Fee",
                 "status": "completed",
-                "due_date": datetime.utcnow() + timedelta(days=30)
+                "due_date": datetime.now(timezone.utc) + timedelta(days=30)
             }
         ]
 
@@ -3302,8 +3284,8 @@ def fill_database():
             {
                 "parent_id": 1,  # johndoe
                 "plan_type": "premium",
-                "start_date": datetime.utcnow(),
-                "end_date": datetime.utcnow() + timedelta(days=365)
+                "start_date": datetime.now(timezone.utc),
+                "end_date": datetime.now(timezone.utc) + timedelta(days=365)
             }
         ]
 
@@ -3323,7 +3305,7 @@ def fill_database():
             {
                 "parent_id": 1,  # johndoe
                 "course_id": 1,  # Art Class
-                "enrollment_date": datetime.utcnow()
+                "enrollment_date": datetime.now(timezone.utc)
             }
         ]
 
@@ -3342,7 +3324,7 @@ def fill_database():
             {
                 "parent_id": 1,  # johndoe
                 "service_id": 1,  # Daycare Service
-                "enrollment_date": datetime.utcnow()
+                "enrollment_date": datetime.now(datetime.timezone.utc)
             }
         ]
 
@@ -3361,7 +3343,7 @@ def fill_database():
             {
                 "parent_id": 1,  # johndoe
                 "event_id": 1,  # School Festival
-                "enrollment_date": datetime.utcnow()
+                "enrollment_date": datetime.now(datetime.timezone.utc)
             }
         ]
 

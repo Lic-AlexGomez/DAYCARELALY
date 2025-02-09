@@ -175,11 +175,8 @@ const ClassesView = () => {
   };
 
   const getTeachers = async () => {
-    const response = await fetch(`${process.env.BACKEND_URL}api/teachers/classes`);
-    if (response.ok) {
-       actions.fetchTeachersClasses();
+        await actions.fetchTeachersClasses();  
       setTeachers(store.teachersClasses);
-    }
   };
 
   useEffect(() => {
