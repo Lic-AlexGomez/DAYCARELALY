@@ -34,7 +34,8 @@ useEffect(() => {
         <div className="topRow">
           <div className="logoContainer">
             <img
-              src={data.image? data.image : imagen}
+              // src={data.image? data.image : imagen}
+              src={imagen}
               alt="Logo"
               className="logo"
             />

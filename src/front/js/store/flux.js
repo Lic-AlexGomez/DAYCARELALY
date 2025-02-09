@@ -1020,6 +1020,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const response = await fetch(process.env.BACKEND_URL + "/api/teachers", {
             headers: getActions().getAuthHeaders(),
           })
+          console.log("RESPONSE FETCH TEACHERS:", response)
           if (response.ok) {
             const data = await response.json()
             setStore({ teachers: data })
@@ -1033,7 +1034,22 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
-
+    
+      fetchTeachersClasses: async () => {
+        try {
+          const response = await fetch(process.env.BACKEND_URL + "/api/teachers/classes", {
+            headers: getActions().getAuthHeaders(),
+          })
+          if (response.ok) {
+            const data = await response.json()
+            setStore({ teachersClasses: data })
+          } else {
+            console.error("Error fetching teachers/classes:", response.status)
+          }
+        } catch (error) {
+          console.error("Error fetching teachers/classes:", error)
+        }
+      },
       fetchServices: async () => {
         try {
           const response = await fetch(process.env.BACKEND_URL + "/api/services", {
@@ -1724,6 +1740,24 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch (error) {
           console.error("Error unenrolling from class:", error)
           return { success: false, error: "An unexpected error occurred" }
+        }
+      },
+      resetPassword: async (email) => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/reset-password`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+          })
+          if (!resp.ok) throw new Error("Password reset request failed")
+
+          const data = await resp.json()
+          return { success: true, message: data.message }
+        } catch (error) {
+          console.error("Error in reset password:", error)
+          return { success: false, error: error.message }
         }
       },
     },

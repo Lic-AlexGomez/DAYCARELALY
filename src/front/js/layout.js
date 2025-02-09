@@ -52,6 +52,7 @@ import EventsView from "./component/admin/EventsView.jsx"
 import ServicesView from "./component/admin/Services.jsx"
 import GalleryView from "./component/admin/Gallery.jsx"
 import SettingsPage from "./component/admin/SettingsView"
+import ForgotPassword from "./component/ForgotPassword.jsx"
 
 // Componentes del Teacher Dashboard
 import TeacherDashboard from "./component/teacher/TeacherDashboard"
@@ -137,7 +138,7 @@ const TeacherDashboardRoutes = () => (
     <Route path="/schedule" element={<TeacherSchedule />} />
     <Route path="/settings" element={<TeacherSettings />} />
     <Route path="/profile" element={<TeacherProfile />} />
-    <Route path="*" element={<h1>Not found!</h1>} />
+    <Route path="*" element={<TeacherOverview/>} />
   </Routes>
   </main>
   </div>
@@ -160,7 +161,7 @@ const ParentDashboardRoutes = () => (
     <Route path="/settings" element={<ParentSettings />} />
     <Route path="/messages" element={<ParentMessages />} />
     <Route path="/virtual-classes-enroll" element={<ClassEnrroll />} />
-    <Route path="*" element={<h1>Not found!</h1>} />
+    <Route path="*" element={<ParentOverview/>} />
   </Routes>
   </main>
   </div>
@@ -190,6 +191,8 @@ const MainRoutes = () => {
           <Route path="/eventphotos" element={<PreviousEventsPhotos />} />
           <Route path="/confirmattendance" element={<ConfirmAttendance />} />
           <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="*" element={<Home />} />
           <Route 
             path="/teacher-dashboard/*" 
             element={

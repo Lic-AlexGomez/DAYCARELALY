@@ -65,7 +65,9 @@ const Alert = ({ className, variant = "default", ...props }) => (
     className={`tw-rounded-lg tw-border tw-p-4 ${
       variant === "destructive"
         ? "tw-border-destructive/50 tw-text-destructive dark:tw-border-destructive [&>svg]:tw-text-destructive"
-        : "tw-text-foreground"
+        : variant === "success"
+          ? "tw-border-green-500/50 tw-text-green-700 dark:tw-border-green-500 [&>svg]:tw-text-green-700"
+          : "tw-text-foreground"
     } ${className}`}
     {...props}
   />
@@ -79,7 +81,7 @@ const AlertDescription = ({ className, ...props }) => (
   <div className={`tw-text-sm [&_p]:tw-leading-relaxed ${className}`} {...props} />
 )
 
-// ExclamationTriangleIcon Component
+// Icons
 const ExclamationTriangleIcon = (props) => (
   <svg
     {...props}
@@ -99,53 +101,58 @@ const ExclamationTriangleIcon = (props) => (
   </svg>
 )
 
-// Login Component
-const Login = () => {
+const CheckCircleIcon = (props) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+    <polyline points="22 4 12 14.01 9 11.01" />
+  </svg>
+)
+
+// ForgotPassword Component
+const ForgotPassword = () => {
   const { actions } = useContext(Context)
   const navigate = useNavigate()
-  const [dataLogin, setDataLogin] = useState({
-    email: "",
-    password: "",
-  })
+  const [email, setEmail] = useState("")
   const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(false)
 
-  const handleChangeLogin = (e) => {
-    const { name, value } = e.target
-    setDataLogin((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
+  const handleChange = (e) => {
+    setEmail(e.target.value)
   }
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setError(null)
+    setSuccess(false)
 
-    if (!dataLogin.email || !dataLogin.password) {
-      setError("Please complete all fields.")
+    if (!email) {
+      setError("Please enter your email address.")
       return
     }
 
     try {
-      const result = await actions.login(dataLogin.email, dataLogin.password)
+      // Assuming there's a resetPassword action in your context
+      const result = await actions.resetPassword(email)
 
-      if (result) {
-        const { role } = result.user
-
-        if (role === "admin" || role === "Admin") {
-          navigate("/admin-dashboard")
-        } else if (role === "teacher" || role === "Teacher") {
-          navigate("/teacher-dashboard")
-        } else if (role === "parent" || role === "Parent") {
-          navigate("/parent-dashboard")
-        } else {
-          setError("Unknown role. Access denied.")
-        }
+      if (result.success) {
+        setSuccess(true)
       } else {
-        setError("Incorrect credentials.")
+        setError(result.error || "An error occurred. Please try again.")
       }
     } catch (error) {
-      console.error("Authentication failed", error)
-      setError("There was a problem logging in. Please try again.")
+      console.error("Password reset request failed", error)
+      setError("There was a problem processing your request. Please try again.")
     }
   }
 
@@ -153,11 +160,11 @@ const Login = () => {
     <div className="tw-container tw-mx-auto tw-flex tw-items-center tw-justify-center tw-min-h-screen tw-px-4">
       <Card className="tw-w-full tw-max-w-md">
         <CardHeader>
-          <CardTitle>Sign in to your account</CardTitle>
-          <CardDescription>Enter your email and password to access your account</CardDescription>
+          <CardTitle>Forgot Password</CardTitle>
+          <CardDescription>Enter your email to reset your password</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSubmit}>
             <div className="tw-space-y-4">
               <div className="tw-space-y-2">
                 <Label htmlFor="email">Email</Label>
@@ -166,20 +173,8 @@ const Login = () => {
                   name="email"
                   type="email"
                   placeholder="Enter your email"
-                  value={dataLogin.email}
-                  onChange={handleChangeLogin}
-                  required
-                />
-              </div>
-              <div className="tw-space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={dataLogin.password}
-                  onChange={handleChangeLogin}
+                  value={email}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -191,17 +186,23 @@ const Login = () => {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
+            {success && (
+              <Alert variant="success" className="tw-mt-4">
+                <CheckCircleIcon className="tw-h-4 tw-w-4" />
+                <AlertTitle>Success</AlertTitle>
+                <AlertDescription>
+                  If an account exists for {email}, you will receive password reset instructions.
+                </AlertDescription>
+              </Alert>
+            )}
             <Button type="submit" className="tw-w-full tw-mt-4">
-              Sign in
+              Reset Password
             </Button>
           </form>
         </CardContent>
         <CardFooter className="tw-flex tw-flex-col tw-space-y-2">
-          <Link to="/signup" className="tw-text-sm tw-text-blue-500 hover:tw-underline">
-            Don't have an account? Sign up
-          </Link>
-          <Link to="/forgot-password" className="tw-text-sm tw-text-blue-500 hover:tw-underline">
-            Forgot your password?
+          <Link to="/login" className="tw-text-sm tw-text-blue-500 hover:tw-underline">
+            Remember your password? Sign in
           </Link>
         </CardFooter>
       </Card>
@@ -209,5 +210,5 @@ const Login = () => {
   )
 }
 
-export default Login
+export default ForgotPassword
 
