@@ -68,7 +68,7 @@ const ParentChildren = () => {
     if (!store.parentChildren) {
       actions.fetchParentChildren()
     }
-  }, [store.parentChildren, actions])
+  }, [store])
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target
