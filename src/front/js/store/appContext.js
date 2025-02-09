@@ -28,7 +28,7 @@ const injectContext = PassedComponent => {
 			 * you should do your ajax requests or fetch api requests here. Do not use setState() to save data in the
 			 * store, instead use actions, like this:
 			 **/
-			if (localStorage.getItem("admin")) {
+			if (localStorage.getItem("admin") === null || localStorage.getItem("admin") === undefined || localStorage.getItem("admin") === "false"  || state.store.admin === null || state.store.admin === undefined || state.store.admin === "false") {	
 				state.actions.addAdmin()
 			}
 			state.actions.fetchSettings()

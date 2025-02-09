@@ -1509,6 +1509,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       addAdmin: async () => {
+        const store = getStore()
         try {
           const response = await fetch(`${process.env.BACKEND_URL}/api/create_admin`, {
             method: "POST",
@@ -1518,6 +1519,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           if (!response.ok) {
             throw new Error("Error al crear el admin: " + response.statusText)
           }
+          setStore({ admin: true })
           localStorage.setItem("admin", true)
         } catch (error) {
           console.error("Error al crear el admin:", error.message)
