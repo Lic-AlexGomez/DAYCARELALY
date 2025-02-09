@@ -4,7 +4,6 @@ import ScrollToTop from "./component/scrollToTop"
 import { BackendURL } from "./component/backendURL"
 
 import { Home } from "./pages/home"
-import { Demo } from "./pages/demo"
 import { Single } from "./pages/single"
 import injectContext from "./store/appContext"
 
@@ -181,7 +180,6 @@ const MainRoutes = () => {
           {/* Rutas principales */}
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/demo" element={<Demo />} />
           <Route path="/single/:theid" element={<Single />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignupCommon />} />
