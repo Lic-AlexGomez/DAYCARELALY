@@ -1,8 +1,9 @@
+import secrets
 import cloudinary,os # type: ignore
 from cloudinary.uploader import upload# type: ignore
 from cloudinary.utils import cloudinary_url# type: ignore
 from flask import Flask, request, jsonify, Blueprint, current_app # type: ignore
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentVirtualClass,ParentActivity,ParentAttendance,ParentGrade,ParentCourse,ParentEvent,ParentPayment,ParentNotification,ParentPaymentHistory,ParentSchedule,ParentService,ParentSetting,ParentSubscription,ParentTask,MessageP,Settings
+from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentVirtualClass,ParentActivity,ParentAttendance,ParentGrade,ParentCourse,ParentEvent,ParentPayment,ParentNotification,ParentPaymentHistory,ParentSchedule,ParentService,ParentSetting,ParentSubscription,ParentTask,MessageP,Settings,PasswordReset
 from api.utils import APIException
 from flask_cors import CORS# type: ignore
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager# type: ignore
@@ -13,7 +14,8 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError# type: ignore
 from werkzeug.security import generate_password_hash # type: ignore
 from faker import Faker # type: ignore
 import random
-
+import datetime
+from flask_mail import Mail, Message
 
 api = Blueprint('api', __name__)
 CORS(api, resources={r"/api/*": {"origins": "*"}})
@@ -26,6 +28,7 @@ cloudinary.config(
 bcrypt = Bcrypt()
 jwt = JWTManager()
 fake = Faker()
+mail = Mail()
 @api.route('/login', methods=['POST'])
 def login():
     data = request.json
@@ -454,13 +457,13 @@ def get_child(id):
     serialized_children = [child.serialize() for child in children]
     return jsonify(serialized_children), 200
 
-@api.route('/children', methods=['POST'])
+@api.route('/children/<int:id>', methods=['POST'])
 @jwt_required()
-def create_child():
+def create_child(id):
     data = request.json
     print(data)
     new_child = Child(
-        parent_id=data['parent_id'],
+        parent_id=id,
         name=data['name'],
         date_of_birth=datetime.fromisoformat(data['date_of_birth']),
         allergies=data.get('allergies', ''),
@@ -1310,6 +1313,7 @@ def delete_parent_activity(id):
     db.session.commit()
     return jsonify({"message": "Activity deleted"}), 200
 
+
 @api.route('/parent_schedules', methods=['GET'])
 @jwt_required()
 def get_parent_schedules():
@@ -1319,10 +1323,12 @@ def get_parent_schedules():
 @api.route('/parent_schedules/<int:id>', methods=['GET'])
 @jwt_required()
 def get_parent_schedule(id):
-    schedule = ParentSchedule.query.get(id)
-    if schedule is None:
+     schedules = ParentSchedule.query.filter_by(parent_id=id).all()
+     if not schedules:
         return jsonify({"error": "Schedule not found"}), 404
-    return jsonify(schedule.serialize()), 200
+
+     serialized_schedules = [schedule.serialize() for schedule in schedules]
+     return jsonify(serialized_schedules), 200
 
 @api.route('/parent_schedules', methods=['POST'])
 @jwt_required()
@@ -2297,6 +2303,42 @@ def delete_parent_payment(id):
     db.session.commit()
     return jsonify({"message": "Payment deleted"}), 200
 
+
+@api.route('/reset-password', methods=['POST'])
+def reset_password_request():
+    data = request.json
+    user = User.query.filter_by(email=data['email']).first()
+    if user:
+        token = secrets.token_urlsafe(32)
+        reset = PasswordReset(
+            user_id=user.id,
+            token=token,
+            expires_at=datetime.utcnow() + timedelta(hours=1)
+        )
+        db.session.add(reset)
+        db.session.commit()
+
+        # Send email with reset instructions
+        reset_url = f"{request.host_url}reset-password/{token}"
+        msg = Message("Password Reset Request",
+                      sender=current_app.config['MAIL_DEFAULT_SENDER'],
+                      recipients=[user.email])
+        msg.body = f"To reset your password, visit the following link: {reset_url}"
+        mail.send(msg)
+
+        return jsonify({"message": "Password reset instructions sent"}), 200
+    return jsonify({"error": "Email not found"}), 404
+
+@api.route('/reset-password/<token>', methods=['POST'])
+def reset_password(token):
+    reset = PasswordReset.query.filter_by(token=token).first()
+    if reset and reset.expires_at > datetime.utcnow():
+        user = User.query.get(reset.user_id)
+        user.set_password(request.json['new_password'])
+        db.session.delete(reset)
+        db.session.commit()
+        return jsonify({"message": "Password reset successfully"}), 200
+    return jsonify({"error": "Invalid or expired token"}), 400
 
 
 

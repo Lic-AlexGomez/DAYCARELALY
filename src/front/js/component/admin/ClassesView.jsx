@@ -177,8 +177,8 @@ const ClassesView = () => {
   const getTeachers = async () => {
     const response = await fetch(`${process.env.BACKEND_URL}api/teachers/classes`);
     if (response.ok) {
-      const data = await response.json();
-      setTeachers(data);
+       actions.fetchTeachersClasses();
+      setTeachers(store.teachersClasses);
     }
   };
 
