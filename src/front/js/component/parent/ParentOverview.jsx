@@ -9,19 +9,20 @@ const ParentOverview = () => {
   useEffect(() => {
     const loadOverviewData = async () => {
       await Promise.all([
-        actions.fetchParentData()
+        actions.fetchParentChildren(),
+        actions.fetchParentActivities(),
+        actions.fetchParentPayments(),
+        actions.fetchParentVirtualClasses()
+
       ])
       setIsLoading(false)
     }
     loadOverviewData()
-  }, [store])
+  }, [store,actions.fetchParentData])
 
-useEffect(() => {
-  actions.fetchParentChildren(),
-  actions.fetchParentActivities(),
-  actions.fetchParentPayments(),
-  actions.fetchParentVirtualClasses()
-}, [store])
+  useEffect(() => {
+    actions.fetchParentData()
+  }, [])
 
   if (isLoading) {
     return <div>Loading overview...</div>

@@ -1310,6 +1310,7 @@ def delete_parent_activity(id):
     db.session.commit()
     return jsonify({"message": "Activity deleted"}), 200
 
+
 @api.route('/parent_schedules', methods=['GET'])
 @jwt_required()
 def get_parent_schedules():
@@ -1319,10 +1320,12 @@ def get_parent_schedules():
 @api.route('/parent_schedules/<int:id>', methods=['GET'])
 @jwt_required()
 def get_parent_schedule(id):
-    schedule = ParentSchedule.query.get(id)
-    if schedule is None:
+     schedules = ParentSchedule.query.filter_by(parent_id=id).all()
+     if not schedules:
         return jsonify({"error": "Schedule not found"}), 404
-    return jsonify(schedule.serialize()), 200
+
+     serialized_schedules = [schedule.serialize() for schedule in schedules]
+     return jsonify(serialized_schedules), 200
 
 @api.route('/parent_schedules', methods=['POST'])
 @jwt_required()

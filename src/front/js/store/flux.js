@@ -1223,6 +1223,7 @@ const getState = ({ getStore, getActions, setStore }) => {
          
           localStorage.setItem("parent_id", JSON.stringify(data.id))
           setStore({ parentData: data })
+          console.log(data)
         } catch (error) {
           console.error("Error fetching parent data:", error)
         }
@@ -1269,11 +1270,12 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id= localStorage.getItem("parent_id")
        
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_schedules/${id}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/parent_schedules/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch parent schedule")
           const data = await resp.json()
+       
           setStore({ parentSchedule: data })
         } catch (error) {
           console.error("Error fetching parent schedule:", error)
