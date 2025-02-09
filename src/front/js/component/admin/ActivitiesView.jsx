@@ -19,7 +19,7 @@ const ActivitiesView = () => {
 
   useEffect(() => {
     actions.fetchActivities()
-  }, [actions])
+  }, [store])
 
   const handleInputChange = (e) => {
     const { name, value, type, files } = e.target
