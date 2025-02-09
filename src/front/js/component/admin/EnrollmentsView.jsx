@@ -13,7 +13,7 @@ const EnrollmentsView = () => {
 
   })
   useEffect(() => {
-    actions.fetchSubscriptions();
+    actions.fetchEnrolledClasses();
     actions.fetchClasses();
     actions.fetchParentChildren();
   }, []);
@@ -118,7 +118,7 @@ const EnrollmentsView = () => {
   return (
     <div>
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Registration Management</h2>
-      <div className="tw-mb-6">
+      {/* <div className="tw-mb-6">
         <form className="tw-flex tw-space-x-4" onSubmit={handleAddSubscription} >
           <div className='tw-flex-1'>
             <select
@@ -161,7 +161,7 @@ const EnrollmentsView = () => {
             Add Registration
           </button>
         </form>
-      </div>
+      </div> */}
       <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
         <thead className="tw-bg-gray-100">
           <tr>
@@ -172,11 +172,12 @@ const EnrollmentsView = () => {
           </tr>
         </thead>
         <tbody className="tw-divide-y tw-divide-gray-200">
-          {store.subscriptions.map((enrollment) => (
+          {console.log(store.enrolledClasses)}
+          {store.enrolledClasses.map((enrollment) => (
             <tr key={enrollment.id}>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.student_name}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.class_name}</td>
-              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.start_date}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.name}</td>
+              {/* <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.class_name}</td>
+              <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.start_date}</td> */}
               <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
 
                 <button className="tw-text-red-600 hover:tw-text-red-900" >

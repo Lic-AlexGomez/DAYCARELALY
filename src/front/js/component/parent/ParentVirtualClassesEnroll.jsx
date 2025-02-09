@@ -1,6 +1,7 @@
-import React, { useState, useEffect,useContext } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import { Context } from "../../store/appContext"
 import { Loader2, UserPlus, UserMinus, Users } from "lucide-react"
+import Swal from "sweetalert2"
 
 
 const Card = ({ className, children, ...props }) => (
@@ -82,7 +83,7 @@ const Badge = ({ className, variant = "default", children, ...props }) => {
   )
 }
 
- function ParentVirtualClassesEnroll() {
+function ParentVirtualClassesEnroll() {
   const { store, actions } = useContext(Context)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -131,6 +132,7 @@ const Badge = ({ className, variant = "default", children, ...props }) => {
     )
   }
 
+
   return (
     <div className="tw-container tw-mx-auto tw-p-4">
       <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Available Virtual Classes</h1>
@@ -170,7 +172,12 @@ const Badge = ({ className, variant = "default", children, ...props }) => {
               </CardContent>
               <CardFooter>
                 <Button
-                  onClick={() => handleEnrollToggle(classItem.id)}
+                  onClick={() => {
+                    handleEnrollToggle(classItem.id);
+
+                  }
+
+                  }
                   variant={isEnrolled ? "secondary" : "default"}
                   className="tw-w-full"
                 >
@@ -191,6 +198,7 @@ const Badge = ({ className, variant = "default", children, ...props }) => {
           )
         })}
       </div>
+        
     </div>
   )
 }
