@@ -647,7 +647,6 @@ def upload_img():
     if file:
         upload_result = upload(file)
         return jsonify({"url": upload_result['secure_url']}), 200
-
 @api.route('/newsletter', methods=['POST'])
 def create_newsletter():
     data = request.json
@@ -1977,7 +1976,7 @@ def delete_parent_event(id):
     return jsonify({"message": "ParentEvent deleted"}), 200
     
 @api.route('/settings', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def get_settings():
     settings = Settings.query.all()
     settings = list(map(lambda x: x.serialize(), settings))
@@ -3366,3 +3365,42 @@ def fill_database():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Error: {str(e)}"}), 500
+    
+@api.route('/create_admin', methods=['POST'])
+def create_admin():
+    data = {
+        'username': "admin",
+        'email': "admin@daycare.com",
+        'password': "admin123",
+        'role': "admin",
+        'position': "Administrator",
+        'department': "Management"
+    }
+
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role')
+    position = data.get('position')
+    department = data.get('department')
+
+    if User.query.filter_by(email=email).first():
+        raise APIException("User already exists", status_code=400)
+
+    hashed_password = generate_password_hash(password)
+    new_user = User(username=username, email=email, password_hash=hashed_password, role=role)
+    db.session.add(new_user)
+    db.session.flush()
+
+    new_admin = AdminD(user_id=new_user.id, position=position, department=department)
+    db.session.add(new_admin)
+
+    db.session.commit()
+
+    access_token = create_access_token(identity=new_user.id)
+
+    return jsonify({
+        "message": "Admin created successfully",
+        "token": access_token,
+        "admin": new_user.serialize()
+    }), 201

@@ -26,14 +26,13 @@ export const Home = () => {
 		<div className="text-center ">
 
 			<Hero />
-			{/* <FileUploader /> */}
+			<FileUploader />
 			<ServicesSection />
 			<AboutUs />
 			<Aday />
 			<Classes />
 			<EducationalPrograms />
 			<Statistics />
-			<PayPalButton />
 			<Getintouch />
 		</div>
 	);
