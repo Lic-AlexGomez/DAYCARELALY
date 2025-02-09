@@ -17,6 +17,7 @@ const Header = () => {
 
   const handleSettings = () => {
     // Add navigation to settings page logic here
+    
     console.log("Navigating to settings...")
   }
 
