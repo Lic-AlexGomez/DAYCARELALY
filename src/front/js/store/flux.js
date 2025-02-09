@@ -39,7 +39,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       teacherClasses: [],
     },
     actions: {
-      // Helper function to get auth headers
+    
       getAuthHeaders: () => {
         const token = localStorage.getItem("token")
         return {
@@ -162,6 +162,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.log("DATOS RECIBIDOS EN LOGIN:", data)
 
           if (response.ok) {
+            localStorage.setItem("token", "")
             localStorage.setItem("token", data.token)
             localStorage.setItem("user", JSON.stringify(data.user))
 
@@ -1037,7 +1038,7 @@ const getState = ({ getStore, getActions, setStore }) => {
     
       fetchTeachersClasses: async () => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/teachers/classes", {
+          const response = await fetch(process.env.BACKEND_URL + "api/teachers/classes", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {

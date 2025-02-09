@@ -11,7 +11,7 @@ const Header = () => {
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen)
   
   const handleLogout = () => {
-   
+    localStorage.clear()
     navigate("/login")
   }
 
