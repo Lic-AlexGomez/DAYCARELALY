@@ -39,7 +39,7 @@ const InactiveAccountsView = () => {
     }
   }
 
-  const filteredAccounts = store.inactiveAccounts.filter(
+  const filteredAccounts = store.parentChildren.filter(
     (account) =>
       account.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       account.email.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -51,7 +51,7 @@ const InactiveAccountsView = () => {
       <div className="tw-mb-4">
         <input
           type="text"
-          placeholder="Buscar cuentas..."
+          placeholder="Search Account..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2 tw-w-full tw-max-w-sm"

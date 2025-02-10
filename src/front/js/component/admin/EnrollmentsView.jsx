@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 
 const EnrollmentsView = () => {
   const { actions, store } = useContext(Context);
+  const [searchTerm, setSearchTerm] = useState("")
   const [enrollments, setEnrollments] = useState({
     student_name: 0,
     class_name: 0,
@@ -13,8 +14,8 @@ const EnrollmentsView = () => {
 
   useEffect(() => {
     actions.fetchEnrolledClasses();
-    actions.fetchClasses();
-    actions.fetchParentChildren();
+    
+    
   }, []);
 
   const handleInputChange = (e) => {
@@ -110,12 +111,24 @@ const EnrollmentsView = () => {
       }
     }
   };
+  // const filteredStudent = store.parentChildren.filter(
+  //   (account) =>
+  //     account.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // )
 
   return (
     <div className="tw-p-4">
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Registration Management</h2>
       <div className="tw-mb-6">
-        <form className="tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-4" onSubmit={handleAddSubscription}>
+      
+        <input
+          type="text"
+          placeholder="Search student..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2 tw-w-full tw-max-w-sm"
+        />
+        {/* <form className="tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-4" onSubmit={handleAddSubscription}>
           <div>
             <select
               className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
@@ -159,13 +172,13 @@ const EnrollmentsView = () => {
             <Plus className="tw-w-5 tw-h-5 tw-mr-2" />
             Add Registration
           </button>
-        </form>
+        </form> */}
       </div>
       <div className="tw-overflow-x-auto">
         <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
           <thead className="tw-bg-gray-100">
             <tr>
-              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Estudiante</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Student</th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Class</th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Registration Date</th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>

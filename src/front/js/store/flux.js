@@ -878,6 +878,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       createActivity: async (formData) => {
         try {
+         
           
           // Validate formData
           if (!formData || typeof formData !== "object") {
@@ -949,7 +950,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
-
+      
       deleteActivity: async (id) => {
         try {
           const store = getStore()
