@@ -1653,10 +1653,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           });
           if (response.ok) {
             const data = await response.json();
-            // Actualiza las clases en el store
             setStore({ enrolledClasses: data });
-    
-            // Filtra las clases pendientes directamente en el store
             const unpaidClasses = data.filter((payment) => payment.status !== "Pagado");
             setStore({ filteredClasses: unpaidClasses });
           } else {
@@ -1736,7 +1733,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       //PAYPAL
       setEnrolledClasses: (enrolledClasses) => {
-        setStore({ enrolledClasses }); // Aquí actualizas el store con las clases
+        setStore({ enrolledClasses });
       },
       updatePaidClasses: (newPaidClass) => {
         setStore((prevState) => {

@@ -7,21 +7,19 @@ const ParentPayments = () => {
   const { store, actions } = useContext(Context);
   const [selectedPayments, setSelectedPayments] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [filteredClasses, setFilteredClasses] = useState([]); // Estado para clases filtradas localmente
+  const [filteredClasses, setFilteredClasses] = useState([]);
 
   useEffect(() => {
-    // Al montar el componente, obtenemos las clases enroladas
     actions.fetchEnrolledClasses();
   }, []);
 
   useEffect(() => {
-    // Crear una copia de las clases y filtrarlas para mostrar solo las pendientes
     setFilteredClasses(
       Array.isArray(store.enrolledClasses)
         ? store.enrolledClasses.filter((payment) => payment.status !== "Pagado")
         : []
     );
-  }, [store.enrolledClasses]); // Este efecto se ejecuta cuando cambian las clases enroladas
+  }, [store.enrolledClasses]); 
 
   const handlePaymentSelection = (payment) => {
     const isSelected = selectedPayments.some((p) => p.id === payment.id);
@@ -47,7 +45,7 @@ const ParentPayments = () => {
       due_date: new Date().toISOString().split("T")[0],
       paypal_order_id: order.id,
       payer_email: order.payer.email_address,
-      class_id: selectedPayments[0].id, // ID de la clase que se está pagando
+      class_id: selectedPayments[0].id, 
     };
 
     try {
@@ -61,11 +59,7 @@ const ParentPayments = () => {
 
       const data = await response.json();
       console.log("Pago guardado en el backend:", data);
-
-      // Actualiza las clases pagadas en el frontend
       actions.fetchEnrolledClasses();
-
-      // Filtramos las clases pagadas y las eliminamos de la lista de clases pendientes
       setFilteredClasses((prevClasses) =>
         prevClasses.filter((payment) => payment.id !== selectedPayments[0].id)
       );
