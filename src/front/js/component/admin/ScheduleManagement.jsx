@@ -79,13 +79,8 @@ const ScheduleManagementPage = () => {
   };
 
   const getTeachers = async () => {
-    const response = await fetch(`${process.env.BACKEND_URL}api/teachers/classes`);
-    if (response.ok) {
-      const data = await response.json();
-      setTeachers(data);
-      console.log(data);
-      setTeachers(data);
-    }
+    await actions.fetchTeachersClasses();
+    setTeachers(store.teachersClasses);
   };
 
   useEffect(() => {
@@ -181,16 +176,16 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule, te
   return (
     <form onSubmit={handleAddSchedule} className="tw-mb-6 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-7 tw-gap-4">
       <div>
-        <label htmlFor="classes">Class</label>
+        <label htmlFor="class">Class</label>
         <select
-          name="classes"
+          name="class"
           onChange={handleInputChange}
           value={newSchedule.class}
           className="tw-border tw-rounded-md tw-px-2 tw-py-2 tw-w-full"
         >
           <option value={0} disabled>select an Class</option>
           {store.classes.map(item => (
-            <option key={`teacher-${item.id}`} value={item.name}>{item.name}</option>
+            <option key={item.id} value={item.name}>{item.name}</option>
           ))}
         </select>
       </div>
@@ -205,7 +200,7 @@ const AddScheduleForm = ({ newSchedule, handleInputChange, handleAddSchedule, te
         >
           <option value={0} disabled>select an Teacher</option>
           {teachers.map(item => (
-            <option key={`teacher-${item.id}`} value={item.user}>{item.username}</option>
+            <option key={`teacher-${item.id}`} value={item.username}>{item.username}</option>
           ))}
         </select>
       </div>

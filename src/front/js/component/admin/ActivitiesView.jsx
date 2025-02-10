@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react"
 import { Context } from "../../store/appContext"
 import { Plus, Edit, Trash, X } from "lucide-react"
+import Swal from "sweetalert2"
 
 const ActivitiesView = () => {
   const { store, actions } = useContext(Context)
@@ -83,6 +84,7 @@ const ActivitiesView = () => {
     })
   }
 
+
   const handleEditActivity = (activity) => {
     setSelectedActivity(activity)
     setFormData({
@@ -113,13 +115,13 @@ const ActivitiesView = () => {
   return (
     <div className="tw-p-4">
       <div className="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-items-center tw-mb-6">
-        <h2 className="tw-text-2xl tw-font-semibold tw-mb-4 sm:tw-mb-0">Activities Management</h2>
+        <h2 className="tw-text-2xl tw-font-semibold tw-mb-4 sm:tw-mb-0">Programs Management</h2>
         <button
           onClick={() => setShowModal(true)}
           className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center tw-gap-2"
         >
           <Plus className="tw-w-5 tw-h-5" />
-          Add Activity
+          Add Program
         </button>
       </div>
       <div className="tw-overflow-x-auto">
@@ -190,7 +192,7 @@ const ActivitiesView = () => {
             <div className="tw-p-6">
               <div className="tw-flex tw-justify-between tw-items-center tw-mb-4">
                 <h2 className="tw-text-2xl tw-font-semibold">
-                  {selectedActivity ? "Edit Activity" : "Add New Activity"}
+                  {selectedActivity ? "Edit Program" : "Add New Program"}
                 </h2>
                 <button onClick={handleCloseModal} className="tw-text-gray-500 hover:tw-text-gray-700">
                   <X className="tw-w-6 tw-h-6" />
@@ -312,7 +314,7 @@ const ActivitiesView = () => {
                     type="submit"
                     className="tw-px-4 tw-py-2 tw-bg-blue-500 tw-text-white tw-rounded-md hover:tw-bg-blue-600"
                   >
-                    {selectedActivity ? "Update Activity" : "Create Activity"}
+                    {selectedActivity ? "Update Program" : "Create Program"}
                   </button>
                 </div>
               </form>
