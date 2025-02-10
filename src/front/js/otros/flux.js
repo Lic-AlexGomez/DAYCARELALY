@@ -1059,15 +1059,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 		  },
 
 		  logout: () => {
-			setStore({ token: null, user: null })
-			localStorage.removeItem("token")
+			localStorage.removeItem("token");
+			localStorage.removeItem("user");
+			setStore({ auth: { token: null, user: null } });
 		  },
-	
 		  checkAuth: () => {
-			const token = localStorage.getItem("token")
-			if (token) {
-			  setStore({ token })
-			  getActions().fetchUserData()
+			const token = localStorage.getItem("token");
+			const user = JSON.parse(localStorage.getItem("user"));
+			if (token && user) {
+			  setStore({ auth: { token, user } });
 			}
 		  },
 	

@@ -1,6 +1,6 @@
-import { NavLink } from "react-router-dom"
-import { Home, Users, Calendar, Activity, CreditCard, Settings, Video, MessageCircle, School } from "lucide-react"
-import React from "react"
+import { NavLink } from "react-router-dom";
+import { Home, Users, Calendar, Activity, CreditCard, Settings, Video, MessageCircle, School, Menu } from "lucide-react";
+import React, { useState } from "react";
 
 const menuItems = [
   { icon: Home, label: "Home", path: "/parent-dashboard" },
@@ -12,33 +12,61 @@ const menuItems = [
   { icon: MessageCircle, label: "Messages", path: "/parent-dashboard/messages" },
   { icon: School, label: "Enroll Classes", path: "/parent-dashboard/virtual-classes-enroll" },
   { icon: Settings, label: "Configuration", path: "/parent-dashboard/settings" },
-]
+];
 
 const ParentSidebar = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
-    <nav className="tw-bg-white tw-w-64 tw-h-full tw-border-r tw-border-gray-200">
-      <div className="tw-flex tw-items-center tw-justify-center tw-h-16 tw-border-b tw-border-gray-200">
-        <span className="tw-text-xl tw-font-semibold tw-text-gray-800">Daycare  Slime Co.</span>
-      </div>
-      <div className="tw-p-4">
-        <ul className="tw-space-y-2">
-          {menuItems.map((item, index) => (
-            <li key={index}>
-              <NavLink
-                to={item.path}
-                className="tw-flex tw-items-center tw-p-2 tw-text-gray-700 tw-rounded-lg hover:tw-bg-gray-100"
-              
-              >
-                <item.icon className="tw-w-5 tw-h-5 tw-mr-3" />
-                <span>{item.label}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
-  )
-}
+    <>
+      {/* Botón de Menú para Móviles */}
+      <button
+        onClick={toggleSidebar}
+        className="tw-fixed tw-top-3 tw-left-4 tw-z-50 tw-p-2 tw-bg-white tw-rounded-lg tw-shadow-md sm:tw-hidden"
+      >
+        <Menu className="tw-w-6 tw-h-6 " />
+      </button>
 
-export default ParentSidebar
+      {/* Barra Lateral */}
+      <nav
+        className={`tw-bg-white tw-w-64 tw-h-full tw-border-r tw-border-gray-200 tw-fixed sm:tw-relative tw-transform ${
+          isSidebarOpen ? "tw-translate-x-0" : "-tw-translate-x-full"
+        } sm:tw-translate-x-0 tw-transition-transform tw-duration-200 tw-ease-in-out tw-z-40`}
+      >
+        <div className="tw-flex tw-items-center tw-justify-center tw-h-14 tw-border-b tw-border-gray-200 ">
+          <span className="tw-text-lg tw-font-semibold tw-text-gray-800">Daycare Slime Co.</span>
+        </div>
+        <div className="tw-p-4">
+          <ul className="tw-space-y-2">
+            {menuItems.map((item, index) => (
+              <li key={index}>
+                <NavLink
+                  to={item.path}
+                  className="tw-flex tw-items-center tw-p-2 tw-text-gray-700 tw-rounded-lg hover:tw-bg-gray-100"
+                  activeClassName="tw-bg-gray-100 tw-font-semibold"
+                >
+                  <item.icon className="tw-w-5 tw-h-5 tw-mr-3" />
+                  <span>{item.label}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
 
+
+      {isSidebarOpen && (
+        <div
+          onClick={toggleSidebar}
+          className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 sm:tw-hidden tw-z-30"
+        ></div>
+      )}
+    </>
+  );
+};
+
+export default ParentSidebar;
