@@ -2249,35 +2249,53 @@ def get_parent_payment(id):
 
 
 @api.route('/parent_payments', methods=['POST'])
-@jwt_required()
 def create_parent_payment():
     data = request.get_json()
     if not data:
         return jsonify({"error": "No se recibieron datos"}), 400
-    try:
-        parent_id = data.get('parent_id')
-        if not parent_id:
-            return jsonify({"error": "El parent_id es obligatorio"}), 400
+    print("Datos recibidos en el backend:", data)
 
-        parent = Parent.query.get(parent_id)
+    try:
+        # Recibimos los datos del pago
+        user_id = data.get('user_id')
+        if not user_id:
+            return jsonify({"error": "El user_id es obligatorio"}), 400
+
+        # Verificamos que el usuario exista
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"error": "El user_id no existe"}), 400
+
+        # Buscamos el parent asociado al usuario
+        parent = Parent.query.filter_by(user_id=user.id).first()
         if not parent:
-            return jsonify({"error": "El parent_id no existe"}), 400
+            return jsonify({"error": "El parent_id no existe para este user_id"}), 400
+
+        # Registramos el nuevo pago
         new_payment = ParentPayment(
-            parent_id=parent_id,
+            parent_id=parent.id,
             amount=float(data['amount']),
             concept=data['concept'],
-            status=data['status'],
+            status=data['status'],  # El status puede ser "Pendiente" inicialmente
             due_date=datetime.strptime(data['due_date'], "%Y-%m-%d").date(),
             paypal_order_id=data['paypal_order_id'],
             payer_email=data['payer_email']
         )
 
+        # Agregamos el pago a la base de datos
         db.session.add(new_payment)
         db.session.commit()
+
+        # Actualizamos el estado a "Pagado" si el pago fue exitoso
+        if data['status'] == 'Pagado':
+            new_payment.status = 'Pagado'
+            db.session.commit()
+
         return jsonify({"message": "Pago registrado exitosamente", "payment": new_payment.serialize()}), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": f"Error al procesar el pago: {str(e)}"}), 500
+
 
 @api.route('/parent_payments/<int:id>', methods=['PUT'])
 @jwt_required()
