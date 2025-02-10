@@ -41,7 +41,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       teacherClasses: [],
     },
     actions: {
-    
+
       getAuthHeaders: () => {
         const token = localStorage.getItem("token")
         return {
@@ -53,12 +53,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       signUp: async (signupData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
@@ -82,71 +82,71 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       uploadToCloudinary: async (file) => {
-		const BACKEND_URL = process.env.BACKEND_URL
-		const store = getStore()
+        const BACKEND_URL = process.env.BACKEND_URL
+        const store = getStore()
 
-		try {
-		  const formData = new FormData()
-		  formData.append("file", file)
+        try {
+          const formData = new FormData()
+          formData.append("file", file)
 
-		  const response = await fetch(`${BACKEND_URL}/api/upload`, {
-			method: "POST",
-			body: formData,
-		  })
+          const response = await fetch(`${BACKEND_URL}/api/upload`, {
+            method: "POST",
+            body: formData,
+          })
 
-		  if (!response.ok) {
-			const errorData = await response.json()
-			throw new Error(errorData.error || "Failed to upload file")
-		  }
+          if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || "Failed to upload file")
+          }
 
-		  const data = await response.json()
-		  setStore({ uploadedFileUrl: data.url, error: null })
+          const data = await response.json()
+          setStore({ uploadedFileUrl: data.url, error: null })
 
-		  return { success: true, url: data.url }
-		} catch (error) {
-		  console.error("Upload Error:", error.message)
-		  setStore({ error: error.message })
-		  return { success: false, error: error.message }
-		}
-	  },
-	  uploadToCloudinaryImg: async (file) => {
-		  const BACKEND_URL = process.env.BACKEND_URL
-		  const store = getStore()
-  
-		  try {
-			const formData = new FormData()
-			formData.append("file", file)
-  
-			const response = await fetch(`${BACKEND_URL}/api/upload/img`, {
-			  method: "POST",
-			  body: formData,
-			})
-  
-			if (!response.ok) {
-			  const errorData = await response.json()
-			  throw new Error(errorData.error || "Failed to upload file")
-			}
-  
-			const data = await response.json()
-			setStore({ uploadedFileUrl: data.url, error: null })
-  
-			return { success: true, url: data.url }
-		  } catch (error) {
-			console.error("Upload Error:", error.message)
-			setStore({ error: error.message })
-			return { success: false, error: error.message }
-		  }
-		},
+          return { success: true, url: data.url }
+        } catch (error) {
+          console.error("Upload Error:", error.message)
+          setStore({ error: error.message })
+          return { success: false, error: error.message }
+        }
+      },
+      uploadToCloudinaryImg: async (file) => {
+        const BACKEND_URL = process.env.BACKEND_URL
+        const store = getStore()
+
+        try {
+          const formData = new FormData()
+          formData.append("file", file)
+
+          const response = await fetch(`${BACKEND_URL}/api/upload/img`, {
+            method: "POST",
+            body: formData,
+          })
+
+          if (!response.ok) {
+            const errorData = await response.json()
+            throw new Error(errorData.error || "Failed to upload file")
+          }
+
+          const data = await response.json()
+          setStore({ uploadedFileUrl: data.url, error: null })
+
+          return { success: true, url: data.url }
+        } catch (error) {
+          console.error("Upload Error:", error.message)
+          setStore({ error: error.message })
+          return { success: false, error: error.message }
+        }
+      },
 
       fetchClasses: async () => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
             headers: getActions().getAuthHeaders(),
           })
@@ -292,12 +292,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       GetClients: async () => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/clients", {
             headers: getActions().getAuthHeaders(),
           })
@@ -336,12 +336,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       addClient: async (clientData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/clients", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
@@ -364,12 +364,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       updateClient: async (id, clientData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/clients/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
@@ -393,12 +393,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       deleteClient: async (id) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/clients/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
@@ -420,12 +420,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       GetSchedules: async () => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/schedules", {
             headers: getActions().getAuthHeaders(),
           })
@@ -488,12 +488,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       addSchedule: async (scheduleData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/schedules", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
@@ -516,12 +516,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       updateSchedule: async (id, scheduleData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/schedules/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
@@ -547,12 +547,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       deleteSchedule: async (id) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/schedules/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
@@ -574,12 +574,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       GetEmails: async () => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/emails", {
             headers: getActions().getAuthHeaders(),
           })
@@ -599,12 +599,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       sendEmail: async (emailData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/emails", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
@@ -631,12 +631,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       deleteEmail: async (id) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/emails/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
@@ -853,12 +853,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       fetchActivities: async () => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
             headers: getActions().getAuthHeaders(),
           })
@@ -878,55 +878,61 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       createActivity: async (formData) => {
         try {
-         
-          
-          // Validate formData
-          if (!formData || typeof formData !== "object") {
-            throw new Error("Invalid form data");
+          const store = getStore();
+          const token = store.token || localStorage.getItem("token");
+      
+          if (!token) {
+            console.error("No token found");
+            return;
           }
       
-          // Create FormData
           const form = new FormData();
+      
           for (const key in formData) {
-            if (formData[key] !== undefined && formData[key] !== null) {
+            if (key === "image" && typeof formData[key] === "string") {
+              form.append("image", formData[key]);
+            } else if (key === "image" && formData[key] instanceof File) {
+              form.append("image", formData[key]);
+            } else {
               form.append(key, formData[key]);
             }
           }
-          console.log("FORM DATA:", form);
       
-          // Make the API request
-          const response = await fetch(`${process.env.BACKEND_URL}/api/activities`, {
+          const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
             method: "POST",
-            headers: getActions().getAuthHeaders(),
+            headers: {
+              "Authorization": `Bearer ${token}`, // Add token here
+            },
             body: form,
           });
       
-          // Handle the response
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Error response:", errorData);
-            throw new Error(errorData.error || "Failed to create activity");
+          if (response.ok) {
+            const newActivity = await response.json();
+            const store = getStore();
+            setStore({ activities: [...store.activities, newActivity] });
+            return { success: true, data: newActivity };
+          } else {
+            const error = await response.json();
+            console.error("Error response:", error); // Log error response
+            return { success: false, error: error.error || "Failed to create activity" };
           }
-      
-          const newActivity = await response.json();
-          const store = getStore();
-          setStore({ activities: [...store.activities, newActivity] });
-      
-          return { success: true, data: newActivity };
         } catch (error) {
           console.error("Error creating activity:", error);
           return { success: false, error: error.message };
         }
       },
+      
+
+
       updateActivity: async (id, activityData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
@@ -950,16 +956,16 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
-      
+
       deleteActivity: async (id) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
@@ -983,12 +989,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       addClass: async (teacher_id, name, description, capacity, price, age, time, image) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
@@ -1025,12 +1031,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       deleteClass: async (id) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
@@ -1051,12 +1057,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       updateClass: async (id, classData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
@@ -1080,12 +1086,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       fetchEvents: async () => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/events", {
             headers: getActions().getAuthHeaders(),
           })
@@ -1104,12 +1110,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       deleteEvent: async (id) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
@@ -1130,12 +1136,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       addEvent: async (name, description, start_time, end_time, image) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/events", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
@@ -1158,12 +1164,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       updateEvent: async (id, eventData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
@@ -1203,7 +1209,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
-    
+
       fetchTeachersClasses: async () => {
         try {
           const response = await fetch(process.env.BACKEND_URL + "api/teachers/classes", {
@@ -1222,12 +1228,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       fetchServices: async () => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/services", {
             headers: getActions().getAuthHeaders(),
           })
@@ -1248,12 +1254,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       addService: async (name, description, image) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/services", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
@@ -1276,12 +1282,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       updateService: async (id, serviceData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/services/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
@@ -1305,12 +1311,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       deleteService: async (id) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/services/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
@@ -1331,12 +1337,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       fetchGallery: async () => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/gallery", {
             headers: getActions().getAuthHeaders(),
           })
@@ -1357,12 +1363,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       updateGallery: async (id, galleryData) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/gallery/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
@@ -1386,12 +1392,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       addGallery: async (name, image) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(process.env.BACKEND_URL + "/api/gallery", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
@@ -1414,12 +1420,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       deleteGallery: async (id) => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/gallery/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
@@ -1455,13 +1461,13 @@ const getState = ({ getStore, getActions, setStore }) => {
       fetchParentData: async () => {
 
         const store = getStore()
-      
+
         try {
-          const resp = await fetch(process.env.BACKEND_URL + "/api/parents/"+store.user.id, {
+          const resp = await fetch(process.env.BACKEND_URL + "/api/parents/" + store.user.id, {
             headers: getActions().getAuthHeaders(),
           })
           const data = await resp.json()
-         
+
           localStorage.setItem("parent_id", JSON.stringify(data.id))
           setStore({ parentData: data })
           console.log(data)
@@ -1472,7 +1478,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Hijos
       fetchParentChildren: async () => {
-        const id= localStorage.getItem("parent_id")
+        const id = localStorage.getItem("parent_id")
         const store = getStore()
         const token = store.token || localStorage.getItem("token")
 
@@ -1485,7 +1491,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             headers: getActions().getAuthHeaders(),
           })
           const data = await resp.json()
-          
+
           setStore({ parentChildren: data })
         } catch (error) {
           console.error("Error fetching parent children:", error)
@@ -1493,8 +1499,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       addChild: async (childData) => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/children/${id}`, {
             method: "POST",
@@ -1514,15 +1520,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Horario
       fetchParentSchedule: async () => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}api/parent_schedules/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch parent schedule")
           const data = await resp.json()
-       
+
           setStore({ parentSchedule: data })
         } catch (error) {
           console.error("Error fetching parent schedule:", error)
@@ -1531,8 +1537,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Pagos
       fetchParentPayments: async () => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_payments/${id}`, {
             headers: getActions().getAuthHeaders(),
@@ -1547,8 +1553,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Actividades
       fetchParentActivities: async () => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_activities/${id}`, {
             headers: getActions().getAuthHeaders(),
@@ -1563,10 +1569,10 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       addParentActivity: async (activityData) => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
-          const resp = await fetch(process.env.BACKEND_URL + "/api/add_parent_activity/"+id, {
+          const resp = await fetch(process.env.BACKEND_URL + "/api/add_parent_activity/" + id, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(activityData),
@@ -1581,8 +1587,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Configuración
       fetchParentSettings: async () => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings/${id}`, {
             headers: getActions().getAuthHeaders(),
@@ -1597,8 +1603,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       updateParentSettings: async (settings) => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings/${id}`, {
             method: "PUT",
@@ -1615,13 +1621,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Clases virtuales
       fetchParentVirtualClasses: async () => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_virtual_classes/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
-        
+
           if (!resp.ok) throw new Error("Failed to fetch parent virtual classes")
           const data = await resp.json()
           console.log(data)
@@ -1633,8 +1639,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       // Mensajes
       fetchMessages: async () => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/messagesP/${id}`, {
             headers: getActions().getAuthHeaders(),
@@ -1649,8 +1655,8 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       sendMessage: async (message) => {
-        const id= localStorage.getItem("parent_id")
-       
+        const id = localStorage.getItem("parent_id")
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/messages/${id}`, {
             method: "POST",
@@ -1699,7 +1705,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const store = getStore()
           const token = store.token || localStorage.getItem("token")
-  
+
           if (!token) {
             console.error("No token found")
             return
@@ -1720,7 +1726,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const store = getStore()
           const token = store.token || localStorage.getItem("token")
-  
+
           if (!token) {
             console.error("No token found")
             return
@@ -1886,12 +1892,12 @@ const getState = ({ getStore, getActions, setStore }) => {
       fetchEnrolledClasses: async () => {
         try {
           const store = getStore()
-        const token = store.token || localStorage.getItem("token")
+          const token = store.token || localStorage.getItem("token")
 
-        if (!token) {
-          console.error("No token found")
-          return
-        }
+          if (!token) {
+            console.error("No token found")
+            return
+          }
           const response = await fetch(`${process.env.BACKEND_URL}/api/enrolled-classes`, {
             headers: getActions().getAuthHeaders(),
           });
@@ -1986,43 +1992,43 @@ const getState = ({ getStore, getActions, setStore }) => {
         });
       },
       processPayment: async (order) => {
-				const store = getStore();
-				const user = store.user;
-			
-				if (!user) {
-				  console.error("No hay usuario logueado");
-				  return;
-				}
-			
-				const paymentData = {
-				  user_id: user.id,  // Enviar user_id, no parent_id
-				  amount: order.purchase_units[0].amount.value,
-				  concept: "Pago Mensualidad",
-				  status: "Completado",
-				  due_date: new Date().toISOString().split("T")[0],
-				  paypal_order_id: order.id,
-				  payer_email: order.payer.email_address,
-				};
-			
-				try {
-				  const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/parent_payments`, {
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify(paymentData),
-				  });
-			
-				  if (!response.ok) throw new Error(`Error en la solicitud: ${response.statusText}`);
-			
-				  const data = await response.json();
-				  console.log("Pago guardado en backend:", data);
-			
-				  // Opcional: actualizar pagos en store
-				  setStore({ parentPayments: [...store.parentPayments, data.payment] });
-				} catch (error) {
-				  console.error("Error al procesar pago:", error);
-				}
-			  },
-        
+        const store = getStore();
+        const user = store.user;
+
+        if (!user) {
+          console.error("No hay usuario logueado");
+          return;
+        }
+
+        const paymentData = {
+          user_id: user.id,  // Enviar user_id, no parent_id
+          amount: order.purchase_units[0].amount.value,
+          concept: "Pago Mensualidad",
+          status: "Completado",
+          due_date: new Date().toISOString().split("T")[0],
+          paypal_order_id: order.id,
+          payer_email: order.payer.email_address,
+        };
+
+        try {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/parent_payments`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(paymentData),
+          });
+
+          if (!response.ok) throw new Error(`Error en la solicitud: ${response.statusText}`);
+
+          const data = await response.json();
+          console.log("Pago guardado en backend:", data);
+
+          // Opcional: actualizar pagos en store
+          setStore({ parentPayments: [...store.parentPayments, data.payment] });
+        } catch (error) {
+          console.error("Error al procesar pago:", error);
+        }
+      },
+
     },
   }
 }
