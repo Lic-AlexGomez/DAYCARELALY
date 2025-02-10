@@ -5,6 +5,7 @@ module.exports = {
     './src/**/*.{js,jsx,ts,tsx}', // Archivos dentro de src
     './public/index.html',       // Archivo HTML principal
   ],
+  darkMode: ["class"],
   theme: {
     extend: {},
   },

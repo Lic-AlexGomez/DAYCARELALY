@@ -59,8 +59,7 @@
 
 .inputFirstName,.inputLastName,.inputEmail,.inputPhone{
    border-bottom: 1px solid #8D8D8D;
-
-   
+  
 }
 
 .labelFirstName,.labelLastName,.labelEmail,.labelPhone,.message{
@@ -86,3 +85,7 @@
    margin-left: 200px;
 
 }
+input::placeholder, textarea::placeholder{
+   color: #8D8D8D !important;
+ }
+ 

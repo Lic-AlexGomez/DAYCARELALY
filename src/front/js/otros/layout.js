@@ -1,8 +1,9 @@
-import React from "react"
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"
+"use client"
+
+import { useContext } from "react"
+import { BrowserRouter, Route, Routes, useLocation, Navigate } from "react-router-dom"
 import ScrollToTop from "./component/scrollToTop"
 import { BackendURL } from "./component/backendURL"
-import { useEffect, useContext } from "react"
 import { Context } from "./store/appContext"
 
 import { Home } from "./pages/home"
@@ -10,7 +11,7 @@ import { Single } from "./pages/single"
 import injectContext from "./store/appContext"
 
 import { Navbar } from "./component/navbar"
-import { Footer } from "./component/footer"
+import Footer from "./component/footer"
 import Login from "./pages/login.jsx"
 
 import ContactUs from "./pages/ContactUs.jsx"
@@ -52,9 +53,8 @@ import { StaffSignup } from "./component/admin/StaffSignup.jsx"
 import ProfileView from "./component/admin/ProfileView.jsx"
 import EventsView from "./component/admin/EventsView.jsx"
 import ServicesView from "./component/admin/Services.jsx"
-
-// Componentes del Teacher Dashboard
-import TeacherDashboard from "./component/teacher/TeacherDashboard"
+import GalleryView from "./component/admin/Gallery.jsx"
+import ForgotPassword from "./component/ForgotPassword.jsx"
 import TeacherOverview from "./component/teacher/TeacherOverview"
 import TeacherClasses from "./component/teacher/TeacherClasses"
 import TeacherStudents from "./component/teacher/TeacherStudents"
@@ -66,7 +66,6 @@ import TeacherHeader from "./component/teacher/TeacherHeader.jsx"
 import TeacherProfile from "./component/teacher/TeacherProfile.jsx"
 
 // Componentes del Parent Dashboard
-
 import ParentOverview from "./component/parent/ParentOverview"
 import ParentChildren from "./component/parent/ParentChildren"
 import ParentSchedule from "./component/parent/ParentSchedule"
@@ -76,12 +75,11 @@ import ParentSettings from "./component/parent/ParentSettings"
 import ParentSidebar from "./component/parent/ParentSidebar.jsx"
 import ParentHeader from "./component/parent/ParentHeader.jsx"
 import ParentVirtualClasses from "./component/parent/ParentVirtualClasses.jsx"
-import ParentVirtualClassesEnroll from "./component/parent/ParentVirtualClassesEnroll.jsx"
-
-
-
+import ParentMessages from "./component/parent/parentMessages.jsx"
+import ClassEnrroll from "./component/parent/ParentVirtualClassesEnroll.jsx"
 
 const AdminDashboard = () => (
+  
   <div className="tw-flex tw-h-screen tw-overflow-hidden">
     <Sidebar />
     <div className="tw-flex-1 tw-overflow-auto">
@@ -104,6 +102,8 @@ const AdminDashboard = () => (
           <Route path="/tasks" element={<TasksView />} />
           <Route path="/activities" element={<ActivitiesView />} />
           <Route path="/services" element={<ServicesView />} />
+          <Route path="/gallery" element={<GalleryView />} />
+          <Route path="/settings" element={<SettingsView />} />
           <Route path="/videos" element={<VideosView />} />
           <Route path="/inactive-accounts" element={<InactiveAccountsView />} />
           <Route path="/approvals" element={<ApprovalsView />} />
@@ -121,47 +121,58 @@ const AdminDashboard = () => (
 
 const TeacherDashboardRoutes = () => (
   <div className="tw-flex tw-h-screen tw-overflow-hidden">
-    <TeacherSidebar/>
+    <TeacherSidebar />
     <div className="tw-flex-1 tw-overflow-auto">
-    <TeacherHeader/>
-    <main className="tw-p-6 tw-mt-2">
-  <Routes>
-    <Route path="/" element={<TeacherOverview/>} />
-    <Route path="/classes" element={<TeacherClasses />} />
-    <Route path="/students" element={<TeacherStudents />} />
-    <Route path="/assignments" element={<TeacherAssignments />} />
-    <Route path="/schedule" element={<TeacherSchedule />} />
-    <Route path="/settings" element={<TeacherSettings />} />
-    <Route path="/profile" element={<TeacherProfile />} />
-    <Route path="*" element={<h1>Not found!</h1>} />
-  </Routes>
-  </main>
+      <TeacherHeader />
+      <main className="tw-p-6 tw-mt-2">
+        <Routes>
+          <Route path="/" element={<TeacherOverview />} />
+          <Route path="/classes" element={<TeacherClasses />} />
+          <Route path="/students" element={<TeacherStudents />} />
+          <Route path="/assignments" element={<TeacherAssignments />} />
+          <Route path="/schedule" element={<TeacherSchedule />} />
+          <Route path="/settings" element={<TeacherSettings />} />
+          <Route path="/profile" element={<TeacherProfile />} />
+          <Route path="*" element={<TeacherOverview />} />
+        </Routes>
+      </main>
+    </div>
   </div>
-</div>
 )
-  
+
 const ParentDashboardRoutes = () => (
   <div className="tw-flex tw-h-screen tw-overflow-hidden">
-    <ParentSidebar/>
+    <ParentSidebar />
     <div className="tw-flex-1 tw-overflow-auto">
-    <ParentHeader/>
-    <main className="tw-p-6 tw-mt-2">
-  <Routes>
-    <Route path="/" element={<ParentOverview/>} />
-    <Route path="/children" element={<ParentChildren />} />
-    <Route path="/schedule" element={<ParentSchedule />} />
-    <Route path="/activities" element={<ParentActivities />} />
-    <Route path="/payments" element={<ParentPayments />} />
-    <Route path="/virtual-classes" element={<ParentVirtualClasses />} />
-    <Route path="/settings" element={<ParentSettings />} />
-    <Route path="/virtual-classes-enroll" element={<ParentVirtualClassesEnroll />} />
-
-    <Route path="*" element={<h1>Not found!</h1>} />
-  </Routes>
-  </main>
+      <ParentHeader />
+      <main className="tw-p-6 tw-mt-2">
+        <Routes>
+          <Route path="/" element={<ParentOverview />} />
+          <Route path="/children" element={<ParentChildren />} />
+          <Route path="/schedule" element={<ParentSchedule />} />
+          <Route path="/activities" element={<ParentActivities />} />
+          <Route path="/payments" element={<ParentPayments />} />
+          <Route path="/virtual-classes" element={<ParentVirtualClasses />} />
+          <Route path="/settings" element={<ParentSettings />} />
+          <Route path="/messages" element={<ParentMessages />} />
+          <Route path="/virtual-classes-enroll" element={<ClassEnrroll />} />
+          <Route path="*" element={<ParentOverview />} />
+        </Routes>
+      </main>
+    </div>
   </div>
-</div>
 )
+
+const ProtectedRoute = ({ children }) => {
+  const { store } = useContext(Context)
+  const location = useLocation()
+
+  if (!store.token) {
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  return children
+}
 
 const MainRoutes = () => {
   const location = useLocation()
@@ -171,7 +182,7 @@ const MainRoutes = () => {
 
   return (
     <>
-       {!isAdminRoute && !isTeacherRoute && !isParentRoute && <Navbar />}
+      {!isAdminRoute && !isTeacherRoute && !isParentRoute && <Navbar />}
       <Routes>
         {/* Rutas principales */}
         <Route path="/" element={<Home />} />
@@ -185,14 +196,36 @@ const MainRoutes = () => {
         <Route path="/services" element={<Services />} />
         <Route path="/eventphotos" element={<PreviousEventsPhotos />} />
         <Route path="/confirmattendance" element={<ConfirmAttendance />} />
-        <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
-        <Route path="/teacher-dashboard/*" element={<TeacherDashboardRoutes />} />
-        <Route path="/parent-dashboard/*" element={<ParentDashboardRoutes />} />
+        <Route
+          path="/admin-dashboard/*"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route
+          path="/teacher-dashboard/*"
+          element={
+            <ProtectedRoute>
+              <TeacherDashboardRoutes />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/parent-dashboard/*"
+          element={
+            <ProtectedRoute>
+              <ParentDashboardRoutes />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/programs" element={<Programs />} />
-        <Route path="*" element={<h1>Not found!</h1>} />
         <Route path="/allprograms" element={<Allprograms />} />
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/about_us" element={<AboutUs />} />
+        <Route path="*" element={<Home />} />
       </Routes>
       {!isAdminRoute && !isTeacherRoute && !isParentRoute && <Footer />}
     </>
@@ -200,13 +233,10 @@ const MainRoutes = () => {
 }
 
 const Layout = () => {
-  const { auth, actions } = useContext(Context)
   const basename = process.env.BASENAME || ""
 
   if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />
-  useEffect(() => {
-    actions.checkAuth()
-  }, [])
+
   return (
     <BrowserRouter basename={basename}>
       <ScrollToTop />
