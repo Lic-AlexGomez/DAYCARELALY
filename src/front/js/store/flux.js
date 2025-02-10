@@ -1329,7 +1329,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
 
           const data = await resp.json()
-
+          console.log(data)
           setStore({ parentActivities: data })
         } catch (error) {
           console.error("Error fetching parent activities:", error)

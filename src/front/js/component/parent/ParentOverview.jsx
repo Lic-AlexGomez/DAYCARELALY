@@ -5,16 +5,19 @@ import { Context } from "../../store/appContext";
 const ParentOverview = () => {
   const { store, actions } = useContext(Context);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [dataActivities, setDataActivities] = useState(false);
+  
   useEffect(() => {
     const loadOverviewData = async () => {
       try {
        
-        await Promise.all([
+         await Promise.all([
+         await actions.fetchParentData(),
          await actions.fetchParentChildren(),
          await actions.fetchParentActivities(),
          await actions.fetchParentPayments(),
          await actions.fetchParentVirtualClasses(),
+         await setDataActivities(store.parentActivities || false)
         ]);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -94,26 +97,30 @@ const ParentOverview = () => {
 
       {/* Lista de actividades recientes */}
       <div className="tw-mt-10">
-        <h4 className="tw-text-xl tw-font-semibold tw-mb-6">Recent Activities</h4>
+        <h4 className="tw-text-xl tw-font-semibold tw-mb-7 ">Recent Activities</h4>
         <ul className="tw-space-y-4">
-          {store.parentActivities.slice(0, 3).map((activity, index) => (
-            <li
-              key={index}
-              className="tw-bg-white tw-rounded-xl tw-shadow-md tw-p-5 tw-transition tw-transform tw-hover:scale-102 tw-hover:shadow-lg"
-            >
-              <div className="tw-flex tw-items-center">
-                <Clock className="tw-w-5 tw-h-5 tw-mr-3 tw-text-gray-500" />
-                <div>
-                  <p className="tw-text-lg tw-font-semibold tw-text-gray-800">
-                    {activity.name}
-                  </p>
-                  <p className="tw-text-sm tw-text-gray-600">
-                    {activity.date} - {activity.time}
-                  </p>
+        {dataActivities.length > 0 ? (
+            dataActivities.slice(0, 3).map((activity, index) => (
+              <li
+                key={index}
+                className="tw-bg-white tw-rounded-xl tw-shadow-md tw-p-5 tw-transition tw-transform tw-hover:scale-102 tw-hover:shadow-lg"
+              >
+                <div className="tw-flex tw-items-center">
+                  <Clock className="tw-w-5 tw-h-5 tw-mr-3 tw-text-gray-500" />
+                  <div>
+                    <p className="tw-text-lg tw-font-semibold tw-text-gray-800">
+                      {activity.name}
+                    </p>
+                    <p className="tw-text-sm tw-text-gray-600">
+                      {activity.date} - {activity.time}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            ))
+          ) : (
+            <li>No activities found</li>
+          )}
         </ul>
       </div>
     </div>
