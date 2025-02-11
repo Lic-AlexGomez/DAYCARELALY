@@ -25,7 +25,7 @@ export const Classes = () => {
       </div>
       
       <div className="tw-container tw-mx-auto tw-px-4">
-        <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4 md:tw-gap-6">
+        <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4 md:tw-gap-6 tw-mx-3.5">
           {store.classes.slice(0, visibleClasses).map((classItem) => (
             <div
               key={classItem.id}
