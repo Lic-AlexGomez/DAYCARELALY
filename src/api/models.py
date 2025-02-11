@@ -152,8 +152,9 @@ class Class(db.Model):
 
 class Enrollment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)
+    child_name =db.Column(db.String(20), nullable=False) 
+    class_name = db.Column(db.String(20), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
     enrolled_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
 
     def __repr__(self):
@@ -162,9 +163,10 @@ class Enrollment(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "child_id": self.child_id,
-            "class_id": self.class_id,
-            "enrollment_date": self.enrollment_date.isoformat()
+            "child_name": self.child_name,
+            "class_name": self.class_name,
+            "price": self.price,
+             "enrolled_at": self.enrolled_at.isoformat()
         }
     
 class Program(db.Model):

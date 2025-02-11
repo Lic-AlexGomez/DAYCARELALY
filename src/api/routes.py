@@ -492,13 +492,14 @@ def get_enrollment(id):
     return jsonify(enrollment.serialize()), 200
 
 @api.route('/enrollments', methods=['POST'])
-@jwt_required()
+#@jwt_required()
 def create_enrollment():
     data = request.json
     new_enrollment = Enrollment(
-        child_id=data['child_id'],
-        class_id=data['class_id'],
-        enrollment_date=datetime.now().date()
+        child_name=data['child_name'],
+        class_name=data['class_name'],
+        price=data['price'],
+        enrolled_at=datetime.now().date()
     )
     db.session.add(new_enrollment)
     db.session.commit()
