@@ -8,6 +8,7 @@ const menuItems = [
   { icon: Calendar, label: "Schedule", path: "/parent-dashboard/schedule" },
   { icon: Activity, label: "Activities", path: "/parent-dashboard/activities" },
   { icon: CreditCard, label: "Payments", path: "/parent-dashboard/payments" },
+  { icon: CreditCard, label: "Payment History", path: "/parent-dashboard/payment-history" },
   { icon: Video, label: "Virtual Classes", path: "/parent-dashboard/virtual-classes" },
   { icon: MessageCircle, label: "Messages", path: "/parent-dashboard/messages" },
   { icon: School, label: "Enroll Classes", path: "/parent-dashboard/virtual-classes-enroll" },

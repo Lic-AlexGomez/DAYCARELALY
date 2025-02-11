@@ -2236,65 +2236,84 @@ def get_parent_payments():
     payments = ParentPayment.query.all()
     return jsonify([payment.serialize() for payment in payments]), 200
 
-@api.route('/parent_payments/<int:id>', methods=['GET'])
+@api.route('/parent_payments/<int:user_id>', methods=['GET'])
 @jwt_required()
-def get_parent_payment(id):
-    payment = ParentPayment.query.filter_by(parent_id=id).all()
-    if payment is None:
-        return jsonify({"error": "Payment not found"}), 404
-   
-    serialized_payment = [payments.serialize() for payments in payment]
-    return jsonify(serialized_payment), 200
+def get_parent_payment(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": f"El user_id {user_id} no existe"}), 400
+    parent = Parent.query.filter_by(user_id=user.id).first()
+    if not parent:
+        return jsonify({"error": f"No se encontró parent para el user_id {user_id}"}), 400
+    payments = ParentPayment.query.filter_by(parent_id=parent.id).all()
+    if payments is None or len(payments) == 0:
+        return jsonify([]), 200  
+
+    serialized_payments = [payment.serialize() for payment in payments]
+    return jsonify(serialized_payments), 200
 
 
 
 @api.route('/parent_payments', methods=['POST'])
-def create_parent_payment():
+def create_parent_payments():
     data = request.get_json()
     if not data:
         return jsonify({"error": "No se recibieron datos"}), 400
+
     print("Datos recibidos en el backend:", data)
+    payments_list = []
+    user_id = None
+    if isinstance(data, list):
+        payments_list = data
+        if len(payments_list) > 0:
+            user_id = payments_list[0].get("user_id")
+    elif isinstance(data, dict):
+        if "payments" in data:
+            payments_list = data["payments"]
+            user_id = data.get("user_id")
+        else:
+            payments_list = [data]
+            user_id = data.get("user_id")
+    else:
+        return jsonify({"error": "Formato de datos no soportado"}), 400
 
+    if not user_id:
+        return jsonify({"error": "El user_id es obligatorio"}), 400
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": f"El user_id {user_id} no existe"}), 400
+    parent = Parent.query.filter_by(user_id=user.id).first()
+    if not parent:
+        return jsonify({"error": f"No se encontró parent para el user_id {user_id}"}), 400
+
+    payments = []
     try:
-        # Recibimos los datos del pago
-        user_id = data.get('user_id')
-        if not user_id:
-            return jsonify({"error": "El user_id es obligatorio"}), 400
+        for payment_data in payments_list:
+            required_fields = ["amount", "concept", "status", "due_date", "payer_email"]
+            for field in required_fields:
+                if field not in payment_data:
+                    return jsonify({"error": f"El campo '{field}' es obligatorio en cada pago."}), 400
 
-        # Verificamos que el usuario exista
-        user = User.query.get(user_id)
-        if not user:
-            return jsonify({"error": "El user_id no existe"}), 400
-
-        # Buscamos el parent asociado al usuario
-        parent = Parent.query.filter_by(user_id=user.id).first()
-        if not parent:
-            return jsonify({"error": "El parent_id no existe para este user_id"}), 400
-
-        # Registramos el nuevo pago
-        new_payment = ParentPayment(
-            parent_id=parent.id,
-            amount=float(data['amount']),
-            concept=data['concept'],
-            status=data['status'],  # El status puede ser "Pendiente" inicialmente
-            due_date=datetime.strptime(data['due_date'], "%Y-%m-%d").date(),
-            paypal_order_id=data['paypal_order_id'],
-            payer_email=data['payer_email']
-        )
-
-        # Agregamos el pago a la base de datos
-        db.session.add(new_payment)
+            new_payment = ParentPayment(
+                parent_id=parent.id,
+                amount=float(payment_data['amount']),
+                concept=payment_data['concept'],
+                status=payment_data['status'],
+                due_date=datetime.strptime(payment_data['due_date'], "%Y-%m-%d").date(),
+                paypal_order_id=payment_data.get('paypal_order_id'), 
+                payer_email=payment_data['payer_email']
+            )
+            db.session.add(new_payment)
+            payments.append(new_payment)
         db.session.commit()
-
-        # Actualizamos el estado a "Pagado" si el pago fue exitoso
-        if data['status'] == 'Pagado':
-            new_payment.status = 'Pagado'
-            db.session.commit()
-
-        return jsonify({"message": "Pago registrado exitosamente", "payment": new_payment.serialize()}), 201
+        return jsonify({
+            "message": "Pagos registrados exitosamente",
+            "payments": [payment.serialize() for payment in payments]
+        }), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": f"Error al procesar el pago: {str(e)}"}), 500
+        return jsonify({"error": f"Error al procesar los pagos: {str(e)}"}), 500
+
 
 
 @api.route('/parent_payments/<int:id>', methods=['PUT'])

@@ -2001,7 +2001,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
 
         const paymentData = {
-          user_id: user.id,  // Enviar user_id, no parent_id
+          user_id: user.id, 
           amount: order.purchase_units[0].amount.value,
           concept: "Pago Mensualidad",
           status: "Completado",
@@ -2011,7 +2011,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
 
         try {
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/parent_payments`, {
+          const response = await fetch(`${process.env.BACKEND_URL}/api/parent_payments`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(paymentData),
@@ -2022,7 +2022,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await response.json();
           console.log("Pago guardado en backend:", data);
 
-          // Opcional: actualizar pagos en store
           setStore({ parentPayments: [...store.parentPayments, data.payment] });
         } catch (error) {
           console.error("Error al procesar pago:", error);

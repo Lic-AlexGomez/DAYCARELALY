@@ -740,7 +740,7 @@ class ParentSchedule(db.Model):
 
 class ParentPayment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=True)  # Ahora permite NULL
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'), nullable=False)
     parent = db.relationship('Parent', backref=db.backref('payments', lazy=True))
     amount = db.Column(db.Float, nullable=False)
     concept = db.Column(db.String(120), nullable=False)

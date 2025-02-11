@@ -8,6 +8,7 @@ import ParentActivities from "./ParentActivities"
 import ParentPayments from "./ParentPayments"
 import ParentSettings from "./ParentSettings"
 import ParentVirtualClasses from "./ParentVirtualClasses"
+import PaymentHistory from "./PaymentHistory"
 
 const ParentDashboard = () => {
   return (
@@ -24,6 +25,8 @@ const ParentDashboard = () => {
                 <Route path="/parent-dashboard/schedule" component={ParentSchedule} />
                 <Route path="/parent-dashboard/activities" component={ParentActivities} />
                 <Route path="/parent-dashboard/payments" component={ParentPayments} />
+                <Route path="/payment-history" component={PaymentHistory} />
+                <Route path="/parent-dashboard/virtual-classes" component={ParentVirtualClasses} />
                 <Route path="/parent-dashboard/settings" component={ParentSettings} />
                 <Route path="/parent-dashboard/virtual-classes" component={ParentVirtualClasses} />
               </Switch>
