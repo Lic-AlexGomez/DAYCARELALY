@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 55598dbe95ad
+Revision ID: d8713cf75ce3
 Revises: 
-Create Date: 2025-02-09 18:59:33.743907
+Create Date: 2025-02-11 21:30:19.352300
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '55598dbe95ad'
+revision = 'd8713cf75ce3'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -76,6 +76,14 @@ def upgrade():
     sa.Column('message', sa.Text(), nullable=False),
     sa.Column('date', sa.DateTime(), nullable=False),
     sa.Column('scheduled_date', sa.DateTime(), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('enrollment',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('child_name', sa.String(length=20), nullable=False),
+    sa.Column('class_name', sa.String(length=20), nullable=False),
+    sa.Column('price', sa.Integer(), nullable=False),
+    sa.Column('enrolled_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('event',
@@ -200,6 +208,20 @@ def upgrade():
     sa.Column('department', sa.String(length=120), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('admin_profile',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=120), nullable=False),
+    sa.Column('phone', sa.String(length=20), nullable=True),
+    sa.Column('address', sa.String(length=200), nullable=True),
+    sa.Column('position', sa.String(length=100), nullable=True),
+    sa.Column('join_date', sa.Date(), nullable=True),
+    sa.Column('bio', sa.Text(), nullable=True),
+    sa.Column('image', sa.String(length=200), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('user_id')
     )
     op.create_table('message',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -331,7 +353,7 @@ def upgrade():
     )
     op.create_table('parent_payment',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('parent_id', sa.Integer(), nullable=True),
+    sa.Column('parent_id', sa.Integer(), nullable=False),
     sa.Column('amount', sa.Float(), nullable=False),
     sa.Column('concept', sa.String(length=120), nullable=False),
     sa.Column('status', sa.String(length=20), nullable=False),
@@ -445,15 +467,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['class_id'], ['class.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('enrollment',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('class_id', sa.Integer(), nullable=False),
-    sa.Column('enrolled_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
-    sa.ForeignKeyConstraint(['class_id'], ['class.id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('grade',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('child_id', sa.Integer(), nullable=False),
@@ -503,7 +516,6 @@ def downgrade():
     op.drop_table('parent_grade')
     op.drop_table('parent_attendance')
     op.drop_table('grade')
-    op.drop_table('enrollment')
     op.drop_table('attendance')
     op.drop_table('task')
     op.drop_table('program')
@@ -529,6 +541,7 @@ def downgrade():
     op.drop_table('parent')
     op.drop_table('notification')
     op.drop_table('message')
+    op.drop_table('admin_profile')
     op.drop_table('admin_d')
     op.drop_table('virtual_class')
     op.drop_table('user')
@@ -542,6 +555,7 @@ def downgrade():
     op.drop_table('gallery')
     op.drop_table('eventsuscriptions')
     op.drop_table('event')
+    op.drop_table('enrollment')
     op.drop_table('email')
     op.drop_table('course')
     op.drop_table('contact')
