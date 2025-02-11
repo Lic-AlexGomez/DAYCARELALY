@@ -1913,28 +1913,36 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error fetching enrolled classes:", error);
         }
       },
-      enrollInClass: async (classId) => {
+      enrollInClass: async (child_name, class_name,price) => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/enroll`, {
+          const store = getStore();
+          const token = store.token || localStorage.getItem("token");
+      
+          if (!token) {
+            console.error("No token found");
+            return;
+          }
+      
+          const response = await fetch(process.env.BACKEND_URL + "/api/enrollments", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
-            body: JSON.stringify({ classId }),
-          })
+            body: JSON.stringify({
+              child_name: child_name,
+              class_name: class_name,
+              price: price
+            }),
+          });
+      
           if (response.ok) {
-            const enrolledClass = await response.json()
-            const store = getStore()
-            setStore({
-              enrolledClasses: [...store.enrolledClasses, enrolledClass],
-              classes: store.classes.map((c) => (c.id === enrolledClass.id ? { ...c, capacity: c.capacity - 1 } : c)),
-            })
-            return { success: true, enrolledClass }
+            const newEnrollment = await response.json();
+            const store = getStore();
+            setStore({ enrolledClasses: [...store.enrolledClasses, newEnrollment] });
+            return newEnrollment;
           } else {
-            console.error("Error enrolling in class:", response.status)
-            return { success: false, error: "Failed to enroll in class" }
+            console.error("Error enrolling in class:", response.status);
           }
         } catch (error) {
-          console.error("Error enrolling in class:", error)
-          return { success: false, error: "An unexpected error occurred" }
+          console.error("Error enrolling in class:", error);
         }
       },
 

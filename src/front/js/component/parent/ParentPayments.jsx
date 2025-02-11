@@ -115,7 +115,7 @@ const ParentPayments = () => {
             return (
               <div key={payment.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
                 <div className="tw-flex tw-justify-between tw-items-center tw-mb-2">
-                  <h4 className="tw-text-lg tw-font-semibold">{payment.name}</h4>
+                  <h4 className="tw-text-lg tw-font-semibold">{payment.class_name}</h4>
                   <span
                     className={`tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold ${payment.status === "Paid"
                       ? "tw-bg-green-100 tw-text-green-800"
