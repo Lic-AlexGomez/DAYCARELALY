@@ -141,13 +141,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       fetchClasses: async () => {
         try {
-          const store = getStore()
-          const token = store.token || localStorage.getItem("token")
-
-          if (!token) {
-            console.error("No token found")
-            return
-          }
+        
           const response = await fetch(process.env.BACKEND_URL + "api/classes", {
             headers: getActions().getAuthHeaders(),
           })
