@@ -35,21 +35,21 @@ const EducationalPrograms = () => {
 
   return (
     <div className="tw-border-none tw-z-10 tw-min-h-screen tw-bg-gradient-to-b tw-from-purple-100 tw-to-purple-200 tw-py-16 tw-px-4 tw-relative tw-overflow-hidden">
-      <div className="tw-absolute tw-left-8 tw-top-8 tw-animate-float">
+      <div className="tw-absolute tw-left-8 tw-top-8 tw-animate-float -tw-z-10">
         <img src={img11} alt="Decorative Element" />
       </div>
-      <div className="tw-absolute tw-right-8 tw-top-8 tw-animate-float-delayed">
+      <div className="tw-absolute   md:tw-right-8 md:tw-top-8 tw-right-8 tw-top-5 tw-animate-float-delayed -tw-z-10 ">
         <img src={img10} alt="Decorative Element" />
       </div>
       <div className="tw-max-w-6xl tw-mx-auto">
         <div className="tw-text-center tw-mb-12">
-          <p className="tw-text-purple-600 tw-mb-2">Educational Programs</p>
-          <h2 className="tw-text-3xl md:tw-text-4xl tw-font-bold tw-text-gray-800">
+          <p className="tw-text-purple-600 tw-mb-2 ">Educational Programs</p>
+          <h2 className="tw-text-3xl md:tw-text-4xl tw-font-bold sm:tw-text-gray-800 ">
             Step By Step Systematic Education
           </h2>
         </div>
 
-        <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-8">
+        <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-8 mx-3">
           {programs.map((program) => (
             <div
               key={program.id}
