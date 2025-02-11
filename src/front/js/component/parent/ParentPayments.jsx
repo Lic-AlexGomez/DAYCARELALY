@@ -36,41 +36,42 @@ const ParentPayments = () => {
       console.error("No hay usuario logueado");
       return;
     }
-
-    const paymentData = {
-      user_id: store.user.id,
-      amount: order.purchase_units[0].amount.value,
+  
+    const paymentsData = selectedPayments.map((payment) => ({
+      user_id: store.user.parent_id || store.user.id, // Asegura que se usa el parent_id si es necesario
+      amount: payment.price,
       concept: "Monthly Payment",
       status: "Pagado",
       due_date: new Date().toISOString().split("T")[0],
       paypal_order_id: order.id,
       payer_email: order.payer.email_address,
-      class_id: selectedPayments[0].id, 
-    };
-
+      class_id: payment.id, 
+    }));
+  
     try {
       const response = await fetch(process.env.BACKEND_URL + "api/parent_payments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(paymentData),
+        body: JSON.stringify(paymentsData), // Enviar array de pagos
       });
-
+  
       if (!response.ok) throw new Error(`Error en la solicitud: ${response.statusText}`);
-
+  
       const data = await response.json();
-      console.log("Pago guardado en el backend:", data);
+      console.log("Pagos guardados en el backend:", data);
+      
+      // Actualizar las clases pagadas en el store
       actions.fetchEnrolledClasses();
       setFilteredClasses((prevClasses) =>
-        prevClasses.filter((payment) => payment.id !== selectedPayments[0].id)
+        prevClasses.filter((payment) => !selectedPayments.some((p) => p.id === payment.id))
       );
-
+  
       setSelectedPayments([]);
       setTotalAmount(0);
     } catch (error) {
-      console.error("Error al guardar pago:", error);
+      console.error("Error al guardar pagos:", error);
     }
   };
-
   return (
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Pending payments</h3>
