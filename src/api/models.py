@@ -1034,3 +1034,33 @@ class PasswordReset(db.Model):
             "created_at": self.created_at.isoformat(),
             "expires_at": self.expires_at.isoformat()
         }
+
+class AdminProfile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), unique=True, nullable=False)
+    name = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(20))
+    address = db.Column(db.String(200))
+    position = db.Column(db.String(100))
+    join_date = db.Column(db.Date)
+    bio = db.Column(db.Text)
+    image = db.Column(db.String(200))
+
+    user = db.relationship('User', backref=db.backref('admin_profile', uselist=False))
+
+    def __repr__(self):
+        return f'<AdminProfile {self.name}>'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'name': self.name,
+            'email': self.user.email,
+            'phone': self.phone,
+            'address': self.address,
+            'position': self.position,
+            'join_date': self.join_date.isoformat() if self.join_date else None,
+            'bio': self.bio,
+            'image': self.image
+        }

@@ -22,6 +22,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       services: [],
       gallery: [],
       subscriptions: [],
+      adminProfile: [],
 
       // Parent dashboard store
       parentData: null,
@@ -59,7 +60,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
+          const response = await fetch(process.env.BACKEND_URL + "api/signup", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(signupData),
@@ -89,7 +90,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const formData = new FormData()
           formData.append("file", file)
 
-          const response = await fetch(`${BACKEND_URL}/api/upload`, {
+          const response = await fetch(`${BACKEND_URL}api/upload`, {
             method: "POST",
             body: formData,
           })
@@ -117,7 +118,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const formData = new FormData()
           formData.append("file", file)
 
-          const response = await fetch(`${BACKEND_URL}/api/upload/img`, {
+          const response = await fetch(`${BACKEND_URL}api/upload/img`, {
             method: "POST",
             body: formData,
           })
@@ -147,7 +148,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
+          const response = await fetch(process.env.BACKEND_URL + "api/classes", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -164,7 +165,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       login: async (email, password) => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/login", {
+          const response = await fetch(process.env.BACKEND_URL + "api/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -199,7 +200,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       newsletter: async (email) => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/newsletter", {
+          const response = await fetch(process.env.BACKEND_URL + "api/newsletter", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -226,7 +227,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       getinTouch: async (name, email, subject, phone_number, message) => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/getintouch", {
+          const response = await fetch(process.env.BACKEND_URL + "api/getintouch", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -249,7 +250,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       contactUs: async (first_name, last_name, email, subject, phone_number, message) => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/contacts", {
+          const response = await fetch(process.env.BACKEND_URL + "api/contacts", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -272,7 +273,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       getPrograms: async () => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/programs", {
+          const response = await fetch(process.env.BACKEND_URL + "api/programs", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -298,7 +299,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/clients", {
+          const response = await fetch(process.env.BACKEND_URL + "api/clients", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -342,7 +343,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/clients", {
+          const response = await fetch(process.env.BACKEND_URL + "api/clients", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(clientData),
@@ -370,7 +371,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/clients/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/clients/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(clientData),
@@ -399,7 +400,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/clients/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/clients/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -426,7 +427,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/schedules", {
+          const response = await fetch(process.env.BACKEND_URL + "api/schedules", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -494,7 +495,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/schedules", {
+          const response = await fetch(process.env.BACKEND_URL + "api/schedules", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(scheduleData),
@@ -522,7 +523,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/schedules/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/schedules/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(scheduleData),
@@ -553,7 +554,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/schedules/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/schedules/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -580,7 +581,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/emails", {
+          const response = await fetch(process.env.BACKEND_URL + "api/emails", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -605,7 +606,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/emails", {
+          const response = await fetch(process.env.BACKEND_URL + "api/emails", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(emailData),
@@ -637,7 +638,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/emails/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/emails/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -657,7 +658,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       fetchVideos: async () => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/videos", {
+          const response = await fetch(process.env.BACKEND_URL + "api/videos", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -673,7 +674,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       uploadVideo: async (formData) => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/videos", {
+          const response = await fetch(process.env.BACKEND_URL + "api/videos", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: formData,
@@ -694,7 +695,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       deleteVideo: async (id) => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/videos/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/videos/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -713,7 +714,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       formEvent: async (full_name, events_selection, parent_name, special_request) => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/eventsuscription", {
+          const response = await fetch(process.env.BACKEND_URL + "api/eventsuscription", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify({ full_name, events_selection, parent_name, special_request }),
@@ -734,7 +735,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       fetchInactiveAccounts: async () => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/inactive-accounts", {
+          const response = await fetch(process.env.BACKEND_URL + "api/inactive-accounts", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -750,7 +751,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       reactivateAccount: async (id) => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}/reactivate`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/inactive-accounts/${id}/reactivate`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
           })
@@ -774,7 +775,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       sendReminder: async (id) => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}/send-reminder`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/inactive-accounts/${id}/send-reminder`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
           })
@@ -792,7 +793,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       deleteInactiveAccount: async (id) => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/inactive-accounts/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/inactive-accounts/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -814,7 +815,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       // Approvals actions
       fetchApprovals: async () => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/approvals", {
+          const response = await fetch(process.env.BACKEND_URL + "api/approvals", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -830,7 +831,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       updateApprovalStatus: async (id, status) => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/approvals/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/approvals/${id}`, {
             method: "PATCH",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify({ status }),
@@ -859,7 +860,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
+          const response = await fetch(process.env.BACKEND_URL + "api/activities", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -898,7 +899,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             }
           }
       
-          const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
+          const response = await fetch(process.env.BACKEND_URL + "api/activities", {
             method: "POST",
             headers: {
               "Authorization": `Bearer ${token}`, // Add token here
@@ -933,7 +934,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/activities/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(activityData),
@@ -966,7 +967,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/activities/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/activities/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -995,7 +996,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
+          const response = await fetch(process.env.BACKEND_URL + "api/classes", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify({ teacher_id, name, description, capacity, price, age, time, image }),
@@ -1016,7 +1017,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       getVirtualClasses: async () => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/virtual-classes", {
+          const response = await fetch(process.env.BACKEND_URL + "api/virtual-classes", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -1037,7 +1038,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/classes/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -1063,7 +1064,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/classes/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/classes/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(classData),
@@ -1092,7 +1093,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/events", {
+          const response = await fetch(process.env.BACKEND_URL + "api/events", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -1116,7 +1117,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/events/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -1142,7 +1143,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/events", {
+          const response = await fetch(process.env.BACKEND_URL + "api/events", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify({ name, description, start_time, end_time, image }),
@@ -1170,7 +1171,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/events/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/events/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(eventData),
@@ -1192,7 +1193,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       fetchTeachers: async () => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/teachers", {
+          const response = await fetch(process.env.BACKEND_URL + "api/teachers", {
             headers: getActions().getAuthHeaders(),
           })
           console.log("RESPONSE FETCH TEACHERS:", response)
@@ -1234,7 +1235,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/services", {
+          const response = await fetch(process.env.BACKEND_URL + "api/services", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -1260,7 +1261,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/services", {
+          const response = await fetch(process.env.BACKEND_URL + "api/services", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify({ name, description, image }),
@@ -1288,7 +1289,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/services/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/services/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(serviceData),
@@ -1317,7 +1318,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/services/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/services/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -1343,7 +1344,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/gallery", {
+          const response = await fetch(process.env.BACKEND_URL + "api/gallery", {
             headers: getActions().getAuthHeaders(),
           })
           if (response.ok) {
@@ -1369,7 +1370,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/gallery/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/gallery/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(galleryData),
@@ -1398,7 +1399,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(process.env.BACKEND_URL + "/api/gallery", {
+          const response = await fetch(process.env.BACKEND_URL + "api/gallery", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify({ name, image }),
@@ -1426,7 +1427,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/gallery/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/gallery/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -1446,7 +1447,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       // Datos del usuario
       fetchUserData: async () => {
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/user`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/user`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch user data")
@@ -1463,7 +1464,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const store = getStore()
 
         try {
-          const resp = await fetch(process.env.BACKEND_URL + "/api/parents/" + store.user.id, {
+          const resp = await fetch(process.env.BACKEND_URL + "api/parents/" + store.user.id, {
             headers: getActions().getAuthHeaders(),
           })
           const data = await resp.json()
@@ -1487,7 +1488,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return
         }
         try {
-          const resp = await fetch(process.env.BACKEND_URL + "/api/children/" + id, {
+          const resp = await fetch(process.env.BACKEND_URL + "api/children/" + id, {
             headers: getActions().getAuthHeaders(),
           })
           const data = await resp.json()
@@ -1502,7 +1503,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id = localStorage.getItem("parent_id")
 
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/children/${id}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/children/${id}`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(childData),
@@ -1540,7 +1541,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id = localStorage.getItem("parent_id")
 
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_payments/${id}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/parent_payments/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch parent payments")
@@ -1556,7 +1557,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id = localStorage.getItem("parent_id")
 
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_activities/${id}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/parent_activities/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
 
@@ -1572,7 +1573,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id = localStorage.getItem("parent_id")
 
         try {
-          const resp = await fetch(process.env.BACKEND_URL + "/api/add_parent_activity/" + id, {
+          const resp = await fetch(process.env.BACKEND_URL + "api/add_parent_activity/" + id, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(activityData),
@@ -1590,7 +1591,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id = localStorage.getItem("parent_id")
 
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings/${id}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/parent_settings/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch parent settings")
@@ -1606,7 +1607,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id = localStorage.getItem("parent_id")
 
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_settings/${id}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/parent_settings/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(settings),
@@ -1624,7 +1625,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id = localStorage.getItem("parent_id")
 
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/parent_virtual_classes/${id}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/parent_virtual_classes/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
 
@@ -1642,7 +1643,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id = localStorage.getItem("parent_id")
 
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/messagesP/${id}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/messagesP/${id}`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch messages")
@@ -1658,7 +1659,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         const id = localStorage.getItem("parent_id")
 
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/messages/${id}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/messages/${id}`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(message),
@@ -1674,7 +1675,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       // Notificaciones
       fetchNotifications: async () => {
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/notifications`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/notifications`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch notifications")
@@ -1687,7 +1688,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       markNotificationAsRead: async (notificationId) => {
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/notifications/${notificationId}`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/notifications/${notificationId}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
           })
@@ -1710,7 +1711,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/settings`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/settings`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch settings")
@@ -1731,7 +1732,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/settings/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/settings/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(updatedSettings),
@@ -1757,7 +1758,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       addAdmin: async () => {
         const store = getStore()
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/create_admin`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/create_admin`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
           })
@@ -1774,7 +1775,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       updateSubscription: async (id, subscriptionData) => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/subscription/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/subscription/${id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(subscriptionData),
@@ -1798,7 +1799,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       deleteSubscription: async (id) => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/subscriptions/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/subscriptions/${id}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
@@ -1817,7 +1818,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       fetchSubscriptions: async () => {
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/subscriptions`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/subscriptions`, {
             headers: getActions().getAuthHeaders(),
           })
           if (!resp.ok) throw new Error("Failed to fetch subscriptions")
@@ -1831,7 +1832,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       addSubscription: async (student_name, class_name, start_date) => {
         try {
-          const response = await fetch(process.env.BACKEND_URL + "/api/subscriptions", {
+          const response = await fetch(process.env.BACKEND_URL + "api/subscriptions", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify({ student_name, class_name, start_date }),
@@ -1861,7 +1862,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
 
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/teacher/classes`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/teacher/classes`, {
             method: "GET",
             headers: getActions().getAuthHeaders(),
           })
@@ -1898,7 +1899,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/enrolled-classes`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/enrolled-classes`, {
             headers: getActions().getAuthHeaders(),
           });
           if (response.ok) {
@@ -1923,7 +1924,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             return;
           }
       
-          const response = await fetch(process.env.BACKEND_URL + "/api/enrollments", {
+          const response = await fetch(process.env.BACKEND_URL + "api/enrollments", {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify({
@@ -1948,7 +1949,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       unenrollFromClass: async (classId) => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/unenroll`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/unenroll`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify({ classId }),
@@ -1971,7 +1972,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
       resetPassword: async (email) => {
         try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/reset-password`, {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/reset-password`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -2019,7 +2020,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
 
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/parent_payments`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/parent_payments`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(paymentData),
@@ -2035,7 +2036,97 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error al procesar pago:", error);
         }
       },
+      // AdminProfileView
+      fetchAdminData: async () => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/admin-profile`, {
+            headers: getActions().getAuthHeaders(),
+          })
+          if (!resp.ok) throw new Error("Failed to fetch admin data")
+          const data = await resp.json()
+      
+          setStore({ adminData: data })
+        } catch (error) {
+          console.error("Error fetching admin data:", error)
+        }
+      },
+      fetchAdminSettings: async () => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/admin-profile`, {
+            headers: getActions().getAuthHeaders(),
+          })
+          if (!resp.ok) throw new Error("Failed to fetch admin settings")
+          const data = await resp.json()
+          console.log(data)
+          setStore({ adminSettings: data })
+        } catch (error) {
+          console.error("Error fetching admin settings:", error)
+        }
+      },
 
+      updateAdminSettings: async (settings) => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/admin-profile`, {
+            method: "PUT",
+            headers: getActions().getAuthHeaders(),
+            body: JSON.stringify(settings),
+          })
+          console.log(resp)
+          if (!resp.ok) throw new Error("Failed to update admin settings")
+          const data = await resp.json()
+          setStore({ adminSettings: data })
+        } catch (error) {
+          console.error("Error updating admin settings:", error)
+        }
+      },
+      fetchAdminProfile: async () => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/admin-profile`, {
+            headers: getActions().getAuthHeaders(),
+          })
+          if (!resp.ok) throw new Error("Failed to fetch admin profile")
+          const data = await resp.json()
+          setStore({ adminProfile: data })
+        } catch (error) {
+          console.error("Error fetching admin profile:", error)
+        }
+      },
+
+      updateAdminProfile: async (profileData) => {
+       
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}api/admin-profile`, {
+            method: "PUT",
+            headers: getActions().getAuthHeaders(),
+            body: JSON.stringify(profileData),
+          })
+          if (!resp.ok) throw new Error("Failed to update admin profile")
+          const data = await resp.json()
+          console.log(data)
+          setStore({ adminProfile: data })
+        } catch (error) {
+          console.error("Error updating admin profile:", error)
+        }
+      },
+
+      uploadProfilePhoto: async (file) => {
+        try {
+          const formData = new FormData()
+          formData.append("file", file)
+
+          const resp = await fetch(`${process.env.BACKEND_URL}api/upload-profile-photo`, {
+            method: "POST",
+            headers: getActions().getAuthHeaders(),
+            body: formData,
+          })
+
+          if (!resp.ok) throw new Error("Failed to upload profile photo")
+          const data = await resp.json()
+          return data.url
+        } catch (error) {
+          console.error("Error uploading profile photo:", error)
+        }
+      },
     },
   }
 }

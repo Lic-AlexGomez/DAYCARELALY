@@ -3,13 +3,14 @@ import cloudinary,os # type: ignore
 from cloudinary.uploader import upload# type: ignore
 from cloudinary.utils import cloudinary_url# type: ignore
 from flask import Flask, request, jsonify, Blueprint, current_app # type: ignore
-from api.models import db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentVirtualClass,ParentActivity,ParentAttendance,ParentGrade,ParentCourse,ParentEvent,ParentPayment,ParentNotification,ParentPaymentHistory,ParentSchedule,ParentService,ParentSetting,ParentSubscription,ParentTask,MessageP,Settings,PasswordReset
+from api.models import AdminProfile, db, Newsletter, User, Parent, Teacher, Child, Class, Enrollment, Program, Contact, Subscription, ProgressReport, Event, Message, Task, Attendance, Grade, Payment, Schedule, Course, Notification, Getintouch, Client, Email, Video, Eventsuscriptions, InactiveAccount, Approval, AdminD, Activity, VirtualClass,Service,Gallery, ParentVirtualClass,ParentActivity,ParentAttendance,ParentGrade,ParentCourse,ParentEvent,ParentPayment,ParentNotification,ParentPaymentHistory,ParentSchedule,ParentService,ParentSetting,ParentSubscription,ParentTask,MessageP,Settings,PasswordReset
 from api.utils import APIException
 from flask_cors import CORS# type: ignore
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager# type: ignore
 from flask_bcrypt import Bcrypt # type: ignore
 from datetime import datetime, timedelta, timezone
 from werkzeug.security import check_password_hash # type: ignore
+from werkzeug.utils import secure_filename # type: ignore
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError# type: ignore
 from werkzeug.security import generate_password_hash # type: ignore
 from faker import Faker # type: ignore
@@ -2379,6 +2380,75 @@ def reset_password(token):
         return jsonify({"message": "Password reset successfully"}), 200
     return jsonify({"error": "Invalid or expired token"}), 400
 
+
+@api.route("/admin-profile", methods=['GET', 'PUT'])
+@jwt_required()
+def admin_profile():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user or user.role != 'admin':
+        return jsonify({"msg": "Access denied"}), 403
+
+    if request.method == 'GET':
+        admin = AdminProfile.query.filter_by(user_id=current_user_id).first()
+        if not admin:
+            return jsonify({"msg": "Admin profile not found"}), 404
+        return jsonify(admin.to_dict()), 200
+
+    elif request.method == 'PUT':
+        admin = AdminProfile.query.filter_by(user_id=current_user_id).first()
+        if not admin:
+            admin = AdminProfile(user_id=current_user_id)
+            db.session.add(admin)
+
+        data = request.json
+        admin.name = data.get('name', admin.name)
+        admin.phone = data.get('phone', admin.phone)
+        admin.address = data.get('address', admin.address)
+        admin.position = data.get('position', admin.position)
+        admin.bio = data.get('bio', admin.bio),
+        admin.image = data.get('image', admin.image)
+        
+        if 'join_date' in data:
+            admin.join_date = datetime.strptime(data['join_date'], '%Y-%m-%d').date()
+        print(data)
+        db.session.commit()
+        return jsonify(admin.to_dict()), 200
+
+@api.route("/upload-profile-photo", methods=['POST'])
+@jwt_required()
+def upload_profile_photo():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user or user.role != 'admin':
+        return jsonify({"msg": "Access denied"}), 403
+
+    if 'file' not in request.files:
+        return jsonify({"msg": "No file part"}), 400
+
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"msg": "No selected file"}), 400
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(api.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        user.profile_picture = filename
+        db.session.commit()
+
+        return jsonify({"msg": "File uploaded successfully", "url": filename}), 200
+
+    return jsonify({"msg": "File type not allowed"}), 400
+
+# Helper function to check allowed file extensions
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS    
 
 
 @api.route('/fill-database', methods=['POST'])

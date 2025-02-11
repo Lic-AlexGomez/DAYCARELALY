@@ -1,60 +1,143 @@
-import React, { useState } from "react"
-import { User, Mail, Phone, MapPin, Briefcase, Calendar, Edit2, Save, X } from "lucide-react"
+import React, { useState, useContext, useEffect } from "react";
+import { Context } from "../../store/appContext";
+import { User, Mail, Phone, MapPin, Briefcase, Calendar, Edit2, Save, X } from "lucide-react";
 
-const ProfileView = () => {
-  const [isEditing, setIsEditing] = useState(false)
-  const [profile, setProfile] = useState({
-    name: "Juan Pérez",
-    email: "juan.perez@example.com",
-    phone: "+34 123 456 789",
-    address: "Calle Mayor 123, Madrid, España",
-    position: "Administrador Senior",
-    joinDate: "01/01/2020",
-    bio: "Administrador experimentado con más de 10 años en el sector educativo.",
-  })
-
-  const [editedProfile, setEditedProfile] = useState({ ...profile })
-
-  const handleEdit = () => {
-    setIsEditing(true)
-  }
-
-  const handleSave = () => {
-    setProfile(editedProfile)
-    setIsEditing(false)
-    // Here you would typically send the updated profile to your backend
-    console.log("Profile updated:", editedProfile)
-  }
-
-  const handleCancel = () => {
-    setEditedProfile({ ...profile })
-    setIsEditing(false)
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setEditedProfile((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const ProfileField = ({ icon: Icon, label, value, name }) => (
-    <div className="tw-flex tw-items-center tw-mb-4">
-      <Icon className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-3" />
-      <div>
-        <p className="tw-text-sm tw-font-medium tw-text-gray-500">{label}</p>
-        {isEditing ? (
-          <input
-            type="text"
+const InputField = React.memo(({ 
+  icon: Icon, 
+  label, 
+  name, 
+  value, 
+  onChange, 
+  isEditing,
+  type = "text",
+  textarea = false
+}) => (
+  <div className="tw-flex tw-items-center tw-mb-4">
+    <Icon className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-3" />
+    <div className="tw-flex-1">
+      <p className="tw-text-sm tw-font-medium tw-text-gray-500">{label}</p>
+      {isEditing ? (
+        textarea ? (
+          <textarea
             name={name}
-            value={editedProfile[name]}
-            onChange={handleChange}
-            className="tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300 tw-shadow-sm focus:tw-border-indigo-300 focus:tw-ring focus:tw-ring-indigo-200 focus:tw-ring-opacity-50"
+            value={value}
+            onChange={onChange}
+            rows="3"
+            className="tw-shadow-sm focus:tw-ring-indigo-500 focus:tw-border-indigo-500 tw-mt-1 tw-block tw-w-full tw-sm:text-sm tw-border tw-border-gray-300 tw-rounded-md"
           />
         ) : (
-          <p className="tw-text-base tw-text-gray-900">{value}</p>
+          <input
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            className="tw-mt-1 tw-block tw-w-full tw-rounded-md tw-border-gray-300 tw-shadow-sm focus:tw-border-indigo-300 focus:tw-ring focus:tw-ring-indigo-200 focus:tw-ring-opacity-50"
+          />
+        )
+      ) : (
+        <p className="tw-text-base tw-text-gray-900 tw-mt-1">{value}</p>
+      )}
+    </div>
+  </div>
+));
+
+const ImageUploader = ({ isEditing, imageUrl, onChange }) => (
+  <div className="tw-bg-gray-50 tw-px-4 tw-py-5 tw-sm:grid tw-sm:grid-cols-3 tw-sm:gap-4 tw-sm:px-6">
+    <dt className="tw-text-sm tw-font-medium tw-text-gray-500">Foto de perfil</dt>
+    <dd className="tw-mt-1 tw-text-sm tw-text-gray-900 tw-sm:mt-0 tw-sm:col-span-2">
+      <div className="tw-flex tw-items-center">
+        <span className="tw-h-24 tw-w-24 tw-rounded-full tw-overflow-hidden tw-bg-gray-100">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt="Profile"
+              className="tw-h-full tw-w-full tw-object-cover"
+            />
+          ) : (
+            <User className="tw-h-full tw-w-full tw-text-gray-300" />
+          )}
+        </span>
+        {isEditing && (
+          <input
+            type="file"
+            onChange={onChange}
+            className="tw-ml-5"
+            accept="image/*"
+          />
         )}
       </div>
-    </div>
-  )
+    </dd>
+  </div>
+);
+
+const FormSection = ({ children, className = "" }) => (
+  <div className={`${className} tw-px-4 tw-py-5 tw-sm:grid tw-sm:grid-cols-3 tw-sm:gap-4 tw-sm:px-6`}>
+    {children}
+  </div>
+);
+
+const ProfileView = () => {
+  const { store, actions } = useContext(Context);
+  const [isEditing, setIsEditing] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [editedProfile, setEditedProfile] = useState({ 
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    position: "",
+    join_date: "",
+    bio: "",
+    image: ""
+  });
+
+  // Cargar perfil inicial
+  useEffect(() => {
+    actions.fetchAdminProfile();
+  }, []);
+
+  // Sincronizar con el store
+  useEffect(() => {
+    if (store.adminProfile) {
+      setEditedProfile(store.adminProfile);
+    }
+  }, [store.adminProfile]);
+
+  const handleEdit = () => setIsEditing(true);
+
+  const handleSave = async () => {
+    try {
+      const updatedProfile = { ...editedProfile };
+      
+      if (imageFile) {
+        const response = await actions.uploadToCloudinary(imageFile);
+        if (response?.url) updatedProfile.image = response.url;
+      }
+
+      await actions.updateAdminProfile(updatedProfile);
+      await actions.fetchAdminProfile(); // Forzar actualización del store
+      
+      setIsEditing(false);
+      setImageFile(null);
+    } catch (error) {
+      console.error("Error saving profile:", error);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setImageFile(null);
+    setEditedProfile(store.adminProfile);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditedProfile(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageChange = (e) => {
+    setImageFile(e.target.files?.[0] || null);
+  };
 
   return (
     <div className="tw-container tw-mx-auto tw-px-4 tw-py-8">
@@ -63,51 +146,86 @@ const ProfileView = () => {
           <h3 className="tw-text-lg tw-leading-6 tw-font-medium tw-text-gray-900">Perfil de Usuario</h3>
           <p className="tw-mt-1 tw-max-w-2xl tw-text-sm tw-text-gray-500">Información personal y detalles</p>
         </div>
+        
         <div className="tw-border-t tw-border-gray-200">
           <dl>
-            <div className="tw-bg-gray-50 tw-px-4 tw-py-5 tw-sm:grid tw-sm:grid-cols-3 tw-sm:gap-4 tw-sm:px-6">
-              <dt className="tw-text-sm tw-font-medium tw-text-gray-500">Foto de perfil</dt>
-              <dd className="tw-mt-1 tw-text-sm tw-text-gray-900 tw-sm:mt-0 tw-sm:col-span-2">
-                <div className="tw-flex tw-items-center">
-                  <span className="tw-h-24 tw-w-24 tw-rounded-full tw-overflow-hidden tw-bg-gray-100">
-                    <User className="tw-h-full tw-w-full tw-text-gray-300" />
-                  </span>
-                  {isEditing && (
-                    <button className="tw-ml-5 tw-bg-white tw-py-2 tw-px-3 tw-border tw-border-gray-300 tw-rounded-md tw-shadow-sm tw-text-sm tw-leading-4 tw-font-medium tw-text-gray-700 hover:tw-bg-gray-50 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-indigo-500">
-                      Cambiar
-                    </button>
-                  )}
-                </div>
-              </dd>
-            </div>
-            <div className="tw-bg-white tw-px-4 tw-py-5 tw-sm:grid tw-sm:grid-cols-3 tw-sm:gap-4 tw-sm:px-6">
-              <ProfileField icon={User} label="Nombre completo" value={profile.name} name="name" />
-              <ProfileField icon={Mail} label="Correo electrónico" value={profile.email} name="email" />
-              <ProfileField icon={Phone} label="Teléfono" value={profile.phone} name="phone" />
-            </div>
-            <div className="tw-bg-gray-50 tw-px-4 tw-py-5 tw-sm:grid tw-sm:grid-cols-3 tw-sm:gap-4 tw-sm:px-6">
-              <ProfileField icon={MapPin} label="Dirección" value={profile.address} name="address" />
-              <ProfileField icon={Briefcase} label="Cargo" value={profile.position} name="position" />
-              <ProfileField icon={Calendar} label="Fecha de incorporación" value={profile.joinDate} name="joinDate" />
-            </div>
-            <div className="tw-bg-white tw-px-4 tw-py-5 tw-sm:grid tw-sm:grid-cols-3 tw-sm:gap-4 tw-sm:px-6">
-              <dt className="tw-text-sm tw-font-medium tw-text-gray-500">Biografía</dt>
-              <dd className="tw-mt-1 tw-text-sm tw-text-gray-900 tw-sm:mt-0 tw-sm:col-span-2">
-                {isEditing ? (
-                  <textarea
-                    name="bio"
-                    value={editedProfile.bio}
-                    onChange={handleChange}
-                    rows="3"
-                    className="tw-shadow-sm focus:tw-ring-indigo-500 focus:tw-border-indigo-500 tw-mt-1 tw-block tw-w-full tw-sm:text-sm tw-border tw-border-gray-300 tw-rounded-md"
-                  />
-                ) : (
-                  profile.bio
-                )}
-              </dd>
-            </div>
+            <ImageUploader 
+              isEditing={isEditing}
+              imageUrl={store.adminProfile?.image}
+              onChange={handleImageChange}
+            />
+
+            <FormSection className="tw-bg-white">
+              <InputField
+                icon={User}
+                label="Nombre completo"
+                name="name"
+                value={editedProfile.name || ""}
+                onChange={handleChange}
+                isEditing={isEditing}
+              />
+              <InputField
+                icon={Mail}
+                label="Correo electrónico"
+                name="email"
+                value={editedProfile.email || ""}
+                onChange={handleChange}
+                isEditing={isEditing}
+                type="email"
+              />
+              <InputField
+                icon={Phone}
+                label="Teléfono"
+                name="phone"
+                value={editedProfile.phone || ""}
+                onChange={handleChange}
+                isEditing={isEditing}
+                type="tel"
+              />
+            </FormSection>
+
+            <FormSection className="tw-bg-gray-50">
+              <InputField
+                icon={MapPin}
+                label="Dirección"
+                name="address"
+                value={editedProfile.address || ""}
+                onChange={handleChange}
+                isEditing={isEditing}
+              />
+              <InputField
+                icon={Briefcase}
+                label="Cargo"
+                name="position"
+                value={editedProfile.position || ""}
+                onChange={handleChange}
+                isEditing={isEditing}
+              />
+              <InputField
+                icon={Calendar}
+                label="Fecha de incorporación"
+                name="join_date"
+                value={editedProfile.join_date || ""}
+                onChange={handleChange}
+                isEditing={isEditing}
+                type="date"
+              />
+            </FormSection>
+
+            <FormSection className="tw-bg-white">
+              <InputField
+                label="Biografía"
+                name="bio"
+                value={editedProfile.bio || ""}
+                onChange={handleChange}
+                isEditing={isEditing}
+                textarea={true}
+                icon={({ className }) => <div className={className} />}
+              />
+            </FormSection>
           </dl>
         </div>
+
         <div className="tw-px-4 tw-py-3 tw-bg-gray-50 tw-text-right tw-sm:px-6">
           {isEditing ? (
             <>
@@ -135,8 +253,7 @@ const ProfileView = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileView
-
+export default ProfileView;
