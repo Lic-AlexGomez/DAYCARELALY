@@ -8,16 +8,19 @@ const ParentPayments = () => {
   const [selectedPayments, setSelectedPayments] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [filteredClasses, setFilteredClasses] = useState([]);
+  
   useEffect(() => {
     actions.fetchEnrolledClasses();
   }, [actions]);
+  
   useEffect(() => {
     setFilteredClasses(
       Array.isArray(store.enrolledClasses)
-        ? store.enrolledClasses.filter((payment) => payment.status !== "Pagado")
+        ? store.enrolledClasses.filter((payment) => payment.status !== "Paid")
         : []
     );
   }, [store.enrolledClasses]);
+
   const handlePaymentSelection = (payment) => {
     const isSelected = selectedPayments.some((p) => p.id === payment.id);
     const newSelectedPayments = isSelected
@@ -27,14 +30,15 @@ const ParentPayments = () => {
     setSelectedPayments(newSelectedPayments);
     setTotalAmount(newSelectedPayments.reduce((sum, p) => sum + (p.price || 0), 0));
   };
+
   const isPaymentDisabled = (paymentId) => {
     const ts = localStorage.getItem(`paymentTimestamp_${paymentId}`);
     if (ts) {
       const diff = Date.now() - parseInt(ts, 10);
-      // Deshabilitar por 30 días en producción
+      // Disable for 30 days in production
       return diff < 30 * 24 * 60 * 60 * 1000;
-      // Para pruebas, deshabilitar solo por 7 segundos
-      // return diff < 7000;
+      // For testing, disable only for 7 seconds
+      //return diff < 7000;
     }
     return false;
   };
@@ -47,16 +51,17 @@ const ParentPayments = () => {
     }
     return null;
   };
+
   const handlePaymentSuccess = async (order) => {
     if (!store.user) {
-      console.error("No hay usuario logueado");
+      console.error("No logged-in user");
       return;
     }
     const paymentsData = selectedPayments.map((payment) => ({
       user_id: store.user.parent_id || store.user.id,
       amount: payment.price,
       concept: "Monthly Payment",
-      status: "Pagado",
+      status: "Paid",  // Changed to "Paid"
       due_date: new Date().toISOString().split("T")[0],
       paypal_order_id: order.id,
       payer_email: order.payer.email_address,
@@ -71,10 +76,10 @@ const ParentPayments = () => {
       });
 
       if (!response.ok)
-        throw new Error(`Error en la solicitud: ${response.statusText}`);
+        throw new Error(`Request error: ${response.statusText}`);
 
       const data = await response.json();
-      console.log("Pagos guardados en el backend:", data);
+      console.log("Payments saved in the backend:", data);
       selectedPayments.forEach((payment) => {
         localStorage.setItem(`paymentTimestamp_${payment.id}`, Date.now().toString());
       });
@@ -85,13 +90,13 @@ const ParentPayments = () => {
       setSelectedPayments([]);
       setTotalAmount(0);
     } catch (error) {
-      console.error("Error al guardar pagos:", error);
+      console.error("Error saving payments:", error);
     }
   };
 
   return (
     <div className="tw-p-6">
-      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Pagos pendientes</h3>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Pending Payments</h3>
       <div className="tw-space-y-4">
         {filteredClasses.length > 0 ? (
           filteredClasses.map((payment) => {
@@ -112,7 +117,7 @@ const ParentPayments = () => {
                 <div className="tw-flex tw-justify-between tw-items-center tw-mb-2">
                   <h4 className="tw-text-lg tw-font-semibold">{payment.name}</h4>
                   <span
-                    className={`tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold ${payment.status === "Pagado"
+                    className={`tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold ${payment.status === "Paid"
                       ? "tw-bg-green-100 tw-text-green-800"
                       : "tw-bg-yellow-100 tw-text-yellow-800"
                       }`}
@@ -128,7 +133,7 @@ const ParentPayments = () => {
                   <div className="tw-flex tw-items-center tw-mb-4">
                     <Calendar className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
                     <span>
-                      Siguiente pago: {nextPaymentDate}
+                      Next Payment: {nextPaymentDate}
                     </span>
                   </div>
                 )}
@@ -136,7 +141,7 @@ const ParentPayments = () => {
                   <div className="tw-flex tw-items-center tw-mb-4">
                     <Calendar className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
                     <span>
-                      Fecha de vencimiento: {expirationDate.toLocaleDateString()}
+                      Due Date: {expirationDate.toLocaleDateString()}
                     </span>
                   </div>
                 )}
@@ -151,19 +156,19 @@ const ParentPayments = () => {
                       : "tw-bg-blue-500"
                     }`}
                 >
-                  {disabled ? "Pagado recientemente" : isSelected ? "Desmarcar" : "Pagar"}
+                  {disabled ? "Recently Paid" : isSelected ? "Unmark" : "Pay"}
                 </button>
               </div>
             );
           })
         ) : (
-          <p>No hay pagos pendientes.</p>
+          <p>No pending payments.</p>
         )}
       </div>
 
       {totalAmount > 0 && (
         <div className="tw-mt-6 tw-text-xl">
-          <h4 className="tw-font-semibold">Total seleccionado: ${totalAmount}</h4>
+          <h4 className="tw-font-semibold">Total Selected: ${totalAmount}</h4>
         </div>
       )}
       {totalAmount > 0 && (
