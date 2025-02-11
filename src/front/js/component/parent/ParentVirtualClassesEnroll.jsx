@@ -90,7 +90,8 @@ function ParentVirtualClassesEnroll() {
   const [error, setError] = useState(null)
   const [formData, setFormData] = useState({
     child_name: "",
-    class_name: ""
+    class_name: "",
+    price:"",
   })
 
   useEffect(() => {
