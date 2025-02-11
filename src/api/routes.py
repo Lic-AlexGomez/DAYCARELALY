@@ -2239,20 +2239,15 @@ def get_parent_payments():
 @api.route('/parent_payments/<int:user_id>', methods=['GET'])
 @jwt_required()
 def get_parent_payment(user_id):
-    # Se busca el usuario con el user_id recibido
     user = User.query.get(user_id)
     if not user:
         return jsonify({"error": f"El user_id {user_id} no existe"}), 400
-
-    # Se busca el parent relacionado al usuario
     parent = Parent.query.filter_by(user_id=user.id).first()
     if not parent:
         return jsonify({"error": f"No se encontró parent para el user_id {user_id}"}), 400
-
-    # Se obtienen los pagos asociados a ese parent
     payments = ParentPayment.query.filter_by(parent_id=parent.id).all()
     if payments is None or len(payments) == 0:
-        return jsonify([]), 200  # Retornamos un arreglo vacío si no hay pagos
+        return jsonify([]), 200  
 
     serialized_payments = [payment.serialize() for payment in payments]
     return jsonify(serialized_payments), 200

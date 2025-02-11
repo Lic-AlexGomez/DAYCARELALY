@@ -11,7 +11,7 @@ const ParentPayments = () => {
   
   useEffect(() => {
     actions.fetchEnrolledClasses();
-  }, [actions]);
+  }, []);
   
   useEffect(() => {
     setFilteredClasses(
@@ -61,7 +61,7 @@ const ParentPayments = () => {
       user_id: store.user.parent_id || store.user.id,
       amount: payment.price,
       concept: "Monthly Payment",
-      status: "Paid",  // Changed to "Paid"
+      status: "Paid",  
       due_date: new Date().toISOString().split("T")[0],
       paypal_order_id: order.id,
       payer_email: order.payer.email_address,
