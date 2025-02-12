@@ -12,7 +12,7 @@ const ParentActivities = () => {
       setIsLoading(false)
     }
     loadActivities()
-  }, [actions.fetchParentActivities]) 
+  }, [actions.fetchParentActivities()]) 
 
   if (isLoading) {
     return <div>Loading activities...</div>

@@ -54,16 +54,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       signUp: async (signupData) => {
         try {
-          const store = getStore()
-          const token = store.token || localStorage.getItem("token")
-
-          if (!token) {
-            console.error("No token found")
-            return
-          }
           const response = await fetch(process.env.BACKEND_URL + "api/signup", {
             method: "POST",
-            headers: getActions().getAuthHeaders(),
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify(signupData),
           })
 
@@ -82,6 +77,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
+
 
       uploadToCloudinary: async (file) => {
         const BACKEND_URL = process.env.BACKEND_URL

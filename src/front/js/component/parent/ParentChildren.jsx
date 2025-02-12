@@ -63,12 +63,38 @@ const ParentChildren = () => {
   const [errors, setErrors] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [addChildError, setAddChildError] = useState("")
-
   useEffect(() => {
-    if (!store.parentChildren) {
-      actions.fetchParentChildren()
-    }
-  }, [store])
+    const loadOverviewData = async () => {
+      try {
+       
+         await Promise.all([
+         await actions.fetchParentData(),
+         await actions.fetchParentChildren(),
+         await actions.fetchParentActivities(),
+         await actions.fetchParentPayments(),
+         await actions.fetchParentVirtualClasses(),
+        ]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        
+        setIsLoading(false);
+      }
+    };
+
+    loadOverviewData();
+  }, [store, actions.fetchParentChildren, actions.fetchParentActivities, actions.fetchParentPayments, actions.fetchParentVirtualClasses]);
+
+  if (isLoading) {
+    return (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-64">
+        <div className="tw-text-lg tw-font-semibold tw-text-gray-700">
+          Loading overview...
+        </div>
+      </div>
+    );
+  }
+
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target
