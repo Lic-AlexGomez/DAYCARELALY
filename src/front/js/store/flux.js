@@ -40,6 +40,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       // Teacher dashboard store
       teacherData: null,
       teacherClasses: [],
+      teacherStudents: [],
     },
     actions: {
 
@@ -1982,6 +1983,35 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
+
+      getStudentsByTeacher: async () => {
+        const store = getStore();
+        const token = store.token || localStorage.getItem("token");
+        
+        if (!token) {
+          console.error("No token found");
+          return;
+        }
+        try {
+          const url = `${process.env.BACKEND_URL}api/teacher/students`;
+          console.log("Request URL:", url);
+          
+          const response = await fetch(url, {
+            method: "GET",
+            headers: getActions().getAuthHeaders(), 
+          });         
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error("Error fetching students: " + JSON.stringify(errorData));
+          }  
+          const data = await response.json();
+          console.log("Received students data:", data);
+          setStore({ teacherStudents: data.students || [] });
+        } catch (error) {
+          console.error("Error loading students:", error);
+        }
+      },
+      
 
 
       //PAYPAL
