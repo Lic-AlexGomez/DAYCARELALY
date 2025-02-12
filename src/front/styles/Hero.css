@@ -10,6 +10,7 @@
   background: linear-gradient(to bottom, #9c29b2 60%, #ffc909 40%);
   color: white;
   text-align: center;
+  
 }
 
 .hero h1 {
@@ -134,7 +135,7 @@
   background-size: cover;
   background-position: center;
   width: 100%;
-  z-index: -22;
+  z-index: 0;
   height: auto;
   display: flex;
  
@@ -150,11 +151,21 @@
     justify-content: flex-end;
     margin-top: 99px;
     margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
 }
 .home-container{
- 
+    background-color: rgb(250, 252, 253);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
   height: 100vh;
-  margin-bottom: 2rem;
+
 
 }
 .hero h1 {
@@ -472,7 +483,8 @@ width: 75%;
  }
 
  .image-container {
-
+    position: relative;
+    z-index: 1;
     margin-top: 7rem;
     margin-right: 2rem;
  }

@@ -18,7 +18,7 @@ const Hero = () => {
   }, [store.settings])
   return (
     <>
-      <div className="home-container d-flex justify-content-space-between align-items-start">
+      <div className="home-container d-flex justify-content-space-between align-items-start" >
         <section className="hero  flex-row justify-content-center align-items-start">
           <div className="hero-content ">
             <div className="styled-text">

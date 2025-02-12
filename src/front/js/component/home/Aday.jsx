@@ -2,7 +2,7 @@ import React from 'react'
 const Aday = () => {
     return (
         <>
-            <section className="daily-activities">
+            <section className="daily-activities" style={{ backgroundColor: "#FAFCFD" }}>
                 <h2>A Day at Daycare  Rainbow</h2>
                 <div className="timeline">
                     <div className="timeline-item">

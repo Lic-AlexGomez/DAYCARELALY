@@ -34,7 +34,7 @@ const AboutUs = () => {
   return (
     <div className="tw-min-h-screen tw-bg-[#710A85] tw-overflow-hidden tw-relative">
       <div
-        className="tw-relative tw-bottom-0 tw-left-0 tw-right-0 tw-w-full tw-h-24 tw-bg-no-repeat tw-bg-cover tw-bg-bottom "
+        className="tw-relative tw-bottom-0 tw-left-0 tw-right-0 tw-w-full sm:tw-h-24 tw-h-7 tw-bg-no-repeat tw-bg-cover tw-bg-bottom "
         style={{
           backgroundImage: `url(${img6})`,
         }}
@@ -133,7 +133,7 @@ const AboutUs = () => {
         </div>
       </div>
       <div
-        className="tw-relative tw-rotate-180 tw-bottom-0 tw-left-0 tw-right-0 tw-w-full tw-h-24 tw-bg-no-repeat tw-bg-cover tw-bg-bottom "
+        className="tw-relative tw-rotate-180 tw-bottom-0 tw-left-0 tw-right-0 tw-w-full sm:tw-h-24 tw-h-7 tw-bg-no-repeat tw-bg-cover tw-bg-bottom "
         style={{
           backgroundImage: `url(${img7})`,
         }}
