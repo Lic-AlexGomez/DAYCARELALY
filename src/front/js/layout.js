@@ -118,7 +118,7 @@ const AdminDashboard = () => (
           <Route path="/staff-signup" element={<StaffSignup />} />
           <Route path="/profile" element={<ProfileView />} />
           <Route path="/dashboard-content" element={<DashboardContent />} />
-          <Route path="*" element={<h1>Not found!</h1>} />
+          <Route path="*" element={<DashboardOverview />} />
         </Routes>
       </main>
     </div>
@@ -205,7 +205,7 @@ const MainRoutes = () => {
           />
           <Route path="/parent-dashboard/*" element={<ParentDashboardRoutes />} />
           <Route path="/programs" element={<Programs />} />
-          <Route path="*" element={<h1>Not found!</h1>} />
+          <Route path="*" element={<ParentDashboardRoutes />} />
           <Route path="/allprograms" element={<Allprograms />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/about_us" element={<AboutUs />} />

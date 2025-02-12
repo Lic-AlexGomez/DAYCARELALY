@@ -62,7 +62,7 @@ const Footer = () => {
 
   return (
     <footer className="tw-bg-[#111111] tw-text-gray-400">
-      <div className="tw-container tw-mx-auto tw-px-2 tw-py-12">
+      <div className="tw-container-fluid tw-mx-auto tw-px-3 tw-py-12">
         <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-5 tw-gap-2">
           {/* About Company Column */}
           <div>
@@ -179,17 +179,17 @@ const Footer = () => {
           
        
            {/* Newsletter */}
-           <div className="tw-bg-black tw-p-6 tw-rounded-md lg:tw-ms-14 tw-mt-6 md:tw-mt-0">
+           <div className="tw-bg-black tw-p-6 tw-rounded-md lg:tw-ms-2 tw-mt-6 md:tw-mt-0">
             <h3 className="tw-text-white tw-font-bold tw-mb-6">Join Our Newsletter</h3>
             <form onSubmit={handleSubmit} className="tw-flex tw-flex-col md:tw-flex-row tw-gap-2 tw-mb-2">
               <input
                 type="email"
                 placeholder="Your email address"
-                className="tw-flex-1 tw-bg-[#1A1A1A] tw-px-4 tw-py-2.5 tw-rounded-sm tw-text-sm tw-text-white"
+                className="tw-flex-1 tw-bg-[#1A1A1A] tw-px-1 tw-py-2.5 tw-rounded-sm tw-text-sm tw-text-white"
               />
               <button
                 type="submit"
-                className="tw-bg-[#FF9F00] tw-text-white tw-px-6 tw-py-2.5 tw-rounded-sm tw-text-sm hover:tw-bg-[#FF9F00]/90"
+                className="tw-bg-[#FF9F00] tw-text-white tw-px-1 tw-py-2.5 tw-rounded-sm tw-text-sm hover:tw-bg-[#FF9F00]/90"
               >
                 Subscribe
               </button>

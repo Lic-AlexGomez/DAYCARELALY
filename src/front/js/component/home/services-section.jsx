@@ -40,8 +40,14 @@ export default function ServicesSection() {
     },
   ];
 
+//   z-index: -42;
+//   position: relative;
+//   height: 100%;
+// }
+
+
   return (
-    <section className="tw-py-20 tw-px-4 tw-bg-gradient-to-b tw-from-white tw-to-pink-30">
+    <section className="tw-py-2 tw-px-4 tw-bg-gradient-to-b  tw-to-pink-30 tw-relative tw-mt-0 -tw-z-40" style={{ backgroundColor: "#FAFCFD" }}>
       <div className="tw-max-w-7xl tw-mx-auto">
         <h1 className="service-section tw-text-4xl md:tw-text-5xl tw-font-bold tw-text-purple-700 tw-text-center tw-mb-6">
           Providing Good Qualities For
