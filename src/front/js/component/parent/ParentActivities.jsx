@@ -1,21 +1,61 @@
-import React, { useEffect, useContext, useState } from "react"
-import { Calendar, Clock, MapPin } from "lucide-react"
-import { Context } from "../../store/appContext"
+import React, { useEffect, useContext, useState } from "react";
+import { Calendar, Clock, MapPin } from "lucide-react";
+import { Context } from "../../store/appContext";
 
 const ParentActivities = () => {
-  const { store, actions } = useContext(Context)
-  const [isLoading, setIsLoading] = useState(true)
+  const { store, actions } = useContext(Context);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadActivities = async () => {
-      await actions.fetchParentActivities()
-      setIsLoading(false)
-    }
-    loadActivities()
-  }, [actions.fetchParentActivities()]) 
+    const loadOverviewData = async () => {
+      try {
+        await Promise.all([
+          actions.fetchParentData(),
+          actions.fetchParentChildren(),
+          actions.fetchParentActivities(),
+          actions.fetchParentPayments(),
+          actions.fetchParentVirtualClasses(),
+        ]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadOverviewData();
+  }, [actions.fetchParentActivities]);
 
   if (isLoading) {
-    return <div>Loading activities...</div>
+    return (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-64">
+        <div className="tw-text-lg tw-font-semibold tw-text-gray-700">
+          Loading activities...
+        </div>
+      </div>
+    );
+  }
+
+
+  if (!Array.isArray(store.parentActivities)) {
+    console.error("store.parentActivities is not an array:", store.parentActivities);
+    return (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-64">
+        <div className="tw-text-lg tw-font-semibold tw-text-gray-700">
+            No activities found.
+        </div>
+      </div>
+    );
+  }
+
+  if (store.parentActivities.length === 0) {
+    return (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-64">
+        <div className="tw-text-lg tw-font-semibold tw-text-gray-700">
+          No activities found.
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -42,13 +82,13 @@ const ParentActivities = () => {
             <div className="tw-mt-2">
               <span
                 className={`tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold
-                ${
-                  activity.status === "scheduled"
-                    ? "tw-bg-blue-100 tw-text-blue-800"
-                    : activity.status === "completed"
-                      ? "tw-bg-green-100 tw-text-green-800"
-                      : "tw-bg-red-100 tw-text-red-800"
-                }`}
+                  ${
+                    activity.status === "scheduled"
+                      ? "tw-bg-blue-100 tw-text-blue-800"
+                      : activity.status === "completed"
+                        ? "tw-bg-green-100 tw-text-green-800"
+                        : "tw-bg-red-100 tw-text-red-800"
+                  }`}
               >
                 {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
               </span>
@@ -57,8 +97,7 @@ const ParentActivities = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ParentActivities
-
+export default ParentActivities;
