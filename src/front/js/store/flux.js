@@ -34,7 +34,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       parentVirtualClasses: [],
       notifications: [],
       enrolledClasses: [],
-      enrolledClassesDup: [],
+      enrolledClasses: [], 
       filteredClasses: [],
 
       // Teacher dashboard store
@@ -55,16 +55,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       signUp: async (signupData) => {
         try {
-          const store = getStore()
-          const token = store.token || localStorage.getItem("token")
-
-          if (!token) {
-            console.error("No token found")
-            return
-          }
           const response = await fetch(process.env.BACKEND_URL + "api/signup", {
             method: "POST",
-            headers: getActions().getAuthHeaders(),
+            headers: {
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify(signupData),
           })
 
@@ -83,6 +78,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
+
 
       uploadToCloudinary: async (file) => {
         const BACKEND_URL = process.env.BACKEND_URL
@@ -1888,20 +1884,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       fetchEnrolledClasses: async () => {
         try {
-          const store = getStore()
-          const token = store.token || localStorage.getItem("token")
+          const store = getStore();
+          const token = store.token || localStorage.getItem("token");
 
           if (!token) {
-            console.error("No token found")
-            return
+            console.error("No token found");
+            return;
           }
-          const response = await fetch(`${process.env.BACKEND_URL}api/enrolled-classes`, {
+
+          const response = await fetch(`${process.env.BACKEND_URL}/api/enrolled-classes`, {
+            method: "GET",
             headers: getActions().getAuthHeaders(),
           });
+
           if (response.ok) {
             const data = await response.json();
+            console.log("Enrolled Classes:", data);
             setStore({ enrolledClasses: data });
-            const unpaidClasses = data.filter((payment) => payment.status !== "Pagado");
+
+            // Filtrar clases con pago pendiente
+            const unpaidClasses = data.filter((classItem) => classItem.status !== "Pagado");
             setStore({ filteredClasses: unpaidClasses });
           } else {
             console.error("Error fetching enrolled classes:", response.status);
@@ -1910,31 +1912,37 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error fetching enrolled classes:", error);
         }
       },
-      enrollInClass: async (child_name, class_name,price) => {
+
+      // Inscribir a una clase
+      enrollInClass: async (classId, childName, price) => {
         try {
           const store = getStore();
           const token = store.token || localStorage.getItem("token");
-      
+
           if (!token) {
             console.error("No token found");
             return;
           }
-      
-          const response = await fetch(process.env.BACKEND_URL + "api/enrollments", {
+
+          const response = await fetch(`${process.env.BACKEND_URL}/api/enroll`, {
             method: "POST",
-            headers: getActions().getAuthHeaders(),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify({
-              child_name: child_name,
-              class_name: class_name,
-              price: price
+              classId: classId, // Este ID debe coincidir con el backend
+              childName: childName,
+              price: price,
             }),
           });
-      
+
           if (response.ok) {
-            const newEnrollment = await response.json();
-            const store = getStore();
-            setStore({ enrolledClasses: [...store.enrolledClasses, newEnrollment] });
-            return newEnrollment;
+            const data = await response.json();
+            console.log("Enrollment successful:", data);
+
+            // Volver a cargar las clases inscritas
+            getActions().fetchEnrolledClasses();
           } else {
             console.error("Error enrolling in class:", response.status);
           }
@@ -1942,6 +1950,8 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error enrolling in class:", error);
         }
       },
+      
+     
 
       unenrollFromClass: async (classId) => {
         try {
@@ -2203,20 +2213,65 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       deleteGetintouchMessage: async (messageId) => {
+      
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/getintouch/${messageId}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
-          console.log(resp)
+         
           if (!resp.ok) throw new Error("Failed to delete getintouch message")
           const updatedMessages = getStore().getintouchMessages.filter((msg) => msg.id !== messageId)
+          console.log(updatedMessages)
           setStore({ getintouchMessages: updatedMessages })
         } catch (error) {
           console.error("Error deleting getintouch message:", error)
         }
       },
-      //TEACHER
+      fetchContacts: async () => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/contacts`, {
+            headers: getActions().getAuthHeaders(),
+          })
+          if (!resp.ok) throw new Error("Failed to fetch contacts")
+          const data = await resp.json()
+          setStore({ contacts: data })
+        } catch (error) {
+          console.error("Error fetching contacts:", error)
+        }
+      },
+
+      createContact: async (contactData) => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/contacts`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(contactData),
+          })
+          if (!resp.ok) throw new Error("Failed to create contact")
+          const newContact = await resp.json()
+          setStore({ contacts: [...getStore().contacts, newContact] })
+          return newContact
+        } catch (error) {
+          console.error("Error creating contact:", error)
+        }
+      },
+
+      deleteContact: async (contactId) => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/contacts/${contactId}`, {
+            method: "DELETE",
+            headers: getActions().getAuthHeaders(),
+          })
+          if (!resp.ok) throw new Error("Failed to delete contact")
+          const updatedContacts = getStore().contacts.filter((contact) => contact.id !== contactId)
+          setStore({ contacts: updatedContacts })
+        } catch (error) {
+          console.error("Error deleting contact:", error)
+        }
+      },
       getAuthHeaders: () => {
         const token = localStorage.getItem("token");
         return {
@@ -2257,7 +2312,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message };
         }
       },
-    }
+    },
   }
 }
 

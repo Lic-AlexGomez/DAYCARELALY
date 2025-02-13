@@ -25,6 +25,7 @@ const menuItems = [
   { icon: FileText, label: "Enrolls", path: "/admin-dashboard/enrollments" },
   { icon: Mail, label: "Emails", path: "/admin-dashboard/emails" },
   { icon: Mail, label: "Get in touch", path: "/admin-dashboard/get-in-touch" },
+  { icon: Mail, label: "Contact Us", path: "/admin-dashboard/contactus" },
   { icon: Activity, label: "Programs", path: "/admin-dashboard/activities" },
   { icon: UserX, label: "Inactive Accounts", path: "/admin-dashboard/inactive-accounts" },
   { icon: UserX, label: "Services", path: "/admin-dashboard/services" },

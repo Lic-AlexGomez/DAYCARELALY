@@ -632,6 +632,17 @@ def create_contact():
     db.session.add(new_contact)
     db.session.commit()
     return jsonify(new_contact.serialize()), 201
+@api.route('/contacts/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_contact(id):
+    contact = Contact.query.get(id)
+    if not contact:
+        return jsonify({"error": "Contact not found"}), 404
+
+    db.session.delete(contact)
+    db.session.commit()
+    return jsonify({"message": "Contact deleted"}), 200
+
 
 @api.route('/upload', methods=['POST'])
 def upload_file():
@@ -695,6 +706,18 @@ def create_contactus():
     db.session.add(new_contactus)
     db.session.commit()
     return jsonify(new_contactus.serialize()), 201
+
+@api.route('/getintouch/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_contactus(id):
+    contactus = Getintouch.query.get(id)
+    if not contactus:
+        return jsonify({"error": "Contact not found"}), 404
+
+    db.session.delete(contactus)
+    db.session.commit()
+    return jsonify({"message": "Contact deleted"}), 200
+
 
 
 @api.route('/clients', methods=['GET'])
@@ -2088,8 +2111,13 @@ def signup_admin():
 @jwt_required()
 def get_enrolled_classes():
     user_id = get_jwt_identity()
+    
+    # Buscar las inscripciones del usuario
     enrollments = Enrollment.query.filter_by(user_id=user_id).all()
-    enrolled_classes = [Class.query.get(e.class_id).serialize() for e in enrollments]
+
+    # Obtener los detalles de las clases inscritas
+    enrolled_classes = [Class.query.filter_by(name=e.class_name).first().serialize() for e in enrollments]
+
     return jsonify(enrolled_classes), 200
 
 @api.route('/enroll', methods=['POST'])
@@ -2450,46 +2478,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS    
 
-
-
-@api.route('/getintouch/<int:message_id>', methods=['GET', 'PUT', 'DELETE'])
-@jwt_required()
-def get(message_id):
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
-    if not user.is_admin:
-        return jsonify({"msg": "Admin access required"}), 403
-    
-    message = Getintouch.query.get_or_404(message_id)
-    return jsonify(message.serialize())
-@jwt_required()
-def put(message_id):
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
-    if not user.is_admin:
-        return jsonify({"msg": "Admin access required"}), 403
-    
-    message = Getintouch.query.get_or_404(message_id)
-    data = request.get_json()
-    message.name = data.get('name', message.name)
-    message.email = data.get('email', message.email)
-    message.subject = data.get('subject', message.subject)
-    message.phone_number = data.get('phone_number', message.phone_number)
-    message.message = data.get('message', message.message)
-    db.session.commit()
-    return jsonify(message.serialize())
-
-@jwt_required()
-def delete(message_id):
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
-    if not user.is_admin:
-        return jsonify({"msg": "Admin access required"}), 403
-    
-    message = Getintouch.query.get_or_404(message_id)
-    db.session.delete(message)
-    db.session.commit()
-    return '', 204
 
 @api.route('/fill-database', methods=['POST'])
 def fill_database():
