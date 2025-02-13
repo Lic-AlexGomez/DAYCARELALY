@@ -1722,6 +1722,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       updateSettings: async (id, updatedSettings) => {
         try {
+          
           const store = getStore()
           const token = store.token || localStorage.getItem("token")
 

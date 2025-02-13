@@ -190,9 +190,12 @@ const Login = () => {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            <Button type="submit" className="tw-w-full tw-mt-4">
+            <div className="tw-flex tw-items-center tw-justify-between tw-mt-4">
+                  <Button type="submit" className="tw-mx-auto  tw-mt-4 border tw-bg-primary hover:tw-bg-purple-600 hover:tw-text-white">
               Sign in
             </Button>
+            </div>
+        
           </form>
         </CardContent>
         <CardFooter className="tw-flex tw-flex-col tw-space-y-2">

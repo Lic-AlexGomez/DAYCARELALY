@@ -2018,17 +2018,12 @@ def delete_parent_event(id):
 # @jwt_required()
 def get_settings():
     settings = Settings.query.all()
-    settings = list(map(lambda x: x.serialize(), settings))
-    return jsonify(settings), 200
+    return jsonify([ps.serialize() for ps in settings]),200
 
 @api.route('/settings/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_settings(id):
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    if not user or user.role != 'admin':
-        return jsonify({"message": "Unauthorized"}), 403
-
     settings = Settings.query.get(id)
     if not settings:
         return jsonify({"message": "Settings not found"}), 404
