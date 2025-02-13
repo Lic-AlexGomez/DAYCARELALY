@@ -2451,6 +2451,46 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS    
 
 
+
+@api.route('/getintouch/<int:message_id>', methods=['GET', 'PUT', 'DELETE'])
+@jwt_required()
+def get(message_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    if not user.is_admin:
+        return jsonify({"msg": "Admin access required"}), 403
+    
+    message = Getintouch.query.get_or_404(message_id)
+    return jsonify(message.serialize())
+@jwt_required()
+def put(message_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    if not user.is_admin:
+        return jsonify({"msg": "Admin access required"}), 403
+    
+    message = Getintouch.query.get_or_404(message_id)
+    data = request.get_json()
+    message.name = data.get('name', message.name)
+    message.email = data.get('email', message.email)
+    message.subject = data.get('subject', message.subject)
+    message.phone_number = data.get('phone_number', message.phone_number)
+    message.message = data.get('message', message.message)
+    db.session.commit()
+    return jsonify(message.serialize())
+
+@jwt_required()
+def delete(message_id):
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    if not user.is_admin:
+        return jsonify({"msg": "Admin access required"}), 403
+    
+    message = Getintouch.query.get_or_404(message_id)
+    db.session.delete(message)
+    db.session.commit()
+    return '', 204
+
 @api.route('/fill-database', methods=['POST'])
 def fill_database():
     try:

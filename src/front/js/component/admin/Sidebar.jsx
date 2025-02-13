@@ -13,6 +13,7 @@ import {
   CalendarIcon as Calendar1,
   Menu,
   X,
+
 } from "lucide-react"
 
 const menuItems = [
@@ -23,6 +24,7 @@ const menuItems = [
   { icon: Calendar1, label: "Events", path: "/admin-dashboard/events" },
   { icon: FileText, label: "Enrolls", path: "/admin-dashboard/enrollments" },
   { icon: Mail, label: "Emails", path: "/admin-dashboard/emails" },
+  { icon: Mail, label: "Get in touch", path: "/admin-dashboard/get-in-touch" },
   { icon: Activity, label: "Programs", path: "/admin-dashboard/activities" },
   { icon: UserX, label: "Inactive Accounts", path: "/admin-dashboard/inactive-accounts" },
   { icon: UserX, label: "Services", path: "/admin-dashboard/services" },

@@ -1,4 +1,4 @@
-"use client"
+
 
 import React, { useState, useContext } from "react"
 import { useNavigate, Link } from "react-router-dom"
@@ -62,11 +62,10 @@ const CardFooter = ({ className, ...props }) => (
 const Alert = ({ className, variant = "default", ...props }) => (
   <div
     role="alert"
-    className={`tw-rounded-lg tw-border tw-p-4 ${
-      variant === "destructive"
+    className={`tw-rounded-lg tw-border tw-p-4 ${variant === "destructive"
         ? "tw-border-destructive/50 tw-text-destructive dark:tw-border-destructive [&>svg]:tw-text-destructive"
         : "tw-text-foreground"
-    } ${className}`}
+      } ${className}`}
     {...props}
   />
 )

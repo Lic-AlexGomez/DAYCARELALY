@@ -41,6 +41,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       teacherData: null,
       teacherClasses: [],
       teacherStudents: [],
+      getintouchMessages: [],
     },
     actions: {
 
@@ -2149,6 +2150,70 @@ const getState = ({ getStore, getActions, setStore }) => {
           return data.url
         } catch (error) {
           console.error("Error uploading profile photo:", error)
+        }
+      },
+      fetchGetintouchMessages: async () => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/getintouch`, {
+            headers: getActions().getAuthHeaders(),
+          })
+          if (!resp.ok) throw new Error("Failed to fetch getintouch messages")
+          const data = await resp.json()
+          setStore({ getintouchMessages: data })
+        } catch (error) {
+          console.error("Error fetching getintouch messages:", error)
+        }
+      },
+
+      createGetintouchMessage: async (messageData) => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/getintouch`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(messageData),
+          })
+          if (!resp.ok) throw new Error("Failed to create getintouch message")
+          const newMessage = await resp.json()
+          setStore({ getintouchMessages: [...getStore().getintouchMessages, newMessage] })
+          return newMessage
+        } catch (error) {
+          console.error("Error creating getintouch message:", error)
+        }
+      },
+
+      updateGetintouchMessage: async (messageId, messageData) => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/getintouch/${messageId}`, {
+            method: "PUT",
+            headers: getActions().getAuthHeaders(),
+            body: JSON.stringify(messageData),
+          })
+          if (!resp.ok) throw new Error("Failed to update getintouch message")
+          const updatedMessage = await resp.json()
+          const updatedMessages = getStore().getintouchMessages.map((msg) =>
+            msg.id === messageId ? updatedMessage : msg,
+          )
+          setStore({ getintouchMessages: updatedMessages })
+          return updatedMessage
+        } catch (error) {
+          console.error("Error updating getintouch message:", error)
+        }
+      },
+
+      deleteGetintouchMessage: async (messageId) => {
+        try {
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/getintouch/${messageId}`, {
+            method: "DELETE",
+            headers: getActions().getAuthHeaders(),
+          })
+          console.log(resp)
+          if (!resp.ok) throw new Error("Failed to delete getintouch message")
+          const updatedMessages = getStore().getintouchMessages.filter((msg) => msg.id !== messageId)
+          setStore({ getintouchMessages: updatedMessages })
+        } catch (error) {
+          console.error("Error deleting getintouch message:", error)
         }
       },
     },
