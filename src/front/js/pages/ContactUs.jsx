@@ -104,11 +104,11 @@ const ContactUs = () => {
 
   return (
     <div className="container-form">
-      <h1 className="contactus tw-text-4xl tw-font-bold tw-pt-10 ">Contact Us</h1>
+      <h1 className="contactus tw-text-4xl tw-font-bold tw-pt-10 tw-animate-twinkle tw-mb-4">Contact Us</h1>
       <p className="anyquestion tw-mx-auto tw-w-70 tw-flex tw-justify-center">
         Any question or remarks? Just write us a message!
       </p>
-      <div className="contactus-container tw-mx-auto tw-w-64 tw-flex tw-justify-start tw-pb-10">
+      <div className="contactus-container tw-mx-auto tw-w-64 tw-flex tw-justify-start tw-pb-10 md:tw-pb-0 lg:tw-pb-0">
         <div className="contactInfo tw-w-64">
           <h2 className="tw-text-2xl tw-font-bold tw-text-white tw-ml-7 tw-w-max tw-mt-16">
             Contact information
@@ -126,7 +126,7 @@ const ContactUs = () => {
                 />
                 <p className="tw-text-white">+1012 3456 789</p>
               </li>
-              <li className="gmail tw-flex tw-items-center tw-space-x-4 tw-mb-4 tw-mb-8">
+              <li className="gmail tw-flex tw-items-center tw-space-x-4 tw-mb-8">
                 <img
                   className="img-gmail tw-w-8 tw-h-8 tw-object-cover tw-ml-6 "
                   src={email}
@@ -169,11 +169,11 @@ const ContactUs = () => {
         <div>
           <form onSubmit={handleSubmit}>
             <div className="form-container tw-p-10">
-              <div className="tw-flex tw-space-x-24 ">
+              <div className="tw-flex md:tw-space-x-24  tw-flex-col md:tw-flex-row lg:tw-flex-row ">
                 <div className="firstName tw-space-y-2 tw-flex-1 ">
                   <label className="labelFirstName tw-block">First Name</label>
                   <input
-                    className="inputFirstName tw-block tw-p-2  tw-w-64"
+                    className="coi inputFirstName tw-block tw-p-2  tw-w-64"
                     type="text"
                     name="first_name"
                     value={dataContactUs.first_name}
@@ -182,9 +182,9 @@ const ContactUs = () => {
                 </div>
 
                 <div className="lastName tw-space-y-2 tw-flex-1 ">
-                  <label className="labelLastName tw-block">Last Name</label>
+                  <label className="labelLastName tw-mt-10 md:tw-mt-0 tw-block">Last Name</label>
                   <input
-                    className="inputLastName tw-block tw-p-2 tw-w-64 m"
+                    className="coi inputLastName tw-block tw-p-2 tw-w-64 m"
                     type="text"
                     name="last_name"
                     value={dataContactUs.last_name}
@@ -192,11 +192,11 @@ const ContactUs = () => {
                   />
                 </div>
               </div>
-              <div className="tw-flex  tw-space-x-24 ">
+              <div className="tw-flex md:tw-space-x-24  tw-flex-col md:tw-flex-row lg:tw-flex-row ">
                 <div className="email tw-mt-10 tw-space-y-2 tw-flex-1 ">
-                  <label className="labelEmail tw-block">email</label>
+                  <label className="labelEmail tw-block">Email</label>
                   <input
-                    className="inputEmail tw-block tw-p-2 tw-w-64"
+                    className="coi inputEmail tw-block tw-p-2 tw-w-64"
                     type="email"
                     name="email"
                     value={dataContactUs.email}
@@ -207,7 +207,7 @@ const ContactUs = () => {
                 <div className="phone tw-mt-10 tw-space-y-2 tw-flex-1 ">
                   <label className="labelPhone tw-block">Phone number</label>
                   <input
-                    className="inputPhone tw-block tw-p-2 tw-w-64"
+                    className="coi inputPhone tw-block tw-p-2 tw-w-64"
                     type="text"
                     name="phone_number"
                     value={dataContactUs.phone_number}
@@ -221,8 +221,8 @@ const ContactUs = () => {
               <h1 className="selectSubject tw-ml-10">
                 <strong>Select Subject?</strong>
               </h1>
-              <div className="tw-flex">
-                <div className="GenerarInquey tw-mt-5 tw-ml-10">
+              <div className="tw-flex tw-flex-col tw-ml-10 md:tw-flex-row lg:tw-flex-row">
+                <div className="GenerarInquey tw-mt-5 tw-ml-0 md:tw-ml-10 lg:tw-ml-10">
                   <label className="tw-inline-flex items-center space-x-2">
                     <input
                       type="radio"
@@ -235,7 +235,7 @@ const ContactUs = () => {
                   </label>
                 </div>
 
-                <div className="techsolutions tw-mt-5 tw-ml-10">
+                <div className="techsolutions tw-mt-5 tw-ml-0 md:tw-ml-10 lg:tw-ml-10">
                   <label className="tw-inline-flex items-center space-x-2">
                     <input
                       type="radio"
@@ -247,7 +247,7 @@ const ContactUs = () => {
                     <span>Technical </span>
                   </label>
                 </div>
-                <div className="product support tw-mt-5 tw-ml-5">
+                <div className="product support tw-mt-5 tw-ml-0 md:tw-ml-5 lg:tw-ml-5">
                   <label className="tw-inline-flex items-center space-x-2">
                     <input
                       type="radio"
@@ -259,7 +259,7 @@ const ContactUs = () => {
                     <span>Products</span>
                   </label>
                 </div>
-                <div className="commercialconsulting tw-mt-5 tw-ml-5">
+                <div className="commercialconsulting tw-mt-5 tw-ml-0 md:tw-ml-5 lg:tw-ml-5">
                   <label className="tw-inline-flex items-center ">
                     <input
                       type="radio"
@@ -274,10 +274,10 @@ const ContactUs = () => {
               </div>
             </div>
             <div>
-              <div className="message-container tw-flex tw-flex-col tw-ml-10 tw-mr-5">
+              <div className="message-container tw-flex tw-flex-col  tw-mr-10 tw-ml-15">
                 <label className="message tw-mt-10">Message</label>
                 <input
-                  className="inputPhone tw-block tw-p-2 tw-w-full tw-mt-2"
+                  className="coi inputPhone tw-block tw-py-8 tw-m-3  tw-mt-2"
                   type="text"
                   name="message"
                   value={dataContactUs.message}
