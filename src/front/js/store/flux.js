@@ -1,9 +1,12 @@
 import { se } from "date-fns/locale/se"
+import { set } from "date-fns/set"
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
-      admin: false,
+      admin: null,
+      paren: null,
+      teache: null,
       token: localStorage.getItem("token") || null,
       user: JSON.parse(localStorage.getItem("user")) || null,
       message: null,
@@ -2351,7 +2354,34 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message };
         }
       },
-    },
+      getPrivate: async (param) => {
+        try {console.log(param)
+
+          const resp = await fetch(`${process.env.BACKEND_URL}/api/${param}`, {
+            method: "GET",
+            headers: getActions().getAuthHeaders(),
+          })
+
+          console.log(resp.status)
+					if (resp.status == 422) {
+            if(param == 'admini'){
+						setStore({ admin: false })
+            }
+            if(param == 'paren'){
+              setStore({ paren: false })
+            }
+            if(param == 'teache'){
+              setStore({ teach: false })
+            }
+					} else {
+						
+					}
+				} catch (error) {
+					console.error('Error fetching private data:', error);
+				}
+      }
+
+      }
   }
 }
 

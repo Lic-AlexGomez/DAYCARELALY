@@ -1,5 +1,6 @@
-import React from "react"
-import { NavLink } from "react-router-dom"
+import React,{useEffect,useContext} from "react"
+import {Context} from "../../store/appContext"
+import { NavLink , useNavigate} from "react-router-dom"
 import { Home, Users, BookOpen, CheckSquare, Calendar, Settings } from "lucide-react"
 
 const menuItems = [
@@ -12,6 +13,20 @@ const menuItems = [
 ]
 
 const TeacherSidebar = () => {
+  const navigate = useNavigate()
+  const { store, actions } = useContext(Context)
+
+    useEffect(() => {
+      actions.getPrivate("teache");
+      },[])
+    useEffect(() =>  {
+  
+      if(store.teache === false){
+        navigate("/login")
+      }else{
+        console.log("parent is logged in",store.teache)
+      }
+    }, [store.teache])
   return (
     <nav className="tw-bg-white tw-w-64 tw-h-full tw-border-r tw-border-gray-200">
       <div className="tw-flex tw-items-center tw-justify-center tw-h-16 tw-border-b tw-border-gray-200">

@@ -3642,3 +3642,28 @@ def get_teacher_students():
         print("Error in get_teacher_students:", str(e))
         return jsonify({"error": "An error occurred", "details": str(e)}), 500
 
+# routes protegidas retornar home
+@api.route('/admini', methods=['GET'])
+@jwt_required()
+def protected():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        return jsonify({"msg": "Missing Authorization Header"}), 422
+    return jsonify(current_user), 200
+@api.route('/paren', methods=['GET'])
+@jwt_required()
+def protectedP():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        return jsonify({"msg": "Missing Authorization Header"}), 401
+    return jsonify(current_user), 200
+@api.route('/teache', methods=['GET'])
+@jwt_required()
+def protectedT():
+    current_user = get_jwt_identity()
+
+    if current_user is None:
+        return jsonify({"msg": "Missing Authorization Header"}), 401
+    return jsonify(current_user), 200
