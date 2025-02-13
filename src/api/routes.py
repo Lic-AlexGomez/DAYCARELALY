@@ -632,6 +632,17 @@ def create_contact():
     db.session.add(new_contact)
     db.session.commit()
     return jsonify(new_contact.serialize()), 201
+@api.route('/contacts/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_contact(id):
+    contact = Contact.query.get(id)
+    if not contact:
+        return jsonify({"error": "Contact not found"}), 404
+
+    db.session.delete(contact)
+    db.session.commit()
+    return jsonify({"message": "Contact deleted"}), 200
+
 
 @api.route('/upload', methods=['POST'])
 def upload_file():
