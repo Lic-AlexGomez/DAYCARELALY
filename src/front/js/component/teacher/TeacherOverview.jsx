@@ -4,33 +4,33 @@ import { Users, BookOpen, CheckSquare, Clock } from "lucide-react";
 
 const TeacherOverview = () => {
   const { store, actions } = useContext(Context);
-  const { teacherStudents, teacherClasses } = store;
+  const { teacherStudents, teachersClasses } = store; 
   const [studentCount, setStudentCount] = useState(0);
   const [assignedClassCount, setAssignedClassCount] = useState(0);
 
   useEffect(() => {
-    actions.getStudentsByTeacher();  
-    actions.fetchTeachersClasses(); 
+    actions.getStudentsByTeacher();
+    actions.fetchTeachersClasses();
   }, []);
+
   useEffect(() => {
-    setStudentCount(teacherStudents.length);  
+    setStudentCount(teacherStudents?.length || 0);
   }, [teacherStudents]);
+
   useEffect(() => {
-    if (teacherClasses) {
-      setAssignedClassCount(teacherClasses.length); 
-    }
-  }, [teacherClasses]);
+    setAssignedClassCount(teachersClasses?.length || 0);
+  }, [teachersClasses]); // Cambio aquí: teacherClasses -> teachersClasses
 
   const stats = [
     { title: "Total Students", value: studentCount, icon: Users, color: "tw-bg-blue-500" },
     { title: "Assigned Classes", value: assignedClassCount, icon: BookOpen, color: "tw-bg-green-500" },
-    { title: "Pending Tasks", value: "12", icon: CheckSquare, color: "tw-bg-yellow-500" },
-    { title: "Class Hours", value: "24", icon: Clock, color: "tw-bg-purple-500" },
+    { title: "Pending Tasks", value: "Coming Soon", icon: CheckSquare, color: "tw-bg-gray-400" },
+    { title: "Class Hours", value: "Coming Soon", icon: Clock, color: "tw-bg-gray-400" },
   ];
 
   return (
-    <div className="tw-p-6 ">
-      <div className="tw-grid tw-grid-cols-4  tw-md:grid-cols-2 tw-lg:grid-cols-4 tw-gap-4">
+    <div className="tw-p-6">
+      <div className="tw-grid tw-grid-cols-4 tw-md:grid-cols-2 tw-lg:grid-cols-4 tw-gap-4">
         {stats.map((stat, index) => (
           <div key={index} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
             <div className="tw-flex tw-items-center">
