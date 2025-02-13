@@ -1,91 +1,266 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
-  --primary: #9c29b2;
-  --secondary: #ffc909;
-  --background: #FFF5E9;
-}
-.container-form{
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   flex-direction: column;
-   height: 100vh;
-   background-color: #ffc909;
-   padding-bottom: 20px;
-}
-
-.contactus-container{
-   margin-top: 30px;
-   margin-bottom: 100px;
-   height: 700px;
-   width: 1200px;
-   background-color: #ffffff;
-   border-radius: 10px;
-   border: 2px solid black;
-   
-   
-}
-.contactInfo{
-   width: 450px;
-   height: 680px;
-   background-color: #9C29B2;
-   margin: 10px;
-   border-radius:10px;
-   padding-left: 1rem;
-}
-.paragraphinfo{
-   color: #C9C9C9;
-}
-.contactus{
-   margin-top:100px;
-  text-align: center;
-}
-.anyquestion{
-   color: #717171;
-}
-
-.twitter-form,.facebook-form,.instagram-form{
-   width: 30px;         
-  height: 30px;         
-  background-color: #000000;  
-  border-radius: 50%;  
-  margin-left: 25px; 
-  margin-top: 250px; 
-}
-
-
-.inputFirstName,.inputLastName,.inputEmail,.inputPhone{
-   border-bottom: 1px solid #8D8D8D;
-  
-}
-
-.labelFirstName,.labelLastName,.labelEmail,.labelPhone,.message{
-   color: #8D8D8D;
-}
-.button-container{
-   display: flex;       
-  
-}
-.sendButton{
-   background-color: #9C29B2;
-   color:white;
-   width:200px;
-   height: 50px;
-   border-radius: 5px;
-   margin-top: 40px;
-   margin-left:auto;
-   margin-right: 20px;
-}
-.img-avion{
-   width: 300px;
-   height: 200px;
-   margin-left: 200px;
-
-}
-input::placeholder, textarea::placeholder{
-   color: #8D8D8D !important;
+   --primary: #9c29b2;
+   --secondary: #ffc909;
+   --background: #FFF5E9;
  }
  
+ /* Estilos Generales */
+ .container-form {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   min-height: 100vh;
+   background-color: var(--background);
+   padding: 2rem 1rem;
+ }
+ 
+ .contactus-container {
+   width: 100%;
+   max-width: 1200px;
+   background: white;
+   border-radius: 10px;
+   border: 2px solid black;
+   margin: 2rem 0;
+   display: flex;
+ }
+ 
+ /* Sección de Información de Contacto */
+ .contactInfo {
+   width: 450px;
+   background: var(--primary);
+   padding: 2rem;
+   border-radius: 10px 0 0 10px;
+   position: relative;
+ }
+ 
+ .contactInfo h2 {
+   color: white;
+   font-size: 1.8rem;
+   font-weight: 700;
+   margin-bottom: 1rem;
+   margin: 0 auto;
+ }
+ 
+ .paragraphinfo {
+   color: #C9C9C9;
+   margin-bottom: 3rem;
+   margin: 0 auto;
+ }
+ 
+ .info ul {
+   list-style: none;
+   padding: 0;
+ }
+ 
+ .info li {
+   display: flex;
+   align-items: center;
+   margin-bottom: 2rem;
+   color: white;
+ }
+ 
+ .info img {
+   width: 32px;
+   height: 32px;
+   margin-right: 1rem;
+ }
+ 
+ .socialmedia {
+   position: absolute;
+   bottom: 2rem;
+   left: 2rem;
+   display: flex;
+   gap: 1.5rem;
+ }
+ 
+ .socialmedia a {
+   width: 35px;
+   height: 35px;
+   background: black;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   transition: transform 0.3s ease;
+ }
+ 
+ .socialmedia a:hover {
+   transform: scale(1.1);
+ }
+ 
+ /* Formulario */
+ .form-container {
+   flex: 1;
+   padding: 2rem;
+ }
+ 
+ .input-group {
+   display: flex;
+   gap: 2rem;
+   margin-bottom: 2rem;
+ }
+ 
+ .input-field {
+   flex: 1;
+ }
+ 
+ 
+ .input-field label {
+   display: block;
+   color: #000000;
+   margin-bottom: 0.5rem;
+ }
+ 
+ .input-field input {
+   width: 100%;
+   padding: 0.5rem 0;
+   border: none;
+   border-bottom: 2px solid #000000;
+   transition: border-color 0.3s ease;
+ }
+ 
+ .input-field input:focus {
+   outline: none;
+   border-color: var(--primary);
+ }
+ 
+ /* Radio Buttons */
+ .radio-group {
+   margin: 2rem 0;
+ }
+ 
+ .radio-group h3 {
+   font-size: 1.2rem;
+   font-weight: 600;
+   margin-bottom: 1rem;
+ }
+ 
+ .radio-options {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+   gap: 1rem;
+ }
+ 
+ .radio-label {
+   display: flex;
+   align-items: center;
+   gap: 0.5rem;
+   cursor: pointer;
+ }
+ 
+ /* Mensaje y Botón */
+ .message-container {
+   margin: 2rem auto;
+ }
+ 
+ .message-container label {
+   display: block;
+   color: #8D8D8D;
+   margin-bottom: 0.5rem;
+text-align: center;
+ }
+ 
+ .message-container textarea {
+   width: 100%;
+   height: 120px;
+   padding: 1rem;
+   border: 2px solid #8D8D8D;
+   border-radius: 8px;
+   resize: vertical;
+ }
+ 
+ .button-container {
+   display: flex;
+   justify-content: space-between;
+   align-items: flex-end;
+ }
+ 
+ .sendButton {
+   background: var(--primary);
+   color: white;
+   padding: 1rem 3rem;
+   border: none;
+   border-radius: 8px;
+   cursor: pointer;
+   transition: background 0.3s ease;
+   margin: 0 30px;
+ }
+ 
+ .sendButton:hover {
+   background: #8a239e;
+ }
+ 
+ .img-avion {
+   width: 250px;
+   opacity: 0.8;
+   transition: opacity 0.3s ease;
+ }
+ 
+ .img-avion:hover {
+   opacity: 1;
+ }
+ 
+ /* Responsividad */
+ @media (max-width: 1024px) {
+   .contactus-container {
+     flex-direction: column;
+   }
+   
+   .contactInfo {
+     width: 100%;
+     border-radius: 10px 10px 0 0;
+   }
+   
+   .img-avion {
+     display: none;
+   }
+ }
+ 
+ @media (max-width: 768px) {
+   .input-group {
+     flex-direction: column;
+     gap: 1rem;
+   }
+   
+   .radio-options {
+     grid-template-columns: 1fr;
+   }
+   
+   .sendButton {
+     width: 100%;
+   }
+ }
+ 
+ @media (max-width: 480px) {
+   .contactInfo {
+     padding: 1.5rem;
+   }
+   
+   .form-container {
+      padding: 1.5rem;
+      margin: 0 auto;
+      display: flex
+;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+  }
+   
+   .info li {
+     flex-direction: column;
+     align-items: flex-start;
+   }
+   
+   .socialmedia {
+     position: static;
+     margin-top: 2rem;
+     justify-content: center;
+   }
+ }
+ .coi{
+  border: 1px solid #333232 !important;
+  border-radius: 10px;
+}
+.contactus {
+  
+}
