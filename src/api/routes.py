@@ -2100,8 +2100,13 @@ def signup_admin():
 @jwt_required()
 def get_enrolled_classes():
     user_id = get_jwt_identity()
+    
+    # Buscar las inscripciones del usuario
     enrollments = Enrollment.query.filter_by(user_id=user_id).all()
-    enrolled_classes = [Class.query.get(e.class_id).serialize() for e in enrollments]
+
+    # Obtener los detalles de las clases inscritas
+    enrolled_classes = [Class.query.filter_by(name=e.class_name).first().serialize() for e in enrollments]
+
     return jsonify(enrolled_classes), 200
 
 @api.route('/enroll', methods=['POST'])

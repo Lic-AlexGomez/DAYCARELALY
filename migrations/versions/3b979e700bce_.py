@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: fc43301dcf3f
+Revision ID: 3b979e700bce
 Revises: 
-Create Date: 2025-02-12 04:15:35.366516
+Create Date: 2025-02-13 03:57:42.637342
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fc43301dcf3f'
+revision = '3b979e700bce'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -76,14 +76,6 @@ def upgrade():
     sa.Column('message', sa.Text(), nullable=False),
     sa.Column('date', sa.DateTime(), nullable=False),
     sa.Column('scheduled_date', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('enrollment',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('child_name', sa.String(length=20), nullable=False),
-    sa.Column('class_name', sa.String(length=20), nullable=False),
-    sa.Column('price', sa.Integer(), nullable=False),
-    sa.Column('enrolled_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('event',
@@ -467,6 +459,16 @@ def upgrade():
     sa.ForeignKeyConstraint(['class_id'], ['class.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('enrollment',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('class_id', sa.Integer(), nullable=False),
+    sa.Column('child_name', sa.String(length=20), nullable=False),
+    sa.Column('enrolled_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
+    sa.ForeignKeyConstraint(['class_id'], ['class.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('grade',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('child_id', sa.Integer(), nullable=False),
@@ -516,6 +518,7 @@ def downgrade():
     op.drop_table('parent_grade')
     op.drop_table('parent_attendance')
     op.drop_table('grade')
+    op.drop_table('enrollment')
     op.drop_table('attendance')
     op.drop_table('task')
     op.drop_table('program')
@@ -555,7 +558,6 @@ def downgrade():
     op.drop_table('gallery')
     op.drop_table('eventsuscriptions')
     op.drop_table('event')
-    op.drop_table('enrollment')
     op.drop_table('email')
     op.drop_table('course')
     op.drop_table('contact')

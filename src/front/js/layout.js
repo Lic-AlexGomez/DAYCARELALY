@@ -54,6 +54,7 @@ import GalleryView from "./component/admin/Gallery.jsx"
 import SettingsPage from "./component/admin/SettingsView"
 import ForgotPassword from "./component/ForgotPassword.jsx"
 import GetInTouchView from "./component/admin/GetInTouchView.jsx"
+import ContactUsView from "./component/admin/ContactUsVie.jsx"
 
 // Componentes del Teacher Dashboard
 import TeacherDashboard from "./component/teacher/TeacherDashboard"
@@ -120,6 +121,7 @@ const AdminDashboard = () => (
           <Route path="/profile" element={<ProfileView />} />
           <Route path="/dashboard-content" element={<DashboardContent />} />
           <Route path="/get-in-touch" element={<GetInTouchView />} />
+          <Route path="ContactUs" element={<ContactUsView />} />
           <Route path="*" element={<DashboardOverview />} />
         </Routes>
       </main>

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../../store/appContext";
-// import "../../../styles/Getintouch.css";
+//import "../../../styles/Getintouch.css";
 import imagen from "../../../img/bgGetinT.png";
 
 
@@ -70,7 +70,7 @@ const Getintouch = () => {
               type="text"
               name="name"
               placeholder="Your name"
-              className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90"
+              className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90 tw-placeholder-stone-600"
               value={formData.name}
               onChange={handleChange}
             />
@@ -78,7 +78,7 @@ const Getintouch = () => {
               type="email"
               name="email"
               placeholder="Your email"
-              className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90"
+              className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90 tw-placeholder-stone-600"
               value={formData.email}
               onChange={handleChange}
             />
@@ -86,7 +86,7 @@ const Getintouch = () => {
               type="text"
               name="subject"
               placeholder="Subject"
-              className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90"
+              className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90 tw-placeholder-stone-600"
               value={formData.subject}
               onChange={handleChange}
             />
@@ -94,7 +94,7 @@ const Getintouch = () => {
               type="tel"
               name="phone_number"
               placeholder="Phone number"
-              className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90"
+              className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90 tw-placeholder-stone-600"
               value={formData.phone_number}
               onChange={handleChange}
             />
@@ -103,7 +103,7 @@ const Getintouch = () => {
             name="message"
             placeholder="Message"
             rows="5"
-            className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90 tw-resize-none tw-mb-16"
+            className="tw-w-full tw-p-3 tw-border-none tw-rounded-md tw-bg-white tw-bg-opacity-90 tw-resize-none tw-mb-16 tw-placeholder-stone-600"
             value={formData.message}
             onChange={handleChange}
           ></textarea>
