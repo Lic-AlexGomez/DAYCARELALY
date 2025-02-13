@@ -206,7 +206,7 @@ export const SignupCommon = () => {
   }
 
   return (
-    <div className="tw-mt-3 tw-flex tw-items-center tw-justify-center tw-min-h-screen tw-bg-gradient-to-b tw-from-[#FFC909] tw-to-[#a16bac] tw-px-4">
+    <div className="tw-flex tw-items-center tw-justify-center tw-min-h-screen tw-bg-gradient-to-b tw-from-[#FFC909] tw-to-[#a16bac] tw-px-4">
       <Card className="tw-my-14 tw-w-full tw-max-w-2xl tw-bg-white tw-bg-opacity-90">
         <CardHeader>
           <CardTitle>Welcome to Colorful Kids Daycare !</CardTitle>

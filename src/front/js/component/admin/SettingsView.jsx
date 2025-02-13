@@ -1,167 +1,176 @@
-
-
-import React, { useState, useEffect, useContext } from "react"
-import { Save, Loader2 } from "lucide-react"
-import { Context } from "../../store/appContext"
-
+import React, { useState, useEffect, useContext } from "react";
+import { Save, Loader2 } from "lucide-react";
+import { Context } from "../../store/appContext";
+import { set } from "date-fns/set";
 
 const Card = ({ className, children, ...props }) => (
   <div className={`tw-bg-white tw-rounded-lg tw-border tw-border-gray-200 tw-shadow-sm ${className}`} {...props}>
     {children}
   </div>
-)
+);
 
 const CardHeader = ({ className, children, ...props }) => (
   <div className={`tw-p-6 ${className}`} {...props}>
     {children}
   </div>
-)
+);
 
 const CardTitle = ({ className, children, ...props }) => (
   <h3 className={`tw-text-2xl tw-font-semibold tw-leading-none tw-tracking-tight ${className}`} {...props}>
     {children}
   </h3>
-)
+);
 
 const CardContent = ({ className, children, ...props }) => (
   <div className={`tw-p-6 tw-pt-0 ${className}`} {...props}>
     {children}
   </div>
-)
+);
 
 const Button = ({ className, variant = "default", size = "default", children, ...props }) => {
   const baseStyles =
-    "tw-inline-flex tw-items-center tw-justify-center tw-rounded-md tw-text-sm tw-font-medium tw-transition-colors focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ring focus-visible:tw-ring-offset-2 disabled:tw-opacity-50 disabled:tw-pointer-events-none tw-ring-offset-background"
+    "tw-inline-flex tw-items-center tw-justify-center tw-rounded-md tw-text-sm tw-font-medium tw-transition-colors focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ring focus-visible:tw-ring-offset-2 disabled:tw-opacity-50 disabled:tw-pointer-events-none tw-ring-offset-background";
   const variants = {
     default: "tw-bg-primary tw-text-primary-foreground hover:tw-bg-primary/90",
     outline: "tw-border tw-border-input hover:tw-bg-accent hover:tw-text-accent-foreground",
-  }
+  };
   const sizes = {
     default: "tw-h-10 tw-py-2 tw-px-4",
     sm: "tw-h-9 tw-px-3",
     lg: "tw-h-11 tw-px-8",
-  }
+  };
 
   return (
     <button className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`} {...props}>
       {children}
     </button>
-  )
-}
+  );
+};
 
 const Input = ({ className, ...props }) => (
   <input
     className={`tw-flex tw-h-10 tw-w-full tw-rounded-md tw-border tw-border-input tw-bg-background tw-px-3 tw-py-2 tw-text-sm tw-ring-offset-background file:tw-border-0 file:tw-bg-transparent file:tw-text-sm file:tw-font-medium placeholder:tw-text-muted-foreground focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ring focus-visible:tw-ring-offset-2 disabled:tw-cursor-not-allowed disabled:tw-opacity-50 ${className}`}
     {...props}
   />
-)
+);
 
 const SettingsView = () => {
-  const { actions, store } = useContext(Context)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
-  console.log(store)
-  const [settings, setSettings] = useState({
-    id: store.user.id,
-    name_daycare: "",
-    admin_email: "",
-    max_capacity: 0,
-    phone: "",
-    schedule_attention: "",
-    facebook: "",
-    twitter: "",
-    instagram: "",
-    linkedin: "",
-    image: "",
-    address: "",
-  })
+  const { actions, store } = useContext(Context);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Estado inicial combinando valores por defecto con datos del backend
+  const [settings, setSettings] = useState(() => {
+    const initialSettings = store.settings || {};
+    return {
+      id: store.user?.id || "",
+      name_daycare: initialSettings.name_daycare || "",
+      admin_email: initialSettings.admin_email || "",
+      max_capacity: initialSettings.max_capacity ? Number(initialSettings.max_capacity) : 0,
+      phone: initialSettings.phone || "",
+      schedule_attention: initialSettings.schedule_attention || "",
+      facebook: initialSettings.facebook || "",
+      twitter: initialSettings.twitter || "",
+      instagram: initialSettings.instagram || "",
+      linkedin: initialSettings.linkedin || "",
+      image: initialSettings.image || "",
+      address: initialSettings.address || "",
+    };
+  });
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        actions.fetchSettings()
+        await actions.fetchSettings();
+        await setSettings((prev) => ({
+          ...prev,
+          name_daycare: store.settings.name_daycare || "",
+          admin_email: store.settings.admin_email || "",
+          max_capacity: store.settings.max_capacity ? Number(store.settings.max_capacity) : 0,
+          phone: store.settings.phone || "",
+          schedule_attention: store.settings.schedule_attention || "",
+          facebook: store.settings.facebook || "",
+          twitter: store.settings.twitter || "",
+          instagram: store.settings.instagram || "",
+          linkedin: store.settings.linkedin || "",
+          image: store.settings.image || "",
+          address: store.settings.address || "",
+        }));
       } catch (error) {
-        console.error("Error loading configurations:", error)
-        setError("Configuration could not be loaded. Please try again later.")
+        setError("Configuration could not be loaded. Please try again later.");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  
+  }, []);
 
-  useEffect(() => {
-    if (store.settings && store.settings.length > 0) {
-      setSettings(store.settings[0])
-    }
-  }, [store.settings])
+
 
   const handleInputChange = (e) => {
-    const { name, value, type } = e.target
+    const { name, value, type } = e.target;
     setSettings((prev) => ({
       ...prev,
       [name]: type === "number" ? Number(value) : value,
-    }))
-  }
+    }));
+  };
 
   const handleImageChange = async (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
       try {
-        const result = await actions.uploadToCloudinary(file)
-        console.log(result)
+        const result = await actions.uploadToCloudinary(file);
         if (result.success) {
-          setSettings((prevState) => ({
-            ...prevState,
+          setSettings((prev) => ({
+            ...prev,
             image: result.url,
-          }))
+          }));
         } else {
-          throw new Error(result.error || "Error uploading image")
+          throw new Error(result.error || "Error uploading image");
         }
       } catch (error) {
-        console.error("Error uploading image:", error)
-        setError("Could not upload image. Please try again.")
+        console.error("Error uploading image:", error);
+        setError("Could not upload image. Please try again.");
       }
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
-    console.log(settings)
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
     if (!settings.id) {
-      setError("ID no está definido")
-      setIsLoading(false)
-      return
+      setError("ID is required");
+      setIsLoading(false);
+      return;
     }
 
     try {
-      const result = await actions.updateSettings(settings.id, settings)
-      console.log(result)
+      const result = await actions.updateSettings(settings.id, settings);
       if (result) {
-        await actions.fetchSettings()
-        alert("Configuración actualizada correctamente")
-      } else {
-        throw new Error(result.error || "Error al actualizar la configuración")
+        await actions.fetchSettings(); // Recargar datos actualizados
+        alert("Settings updated successfully!");
       }
     } catch (error) {
-      console.error("Error al actualizar la configuración:", error)
-      setError("No se pudo actualizar la configuración. Por favor, intente de nuevo.")
+      console.error("Error updating settings:", error);
+      setError("Failed to update settings. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
       <div className="tw-flex tw-justify-center tw-items-center tw-h-screen">
         <Loader2 className="tw-h-8 tw-w-8 tw-animate-spin" />
       </div>
-    )
+    );
   }
+
 
   return (
     <div className="tw-container tw-mx-auto tw-p-4">
