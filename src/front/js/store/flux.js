@@ -2199,14 +2199,16 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       deleteGetintouchMessage: async (messageId) => {
+      
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/getintouch/${messageId}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
-          console.log(resp)
+         
           if (!resp.ok) throw new Error("Failed to delete getintouch message")
           const updatedMessages = getStore().getintouchMessages.filter((msg) => msg.id !== messageId)
+          console.log(updatedMessages)
           setStore({ getintouchMessages: updatedMessages })
         } catch (error) {
           console.error("Error deleting getintouch message:", error)
