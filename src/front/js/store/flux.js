@@ -2216,7 +2216,48 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error deleting getintouch message:", error)
         }
       },
-    },
+      //TEACHER
+      getAuthHeaders: () => {
+        const token = localStorage.getItem("token");
+        return {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        };
+      },
+      updateUser: async (updatedUserData) => {
+        try {
+          const store = getStore();
+          const userId = store.user.id;
+  
+          if (!store.token) {
+            console.error("No token found");
+            return { success: false, error: "No token found" };
+          }
+          const response = await fetch(`${process.env.BACKEND_URL}api/users/${userId}`, {
+            method: "PUT",
+            headers: getActions().getAuthHeaders(),
+            body: JSON.stringify({
+              username: updatedUserData.username,
+              email: updatedUserData.email,
+            }),
+          });
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Update Failed");
+          }
+          const data = await response.json();
+          setStore({
+            ...store,
+            user: data,  
+          });
+          localStorage.setItem("user", JSON.stringify(data));
+          return { success: true, data };
+        } catch (error) {
+          console.error("Update Error:", error.message);
+          return { success: false, error: error.message };
+        }
+      },
+    }
   }
 }
 

@@ -19,7 +19,7 @@ const TeacherOverview = () => {
 
   useEffect(() => {
     setAssignedClassCount(teachersClasses?.length || 0);
-  }, [teachersClasses]); // Cambio aquí: teacherClasses -> teachersClasses
+  }, [teachersClasses]); 
 
   const stats = [
     { title: "Total Students", value: studentCount, icon: Users, color: "tw-bg-blue-500" },
