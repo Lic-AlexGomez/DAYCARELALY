@@ -16,15 +16,15 @@ const ParentPayments = () => {
   useEffect(() => {
     setFilteredClasses(
       Array.isArray(store.enrolledClasses)
-        ? store.enrolledClasses.filter((payment) => payment.status !== "Paid")
+        ? store.enrolledClasses.filter((payment) => payment.class.status !== "Paid")
         : []
     );
   }, [store.enrolledClasses]);
 
   const handlePaymentSelection = (payment) => {
-    const isSelected = selectedPayments.some((p) => p.id === payment.id);
+    const isSelected = selectedPayments.some((p) => p.id === payment.class.id);
     const newSelectedPayments = isSelected
-      ? selectedPayments.filter((p) => p.id !== payment.id)
+      ? selectedPayments.filter((p) => p.id !== payment.class.id)
       : [...selectedPayments, payment];
 
     setSelectedPayments(newSelectedPayments);
@@ -59,13 +59,13 @@ const ParentPayments = () => {
     }
     const paymentsData = selectedPayments.map((payment) => ({
       user_id: store.user.parent_id || store.user.id,
-      amount: payment.price,
+      amount: payment.class.price,
       concept: "Monthly Payment",
       status: "Paid",  
       due_date: new Date().toISOString().split("T")[0],
       paypal_order_id: order.id,
       payer_email: order.payer.email_address,
-      class_id: payment.id,
+      class_id: payment.class.id,
     }));
 
     try {
@@ -81,11 +81,11 @@ const ParentPayments = () => {
       const data = await response.json();
       console.log("Payments saved in the backend:", data);
       selectedPayments.forEach((payment) => {
-        localStorage.setItem(`paymentTimestamp_${payment.id}`, Date.now().toString());
+        localStorage.setItem(`paymentTimestamp_${payment.class.id}`, Date.now().toString());
       });
       actions.fetchEnrolledClasses();
       setFilteredClasses((prevClasses) =>
-        prevClasses.filter((payment) => !selectedPayments.some((p) => p.id === payment.id))
+        prevClasses.filter((payment) => !selectedPayments.some((p) => p.id === payment.class.id))
       );
       setSelectedPayments([]);
       setTotalAmount(0);
@@ -100,34 +100,34 @@ const ParentPayments = () => {
       <div className="tw-space-y-4">
         {filteredClasses.length > 0 ? (
           filteredClasses.map((payment) => {
-            const disabled = isPaymentDisabled(payment.id);
-            const isSelected = selectedPayments.some((p) => p.id === payment.id);
+            const disabled = isPaymentDisabled(payment.class.id);
+            const isSelected = selectedPayments.some((p) => p.id === payment.class.id);
             const expirationDate = (() => {
-              const ts = localStorage.getItem(`paymentTimestamp_${payment.id}`);
+              const ts = localStorage.getItem(`paymentTimestamp_${payment.class.id}`);
               if (ts) {
                 const nextTimestamp = parseInt(ts, 10) + 30 * 24 * 60 * 60 * 1000;
                 return new Date(nextTimestamp + 6 * 24 * 60 * 60 * 1000);
               }
               return null;
             })();
-            const nextPaymentDate = getNextPaymentDate(payment.id);
+            const nextPaymentDate = getNextPaymentDate(payment.class.id);
 
             return (
-              <div key={payment.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
+              <div key={payment.class.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
                 <div className="tw-flex tw-justify-between tw-items-center tw-mb-2">
-                  <h4 className="tw-text-lg tw-font-semibold">{payment.class_name}</h4>
+                  <h4 className="tw-text-lg tw-font-semibold">{payment.class.name}</h4>
                   <span
-                    className={`tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold ${payment.status === "Paid"
+                    className={`tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold ${payment.class.status === "Paid"
                       ? "tw-bg-green-100 tw-text-green-800"
                       : "tw-bg-yellow-100 tw-text-yellow-800"
                       }`}
                   >
-                    {payment.status}
+                    {payment.class.status}
                   </span>
                 </div>
                 <div className="tw-flex tw-items-center tw-mb-2">
                   <DollarSign className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
-                  <span>${payment.price}</span>
+                  <span>${payment.class.price}</span>
                 </div>
                 {nextPaymentDate && (
                   <div className="tw-flex tw-items-center tw-mb-4">
