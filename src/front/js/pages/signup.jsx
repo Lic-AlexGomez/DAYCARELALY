@@ -96,11 +96,10 @@ const SelectItem = ({ className, children, onClick, ...props }) => (
 
 const Alert = ({ variant, className, children, ...props }) => (
   <div
-    className={`tw-p-4 tw-rounded-lg tw-flex tw-items-center tw-border-2 ${
-      variant === "destructive"
+    className={`tw-p-4 tw-rounded-lg tw-flex tw-items-center tw-border-2 ${variant === "destructive"
         ? "tw-bg-red-100 tw-text-red-700 tw-border-red-300"
         : "tw-bg-[#FFC909] tw-text-[#9C29B2] tw-border-[#9C29B2]"
-    } ${className}`}
+      } ${className}`}
     {...props}
   >
     {children}
@@ -133,11 +132,10 @@ const TabsList = ({ className, children, ...props }) => (
 
 const TabsTrigger = ({ className, children, isActive, ...props }) => (
   <button
-    className={`tw-px-6 tw-py-3 tw-text-lg tw-font-medium tw-rounded-t-lg tw-transition-all tw-duration-300 ${
-      isActive
+    className={`tw-px-6 tw-py-3 tw-text-lg tw-font-medium tw-rounded-t-lg tw-transition-all tw-duration-300 ${isActive
         ? "tw-bg-[#FFC909] tw-text-[#9C29B2]"
         : "tw-bg-[#9C29B2] tw-bg-opacity-10 tw-text-[#9C29B2] hover:tw-bg-[#FFC909] hover:tw-bg-opacity-50"
-    } ${className}`}
+      } ${className}`}
     {...props}
   >
     {children}
@@ -523,7 +521,7 @@ export const Signup = () => {
                         >
                           {formData.profilePicture ? (
                             <img
-                              src={URL.createObjectURL(formData.profilePicture) || "/placeholder.svg"}
+                              src={URL.createObjectURL(formData.profilePicture) || " "}
                               alt="Profile preview"
                               className="tw-max-h-full tw-max-w-full tw-object-contain tw-rounded-lg"
                             />

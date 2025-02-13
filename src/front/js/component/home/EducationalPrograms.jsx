@@ -59,7 +59,7 @@ const EducationalPrograms = () => {
               <div className="tw-flex tw-items-center tw-gap-7">
                 <div className="tw-w-44 tw-h-34 tw-rounded-2xl tw-overflow-hidden tw-flex-shrink-0">
                   <img
-                    src={program.image || "/placeholder.svg"}
+                    src={program.image || " "}
                     alt={program.title}
                     className="tw-w-full tw-h-full tw-object-cover"
                   />

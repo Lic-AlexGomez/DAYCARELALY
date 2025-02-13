@@ -72,7 +72,7 @@ const Footer = () => {
                 src={
                   data.image ||
                   "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-99FXF35kTcwNUSbJWYUSXRAgAYiuGx.png" ||
-                  "/placeholder.svg"
+                  ""
                 }
                 alt="Logo"
                 className="tw-h-10"

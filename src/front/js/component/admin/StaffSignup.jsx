@@ -97,8 +97,8 @@ const SelectItem = ({ className, children, onClick, ...props }) => (
 const Alert = ({ variant, className, children, ...props }) => (
   <div
     className={`tw-p-4 tw-rounded-lg tw-flex tw-items-center tw-border-2 ${variant === "destructive"
-        ? "tw-bg-red-100 tw-text-red-700 tw-border-red-300"
-        : "tw-bg-[#FFC909] tw-text-[#9C29B2] tw-border-[#9C29B2]"
+      ? "tw-bg-red-100 tw-text-red-700 tw-border-red-300"
+      : "tw-bg-[#FFC909] tw-text-[#9C29B2] tw-border-[#9C29B2]"
       } ${className}`}
     {...props}
   >
@@ -148,7 +148,7 @@ const renderProfilePictureUpload = (formData, handleChange) => (
       >
         {formData.profilePicture ? (
           <img
-            src={URL.createObjectURL(formData.profilePicture) || "/placeholder.svg"}
+            src={URL.createObjectURL(formData.profilePicture) || " "}
             alt="Profile preview"
             className="tw-max-h-full tw-max-w-full tw-object-contain tw-rounded-lg"
           />
