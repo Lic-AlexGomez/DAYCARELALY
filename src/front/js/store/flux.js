@@ -28,6 +28,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       gallery: [],
       subscriptions: [],
       adminProfile: [],
+      newsletter: [],
 
       // Parent dashboard store
       parentData: null,
@@ -195,7 +196,21 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.log("Error en login:", error)
         }
       },
-
+      fetchnewsletter: async () => {
+        try {
+          const response = await fetch(process.env.BACKEND_URL + "api/newsletter", {
+            headers: getActions().getAuthHeaders(),
+          })
+          if (response.ok) {
+            const data = await response.json()
+            setStore({ newsletter: data })
+          } else {
+            console.error("Error fetching newsletter:", response.status)
+          }
+        } catch (error) {
+          console.error("Error fetching newsletter:", error)
+        }
+      },
       newsletter: async (email) => {
         try {
           const response = await fetch(process.env.BACKEND_URL + "api/newsletter", {
@@ -220,6 +235,20 @@ const getState = ({ getStore, getActions, setStore }) => {
           return data
         } catch (error) {
           console.log("Error loading message from backend", error)
+        }
+      },
+      deleteNewsletterSubscriber: async (id) => {
+        try {
+          const response = await fetch(`${process.env.BACKEND_URL}api/newsletter/${id}`, {
+            method: "DELETE",
+            headers: getActions().getAuthHeaders(),
+          })
+          if (response.ok) {
+            const data = await response.json()
+            setStore({ newsletter: data })
+          }
+        } catch (error) {
+          console.error("Error deleting newsletter subscriber:", error)
         }
       },
 

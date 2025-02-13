@@ -184,6 +184,7 @@ const Footer = () => {
             <form onSubmit={handleSubmit} className="tw-flex tw-flex-col md:tw-flex-row tw-gap-2 tw-mb-2">
               <input
                 type="email"
+                onChange={handleChangeEmail}
                 placeholder="Your email address"
                 className="tw-flex-1 tw-bg-[#1A1A1A] tw-px-1 tw-py-2.5 tw-rounded-sm tw-text-sm tw-text-white"
               />
