@@ -3,29 +3,27 @@ import { Context } from "../../store/appContext";
 import { Save } from "lucide-react";
 
 const TeacherSettings = () => {
-  const { store } = useContext(Context);
-  const user = store.user; // Obtenemos el usuario desde el contexto
+  const { store, actions } = useContext(Context); 
+  const user = store.user; 
 
-  // Estado para almacenar los datos del formulario
   const [settings, setSettings] = useState({
     name: "",
     email: "",
-    theme: "light", // Valor por defecto para el tema
+    theme: "light", 
   });
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Estado para controlar la visibilidad del dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); 
+  const [showModal, setShowModal] = useState(false); 
 
-  // Usamos useEffect para cargar los datos del usuario cuando estén disponibles
   useEffect(() => {
     if (user) {
-      // Si el usuario está disponible, actualizamos el estado de settings
       setSettings({
-        name: user.username || "",  // Usamos el username del usuario
-        email: user.email || "",    // Usamos el correo electrónico
-        theme: "light",             // Usamos el valor por defecto para el tema
+        name: user.username || "",  
+        email: user.email || "",    
+        theme: "light",             
       });
     }
-  }, [user]); // Solo se ejecuta cuando el `user` cambia
+  }, [user]); 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -35,16 +33,24 @@ const TeacherSettings = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Configuración guardada");
+    const result = await actions.updateUser({
+      username: settings.name,
+      email: settings.email,
+    });
+
+    if (result.success) {
+      setShowModal(true); 
+    } else {
+      alert(`Error: ${result.error}`);
+    }
   };
 
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen); // Cambia el estado de la visibilidad del dropdown
+    setIsDropdownOpen(!isDropdownOpen); 
   };
 
-  // Si el usuario aún no está disponible, mostramos un mensaje de carga
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -61,10 +67,9 @@ const TeacherSettings = () => {
             type="text"
             id="name"
             name="name"
-            value={settings.name} // Usamos el nombre cargado desde el user
+            value={settings.name} 
             onChange={handleInputChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-            readOnly
           />
         </div>
         <div className="tw-mb-4">
@@ -75,27 +80,24 @@ const TeacherSettings = () => {
             type="email"
             id="email"
             name="email"
-            value={settings.email} // Usamos el correo cargado desde el user
+            value={settings.email} 
             onChange={handleInputChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-            readOnly
           />
         </div>
         <div className="tw-mb-4">
           <label htmlFor="theme" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
             Theme (Coming Soon)
           </label>
-          {/* Contenedor del desplegable */}
           <div className="tw-relative">
             <div
               className="tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2 tw-bg-gray-300 tw-cursor-pointer"
-              onClick={toggleDropdown} // Controlamos el clic para abrir/cerrar el dropdown
+              onClick={toggleDropdown} 
             >
               <div className="tw-text-gray-700 tw-py-1 tw-px-2">
                 {settings.theme}
               </div>
             </div>
-            {/* Dropdown desplegable */}
             {isDropdownOpen && (
               <div className="tw-absolute tw-top-full tw-left-0 tw-w-full tw-bg-gray-300 tw-border tw-border-gray-500 tw-rounded-md tw-mt-1">
                 <div className="tw-p-2">
@@ -135,8 +137,24 @@ const TeacherSettings = () => {
           Save Changes
         </button>
       </form>
+
+      {showModal && (
+        <div className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-50">
+          <div className="tw-bg-white tw-rounded-lg tw-p-6 tw-w-1/3">
+            <h2 className="tw-text-xl tw-font-semibold tw-mb-4">Success</h2>
+            <p className="tw-text-gray-700">Your settings have been updated successfully!</p>
+            <div className="tw-flex tw-justify-end tw-mt-4">
+              <button
+                onClick={() => setShowModal(false)} 
+                className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
-
 export default TeacherSettings;
