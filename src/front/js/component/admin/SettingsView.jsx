@@ -1,6 +1,6 @@
-"use client"
 
-import React, { useState, useEffect,useContext } from "react"
+
+import React, { useState, useEffect, useContext } from "react"
 import { Save, Loader2 } from "lucide-react"
 import { Context } from "../../store/appContext"
 
@@ -183,7 +183,7 @@ const SettingsView = () => {
           <CardContent className="tw-grid tw-grid-cols-1 tw-md:grid-cols-2 tw-gap-6">
             <div>
               <label htmlFor="name_daycare" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-              Daycere Name
+                Daycere Name
               </label>
               <Input
                 type="text"
@@ -195,7 +195,7 @@ const SettingsView = () => {
             </div>
             <div>
               <label htmlFor="admin_email" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-              Administrator Email
+                Administrator Email
               </label>
               <Input
                 type="email"
@@ -207,7 +207,7 @@ const SettingsView = () => {
             </div>
             <div>
               <label htmlFor="max_capacity" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-              Maximum daycare capacity
+                Maximum daycare capacity
               </label>
               <Input
                 type="number"
@@ -325,7 +325,7 @@ const SettingsView = () => {
             )}
             <div>
               <label htmlFor="image" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-              Upload new logo
+                Upload new logo
               </label>
               <Input type="file" id="image" name="image" onChange={handleImageChange} accept="image/*" />
             </div>

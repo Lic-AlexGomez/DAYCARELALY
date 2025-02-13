@@ -1,4 +1,4 @@
-"use client"
+
 
 import { useContext } from "react"
 import { BrowserRouter, Route, Routes, useLocation, Navigate } from "react-router-dom"
@@ -79,7 +79,7 @@ import ParentMessages from "./component/parent/parentMessages.jsx"
 import ClassEnrroll from "./component/parent/ParentVirtualClassesEnroll.jsx"
 
 const AdminDashboard = () => (
-  
+
   <div className="tw-flex tw-h-screen tw-overflow-hidden">
     <Sidebar />
     <div className="tw-flex-1 tw-overflow-auto">
