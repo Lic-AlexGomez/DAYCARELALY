@@ -106,15 +106,15 @@ const EnrollChildModal = ({
 
             <div>
               <label
-                htmlFor="class_name"
+                htmlFor="classId"
                 className="tw-block tw-text-sm tw-font-medium tw-text-gray-700"
               >
                 Class
               </label>
               <select
-                name="class_name"
+                name="classId"
                 className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                value={formData.class_name}
+                value={formData.classId}
                 onChange={handleInputChange}
               >
                 <option value="" disabled>
@@ -173,7 +173,7 @@ function ParentVirtualClassesEnroll() {
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     child_name: "",
-    class_name: "",
+    classId: "",
     price: "",
   });
 
@@ -182,6 +182,8 @@ function ParentVirtualClassesEnroll() {
       try {
         await actions.fetchClasses();
         await actions.fetchEnrolledClasses();
+        await actions.fetchParentChildren();
+        await actions.fetchMyClassesParent();
         console.log(store)
         setLoading(false);
       } catch (err) {
@@ -193,11 +195,10 @@ function ParentVirtualClassesEnroll() {
     fetchData();
   }, []);
 
-  // Reinicia el formulario cuando se actualizan las clases o los niños
   useEffect(() => {
     setFormData({
       child_name: "",
-      class_name: "",
+      classId: "",
       price: "",
     });
   }, [store.classes, store.parentChildren]);
@@ -218,12 +219,13 @@ function ParentVirtualClassesEnroll() {
 
     try {
       const result = await actions.enrollInClass(
+        formData.classId,
         formData.child_name,
-        formData.class_name,
         formData.price
       );
-
+ 
       if (result) {
+
         Swal.fire({
           icon: "success",
           title: "Child Added",
@@ -232,7 +234,7 @@ function ParentVirtualClassesEnroll() {
         actions.fetchEnrolledClasses();
         setFormData({
           child_name: "",
-          class_name: "",
+          classId: "",
           price: "",
         });
         setShowModal(false);
@@ -257,7 +259,7 @@ function ParentVirtualClassesEnroll() {
     setShowModal(false);
     setFormData({
       child_name: "",
-      class_name: "",
+      classId: "",
       price: "",
     });
   };
@@ -268,7 +270,7 @@ function ParentVirtualClassesEnroll() {
     setFormData((prevData) => {
       let updatedData = { ...prevData, [name]: value };
 
-      if (name === "class_name") {
+      if (name === "classId") {
         const selectedClass = store.classes.find(
           (classItem) => classItem.id.toString() === value
         );
@@ -298,7 +300,7 @@ function ParentVirtualClassesEnroll() {
       </div>
     );
   }
-console.log(store)
+console.log(store.enrolledClasses)
   return (
     <div className="tw-container tw-mx-auto tw-p-4">
       <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Available Virtual Classes</h1>
@@ -349,7 +351,7 @@ console.log(store)
           </button>
         </div>
 
-        {store.enrolledClasses1 && store.enrolledClasses.length > 0 ? (
+        {store.enrolledClasses && store.enrolledClasses.length > 0 ? (
           <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
             <thead className="tw-bg-gray-100">
               <tr>
@@ -369,9 +371,12 @@ console.log(store)
             </thead>
             <tbody className="tw-divide-y tw-divide-gray-200">
               {store.enrolledClasses.map((activity) => (
+
+                
+
                 <tr key={activity.id}>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.child_name}</td>
-                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.class_name}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.class.name}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.enrolled_at}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                     <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3"></button>

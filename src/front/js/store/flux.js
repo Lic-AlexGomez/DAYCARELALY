@@ -1,3 +1,5 @@
+import { se } from "date-fns/locale/se"
+
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
@@ -36,6 +38,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       enrolledClasses: [],
       enrolledClasses: [], 
       filteredClasses: [],
+      myClasses: [],
 
       // Teacher dashboard store
       teacherData: null,
@@ -1914,7 +1917,9 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       // Inscribir a una clase
-      enrollInClass: async (classId, childName, price) => {
+      enrollInClass: async (classId, child_name, price) => {
+        console.log("Enrolling in class:", classId, child_name, price);
+       
         try {
           const store = getStore();
           const token = store.token || localStorage.getItem("token");
@@ -1932,15 +1937,14 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             body: JSON.stringify({
               classId: classId, // Este ID debe coincidir con el backend
-              childName: childName,
-              price: price,
+              child_name: child_name,
             }),
           });
-
+console.log("RESPONSE ENROLL IN CLASS:", response)
           if (response.ok) {
             const data = await response.json();
-            console.log("Enrollment successful:", data);
-
+            setStore({ enrolledClasses: [...store.enrolledClasses, data] });
+            return  true;
             // Volver a cargar las clases inscritas
             getActions().fetchEnrolledClasses();
           } else {
@@ -1950,7 +1954,28 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error enrolling in class:", error);
         }
       },
-      
+      // my-classes
+      fetchMyClassesParent: async () => {
+        try {
+          const store = getStore();
+          const token = store.token || localStorage.getItem("token");
+          if (!token) {
+            console.error("No token found");
+            return;
+          }
+          const response = await fetch(`${process.env.BACKEND_URL}api/my-classes`, {
+            headers: getActions().getAuthHeaders(),
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setStore({ myClasses: data });
+          } else {
+            console.error("Error fetching my classes:", response.status);
+          }
+        } catch (error) {
+          console.error("Error fetching my classes:", error);
+        }
+      },
      
 
       unenrollFromClass: async (classId) => {

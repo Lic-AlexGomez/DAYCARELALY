@@ -152,9 +152,9 @@ class Class(db.Model):
 
 class Enrollment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Relación con usuario
-    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)  # Relación con clase
-    child_name = db.Column(db.String(20), nullable=False) 
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # Relación con usuario
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=True)  # Relación con clase
+    child_name = db.Column(db.String(20), nullable=True) 
     enrolled_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
 
     def __repr__(self):
