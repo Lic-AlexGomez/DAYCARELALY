@@ -3650,7 +3650,7 @@ def protectedP():
     return jsonify(current_user), 200
 @api.route('/teache', methods=['GET'])
 @jwt_required()
-def protectedP():
+def protectedT():
     current_user = get_jwt_identity()
 
     if current_user is None:
