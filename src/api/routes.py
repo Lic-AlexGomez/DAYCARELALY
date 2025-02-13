@@ -668,6 +668,12 @@ def upload_img():
     if file:
         upload_result = upload(file)
         return jsonify({"url": upload_result['secure_url']}), 200
+    
+@api.route('/newsletter', methods=['GET'])
+def get_newsletter():
+    subscribers = Newsletter.query.all()
+    return jsonify([subscriber.serialize() for subscriber in subscribers]), 200
+ 
 @api.route('/newsletter', methods=['POST'])
 def create_newsletter():
     data = request.json
@@ -677,6 +683,18 @@ def create_newsletter():
     db.session.add(new_subscription)
     db.session.commit()
     return jsonify(new_subscription.serialize()), 201
+
+@api.route('/newsletter/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_newsletter(id):
+    newsletter = Newsletter.query.get(id)
+    if not newsletter:
+        return jsonify({"error": "Newsletter not found"}), 404
+
+    db.session.delete(newsletter)
+    db.session.commit()
+    return jsonify({"message": "Newsletter deleted"}), 200
+
 
 @api.route('/getintouch', methods=['GET'])
 @jwt_required()
