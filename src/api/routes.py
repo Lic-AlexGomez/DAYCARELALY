@@ -493,7 +493,7 @@ def get_enrollment(id):
     return jsonify(enrollment.serialize()), 200
 
 @api.route('/enrollments', methods=['POST'])
-#@jwt_required()
+@jwt_required()
 def create_enrollment():
     data = request.json
     new_enrollment = Enrollment(
@@ -2111,42 +2111,58 @@ def signup_admin():
 @jwt_required()
 def get_enrolled_classes():
     user_id = get_jwt_identity()
-    
-    # Buscar las inscripciones del usuario
     enrollments = Enrollment.query.filter_by(user_id=user_id).all()
+    
+    result = []
+    for enrollment in enrollments:
+        class_obj = Class.query.get(enrollment.class_id)
+        if class_obj:
+            # Combinar los datos de la inscripción y de la clase
+            result.append({
+                "id": enrollment.id,
+                "child_name": enrollment.child_name,
+                "enrolled_at": enrollment.enrolled_at.isoformat(),
+                "class": class_obj.serialize()
+            })
+    
+    return jsonify(result), 200
 
-    # Obtener los detalles de las clases inscritas
-    enrolled_classes = [Class.query.filter_by(name=e.class_name).first().serialize() for e in enrollments]
-
-    return jsonify(enrolled_classes), 200
 
 @api.route('/enroll', methods=['POST'])
 @jwt_required()
 def enroll_in_class():
     user_id = get_jwt_identity()
-    class_id = request.json.get('classId', None)
+    data = request.json
+    print(data)
 
-    if not class_id:
-        return jsonify({"msg": "Class ID is required"}), 400
+    # Validar que se envíe un valor para classId y que sea convertible a entero
+    try:
+        class_id = int(data.get('classId', None))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Class ID must be an integer"}), 400
+
+    if not data.get('child_name'):
+        return jsonify({"error": "Child name cannot be empty"}), 400
 
     class_to_enroll = Class.query.get(class_id)
     if not class_to_enroll:
-        return jsonify({"msg": "Class not found"}), 404
+        return jsonify({"error": "Class not found"}), 404
 
     if class_to_enroll.capacity <= 0:
-        return jsonify({"msg": "Class is full"}), 400
+        return jsonify({"error": "Class is full"}), 400
 
-    existing_enrollment = Enrollment.query.filter_by(user_id=user_id, class_id=class_id).first()
-    if existing_enrollment:
-        return jsonify({"msg": "Already enrolled in this class"}), 400
-
-    new_enrollment = Enrollment(user_id=user_id, class_id=class_id)
-    class_to_enroll.capacity -= 1
+    new_enrollment = Enrollment(
+        user_id=user_id,
+        class_id=class_id,
+        child_name=data['child_name'],
+        enrolled_at=datetime.now(timezone.utc)
+    )
 
     db.session.add(new_enrollment)
+    class_to_enroll.capacity -= 1
     db.session.commit()
 
-    return jsonify(class_to_enroll.serialize()), 201
+    return jsonify(new_enrollment.serialize()), 201
 
 @api.route('/unenroll', methods=['POST'])
 @jwt_required()
@@ -2178,6 +2194,7 @@ def get_my_classes():
     enrollments = Enrollment.query.filter_by(user_id=user_id).all()
     enrolled_classes = [Class.query.get(e.class_id).serialize() for e in enrollments]
     return jsonify(enrolled_classes), 200
+
 
 @api.route('/add-class', methods=['POST'])
 @jwt_required()
