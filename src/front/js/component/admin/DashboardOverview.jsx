@@ -6,7 +6,10 @@ import { Users, BookOpen, FileText, DollarSign, TrendingUp, Calendar } from "luc
 const DashboardOverview = () => {
   const { store, actions } = useContext(Context)
   const [activeTab, setActiveTab] = useState("overview")
-
+  useEffect(() => {
+    
+  }, [store.users]);
+  
   useEffect(() => {
     actions.GetClients()
   }, [store.clients.length])

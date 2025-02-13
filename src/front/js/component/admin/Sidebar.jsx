@@ -1,5 +1,6 @@
-import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import React, { useState, useContext,useEffect } from "react"
+import { Link , useNavigate} from "react-router-dom"
+import { Context } from "../../store/appContext"
 import {
   HomeIcon as House,
   Users,
@@ -36,11 +37,25 @@ const menuItems = [
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const { store,actions } = useContext(Context)
+  const navigate = useNavigate()
+
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
+  useEffect(() => {
+    actions.getPrivate("admini");
+    },[])
+  useEffect(() =>  {
 
+    if(store.admin === false){
+      navigate("/login")
+    }else{
+      console.log("Admin is logged in",store.admin)
+    }
+  }, [store.admin])
+  
   return (
     <>
    

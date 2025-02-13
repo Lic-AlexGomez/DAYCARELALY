@@ -1,26 +1,28 @@
-import React, { useState } from "react"
+import React, { act, useState ,useContext, useEffect} from "react"
 import { Link } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import { Context } from "../../store/appContext"
 
-import { Bell, User, LogOut, Settings, UserCircle, ChevronDown } from "lucide-react"
+import { Bell, User, LogOut, Settings, UserCircle, ChevronDown, Store } from "lucide-react"
 
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-  
+  const { actions,store } = useContext(Context)
   const navigate = useNavigate()
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen)
   
   const handleLogout = () => {
     localStorage.clear()
+    actions.logout()  
     navigate("/login")
   }
 
-  const handleSettings = () => {
-    // Add navigation to settings page logic here
-    
-    console.log("Navigating to settings...")
+useEffect(() => {
+  if(store.admin==true){
+    console.log("Admin is logged in")
+    navigate("/login")
   }
-
+}, [Store])
 
   return (
     <header className="tw-bg-white tw-border-b tw-border-gray-200">

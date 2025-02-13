@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { Home, Users, Calendar, Activity, CreditCard, Settings, Video, MessageCircle, School, Menu } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useContext,useEffect } from "react"
+import { Link , useNavigate} from "react-router-dom"
+import { Context } from "../../store/appContext"
 
 const menuItems = [
   { icon: Home, label: "Home", path: "/parent-dashboard" },
@@ -17,11 +19,24 @@ const menuItems = [
 
 const ParentSidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { store,actions } = useContext(Context)
+  const navigate = useNavigate()
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+  useEffect(() => {
+    actions.getPrivate("paren");
+    },[])
+  useEffect(() =>  {
 
+    if(store.paren === false){
+      navigate("/login")
+    }else{
+      console.log("parent is logged in",store.paren)
+    }
+  }, [store.paren])
+  
   return (
     <>
       {/* Botón de Menú para Móviles */}
