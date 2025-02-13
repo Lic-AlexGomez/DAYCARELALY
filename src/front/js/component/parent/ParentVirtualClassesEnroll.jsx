@@ -184,7 +184,6 @@ function ParentVirtualClassesEnroll() {
         await actions.fetchEnrolledClasses();
         await actions.fetchParentChildren();
         await actions.fetchMyClassesParent();
-        console.log(store)
         setLoading(false);
       } catch (err) {
         setError("An error occurred while fetching classes. Please try again later.");
@@ -223,7 +222,7 @@ function ParentVirtualClassesEnroll() {
         formData.child_name,
         formData.price
       );
- 
+
       if (result) {
 
         Swal.fire({
@@ -300,7 +299,7 @@ function ParentVirtualClassesEnroll() {
       </div>
     );
   }
-console.log(store.enrolledClasses)
+
   return (
     <div className="tw-container tw-mx-auto tw-p-4">
       <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Available Virtual Classes</h1>
@@ -314,7 +313,7 @@ console.log(store.enrolledClasses)
           >
             <div className="tw-relative">
               <img
-                src={classItem.image || "/placeholder.svg?height=200&width=400"}
+                src={classItem.image || " ?height=200&width=400"}
                 alt={classItem.name}
                 className="tw-w-full tw-h-48 tw-object-cover"
               />
@@ -371,9 +370,6 @@ console.log(store.enrolledClasses)
             </thead>
             <tbody className="tw-divide-y tw-divide-gray-200">
               {store.enrolledClasses.map((activity) => (
-
-                
-
                 <tr key={activity.id}>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.child_name}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.class.name}</td>

@@ -1,4 +1,4 @@
-import React, { useState,useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Search } from "lucide-react";
 import "../../styles/Navbar.css";
 import logoImage from "../../img/lgo.png";
@@ -32,7 +32,7 @@ export const Navbar = () => {
         <header className="headerContainer container">
           <div className="topRow">
             <div className="logoContainer">
-              <img src={logoImage || "/placeholder.svg"} alt="Logo" className="logo" />
+              <img src={logoImage || " "} alt="Logo" className="logo" />
             </div>
             <div className="searchContainer sm:me-5 sm-tw-mr-10">
               <input type="search" placeholder="Search..." className="searchInput" />
@@ -48,7 +48,7 @@ export const Navbar = () => {
                 className="icon facebook-icon ms-2"
                 title="Visit our Facebook page"
               >
-                <img src={facebookIcon || "/placeholder.svg"} alt="Facebook" />
+                <img src={facebookIcon || " "} alt="Facebook" />
               </a>
               <a
                 href={data.instagram || "https://www.instagram.com/slimefactorycolombia/"}
@@ -57,7 +57,7 @@ export const Navbar = () => {
                 className="icon instagram-icon ms-2"
                 title="Visit our Instagram page"
               >
-                <img src={instagramIcon || "/placeholder.svg"} alt="Instagram" />
+                <img src={instagramIcon || " "} alt="Instagram" />
               </a>
               <a
                 href={data.whatsapp || "https://wa.me/573104000000"}
@@ -66,7 +66,7 @@ export const Navbar = () => {
                 className="icon whatsapp-icon ms-2"
                 title="Contact us on WhatsApp"
               >
-                <img src={whatsappIcon || "/placeholder.svg"} alt="WhatsApp" />
+                <img src={whatsappIcon || " "} alt="WhatsApp" />
               </a>
             </div>
           </div>
@@ -120,7 +120,7 @@ export const Navbar = () => {
           </div>
         </header>
       </div>
-      <img src={underNavImage || "/placeholder.svg"} alt="Under Navigation" className="underNav" />
+      <img src={underNavImage || " "} alt="Under Navigation" className="underNav" />
     </>
   )
 }

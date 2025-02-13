@@ -48,7 +48,7 @@ const ParentSidebar = () => {
                 <NavLink
                   to={item.path}
                   className="tw-flex tw-items-center tw-p-2 tw-text-gray-700 tw-rounded-lg hover:tw-bg-gray-100"
-                  activeClassName="tw-bg-gray-100 tw-font-semibold"
+  
                 >
                   <item.icon className="tw-w-5 tw-h-5 tw-mr-3" />
                   <span>{item.label}</span>

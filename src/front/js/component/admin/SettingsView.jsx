@@ -317,7 +317,7 @@ const SettingsView = () => {
             {settings.image && (
               <div className="tw-mb-4">
                 <img
-                  src={settings.image || "/placeholder.svg"}
+                  src={settings.image || " "}
                   alt="Logo del Centro"
                   className="tw-w-32 tw-h-32 tw-object-cover tw-rounded-md"
                 />

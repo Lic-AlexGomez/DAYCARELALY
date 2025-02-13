@@ -1466,7 +1466,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           localStorage.setItem("parent_id", JSON.stringify(data.id))
           setStore({ parentData: data })
-          console.log(data)
+          
         } catch (error) {
           console.error("Error fetching parent data:", error)
         }
@@ -1703,7 +1703,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           const token = store.token || localStorage.getItem("token")
 
           if (!token) {
-            console.error("No token found")
             return
           }
           const resp = await fetch(`${process.env.BACKEND_URL}api/settings`, {
@@ -1751,7 +1750,6 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       addAdmin: async () => {
-        const store = getStore()
         try {
           const response = await fetch(`${process.env.BACKEND_URL}api/create_admin`, {
             method: "POST",
@@ -1759,12 +1757,12 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
 
           if (!response.ok) {
-            throw new Error("Error al crear el admin: " + response.statusText)
+           return false
           }
           setStore({ admin: true })
           localStorage.setItem("admin", true)
         } catch (error) {
-          console.error("Error al crear el admin:", error.message)
+        
         }
       },
 
@@ -1902,7 +1900,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           if (response.ok) {
             const data = await response.json();
-            console.log("Enrolled Classes:", data);
             setStore({ enrolledClasses: data });
 
             // Filtrar clases con pago pendiente
@@ -1940,7 +1937,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               child_name: child_name,
             }),
           });
-console.log("RESPONSE ENROLL IN CLASS:", response)
+
           if (response.ok) {
             const data = await response.json();
             setStore({ enrolledClasses: [...store.enrolledClasses, data] });

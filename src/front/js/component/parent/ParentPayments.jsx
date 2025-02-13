@@ -113,7 +113,7 @@ const ParentPayments = () => {
             const nextPaymentDate = getNextPaymentDate(payment.class.id);
 
             return (
-              <div key={payment.class.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
+              <div key={payment.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
                 <div className="tw-flex tw-justify-between tw-items-center tw-mb-2">
                   <h4 className="tw-text-lg tw-font-semibold">{payment.class.name}</h4>
                   <span

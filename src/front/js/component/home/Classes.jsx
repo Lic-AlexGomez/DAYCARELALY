@@ -17,13 +17,13 @@ export const Classes = () => {
   return (
     <div className="tw-bg-white tw-py-12">
       <div className="tw-container tw-mx-auto tw-px-4 tw-text-center tw-mb-12">
-        <img src={book || "/placeholder.svg"} alt="Books icon" className="tw-mx-auto tw-mb-2 tw-w-16 md:tw-w-20" />
+        <img src={book || " "} alt="Books icon" className="tw-mx-auto tw-mb-2 tw-w-16 md:tw-w-20" />
         <div className="tw-text-[#9C29B2] tw-text-sm md:tw-text-base tw-mb-2 font-bold">On Going Classes</div>
         <h2 className="tw-text-2xl md:tw-text-3xl tw-font-bold title-component-class tw-text-[#9C29B2] tw-px-4">
           Take The Classes & Start<br className="tw-hidden sm:tw-inline" /> Learning From Today
         </h2>
       </div>
-      
+
       <div className="tw-container tw-mx-auto tw-px-4">
         <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4 md:tw-gap-6 tw-mx-3.5">
           {store.classes.slice(0, visibleClasses).map((classItem) => (
@@ -34,7 +34,7 @@ export const Classes = () => {
               {/* Imagen responsive */}
               <div className="tw-relative tw-pb-[56.25%] tw-max-h-48 md:tw-max-h-56">
                 <img
-                  src={classItem.image || "/placeholder.svg"}
+                  src={classItem.image || " "}
                   alt={classItem.name}
                   className="tw-absolute tw-inset-0 tw-w-full tw-h-full tw-object-cover"
                 />
