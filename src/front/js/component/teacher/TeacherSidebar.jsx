@@ -1,7 +1,7 @@
 import React,{useEffect,useContext} from "react"
 import {Context} from "../../store/appContext"
 import { NavLink , useNavigate} from "react-router-dom"
-import { Home, Users, BookOpen, CheckSquare, Calendar, Settings,Video } from "lucide-react"
+import { Home, Users, BookOpen, CheckSquare, Calendar, Settings,Video,MessageCircle } from "lucide-react"
 
 const menuItems = [
   { icon: Home, label: "Home", path: "/teacher-dashboard" },
@@ -10,6 +10,7 @@ const menuItems = [
   // { icon: CheckSquare, label: "Assignments", path: "/teacher-dashboard/assignments" },
   { icon: Video, label: "Virtual Classes", path: "/teacher-dashboard/teachervirtualclasses" },
   { icon: Calendar, label: "Schedule", path: "/teacher-dashboard/schedule" },
+  { icon: MessageCircle, label: "Messages", path: "/teacher-dashboard/teachermessages" },
   { icon: Settings, label: "Settings", path: "/teacher-dashboard/settings" },
 ]
 
