@@ -1,13 +1,14 @@
 import React,{useEffect,useContext} from "react"
 import {Context} from "../../store/appContext"
 import { NavLink , useNavigate} from "react-router-dom"
-import { Home, Users, BookOpen, CheckSquare, Calendar, Settings } from "lucide-react"
+import { Home, Users, BookOpen, CheckSquare, Calendar, Settings,Video } from "lucide-react"
 
 const menuItems = [
   { icon: Home, label: "Home", path: "/teacher-dashboard" },
   { icon: BookOpen, label: "My Classes", path: "/teacher-dashboard/classes" },
   { icon: Users, label: "Students", path: "/teacher-dashboard/students" },
   // { icon: CheckSquare, label: "Assignments", path: "/teacher-dashboard/assignments" },
+  { icon: Video, label: "Virtual Classes", path: "/teacher-dashboard/teachervirtualclasses" },
   { icon: Calendar, label: "Schedule", path: "/teacher-dashboard/schedule" },
   { icon: Settings, label: "Settings", path: "/teacher-dashboard/settings" },
 ]
