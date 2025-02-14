@@ -337,6 +337,44 @@ function ParentVirtualClassesEnroll() {
       return updatedData;
     });
   }
+  const handleUnenrollClass = async (id) => {
+    const confirmDelete = await Swal.fire({
+      title: '¿Are you sure?',
+      text: "This action cannot be undone.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Delete',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (confirmDelete.isConfirmed) {
+      try {
+        const result = await actions.unenrollClass(id);
+
+        if (result) {
+          Swal.fire({
+            icon: 'success',
+            title: 'unenroll succesfull',
+            text: 'You has been successfully unenrolled.',
+          });
+          actions.fetchEnrolledClasses();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'There was an error.',
+          });
+        }
+      } catch (error) {
+        console.error("Error en handleUnenrollClass:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'There was an error.',
+        });
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -435,10 +473,14 @@ function ParentVirtualClassesEnroll() {
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity?.enrolled_at || "No class available"}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                     <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3"></button>
+
                     <button
                       className="tw-text-red-600 hover:tw-text-red-900"
                       onClick={() => handleDeleteEnrollment(activity.id)}
                     >
+
+                    <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleUnenrollClass(activity.id)}>
+
                       <Trash className="tw-w-5 tw-h-5" />
                     </button>
                   </td>

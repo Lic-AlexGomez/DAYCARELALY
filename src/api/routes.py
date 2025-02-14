@@ -492,6 +492,17 @@ def get_enrollment(id):
         return jsonify({"error": "Enrollment not found"}), 404
     return jsonify(enrollment.serialize()), 200
 
+@api.route('/unenrolled/<int:id>', methods=['DELETE'])
+@jwt_required()
+def unenrolled_class(id):
+    unenroll = Enrollment.query.get(id)
+    if not unenroll:
+        return jsonify({"error": "class not found"}), 404
+
+    db.session.delete(unenroll)
+    db.session.commit()
+    return jsonify({"message": "unenrolled succesfull"}), 200
+
 @api.route('/enrollments', methods=['POST'])
 @jwt_required()
 def create_enrollment():

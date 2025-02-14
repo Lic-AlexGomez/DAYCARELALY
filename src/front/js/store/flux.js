@@ -2044,7 +2044,24 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error fetching my classes:", error);
         }
       },
-     
+      unenrollClass: async (id) => {
+        try {
+          const response = await fetch(`${process.env.BACKEND_URL}api/unenrolled/${id}`, {
+            method: "DELETE",
+            headers: getActions().getAuthHeaders(),
+          })
+
+          if (response.ok) {
+            return { success: true }
+          } else {
+            console.error("Error deleting subscription:", response.status)
+            return { success: false, error: `Status: ${response.status}` }
+          }
+        } catch (error) {
+          console.error("Error deleting subscription:", error)
+          return { success: false, error: error.message }
+        }
+      },
 
       unenrollFromClass: async (classId) => {
         try {
