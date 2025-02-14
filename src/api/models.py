@@ -748,7 +748,9 @@ class ParentPayment(db.Model):
     status = db.Column(db.String(20), nullable=False)
     due_date = db.Column(db.Date, nullable=False)
     paypal_order_id = db.Column(db.String(50), nullable=False) 
-    payer_email = db.Column(db.String(100), nullable=False)  
+    payer_email = db.Column(db.String(100), nullable=False)
+    child_name = db.Column(db.String(100), nullable=True) 
+    class_name = db.Column(db.String(120), nullable=True)  
 
     def __repr__(self):
         return f'<ParentPayment {self.concept}>'
@@ -762,7 +764,9 @@ class ParentPayment(db.Model):
             "status": self.status,
             "due_date": self.due_date.isoformat(),
             "paypal_order_id": self.paypal_order_id,
-            "payer_email": self.payer_email
+            "payer_email": self.payer_email,
+            "child_name": self.child_name,
+            "class_name": self.class_name
         }
 
 class ParentSetting(db.Model):
