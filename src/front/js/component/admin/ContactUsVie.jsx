@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react"
 import { Context } from "../../store/appContext"
 import { Trash, Eye, Search, ChevronLeft, ChevronRight } from "lucide-react"
+import Swal from 'sweetalert2';
 
 const ContactUsView = () => {
   const { store, actions } = useContext(Context)
@@ -13,11 +14,27 @@ const ContactUsView = () => {
     actions.fetchContacts()
   }, [actions.fetchContacts]) // Added actions.fetchContacts to dependencies
 
-  const handleDeleteContact = async (id) => {
-    if (window.confirm("Are you sure you want to delete this contact?")) {
-      await actions.deleteContact(id)
-    }
+  
+
+const handleDeleteContact = async (id) => {
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: 'You won’t be able to undo this!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it',
+    cancelButtonText: 'Cancel'
+  });
+
+  if (result.isConfirmed) {
+    await actions.deleteContact(id);
+    Swal.fire(
+      'Deleted!',
+      'The contact has been deleted.',
+      'success'
+    );
   }
+}
 
   const filteredContacts =
     store.contacts?.filter(
