@@ -8,6 +8,18 @@ const ParentSettings = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
 
+  // Función para obtener el email desde el localStorage
+  const getUserEmailFromStorage = () => {
+    const user = JSON.parse(localStorage.getItem("user"))
+    return user?.email || ""
+  }
+
+  // Función para obtener el username desde el localStorage
+  const getUsernameFromStorage = () => {
+    const user = JSON.parse(localStorage.getItem("user"))
+    return user?.username || ""
+  }
+
   useEffect(() => {
     const loadSettings = async () => {
       try {
@@ -19,13 +31,25 @@ const ParentSettings = () => {
       }
     }
     loadSettings()
-  }, [actions.fetchParentSettings]) 
+  }, [actions.fetchParentSettings])
 
   useEffect(() => {
     if (store.parentSettings) {
       setSettings(store.parentSettings)
     }
   }, [store.parentSettings])
+
+  // Actualizar el estado del username y email si se cargan desde localStorage
+  useEffect(() => {
+    const emailFromStorage = getUserEmailFromStorage()
+    const usernameFromStorage = getUsernameFromStorage()
+
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      email: emailFromStorage,
+      name: usernameFromStorage,
+    }))
+  }, []) // Se ejecuta una vez al inicio
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -78,12 +102,12 @@ const ParentSettings = () => {
             type="email"
             id="email"
             name="email"
-            value={settings.email || ""}
+            value={getUserEmailFromStorage()}
             onChange={handleInputChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
           />
         </div>
-        <div className="tw-mb-4">
+        {/* <div className="tw-mb-4">
           <label htmlFor="phone" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
             Phone
           </label>
@@ -95,7 +119,7 @@ const ParentSettings = () => {
             onChange={handleInputChange}
             className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
           />
-        </div>
+        </div> */}
         <div className="tw-mb-4">
           <label className="tw-flex tw-items-center">
             <input
@@ -137,4 +161,3 @@ const ParentSettings = () => {
 }
 
 export default ParentSettings
-
