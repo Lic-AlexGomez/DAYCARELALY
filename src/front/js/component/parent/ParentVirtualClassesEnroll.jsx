@@ -184,6 +184,7 @@ function ParentVirtualClassesEnroll() {
         await actions.fetchEnrolledClasses();
         await actions.fetchParentChildren();
         await actions.fetchMyClassesParent();
+        console.log(store)
         setLoading(false);
       } catch (err) {
         setError("An error occurred while fetching classes. Please try again later.");
@@ -205,55 +206,68 @@ function ParentVirtualClassesEnroll() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.classId || isNaN(parseInt(formData.classId))) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Class",
+            text: "Please select a valid class.",
+        });
+        return;
+    }
+
+    if (!formData.child_name.trim()) {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid Name",
+            text: "Child name cannot be empty.",
+        });
+        return;
+    }
+
     const confirmSubmit = await Swal.fire({
-      title: "Are you sure?",
-      text: "Do you want to add a new child?",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Yes, add!",
-      cancelButtonText: "No, cancel",
+        title: "Are you sure?",
+        text: "Do you want to add a new child?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, add!",
+        cancelButtonText: "No, cancel",
     });
 
     if (!confirmSubmit.isConfirmed) return;
 
     try {
-      const result = await actions.enrollInClass(
-        formData.classId,
-        formData.child_name,
-        formData.price
-      );
+        const result = await actions.enrollInClass(formData.classId, formData.child_name);
 
-      if (result) {
+        if (result.success) {
+            Swal.fire({
+                icon: "success",
+                title: "Child Added",
+                text: "A new child has been added!",
+            });
 
-        Swal.fire({
-          icon: "success",
-          title: "Child Added",
-          text: "A new child has been added!",
-        });
-        actions.fetchEnrolledClasses();
-        setFormData({
-          child_name: "",
-          classId: "",
-          price: "",
-        });
-        setShowModal(false);
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: `There was an error: ${result.error}`,
-        });
-      }
+            setFormData({
+                child_name: "",
+                classId: "",
+            });
+            setShowModal(false);
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: `There was an error: ${result.error}`,
+            });
+        }
     } catch (error) {
-      console.error("Error in handleSubmit:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Submission Error",
-        text: "There was an error submitting the form. Please try again.",
-      });
+        console.error("Error in handleSubmit:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Submission Error",
+            text: "There was an error submitting the form. Please try again.",
+        });
     }
-  };
+};
 
+  
   const handleCloseModal = () => {
     setShowModal(false);
     setFormData({
@@ -337,7 +351,8 @@ function ParentVirtualClassesEnroll() {
       </div>
     );
   }
-
+console.log(store.enrolledClasses)
+console.log(store.classes)
   return (
     <div className="tw-container tw-mx-auto tw-p-4">
       <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Available Virtual Classes</h1>
@@ -351,7 +366,7 @@ function ParentVirtualClassesEnroll() {
           >
             <div className="tw-relative">
               <img
-                src={classItem.image || " ?height=200&width=400"}
+                src={classItem.image || "/placeholder.svg?height=200&width=400"}
                 alt={classItem.name}
                 className="tw-w-full tw-h-48 tw-object-cover"
               />
@@ -388,7 +403,7 @@ function ParentVirtualClassesEnroll() {
           </button>
         </div>
 
-        {store.enrolledClasses && store.enrolledClasses.length > 0 ? (
+        {store.enrolledClasses  ? (
           <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
             <thead className="tw-bg-gray-100">
               <tr>
@@ -408,10 +423,14 @@ function ParentVirtualClassesEnroll() {
             </thead>
             <tbody className="tw-divide-y tw-divide-gray-200">
               {store.enrolledClasses.map((activity) => (
+
+                
+
                 <tr key={activity.id}>
-                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.child_name}</td>
-                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.class.name}</td>
-                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.enrolled_at}</td>
+                  
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity?.child_name || "No class available"}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.class?.name || "No class available"}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity?.enrolled_at || "No class available"}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                     <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3"></button>
                     <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleUnenrollClass(activity.id)}>

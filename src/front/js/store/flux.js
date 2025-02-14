@@ -1946,44 +1946,52 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      // Inscribir a una clase
-      enrollInClass: async (classId, child_name, price) => {
-        console.log("Enrolling in class:", classId, child_name, price);
-       
+      enrollInClass: async (classId, child_name) => {
+        console.log("Enrolling in class:", classId, child_name);
+    
         try {
-          const store = getStore();
-          const token = store.token || localStorage.getItem("token");
-
-          if (!token) {
-            console.error("No token found");
-            return;
-          }
-
-          const response = await fetch(`${process.env.BACKEND_URL}/api/enroll`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              classId: classId, // Este ID debe coincidir con el backend
-              child_name: child_name,
-            }),
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setStore({ enrolledClasses: [...store.enrolledClasses, data] });
-            return  true;
-            // Volver a cargar las clases inscritas
-            getActions().fetchEnrolledClasses();
-          } else {
-            console.error("Error enrolling in class:", response.status);
-          }
+            const store = getStore();
+            const token = store.token || localStorage.getItem("token");
+    
+            if (!token) {
+                console.error("No token found");
+                return { success: false, error: "No authentication token found" };
+            }
+    
+            const response = await fetch(`${process.env.BACKEND_URL}/api/enroll`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    classId: classId,
+                    child_name: child_name,
+                }),
+            });
+    
+            const responseData = await response.json().catch(() => null); // 👈 Evita error si la respuesta no es JSON
+    
+            if (!response.ok || !responseData) {
+                console.error("Error enrolling in class:", response.status, responseData?.error || "No response data");
+                return { success: false, error: responseData?.error || "Unknown error" };
+            }
+    
+            console.log("Enrollment successful:", responseData);
+    
+            setStore({ enrolledClasses: [...store.enrolledClasses, responseData] });
+    
+            await getActions().fetchEnrolledClasses();
+    
+            return { success: true };
+    
         } catch (error) {
-          console.error("Error enrolling in class:", error);
+            console.error("Unexpected error enrolling in class:", error);
+            return { success: false, error: "Unexpected error occurred" };
         }
-      },
+    },
+    
+    
       // my-classes
       fetchMyClassesParent: async () => {
         try {
