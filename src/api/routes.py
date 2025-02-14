@@ -1159,7 +1159,8 @@ def create_virtual_class():
             duration=data['duration'],
             teacher=data['teacher'],
             capacity=data['capacity'],
-            price=data['price']
+            price=data['price'],
+            meet_link= data['meet_link']
         )
         db.session.add(new_virtual_class)
         db.session.commit()
@@ -1184,6 +1185,7 @@ def update_virtual_class(id):
         virtual_class.teacher = data.get('teacher', virtual_class.teacher)
         virtual_class.capacity = data.get('capacity', virtual_class.capacity)
         virtual_class.price = data.get('price', virtual_class.price)
+        virtual_class.meet_link = data.get('meet_link', virtual_class.meet_link)
         db.session.commit()
         return jsonify(virtual_class.serialize()), 200
     except SQLAlchemyError as e:

@@ -9,19 +9,19 @@ const VirtualClasses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClass, setEditingClass] = useState(null);
   const [newClass, setNewClass] = useState({
-    teacher_id: 0,
     name: '',
     description: '',
+    date:'',
+    time: '',
+    duration:'',
+    teacher: 0,
     capacity: '',
     price: '',
-    age: '',
-    time: '',
-    image: '',
-    link_meet:''
+    meet_link:''
   });
 
   useEffect(() => {
-    actions.fetchClasses();
+    actions.fetchVirtualClasses();
   }, []);
 
   const handleInputChange = (e) => {
@@ -33,42 +33,23 @@ const VirtualClasses = () => {
     }
   };
 
-  const handleImageChange = async (e) => {
-    const result = await actions.uploadToCloudinary(e.target.files[0]);
-    if (result.success) {
-      setNewClass({ ...newClass, image: result.url });
-    }
-  };
 
-  const handleImageEditChange = async (e) => {
-    const result = await actions.uploadToCloudinary(e.target.files[0]);
-    if (result.success) {
-      setEditingClass((prevState) => {
-        const updatedClass = {
-          ...prevState,
-          image: result.url,
-        };
-        return updatedClass;
-      });
-    }
-  };
-
-  const handleAddClass = async (e) => {
+  const handleAddVirtualClass = async (e) => {
     e.preventDefault();
 
   
-    if (newClass.teacher_id === 0) {
+    if (newClass.teacher === 0) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Por favor, selecciona un profesor.',
+        text: 'Please, Select a teacher.',
       });
       return;
     }
 
     const confirmSubmit = await Swal.fire({
       title: "Are you sure?",
-      text: "Do you want to add this class?",
+      text: "Do you want to add this virtual class?",
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes, add!",
@@ -80,33 +61,35 @@ const VirtualClasses = () => {
     }
 
     try {
-      const result = await actions.addClass(
-        newClass.teacher_id,
+      const result = await actions.addVirtualClass(
         newClass.name,
         newClass.description,
+        newClass.date,
+        newClass.time,
+        newClass.duration,
+        newClass.teacher,
         newClass.capacity,
         newClass.price,
-        newClass.age,
-        newClass.time,
-        newClass.image
+        newClass.meet_link
       );
 
       if (result) {
         Swal.fire({
           icon: "success",
-          title: "Class Added",
-          text: "A new class has been added!",
+          title: " Virtual Class Added",
+          text: "A new  virtual class has been added!",
         });
-        actions.fetchClasses();
+        actions.getVirtualClasses();
         setNewClass({
-          teacher_id: 0,
-          name: '',
+          name: 0,
           description: '',
+          date: '',
+          time: '',
+          duration: '',
+          teacher: '',
           capacity: '',
           price: '',
-          age: '',
-          time: '',
-          image: ''
+          meet_link:''
         });
       } else {
         Swal.fire({
@@ -116,7 +99,7 @@ const VirtualClasses = () => {
         });
       }
     } catch (error) {
-      console.error("Error in handleAddClass:", error);
+      console.error("Error in handleAddVirtualClass:", error);
       Swal.fire({
         icon: "error",
         title: "Submission Error",
@@ -139,12 +122,12 @@ const VirtualClasses = () => {
 
   const handleDeleteClass = async (id) => {
     const confirmDelete = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: "Esta acción no se puede deshacer.",
+      title: '¿You are sure?',
+      text: "This action cannot be undone",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'Cancel',
     });
 
     if (confirmDelete.isConfirmed) {
@@ -154,23 +137,23 @@ const VirtualClasses = () => {
         if (result) {
           Swal.fire({
             icon: 'success',
-            title: 'Clase eliminada',
-            text: 'La clase ha sido eliminada con éxito.',
+            title: 'Virtual class delete',
+            text: 'The class has been successfully deleted.',
           });
-          actions.fetchClasses();
+          actions.getVirtualClasses();
         } else {
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Hubo un error al eliminar la clase.',
+            text: 'There was an error deleting the class.',
           });
         }
       } catch (error) {
-        console.error("Error en handleDeleteClass:", error);
+        console.error("Error en handleDeleteVirtualClass:", error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'Hubo un error al intentar eliminar la clase. Intenta nuevamente.',
+          text: 'There was an error trying to delete the class. Try again.',
         });
       }
     }
@@ -189,14 +172,14 @@ const VirtualClasses = () => {
     <div className="tw-p-4">
       <h2 className="tw-text-2xl tw-font-semibold tw-mb-6"> Virtual Class Management</h2>
       <div className="tw-mb-6">
-        <form onSubmit={handleAddClass} className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-6">
+        <form onSubmit={handleAddVirtualClass} className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-6">
           <div>
             <div className='tw-flex-1'>
-              <label htmlFor="teacher_id" className='tw-block tw-mb-2'>Teacher</label>
+              <label htmlFor="teacher" className='tw-block tw-mb-2'>Teacher</label>
               <select
-                name="teacher_id"
+                name="teacher"
                 onChange={handleInputChange}
-                value={newClass.teacher_id}
+                value={newClass.teacher}
                 className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
               >
                 <option value={0} disabled>Select an Teacher</option>
@@ -258,11 +241,11 @@ const VirtualClasses = () => {
             </div>
 
             <div className='tw-flex-1'>
-              <label htmlFor="age" className='tw-block tw-mb-2'>Age Range</label>
+              <label htmlFor="time" className='tw-block tw-mb-2'>Time</label>
               <input
                 type="text"
-                name="age"
-                value={newClass.age}
+                name="time"
+                value={newClass.time}
                 onChange={handleInputChange}
                 placeholder="Age Range"
                 className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
@@ -271,11 +254,23 @@ const VirtualClasses = () => {
             </div>
 
             <div className='tw-flex-1'>
-              <label htmlFor="time" className='tw-block tw-mb-2'>Schedule</label>
+              <label htmlFor="duration" className='tw-block tw-mb-2'>Duration</label>
               <input
                 type="text"
-                name="time"
-                value={newClass.time}
+                name="duration"
+                value={newClass.duration}
+                onChange={handleInputChange}
+                placeholder="Schedule"
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                required
+              />
+            </div>
+            <div className='tw-flex-1'>
+              <label htmlFor="date" className='tw-block tw-mb-2'>Date</label>
+              <input
+                type="date"
+                name="date"
+                value={newClass.date}
                 onChange={handleInputChange}
                 placeholder="Schedule"
                 className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
@@ -284,21 +279,11 @@ const VirtualClasses = () => {
             </div>
 
             <div className='tw-flex-1'>
-              <label htmlFor="image" className='tw-block tw-mb-2'>Image</label>
-              <input
-                type="file"
-                name="image"
-                onChange={handleImageChange}
-                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
-                required
-              />
-            </div>
-            <div className='tw-flex-1'>
-              <label htmlFor="link_meet" className='tw-block tw-mb-2'>Meet Link </label>
+              <label htmlFor="meet_link" className='tw-block tw-mb-2'>Meet Link </label>
               <input
                 type="text"
-                name="link_meet"
-                value={newClass.link_meet}
+                name="meet_link"
+                value={newClass.meet_link}
                 onChange={handleInputChange}
                 className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 required
@@ -321,30 +306,27 @@ const VirtualClasses = () => {
         <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
           <thead className="tw-bg-gray-100">
             <tr>
-              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Teacher</th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Name</th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Description</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Date</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Meet Link</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Duration</th>
+              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Teacher</th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Capacity</th>
-              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Price</th>
-              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Age</th>
-              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Schedule</th>
-              <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Image</th>
               <th className="tw-px-6 tw-py-3 tw-text-left tw-text-xs tw-font-medium tw-text-gray-500 tw-uppercase tw-tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="tw-divide-y tw-divide-gray-200">
-            {store.classes.map((classItem) => (
+            {console.log(store.virtualClasses)}
+            {store.virtualClasses.map((classItem) => (
               <tr key={classItem.id}>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.teacher_id}</td>
                 <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
                 <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.description}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.date}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.meet_link}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.duration}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.teacher}</td>
                 <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.capacity}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.price}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.age}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.time}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                  {classItem.image ? <img src={classItem.image} alt="Class" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
-                </td>
                 <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                   <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3" onClick={() => handleEditClass(classItem)}>
                     <Edit className="tw-w-5 tw-h-5" />

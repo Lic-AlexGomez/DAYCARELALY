@@ -29,6 +29,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       subscriptions: [],
       adminProfile: [],
       newsletter: [],
+      virtualClasses:[],
 
       // Parent dashboard store
       parentData: null,
@@ -1042,6 +1043,79 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
+      fetchVirtualClasses: async () => {
+        try {
+          const store = getStore()
+          const token = store.token || localStorage.getItem("token")
+
+          if (!token) {
+            console.error("No token found")
+            return
+          }
+          const response = await fetch(process.env.BACKEND_URL + "api/virtual-classes", {
+            headers: getActions().getAuthHeaders(),
+          })
+          if (response.ok) {
+            const data = await response.json()
+            setStore({ virtualClasses: data })
+
+            // If the database is empty, load initial data
+            if (data.length === 0) {
+              getActions().loadInitialClientsData()
+            }
+          } else {
+            console.error("Error fetching clients:", response.status)
+          }
+        } catch (error) {
+          console.error("Error fetching clients:", error)
+        }
+      },
+      addVirtualClass: async (name, description, date, time, duration, teacher, capacity, price, meet_link) => {
+        try {
+          const store = getStore();
+          const token = store.token || localStorage.getItem("token");
+      
+          if (!token) {
+            console.error("No se encontró el token");
+            return;
+          }
+      
+          const response = await fetch(process.env.BACKEND_URL + "api/virtual-classes", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${token}`, // Agregar el token aquí
+              "Content-Type": "application/json", // Especifica que el cuerpo es JSON
+            },
+            body: JSON.stringify({ 
+              name, 
+              description, 
+              date, 
+              time, 
+              duration, 
+              teacher, 
+              capacity, 
+              price, 
+              meet_link 
+            }), // Convertir los datos a JSON
+          });
+      
+          if (response.ok) {
+            const newVirtualClass = await response.json();
+            const store = getStore();
+            setStore({ virtualClasses: [...store.virtualClasses, newVirtualClass] });
+            return { success: true, data: newVirtualClass };
+          } else {
+            const error = await response.json();
+            console.error("Error en la respuesta:", error); 
+            return { success: false, error: error.error || "Error al crear la clase virtual" };
+          }
+        } catch (error) {
+          console.error("Error al crear la actividad:", error);
+          return { success: false, error: error.message };
+        }
+      },
+      
+      
 
       getVirtualClasses: async () => {
         try {
@@ -1050,7 +1124,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           if (response.ok) {
             const data = await response.json()
-            setStore({ parentvirtualClasses: data })
+            setStore({ parentVirtualClasses: data })
           }
         } catch (error) {
           console.error("Error fetching parent virtual classes:", error)

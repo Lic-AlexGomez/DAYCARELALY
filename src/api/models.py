@@ -654,6 +654,7 @@ class VirtualClass(db.Model):
     teacher = db.Column(db.String(120), nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
+    meet_link = db.Column(db.String(120), nullable=False)
 
     def __repr__(self):
         return f'<VirtualClass {self.name}>'
@@ -668,7 +669,9 @@ class VirtualClass(db.Model):
             "duration": self.duration,
             "teacher": self.teacher,
             "capacity": self.capacity,
-            "price": self.price
+            "price": self.price,
+            "meet_link": self.meet_link
+
         }
 
 class Service(db.Model):
