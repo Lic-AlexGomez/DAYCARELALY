@@ -21,6 +21,7 @@ import {
 const menuItems = [
   { icon: House, label: "Dashboard", path: "/admin-dashboard" },
   { icon: Users, label: "Clients", path: "/admin-dashboard/clients" },
+  { icon: BookOpen, label: "Virtual Classes", path: "/admin-dashboard/virtual-classes" },
   { icon: Clock, label: "Schedule", path: "/admin-dashboard/schedule-management" },
   { icon: BookOpen, label: "Classes", path: "/admin-dashboard/classes" },
   { icon: Calendar1, label: "Events", path: "/admin-dashboard/events" },

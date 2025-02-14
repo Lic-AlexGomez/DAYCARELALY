@@ -56,6 +56,8 @@ import ForgotPassword from "./component/ForgotPassword.jsx"
 import GetInTouchView from "./component/admin/GetInTouchView.jsx"
 import ContactUsView from "./component/admin/ContactUsVie.jsx"
 import Newsletter from "./component/admin/Newsletter.jsx"
+import VirtualClasses from "./component/admin/VirtualClasses.jsx"
+
 
 // Componentes del Teacher Dashboard
 import TeacherDashboard from "./component/teacher/TeacherDashboard"
@@ -80,7 +82,6 @@ import ParentPayments from "./component/parent/ParentPayments"
 import ParentSettings from "./component/parent/ParentSettings"
 import ParentSidebar from "./component/parent/ParentSidebar.jsx"
 import ParentHeader from "./component/parent/ParentHeader.jsx"
-import ParentVirtualClasses from "./component/parent/ParentVirtualClasses.jsx"
 import ParentMessages from "./component/parent/parentMessages.jsx"
 import ClassEnrroll from "./component/parent/ParentVirtualClassesEnroll.jsx"
 import PaymentHistory from "./component/parent/PaymentHistory.jsx"
@@ -99,6 +100,7 @@ const AdminDashboard = () => (
           <Route path="/clients" element={<ClientsView />} />
           <Route path="/events" element={<EventsView />} />
           <Route path="/schedule-management" element={<ScheduleManagement />} />
+          <Route path="/virtual-classes" element={<VirtualClasses />} />
           <Route path="/classes" element={<ClassesView />} />
           <Route path="/enrollments" element={<EnrollmentsView />} />
           <Route path="/reports" element={<ReportsView />} />
@@ -164,11 +166,11 @@ const ParentDashboardRoutes = () => (
     <Route path="/schedule" element={<ParentSchedule />} />
     <Route path="/activities" element={<ParentActivities />} />
     <Route path="/payments" element={<ParentPayments />} />
-    <Route path="/virtual-classes" element={<ParentVirtualClasses />} />
     <Route path="/settings" element={<ParentSettings />} />
     <Route path="/messages" element={<ParentMessages />} />
     <Route path="/virtual-classes-enroll" element={<ClassEnrroll />} />
     <Route path="/payment-history" element={<PaymentHistory />} />
+    <Route path="/virtual-classes" element={<VirtualCl />} />
     <Route path="*" element={<ParentOverview/>} />
   </Routes>
   </main>
