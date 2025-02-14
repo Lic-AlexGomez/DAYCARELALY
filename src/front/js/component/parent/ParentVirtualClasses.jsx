@@ -6,14 +6,14 @@ const ParentVirtualClasses = () => {
   const { store, actions } = useContext(Context)
 
   useEffect(() => {
-    actions.fetchParentVirtualClasses()
+    actions.fetchVirtualClasses()
   }, [])
 
   return (
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Virtual Classes</h3>
       <div className="tw-space-y-4">
-        {store.parentVirtualClasses.map((virtualClass) => (
+        {store.virtualClasses.map((virtualClass) => (
           <div key={virtualClass.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
             <h4 className="tw-text-lg tw-font-semibold tw-mb-2">{virtualClass.name}</h4>
             <p className="tw-text-gray-600 tw-mb-4">{virtualClass.description}</p>
@@ -28,7 +28,7 @@ const ParentVirtualClasses = () => {
             <div className="tw-flex tw-items-center tw-mt-4">
               <Video className="tw-w-5 tw-h-5 tw-text-blue-500 tw-mr-2" />
               <a
-                href={virtualClass.link ? virtualClass.link : "https://meet.google.com/qxp-rjnw-dbr"} 
+                href={virtualClass.meet_link ? virtualClass.meet_link : "https://meet.google.com/qxp-rjnw-dbr"} 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="tw-text-blue-500 hover:tw-underline tw-pointer-events-auto tw-cursor-pointer"

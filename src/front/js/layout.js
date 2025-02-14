@@ -85,6 +85,7 @@ import ParentHeader from "./component/parent/ParentHeader.jsx"
 import ParentMessages from "./component/parent/parentMessages.jsx"
 import ClassEnrroll from "./component/parent/ParentVirtualClassesEnroll.jsx"
 import PaymentHistory from "./component/parent/PaymentHistory.jsx"
+import ParentVirtualClasses from "./component/parent/ParentVirtualClasses.jsx"
 
 
 
@@ -170,7 +171,7 @@ const ParentDashboardRoutes = () => (
     <Route path="/messages" element={<ParentMessages />} />
     <Route path="/virtual-classes-enroll" element={<ClassEnrroll />} />
     <Route path="/payment-history" element={<PaymentHistory />} />
-    <Route path="/virtual-classes" element={<VirtualCl />} />
+    <Route path="/virtual-classes" element={<ParentVirtualClasses />} />
     <Route path="*" element={<ParentOverview/>} />
   </Routes>
   </main>
