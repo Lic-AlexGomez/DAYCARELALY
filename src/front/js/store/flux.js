@@ -47,6 +47,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       // Teacher dashboard store
       teacherData: null,
       teacherClasses: [],
+      teachersClasses: [],
       teacherStudents: [],
       getintouchMessages: [],
     },
@@ -1242,15 +1243,17 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const response = await fetch(process.env.BACKEND_URL + "api/teachers/classes", {
             headers: getActions().getAuthHeaders(),
-          })
+          });
+      
           if (response.ok) {
-            const data = await response.json()
-            setStore({ teachersClasses: data })
+            const data = await response.json();
+            // Asegurarse de que 'data' sea un array
+            setStore({ teachersClasses: Array.isArray(data) ? data : [] });
           } else {
-            console.error("Error fetching teachers/classes:", response.status)
+            console.error("Error fetching teachers/classes:", response.status);
           }
         } catch (error) {
-          console.error("Error fetching teachers/classes:", error)
+          console.error("Error fetching teachers/classes:", error);
         }
       },
       fetchServices: async () => {

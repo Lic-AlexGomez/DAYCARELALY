@@ -4,23 +4,38 @@ import { Users, BookOpen, CheckSquare, Clock } from "lucide-react";
 
 const TeacherOverview = () => {
   const { store, actions } = useContext(Context);
-  const { teacherStudents, teachersClasses } = store; 
+  const { teacherStudents, teacherClasses } = store;
   const [studentCount, setStudentCount] = useState(0);
   const [assignedClassCount, setAssignedClassCount] = useState(0);
+  const [loading, setLoading] = useState(true); // Nuevo estado para manejar carga de datos
 
   useEffect(() => {
-    actions.getStudentsByTeacher();
-    actions.fetchTeachersClasses();
+    const fetchData = async () => {
+      if (!teacherStudents || teacherStudents.length === 0) {
+        await actions.getStudentsByTeacher();
+      }
+      if (!teacherClasses || teacherClasses.length === 0) {
+        await actions.getTeacherClasses();
+      }
+      setLoading(false); // Indicar que los datos ya están cargados
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {
-    setStudentCount(teacherStudents?.length || 0);
+    if (teacherStudents) {
+      setStudentCount(teacherStudents.length || 0);
+    }
   }, [teacherStudents]);
 
   useEffect(() => {
-    setAssignedClassCount(teachersClasses?.length || 0);
-  }, [teachersClasses]); 
+    if (teacherClasses) {
+      setAssignedClassCount(teacherClasses.length || 0);
+    }
+  }, [teacherClasses]);
 
+  // Datos de las tarjetas
   const stats = [
     { title: "Total Students", value: studentCount, icon: Users, color: "tw-bg-blue-500" },
     { title: "Assigned Classes", value: assignedClassCount, icon: BookOpen, color: "tw-bg-green-500" },
@@ -29,35 +44,25 @@ const TeacherOverview = () => {
   ];
 
   return (
-    <div className="tw-p-6">
-      <div className="tw-grid tw-grid-cols-4 tw-md:grid-cols-2 tw-lg:grid-cols-4 tw-gap-4">
-        {stats.map((stat, index) => (
-          <div key={index} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-            <div className="tw-flex tw-items-center">
-              <div className={`tw-rounded-full tw-p-3 ${stat.color}`}>
-                <stat.icon className="tw-w-6 tw-h-6 tw-text-white" />
-              </div>
-              <div className="tw-ml-4">
-                <h4 className="tw-text-lg tw-font-semibold tw-text-gray-700">{stat.title}</h4>
-                <p className="tw-text-2xl tw-font-bold tw-text-gray-900">{stat.value}</p>
+    <div>
+      <h3 className="tw-text-xl tw-font-semibold tw-mb-4">Teacher Overview</h3>
+      {loading ? (
+        <p>Loading data...</p>
+      ) : (
+        <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-4">
+          {stats.map((stat, index) => (
+            <div key={index} className={`tw-p-4 tw-rounded-lg tw-shadow-md ${stat.color}`}>
+              <div className="tw-flex tw-items-center tw-gap-4">
+                <stat.icon className="tw-text-white tw-w-6 tw-h-6" />
+                <div>
+                  <p className="tw-text-white tw-text-sm">{stat.title}</p>
+                  <p className="tw-text-white tw-text-lg tw-font-semibold">{stat.value}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <div className="tw-mt-8">
-        <h4 className="tw-text-lg tw-font-semibold tw-mb-4">Upcoming Classes</h4>
-        <ul className="tw-space-y-2">
-          <li className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-            <p className="tw-font-semibold">Art Class</p>
-            <p className="tw-text-sm tw-text-gray-600">Today, 10:00 AM - 11:30 AM</p>
-          </li>
-          <li className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-4">
-            <p className="tw-font-semibold">Music Class</p>
-            <p className="tw-text-sm tw-text-gray-600">Morning, 2:00 PM - 3:30 PM</p>
-          </li>
-        </ul>
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

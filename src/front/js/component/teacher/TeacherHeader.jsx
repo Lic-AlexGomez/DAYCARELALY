@@ -25,13 +25,6 @@ const TeacherHeader = () => {
             <button className="tw-text-gray-500 hover:tw-text-gray-700">
               <Bell className="tw-w-6 tw-h-6" />
             </button>
-            <Link
-              to="/teacher-dashboard/profile"
-              className="tw-flex tw-items-center tw-text-gray-700 hover:tw-text-gray-900"
-            >
-              <User className="tw-w-6 tw-h-6 tw-mr-2" />
-              {user ? user.username : "Teacher"} 
-            </Link>
             <button
               onClick={handleLogout}
               className="tw-flex tw-items-center tw-text-gray-700 hover:tw-text-gray-900"

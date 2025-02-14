@@ -3663,8 +3663,6 @@ def get_teacher_students():
         if not teacher_classes:
             print("No classes found for teacher")
             return jsonify({"message": "No classes found for this teacher"}), 404
-        
-        # Obtener los IDs de las clases
         teacher_class_ids = [cls.id for cls in teacher_classes]
         print("Teacher class IDs:", teacher_class_ids)
         
