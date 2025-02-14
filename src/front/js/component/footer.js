@@ -2,6 +2,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Context } from "../store/appContext"
+import Swal from 'sweetalert2';
 
 const Footer = () => {
   const { store, actions } = useContext(Context)
@@ -13,15 +14,25 @@ const Footer = () => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const result = await actions.newsletter(email)
+      const result = await actions.newsletter(email);
       if (result) {
-        alert("You have successfully subscribed to the newsletter")
-        setEmail("")
+        Swal.fire({
+          title: 'Success!',
+          text: 'You have successfully subscribed to the newsletter.',
+          icon: 'success',
+          confirmButtonText: 'Great!'
+        });
+        setEmail("");
       }
     } catch (error) {
-      alert("There was an error when subscribing: " + error.message)
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error when subscribing: ' + error.message,
+        icon: 'error',
+        confirmButtonText: 'Try Again'
+      });
     }
   }
 
@@ -185,6 +196,7 @@ const Footer = () => {
               <input
                 type="email"
                 onChange={handleChangeEmail}
+                value={email}
                 placeholder="Your email address"
                 className="tw-flex-1 tw-bg-[#1A1A1A] tw-px-1 tw-py-2.5 tw-rounded-sm tw-text-sm tw-text-white"
               />
