@@ -4,16 +4,22 @@ import { Context } from "../../store/appContext"
 
 const ParentSettings = () => {
   const { store, actions } = useContext(Context)
-  const [settings, setSettings] = useState(store.parentSettings || {})
+  const [settings, setSettings] = useState({})
   const [isLoading, setIsLoading] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     const loadSettings = async () => {
-      await actions.fetchParentSettings()
-      setIsLoading(false)
+      try {
+        await actions.fetchParentSettings()
+        setIsLoading(false)
+      } catch (error) {
+        console.error("Error loading settings:", error)
+        setIsLoading(false)
+      }
     }
     loadSettings()
-  }, [actions.fetchParentSettings])
+  }, [actions.fetchParentSettings]) 
 
   useEffect(() => {
     if (store.parentSettings) {
@@ -23,21 +29,30 @@ const ParentSettings = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target
-    setSettings({
-      ...settings,
+    setSettings((prevSettings) => ({
+      ...prevSettings,
       [name]: type === "checkbox" ? checked : value,
-    })
+    }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    actions.updateParentSettings(settings)
+    setIsSaving(true)
+    try {
+      await actions.updateParentSettings(settings)
+      alert("Settings updated successfully!")
+    } catch (error) {
+      console.error("Error updating settings:", error)
+      alert("Failed to update settings. Please try again.")
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   if (isLoading) {
     return <div>Loading settings...</div>
   }
-console.log(store.parentSettings)
+
   return (
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Configuration</h3>
@@ -57,7 +72,7 @@ console.log(store.parentSettings)
         </div>
         <div className="tw-mb-4">
           <label htmlFor="email" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-          Email
+            Email
           </label>
           <input
             type="email"
@@ -70,7 +85,7 @@ console.log(store.parentSettings)
         </div>
         <div className="tw-mb-4">
           <label htmlFor="phone" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-          Phone
+            Phone
           </label>
           <input
             type="tel"
@@ -95,7 +110,7 @@ console.log(store.parentSettings)
         </div>
         <div className="tw-mb-4">
           <label htmlFor="language" className="tw-block tw-text-sm tw-font-medium tw-text-gray-700 tw-mb-1">
-          Language
+            Language
           </label>
           <select
             id="language"
@@ -111,9 +126,10 @@ console.log(store.parentSettings)
         <button
           type="submit"
           className="tw-bg-blue-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-md tw-flex tw-items-center"
+          disabled={isSaving}
         >
           <Save className="tw-w-5 tw-h-5 tw-mr-2" />
-          Save Changes
+          {isSaving ? "Saving..." : "Save Changes"}
         </button>
       </form>
     </div>
