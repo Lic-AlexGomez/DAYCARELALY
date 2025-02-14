@@ -2402,7 +2402,9 @@ def create_parent_payments():
                 status=payment_data['status'],
                 due_date=datetime.strptime(payment_data['due_date'], "%Y-%m-%d").date(),
                 paypal_order_id=payment_data.get('paypal_order_id'), 
-                payer_email=payment_data['payer_email']
+                payer_email=payment_data['payer_email'],
+                child_name=payment_data.get('child_name'),      
+                class_name=payment_data.get('class_name')          
             )
             db.session.add(new_payment)
             payments.append(new_payment)

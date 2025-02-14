@@ -2132,9 +2132,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.error("Error loading students:", error);
         }
       },
-      
-
-
       //PAYPAL
       setEnrolledClasses: (enrolledClasses) => {
         setStore({ enrolledClasses });
@@ -2155,13 +2152,16 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
 
         const paymentData = {
-          user_id: user.id, 
-          amount: order.purchase_units[0].amount.value,
-          concept: "Pago Mensualidad",
-          status: "Completado",
+          user_id: store.user.parent_id || store.user.id,
+          child_name: payment.child_name,       
+          class_name: payment.class.name,          
+          amount: payment.class.price,
+          concept: "Monthly Payment",
+          status: "Paid",
           due_date: new Date().toISOString().split("T")[0],
           paypal_order_id: order.id,
           payer_email: order.payer.email_address,
+          class_id: payment.class.id,
         };
 
         try {

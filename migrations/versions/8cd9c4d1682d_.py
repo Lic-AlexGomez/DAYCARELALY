@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 3b979e700bce
+Revision ID: 8cd9c4d1682d
 Revises: 
-Create Date: 2025-02-13 03:57:42.637342
+Create Date: 2025-02-14 01:37:16.818064
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3b979e700bce'
+revision = '8cd9c4d1682d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -352,6 +352,8 @@ def upgrade():
     sa.Column('due_date', sa.Date(), nullable=False),
     sa.Column('paypal_order_id', sa.String(length=50), nullable=False),
     sa.Column('payer_email', sa.String(length=100), nullable=False),
+    sa.Column('child_name', sa.String(length=100), nullable=True),
+    sa.Column('class_name', sa.String(length=120), nullable=True),
     sa.ForeignKeyConstraint(['parent_id'], ['parent.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -461,9 +463,9 @@ def upgrade():
     )
     op.create_table('enrollment',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('class_id', sa.Integer(), nullable=False),
-    sa.Column('child_name', sa.String(length=20), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
+    sa.Column('class_id', sa.Integer(), nullable=True),
+    sa.Column('child_name', sa.String(length=20), nullable=True),
     sa.Column('enrolled_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=True),
     sa.ForeignKeyConstraint(['class_id'], ['class.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
