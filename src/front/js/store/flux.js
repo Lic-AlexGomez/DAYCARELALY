@@ -1114,6 +1114,35 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message };
         }
       },
+      updateVirtualClass: async (id, virtualClassData) => {
+        try {
+          const store = getStore()
+          const token = store.token || localStorage.getItem("token")
+
+          if (!token) {
+            console.error("No token found")
+            return
+          }
+          const response = await fetch(`${process.env.BACKEND_URL}api/virtual-classes/${id}`, {
+            method: "PUT",
+            headers: getActions().getAuthHeaders(),
+            body: JSON.stringify(virtualClassData),
+          })
+
+          if (response.ok) {
+            const updatedVirtualClass = await response.json()
+            const store = getStore()
+            const updatedVirtualClasses = store.virtualClasses.map((classes) => (classes.id === id ? updatedVirtualClass : classes))
+            setStore({ virtualClasses: updatedVirtualClasses })
+            return updatedVirtualClass
+          } else {
+            console.error("Error updating class:", response.status)
+          }
+        } catch (error) {
+          console.error("Error updating class:", error)
+        }
+      },
+
       
       
 
