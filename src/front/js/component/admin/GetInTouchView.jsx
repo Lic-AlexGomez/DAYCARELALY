@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react"
 import { Context } from "../../store/appContext"
 import { Trash, Eye, Search, ChevronLeft, ChevronRight } from "lucide-react"
+import Swal from 'sweetalert2';
+
 
 const GetInTouchView = () => {
   const { store, actions } = useContext(Context)
@@ -14,8 +16,22 @@ const GetInTouchView = () => {
   }, []) 
 
   const handleDeleteMessage = async (id) => {
-    if (window.confirm("Are you sure you want to delete this message?")) {
-      await actions.deleteGetintouchMessage(id)
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won’t be able to undo this action!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it',
+      cancelButtonText: 'Cancel'
+    });
+  
+    if (result.isConfirmed) {
+      await actions.deleteGetintouchMessage(id);
+      Swal.fire(
+        'Deleted!',
+        'The message has been deleted.',
+        'success'
+      );
     }
   }
 
