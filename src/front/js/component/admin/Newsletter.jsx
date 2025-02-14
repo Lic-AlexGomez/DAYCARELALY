@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../../store/appContext";
 import { Trash, Eye, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import Swal from "sweetalert2";
 
 const NewsletterView = () => {
   const { store, actions } = useContext(Context);
@@ -14,10 +15,32 @@ const NewsletterView = () => {
   }, [store.newsletter]);
 
   const handleDeleteSubscriber = async (id) => {
-    if (window.confirm("Are you sure you want to delete this subscriber?")) {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this subscriber!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true
+    });
+  
+    if (result.isConfirmed) {
       await actions.deleteNewsletterSubscriber(id);
+      Swal.fire(
+        'Deleted!',
+        'The subscriber has been deleted.',
+        'success'
+      );
+    } else {
+      Swal.fire(
+        'Cancelled',
+        'The subscriber is safe :)',
+        'error'
+      );
     }
   };
+  
 
   const newsletterData = Array.isArray(store.newsletter) ? store.newsletter : [];
   const filteredSubscribers = newsletterData.filter((subscriber) =>
