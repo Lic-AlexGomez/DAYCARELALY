@@ -1,6 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Calendar, Clock, MapPin } from "lucide-react";
 import { Context } from "../../store/appContext";
+import { Link } from "react-router-dom";
 
 const ParentActivities = () => {
   const { store, actions } = useContext(Context);
@@ -15,6 +16,7 @@ const ParentActivities = () => {
           actions.fetchParentActivities(),
           actions.fetchParentPayments(),
           actions.fetchParentVirtualClasses(),
+          
         ]);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -25,6 +27,10 @@ const ParentActivities = () => {
 
     loadOverviewData();
   }, [actions.fetchParentActivities]);
+
+  useEffect(() => {
+      actions.fetchEvents();
+    }, []);
 
   if (isLoading) {
     return (
@@ -37,39 +43,39 @@ const ParentActivities = () => {
   }
 
 
-  if (!Array.isArray(store.parentActivities)) {
-    console.error("store.parentActivities is not an array:", store.parentActivities);
-    return (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-64">
-        <div className="tw-text-lg tw-font-semibold tw-text-gray-700">
-            No activities found.
-        </div>
-      </div>
-    );
-  }
+  // if (!Array.isArray(store.parentActivities)) {
+  //   console.error("store.parentActivities is not an array:", store.parentActivities);
+  //   return (
+  //     <div className="tw-flex tw-justify-center tw-items-center tw-h-64">
+  //       <div className="tw-text-lg tw-font-semibold tw-text-gray-700">
+  //           No activities found.
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  if (store.parentActivities.length === 0) {
-    return (
-      <div className="tw-flex tw-justify-center tw-items-center tw-h-64">
-        <div className="tw-text-lg tw-font-semibold tw-text-gray-700">
-          No activities found.
-        </div>
-      </div>
-    );
-  }
+  // if (store.parentActivities.length === 0) {
+  //   return (
+  //     <div className="tw-flex tw-justify-center tw-items-center tw-h-64">
+  //       <div className="tw-text-lg tw-font-semibold tw-text-gray-700">
+  //         No activities found.
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
       <h3 className="tw-text-xl tw-font-semibold tw-mb-6">Activities</h3>
       <div className="tw-space-y-4">
-        {store.parentActivities.map((activity) => (
+        {store.events.map((activity) => (
           <div key={activity.id} className="tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6">
             <h4 className="tw-text-lg tw-font-semibold tw-mb-2">{activity.name}</h4>
             <div className="tw-flex tw-items-center tw-mb-2">
               <Calendar className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
-              <span>{new Date(activity.date).toLocaleDateString()}</span>
+              <span>{activity.start_time}</span>
             </div>
-            <div className="tw-flex tw-items-center tw-mb-2">
+            {/* <div className="tw-flex tw-items-center tw-mb-2">
               <Clock className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
               <span>
                 {activity.time} - Duration: {activity.duration}
@@ -78,8 +84,8 @@ const ParentActivities = () => {
             <div className="tw-flex tw-items-center tw-mb-2">
               <MapPin className="tw-w-5 tw-h-5 tw-text-gray-500 tw-mr-2" />
               <span>{activity.location}</span>
-            </div>
-            <div className="tw-mt-2">
+            </div> */}
+            {/* <div className="tw-mt-2">
               <span
                 className={`tw-px-2 tw-py-1 tw-rounded-full tw-text-sm tw-font-semibold
                   ${
@@ -91,8 +97,8 @@ const ParentActivities = () => {
                   }`}
               >
                 {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
-              </span>
-            </div>
+              </span> */}
+            {/* </div> */}
           </div>
         ))}
       </div>

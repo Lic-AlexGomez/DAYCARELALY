@@ -46,7 +46,7 @@ const ParentHeader = () => {
               <button className="tw-relative tw-text-red-500 tw-p-2 sm:tw-p-0">
                 <ShoppingBag className="tw-w-5 tw-h-5 sm:tw-w-6 sm:tw-h-6" />
                 {store.enrolledClasses.length > 0 && (
-                  <span className="tw-absolute tw-top-0 tw-right-0 tw-w-4 tw-h-4 sm:tw-w-6 sm:tw-h-6 tw-bg-blue-500 tw-text-white tw-rounded-full tw-flex tw-items-center tw-justify-center tw-text-xs">
+                  <span className="tw-absolute tw-top-0 tw-right-0 tw-w-4 tw-h-4 sm:tw-w-4 sm:tw-h-4 tw-bg-blue-500 tw-text-white tw-rounded-full tw-flex tw-items-center tw-justify-center tw-text-xs">
                     {store.enrolledClasses.length}
                   </span>
                 )}

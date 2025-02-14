@@ -187,9 +187,9 @@ const EnrollmentsView = () => {
           <tbody className="tw-divide-y tw-divide-gray-200">
             {store.enrolledClasses.map((enrollment) => (
               <tr key={enrollment.id}>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.name}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.class_name}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.start_date}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.child_name}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.class.name}</td>
+                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{enrollment.enrolled_at}</td>
                 <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                   <button
                     className="tw-text-red-600 hover:tw-text-red-900"
