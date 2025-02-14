@@ -1143,7 +1143,31 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      
+      deleteVirtualClass: async (id) => {
+        try {
+          const store = getStore()
+          const token = store.token || localStorage.getItem("token")
+
+          if (!token) {
+            console.error("No token found")
+            return
+          }
+          const response = await fetch(`${process.env.BACKEND_URL}api/virtual-classes/${id}`, {
+            method: "DELETE",
+            headers: getActions().getAuthHeaders(),
+          })
+
+          if (response.ok) {
+            return { success: true }
+          } else {
+            console.error("Error deleting class:", response.status)
+            return { success: false, error: `Status: ${response.status}` }
+          }
+        } catch (error) {
+          console.error("Error deleting class:", error)
+          return { success: false, error: error.message }
+        }
+      },
       
 
       getVirtualClasses: async () => {

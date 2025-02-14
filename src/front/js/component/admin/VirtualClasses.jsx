@@ -132,7 +132,7 @@ const VirtualClasses = () => {
 
         if (confirmDelete.isConfirmed) {
             try {
-                const result = await actions.deleteClass(id);
+                const result = await actions.deleteVirtualClass(id);
 
                 if (result) {
                     Swal.fire({
@@ -140,7 +140,7 @@ const VirtualClasses = () => {
                         title: 'Virtual class delete',
                         text: 'The class has been successfully deleted.',
                     });
-                    actions.getVirtualClasses();
+                    actions.fetchVirtualClasses();
                 } else {
                     Swal.fire({
                         icon: 'error',
