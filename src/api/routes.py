@@ -2221,6 +2221,26 @@ def unenroll_from_class():
 
     return jsonify({"msg": "Successfully unenrolled from class"}), 200
 
+@api.route('/enrollments/<int:enrollment_id>', methods=['DELETE'])
+@jwt_required()  
+def delete_enrollment(enrollment_id):
+    try:
+     
+        enrollment = Enrollment.query.get(enrollment_id)
+
+        if not enrollment:
+            return jsonify({"success": False, "error": "Enrollment not found"}), 404
+
+   
+        db.session.delete(enrollment)
+        db.session.commit()
+
+        return jsonify({"success": True, "message": "Enrollment deleted successfully"}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+    
 @api.route('/my-classes', methods=['GET'])
 @jwt_required()
 def get_my_classes():

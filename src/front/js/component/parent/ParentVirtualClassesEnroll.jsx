@@ -207,67 +207,107 @@ function ParentVirtualClassesEnroll() {
     e.preventDefault();
 
     if (!formData.classId || isNaN(parseInt(formData.classId))) {
-        Swal.fire({
-            icon: "error",
-            title: "Invalid Class",
-            text: "Please select a valid class.",
-        });
-        return;
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Class",
+        text: "Please select a valid class.",
+      });
+      return;
     }
 
     if (!formData.child_name.trim()) {
-        Swal.fire({
-            icon: "error",
-            title: "Invalid Name",
-            text: "Child name cannot be empty.",
-        });
-        return;
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Name",
+        text: "Child name cannot be empty.",
+      });
+      return;
     }
 
     const confirmSubmit = await Swal.fire({
-        title: "Are you sure?",
-        text: "Do you want to add a new child?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Yes, add!",
-        cancelButtonText: "No, cancel",
+      title: "Are you sure?",
+      text: "Do you want to add a new child?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, add!",
+      cancelButtonText: "No, cancel",
     });
 
     if (!confirmSubmit.isConfirmed) return;
 
     try {
-        const result = await actions.enrollInClass(formData.classId, formData.child_name);
+      const result = await actions.enrollInClass(formData.classId, formData.child_name);
 
-        if (result.success) {
-            Swal.fire({
-                icon: "success",
-                title: "Child Added",
-                text: "A new child has been added!",
-            });
-
-            setFormData({
-                child_name: "",
-                classId: "",
-            });
-            setShowModal(false);
-        } else {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: `There was an error: ${result.error}`,
-            });
-        }
-    } catch (error) {
-        console.error("Error in handleSubmit:", error);
+      if (result.success) {
         Swal.fire({
-            icon: "error",
-            title: "Submission Error",
-            text: "There was an error submitting the form. Please try again.",
+          icon: "success",
+          title: "Child Added",
+          text: "A new child has been added!",
         });
-    }
-};
 
-  
+        setFormData({
+          child_name: "",
+          classId: "",
+        });
+        setShowModal(false);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: `There was an error: ${result.error}`,
+        });
+      }
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Submission Error",
+        text: "There was an error submitting the form. Please try again.",
+      });
+    }
+  };
+  const handleDeleteEnrollment = async (enrollmentId) => {
+    const confirmDelete = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to remove this enrollment?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, remove it!",
+      cancelButtonText: "No, cancel",
+    });
+
+    if (!confirmDelete.isConfirmed) return;
+
+    try {
+      const result = await actions.deleteEnrollment(enrollmentId);
+
+      if (result.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Enrollment Removed",
+          text: "The enrollment has been successfully removed.",
+        });
+
+        // Actualizar la lista después de eliminar
+        await actions.fetchEnrolledClasses();
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: `There was an error: ${result.error}`,
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting enrollment:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Deletion Error",
+        text: "There was an error removing the enrollment. Please try again.",
+      });
+    }
+  };
+
+
   const handleCloseModal = () => {
     setShowModal(false);
     setFormData({
@@ -351,8 +391,8 @@ function ParentVirtualClassesEnroll() {
       </div>
     );
   }
-console.log(store.enrolledClasses)
-console.log(store.classes)
+  console.log(store.enrolledClasses)
+  console.log(store.classes)
   return (
     <div className="tw-container tw-mx-auto tw-p-4">
       <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Available Virtual Classes</h1>
@@ -391,7 +431,7 @@ console.log(store.classes)
         ))}
       </div>
 
-      {/* Botón para abrir el modal y tabla de clases inscritas */}
+
       <div className="tw-p-4">
         <div className="tw-flex tw-justify-between tw-items-center tw-mb-6">
           <button
@@ -403,7 +443,7 @@ console.log(store.classes)
           </button>
         </div>
 
-        {store.enrolledClasses  ? (
+        {store.enrolledClasses ? (
           <table className="tw-w-full tw-bg-white tw-shadow-md tw-rounded-lg">
             <thead className="tw-bg-gray-100">
               <tr>
@@ -424,16 +464,23 @@ console.log(store.classes)
             <tbody className="tw-divide-y tw-divide-gray-200">
               {store.enrolledClasses.map((activity) => (
 
-                
+
 
                 <tr key={activity.id}>
-                  
+
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity?.child_name || "No class available"}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.class?.name || "No class available"}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity?.enrolled_at || "No class available"}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
                     <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3"></button>
+
+                    <button
+                      className="tw-text-red-600 hover:tw-text-red-900"
+                      onClick={() => handleDeleteEnrollment(activity.id)}
+                    >
+
                     <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleUnenrollClass(activity.id)}>
+
                       <Trash className="tw-w-5 tw-h-5" />
                     </button>
                   </td>
@@ -445,7 +492,7 @@ console.log(store.classes)
           <div className="tw-text-center tw-p-4 tw-text-gray-500">No enrollments found</div>
         )}
 
-        {/* Modal para inscribir al niño */}
+
         <EnrollChildModal
           show={showModal}
           onClose={handleCloseModal}
