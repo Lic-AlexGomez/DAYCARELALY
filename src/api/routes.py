@@ -2146,12 +2146,15 @@ def get_enrolled_classes():
 def enroll_in_class():
     user_id = get_jwt_identity()
     data = request.json
-    print(data)
+    print("Received data:", data)  # 👈 Para depurar en la consola
 
     # Validar que se envíe un valor para classId y que sea convertible a entero
     try:
         class_id = int(data.get('classId', None))
-    except (ValueError, TypeError):
+        if class_id is None:
+            raise ValueError("Class ID is required")
+    except (ValueError, TypeError) as e:
+        print("Invalid class ID:", e)
         return jsonify({"error": "Class ID must be an integer"}), 400
 
     if not data.get('child_name'):
@@ -2164,18 +2167,25 @@ def enroll_in_class():
     if class_to_enroll.capacity <= 0:
         return jsonify({"error": "Class is full"}), 400
 
-    new_enrollment = Enrollment(
-        user_id=user_id,
-        class_id=class_id,
-        child_name=data['child_name'],
-        enrolled_at=datetime.now(timezone.utc)
-    )
+    try:
+        new_enrollment = Enrollment(
+            user_id=user_id,
+            class_id=class_id,
+            child_name=data['child_name'],
+            enrolled_at=datetime.now(timezone.utc)
+        )
 
-    db.session.add(new_enrollment)
-    class_to_enroll.capacity -= 1
-    db.session.commit()
+        db.session.add(new_enrollment)
+        class_to_enroll.capacity -= 1
+        db.session.commit()
 
-    return jsonify(new_enrollment.serialize()), 201
+      
+        return jsonify(new_enrollment.serialize()), 201
+
+    except Exception as e:
+        db.session.rollback()  # Deshacer cambios en caso de error
+        print("Error during enrollment:", e)
+        return jsonify({"error": "An error occurred while processing enrollment"}), 500
 
 @api.route('/unenroll', methods=['POST'])
 @jwt_required()
