@@ -152,10 +152,12 @@ class Class(db.Model):
 
 class Enrollment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # Relación con usuario
-    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=True)  # Relación con clase
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=True)  
     child_name = db.Column(db.String(20), nullable=True) 
     enrolled_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
+
+    class_obj = db.relationship("Class", backref="enrollments")
 
     def __repr__(self):
         return f'<Enrollment {self.id}>'
@@ -166,7 +168,10 @@ class Enrollment(db.Model):
             "user_id": self.user_id,
             "class_id": self.class_id,
             "child_name": self.child_name,
-            "enrolled_at": self.enrolled_at.isoformat()
+            "enrolled_at": self.enrolled_at.isoformat(),
+            "class_name": self.class_obj.name if self.class_obj else None,  
+            "time": self.class_obj.time if self.class_obj else None, 
+            "capacity": self.class_obj.capacity if self.class_obj else None  
         }
 class Program(db.Model):
     id = db.Column(db.Integer, primary_key=True)

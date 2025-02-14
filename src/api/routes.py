@@ -3658,23 +3658,31 @@ def get_teacher_students():
         teacher = Teacher.query.filter_by(user_id=current_user_id).first()
         if not teacher:
             return jsonify({"error": "Teacher not found"}), 404
+        
         teacher_classes = Class.query.filter_by(teacher_id=teacher.id).all()
         if not teacher_classes:
             print("No classes found for teacher")
             return jsonify({"message": "No classes found for this teacher"}), 404
-        class_names = [cls.name for cls in teacher_classes]
-        print("Class names for teacher:", class_names)
-        enrollments = db.session.query(Enrollment, Class).join(Class, Class.name == Enrollment.class_name).filter(Enrollment.class_name.in_(class_names)).all()
+        
+        # Obtener los IDs de las clases
+        teacher_class_ids = [cls.id for cls in teacher_classes]
+        print("Teacher class IDs:", teacher_class_ids)
+        
+        enrollments = db.session.query(Enrollment, Class)\
+            .join(Class, Enrollment.class_id == Class.id)\
+            .filter(Enrollment.class_id.in_(teacher_class_ids)).all()
+        
         if not enrollments:
             print("No enrollments found for teacher's classes")
             return jsonify({"message": "No enrollments found for teacher's classes"}), 404
+        
         students = []
         for enrollment, class_info in enrollments:
             students.append({
                 "id": enrollment.id,
                 "child_name": enrollment.child_name,
-                "class_name": enrollment.class_name,
-                "price": enrollment.price,
+                "class_name": class_info.name,
+                "price": class_info.price,  
                 "enrolled_at": enrollment.enrolled_at.isoformat(),
                 "time": class_info.time,
                 "capacity": class_info.capacity
