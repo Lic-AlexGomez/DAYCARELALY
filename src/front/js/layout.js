@@ -71,6 +71,8 @@ import TeacherSidebar from "./component/teacher/TeacherSidebar.jsx"
 import TeacherHeader from "./component/teacher/TeacherHeader.jsx"
 import TeacherProfile from "./component/teacher/TeacherProfile.jsx"
 import ProtectedRoute from "./component/teacher/ProtectedRoute"; 
+import TeacherVirtualClasses from "./component/teacher/TeacherVirtualClasses.jsx"
+import TeacherMessages from "./component/teacher/TeacherMessages.jsx"
 
 // Componentes del Parent Dashboard
 
@@ -148,6 +150,8 @@ const TeacherDashboardRoutes = () => (
     <Route path="/schedule" element={<TeacherSchedule />} />
     <Route path="/settings" element={<TeacherSettings />} />
     <Route path="/profile" element={<TeacherProfile />} />
+    <Route path="/teachervirtualclasses" element={<TeacherVirtualClasses />} />
+    <Route path="/teachermessages" element={<TeacherMessages />} />
     <Route path="*" element={<TeacherOverview/>} />
   </Routes>
   </main>
