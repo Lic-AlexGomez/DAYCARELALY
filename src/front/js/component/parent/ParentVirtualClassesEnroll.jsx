@@ -472,18 +472,19 @@ function ParentVirtualClassesEnroll() {
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity.class?.name || "No class available"}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{activity?.enrolled_at || "No class available"}</td>
                   <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                    <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3"></button>
+                    <button
+                      className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3"
+                    
+                    ></button>
 
                     <button
                       className="tw-text-red-600 hover:tw-text-red-900"
-                      onClick={() => handleDeleteEnrollment(activity.id)}
+                      onClick={() => handleUnenrollClass(activity.id)} 
                     >
-
-                    <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleUnenrollClass(activity.id)}>
-
                       <Trash className="tw-w-5 tw-h-5" />
                     </button>
                   </td>
+
                 </tr>
               ))}
             </tbody>
