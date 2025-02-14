@@ -16,7 +16,8 @@ const VirtualClasses = () => {
     price: '',
     age: '',
     time: '',
-    image: ''
+    image: '',
+    link_meet:''
   });
 
   useEffect(() => {
@@ -186,7 +187,7 @@ const VirtualClasses = () => {
 
   return (
     <div className="tw-p-4">
-      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6">Class Management</h2>
+      <h2 className="tw-text-2xl tw-font-semibold tw-mb-6"> Virtual Class Management</h2>
       <div className="tw-mb-6">
         <form onSubmit={handleAddClass} className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-6">
           <div>
@@ -288,6 +289,17 @@ const VirtualClasses = () => {
                 type="file"
                 name="image"
                 onChange={handleImageChange}
+                className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
+                required
+              />
+            </div>
+            <div className='tw-flex-1'>
+              <label htmlFor="link_meet" className='tw-block tw-mb-2'>Meet Link </label>
+              <input
+                type="text"
+                name="link_meet"
+                value={newClass.link_meet}
+                onChange={handleInputChange}
                 className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 required
               />
