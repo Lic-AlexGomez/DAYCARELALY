@@ -81,12 +81,12 @@ const VirtualClasses = () => {
                 });
                 actions.getVirtualClasses();
                 setNewClass({
-                    name: 0,
+                    name: '',
                     description: '',
                     date: '',
                     time: '',
                     duration: '',
-                    teacher: '',
+                    teacher: 0,
                     capacity: '',
                     price: '',
                     meet_link: ''
