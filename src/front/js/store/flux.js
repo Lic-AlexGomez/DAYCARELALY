@@ -1991,6 +1991,36 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
     },
     
+    deleteEnrollment: async (enrollmentId) => {
+      try {
+        const token = localStorage.getItem("token"); // Si necesitas autenticación
+    
+        const response = await fetch(`${process.env.BACKEND_URL}/api/enrollments/${enrollmentId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Solo si es necesario
+          },
+        });
+    
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Error deleting enrollment:", errorData);
+          return { success: false, error: errorData.message || "Failed to delete enrollment" };
+        }
+    
+       
+        setStore({
+          enrolledClasses: getStore().enrolledClasses.filter((enrollment) => enrollment.id !== enrollmentId),
+        });
+    
+        return { success: true };
+      } catch (error) {
+        console.error("Error in deleteEnrollment action:", error);
+        return { success: false, error: "An error occurred while deleting the enrollment" };
+      }
+    }
+,    
     
       // my-classes
       fetchMyClassesParent: async () => {
