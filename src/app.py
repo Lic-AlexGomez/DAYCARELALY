@@ -10,6 +10,8 @@ from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import create_access_token,get_jwt_identity, jwt_required,  JWTManager
+from flask_mail import Mail,Message
+from smtplib import SMTP_SSL
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -23,6 +25,17 @@ if db_url is not None:
         "postgres://", "postgresql://")
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
+
+
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587  # Puerto para TLS
+app.config['MAIL_USE_TLS'] = True  # Activar TLS
+app.config['MAIL_USERNAME'] = 'rainbowdaycare119@gmail.com'
+app.config['MAIL_PASSWORD'] = 'bbpg gcdy tnsw mpns'
+app.config['MAIL_DEFAULT_SENDER'] = 'rainbowdaycare119@gmail.com'
+
+mail = Mail(app)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["JWT_SECRET_KEY"] = "super-secret"  
