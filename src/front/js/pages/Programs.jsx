@@ -1,5 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Context } from "../store/appContext";
+import React, { useState, useEffect } from "react";
 import { BookOpen } from 'lucide-react';
 import book from "../../img/books.png";
 import littleexplorers from "../../img/little-explorers.jpg";
@@ -7,105 +6,21 @@ import dancing from "../../img/dancing.jpg";
 import Scientists from "../../img/LittleScientist.jpg";
 import kids4C from "../../img/kids4C.png";
 import { useNavigate } from 'react-router-dom';
-import ProgramModal from "../component/home/ProgramsModal.jsx"
+import ProgramModal from "../component/home/ProgramsModal.jsx";
 
+export const defaultPrograms = [];
 
-export const defaultPrograms = [
-    // {
-    //     id: 111111111,
-    //     name: "Little Explorers ",
-    //     price: "25",
-    //     description: "A hands-on program featuring activities like building with blocks, painting, sensory games (sand, water), and group play.",
-    //     age: "3-5 Years",
-    //     time: "8-10 am",
-    //     capacity: "15 Kids",
-    //     image: littleexplorers,
-    // },
-    // {
-    //     id: 2222222222,
-    //     name: "Learning with Rhythm",
-    //     price: "25",
-    //     description: "Musical activities such as singing, playing basic instruments (maracas, tambourines), and learning rhythms through body games.",
-    //     age: "3-4 Years",
-    //     time: "9-11 am",
-    //     capacity: "15 Kids",
-    //     image: dancing,
-    // },
-    // {
-    //     id: 333333333333,
-    //     name: "Little Scientists",
-    //     price: "35",
-    //     description: "Stimulate curiosity and critical thinking through basic science experiments and activities through playing with different elements.",
-    //     age: "3-5 Years",
-    //     time: "8-10 am",
-    //     capacity: "10 Kids",
-    //     image: Scientists,
-    // },
-    // {
-    //     id: 44444444444,
-    //     name: "Creative Minds",
-    //     price: "30",
-    //     description: "Exploring creative thinking and hands-on activities in arts, crafts, and problem-solving.",
-    //     age: "4-5 Years",
-    //     time: "10-12 am",
-    //     capacity: "12 Kids",
-    //     image: book,
-    // },
-    // {
-    //     id: 5555555555555,
-    //     name: "Nature Explorers",
-    //     price: "28",
-    //     description: "An outdoor program focused on exploring nature, identifying plants and animals, and engaging in outdoor play and learning.",
-    //     age: "4-6 Years",
-    //     time: "9-11 am",
-    //     capacity: "12 Kids",
-    //     image: littleexplorers,
-    // },
-    // {
-    //     id: 6666666666666,
-    //     name: "Artistic Adventures",
-    //     price: "30",
-    //     description: "A creative program where kids learn to express themselves through painting, sculpture, and crafts.",
-    //     age: "3-5 Years",
-    //     time: "8-10 am",
-    //     capacity: "15 Kids",
-    //     image: dancing,
-    // },
-    // {
-    //     id: 77777777777,
-    //     name: "Tech Tots",
-    //     price: "35",
-    //     description: "Introduce young minds to basic technology concepts using age-appropriate tools and games.",
-    //     age: "5-6 Years",
-    //     time: "10-12 am",
-    //     capacity: "10 Kids",
-    //     image: Scientists,
-    // },
-    // {
-    //     id:88888888888888,
-    //     name: "Mini Chefs",
-    //     price: "30",
-    //     description: "A fun and educational program where kids learn basic cooking skills and food safety.",
-    //     age: "4-6 Years",
-    //     time: "11 am - 1 pm",
-    //     capacity: "10 Kids",
-    //     image: kids4C,
-    // }
-];
 export const Programs = () => {
     const navigate = useNavigate();
-    const { store, actions } = useContext(Context);
+    const [programs, setPrograms] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [visiblePrograms, setVisiblePrograms] = useState(3);
     const [selectedProgram, setSelectedProgram] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const allPrograms = [...(store.activities || [])];
-
     const programsPerPage = 3;
-
     const goToNext = () => {
-        if (currentIndex < Math.ceil(allPrograms.length / programsPerPage) - 1) {
+        if (currentIndex < Math.ceil(programs.length / programsPerPage) - 1) {
             setCurrentIndex(currentIndex + 1);
         }
     };
@@ -122,9 +37,21 @@ export const Programs = () => {
     const handleShowMore = () => {
         setVisiblePrograms((prev) => prev + 3);
     };
-
     useEffect(() => {
-        actions.fetchActivities();
+        const fetchPrograms = async () => {
+            try {
+                const response = await fetch(process.env.BACKEND_URL + "/api/activities");
+                if (response.ok) {
+                    const data = await response.json();
+                    setPrograms(data);
+                } else {
+                    console.error("Error fetching programs:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching programs:", error);
+            }
+        };
+        fetchPrograms();
     }, []);
 
     const openModal = (program) => {
@@ -168,7 +95,7 @@ export const Programs = () => {
 
                 {/* Programas en el Carousel */}
                 <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6 tw-overflow-hidden">
-                    {store.activities.slice(startIndex, endIndex).map((programItem) => (
+                    {programs.slice(startIndex, endIndex).map((programItem) => (
                         <div
                             key={programItem.id}
                             className="tw-bg-white tw-rounded-3xl tw-overflow-hidden tw-shadow-lg tw-border tw-border-[#9C29B2]"
@@ -226,7 +153,7 @@ export const Programs = () => {
                 </div>
 
                 {/* Botón Siguiente */}
-                {currentIndex < Math.ceil(allPrograms.length / programsPerPage) - 1 && (
+                {currentIndex < Math.ceil(programs.length / programsPerPage) - 1 && (
                     <button
                         onClick={goToNext}
                         className="tw-absolute tw-top-1/2 tw-right-0 tw-transform tw--translate-y-1/2 tw-bg-white tw-px-3 tw-py-2 tw-rounded-full tw-shadow-lg tw-text-[#9C29B2]"

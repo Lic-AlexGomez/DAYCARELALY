@@ -1,28 +1,40 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Context } from "../store/appContext";
+import React, { useState, useEffect } from "react";
 import kids4C from "../../img/kids4C.png";
 import { useNavigate } from "react-router-dom";
-import { defaultPrograms } from "./Programs.jsx";
-import ProgramModal from "../component/home/ProgramsModal.jsx"
+import ProgramModal from "../component/home/ProgramsModal.jsx";
 
 export const Allprograms = () => {
-    const { store, actions } = useContext(Context);
-
+    const navigate = useNavigate();
+    const [programs, setPrograms] = useState([]);
     const [selectedAge, setSelectedAge] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedProgram, setSelectedProgram] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const allPrograms = [...defaultPrograms, ...(store.programs || [])];
-
+    // Solicita los datos directamente desde la base de datos al montar el componente
     useEffect(() => {
-        actions.getPrograms();
+        const fetchPrograms = async () => {
+            try {
+                const response = await fetch(process.env.BACKEND_URL + "/api/activities");
+                if (response.ok) {
+                    const data = await response.json();
+                    setPrograms(data);
+                } else {
+                    console.error("Error fetching programs:", response.status);
+                }
+            } catch (error) {
+                console.error("Error fetching programs:", error);
+            }
+        };
+        fetchPrograms();
     }, []);
 
-    const uniqueAges = [...new Set(allPrograms.map((program) => program.age))];
+    // Extrae los valores únicos de age_range para el filtro
+    const uniqueAges = [...new Set(programs.map((program) => program.age_range))];
 
-    const filteredPrograms = allPrograms.filter((program) =>
-        selectedAge ? program.age === selectedAge : true
+    // Filtra los programas según la edad seleccionada (si hay filtro)
+    const filteredPrograms = programs.filter((program) =>
+        selectedAge ? program.age_range === selectedAge : true
     );
 
     const toggleDropdown = () => {
@@ -132,11 +144,9 @@ export const Allprograms = () => {
                             >
                                 Read More
                             </button>
-
                         </div>
                     </div>
                 ))}
-
             </div>
 
             <ProgramModal
