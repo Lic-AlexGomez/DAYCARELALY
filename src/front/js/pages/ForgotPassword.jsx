@@ -11,7 +11,7 @@ const Button = ({ className, children, ...props }) => (
     {children}
   </button>
 )
-// ExclamationTriangleIcon Component
+
 const ExclamationTriangleIcon = (props) => (
     <svg
       {...props}
@@ -29,8 +29,8 @@ const ExclamationTriangleIcon = (props) => (
       <line x1="12" y1="9" x2="12" y2="13" />
       <line x1="12" y1="17" x2="12.01" y2="17" />
     </svg>
-  )
-  
+)
+
 const Input = React.forwardRef(({ className, type, ...props }, ref) => {
   return (
     <input
@@ -91,11 +91,10 @@ const AlertDescription = ({ className, ...props }) => (
   <div className={`tw-text-sm [&_p]:tw-leading-relaxed ${className}`} {...props} />
 )
 
-
 const ForgotPassword = () => {
   const { actions } = useContext(Context)
   const navigate = useNavigate()
-  const { token } = useParams()  
+  const { token } = useParams()
   const [newPassword, setNewPassword] = useState("")
   const [error, setError] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
@@ -113,12 +112,11 @@ const ForgotPassword = () => {
     }
 
     try {
-    
       const response = await actions.changePassword(token, newPassword)
 
       if (response.success) {
         setSuccessMessage("Your password has been reset successfully!")
-        setError(null) 
+        setError(null)
         setNewPassword("") 
       } else {
         setError(response.message || "There was an error resetting your password.")
@@ -127,6 +125,11 @@ const ForgotPassword = () => {
       console.error("Password reset failed", error)
       setError("There was a problem resetting your password. Please try again.")
     }
+  }
+
+
+  const handleLoginRedirect = () => {
+    navigate("/login")
   }
 
   return (
@@ -166,16 +169,26 @@ const ForgotPassword = () => {
               </Alert>
             )}
             <div className="tw-flex tw-items-center tw-justify-between tw-mt-4">
-              <Button type="submit" className="tw-mx-auto tw-mt-4 border tw-bg-primary hover:tw-bg-purple-600 hover:tw-text-white">
-                Reset Password
+             
+              <Button
+                type="submit"
+                className="tw-mx-auto tw-mt-4 border tw-bg-primary hover:tw-bg-purple-600 hover:tw-text-white"
+              >
+                {successMessage ? (
+                  <span onClick={handleLoginRedirect}>Log In</span>
+                ) : (
+                  "Reset Password"
+                )}
               </Button>
             </div>
           </form>
         </CardContent>
         <CardFooter className="tw-flex tw-flex-col tw-space-y-2">
-          <Link to="/login" className="tw-text-sm tw-text-blue-500 hover:tw-underline">
-            Remembered your password? Sign in
-          </Link>
+          {!successMessage && (
+            <Link to="/login" className="tw-text-sm tw-text-blue-500 hover:tw-underline">
+              Remembered your password? Sign in
+            </Link>
+          )}
         </CardFooter>
       </Card>
     </div>
