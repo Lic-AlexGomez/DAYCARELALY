@@ -28,7 +28,7 @@ else:
 
 
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
 app.config['MAIL_PORT'] = 587  # Puerto para TLS
 app.config['MAIL_USE_TLS'] = True  # Activar TLS
 app.config['MAIL_USERNAME'] = 'rainbowdaycare119@gmail.com'
