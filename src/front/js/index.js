@@ -1,15 +1,14 @@
-//import react into the bundle
+// Importa react en tu bundle
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client"; // Cambio aquí para usar 'client'
 
-//include your index.scss file into the bundle
-
-import '../styles/tailwind.css'; 
-
+// Incluye tu archivo tailwind.css y otros estilos
+import '../styles/tailwind.css';
 import "../styles/index.css";
 
-//import your own components
+// Importa tu propio componente
 import Layout from "./layout";
 
-//render your react application
-ReactDOM.render(<Layout />, document.querySelector("#app"));
+// Renderiza tu aplicación React
+const root = ReactDOM.createRoot(document.querySelector("#app")); // Crea el root
+root.render(<Layout />); // Usa render() para montar el componente

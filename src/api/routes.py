@@ -2477,7 +2477,7 @@ def reset_password_request():
         db.session.commit()
 
        
-        reset_url = f"{'https://glorious-adventure-7v7q99qvg6vpfqx6-3000.app.github.dev/'}reset-password/{token}"
+        reset_url = f"{'https://sample-service-name-n0ab.onrender.com/'}reset-password/{token}"
 
     
         msg = Message("Password Reset Request",
