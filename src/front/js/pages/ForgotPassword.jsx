@@ -117,7 +117,7 @@ const ForgotPassword = () => {
       if (response.success) {
         setSuccessMessage("Your password has been reset successfully!")
         setError(null)
-        setNewPassword("") 
+        setNewPassword("") // Reset password field
       } else {
         setError(response.message || "There was an error resetting your password.")
       }
@@ -127,7 +127,7 @@ const ForgotPassword = () => {
     }
   }
 
-
+  // Navigate to the login page after successful password reset
   const handleLoginRedirect = () => {
     navigate("/login")
   }
@@ -152,6 +152,7 @@ const ForgotPassword = () => {
                   value={newPassword}
                   onChange={handleChangePassword}
                   required
+                  disabled={successMessage}  // Disable input when successMessage exists
                 />
               </div>
             </div>
@@ -169,7 +170,7 @@ const ForgotPassword = () => {
               </Alert>
             )}
             <div className="tw-flex tw-items-center tw-justify-between tw-mt-4">
-             
+              {/* Change button text to "Log In" after success */}
               <Button
                 type="submit"
                 className="tw-mx-auto tw-mt-4 border tw-bg-primary hover:tw-bg-purple-600 hover:tw-text-white"
