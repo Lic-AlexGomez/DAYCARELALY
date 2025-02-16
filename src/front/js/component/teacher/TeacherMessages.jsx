@@ -11,7 +11,7 @@ const TeacherMessages = () => {
     
     const user = JSON.parse(localStorage.getItem("user"));  
     const userEmail = user?.email; 
-    console.log(store.emails)
+    // console.log(store.emails)
     const filteredMessages = store.emails?.filter((message) => message.user_email === userEmail) || [];
 
     return (

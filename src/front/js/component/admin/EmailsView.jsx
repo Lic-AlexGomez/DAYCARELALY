@@ -31,7 +31,7 @@ const EmailManagementPage = () => {
       });
 
       const response = await actions.sendEmail(emailToSend);
-      console.log("Respuesta de la API:", response);
+      // console.log("Respuesta de la API:", response);
 
       setNewEmail({ to_name: "", user_email: "", message: "", scheduledDate: "" });
 

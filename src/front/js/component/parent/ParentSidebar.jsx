@@ -33,7 +33,7 @@ const ParentSidebar = () => {
     if(store.paren === false){
       navigate("/login")
     }else{
-      console.log("parent is logged in",store.paren)
+      // console.log("parent is logged in",store.paren)
     }
   }, [store.paren])
   

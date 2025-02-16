@@ -55,7 +55,7 @@ const Sidebar = () => {
     if(store.admin === false){
       navigate("/login")
     }else{
-      console.log("Admin is logged in",store.admin)
+      // console.log("Admin is logged in",store.admin)
     }
   }, [store.admin])
   
