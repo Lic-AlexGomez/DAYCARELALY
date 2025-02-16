@@ -270,13 +270,13 @@ const ClassesView = () => {
             </div>
 
             <div className='tw-flex-1'>
-              <label htmlFor="time" className='tw-block tw-mb-2'>Schedule</label>
+              <label htmlFor="time" className='tw-block tw-mb-2'>Time</label>
               <input
                 type="text"
                 name="time"
                 value={newClass.time}
                 onChange={handleInputChange}
-                placeholder="Schedule"
+                placeholder="8-10 AM"
                 className="tw-w-full tw-border tw-border-gray-300 tw-rounded-md tw-px-3 tw-py-2"
                 required
               />
