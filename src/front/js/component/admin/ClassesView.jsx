@@ -55,7 +55,7 @@ const ClassesView = () => {
   const handleAddClass = async (e) => {
     e.preventDefault();
 
-  
+
     if (newClass.teacher_id === 0) {
       Swal.fire({
         icon: 'error',
@@ -200,7 +200,7 @@ const ClassesView = () => {
               >
                 <option value={0} disabled>Select an Teacher</option>
                 {teachers.map(item => (
-                  <option key={`teacher-${item.id}`} value={item.id}>{item.username}</option>
+                  <option key={`teacher-${item.username}`} value={item.id}>{item.username}</option>
                 ))}
               </select>
             </div>
@@ -321,28 +321,44 @@ const ClassesView = () => {
             </tr>
           </thead>
           <tbody className="tw-divide-y tw-divide-gray-200">
-            {store.classes.map((classItem) => (
-              <tr key={classItem.id}>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.teacher_id}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.description}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.capacity}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.price}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.age}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.time}</td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                  {classItem.image ? <img src={classItem.image} alt="Class" className="tw-w-16 tw-h-16 tw-object-cover" /> : "No image"}
-                </td>
-                <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
-                  <button className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3" onClick={() => handleEditClass(classItem)}>
-                    <Edit className="tw-w-5 tw-h-5" />
-                  </button>
-                  <button className="tw-text-red-600 hover:tw-text-red-900" onClick={() => handleDeleteClass(classItem.id)}>
-                    <Trash className="tw-w-5 tw-h-5" />
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {store.classes.map((classItem) => {
+              // Buscar el maestro correspondiente a este teacher_id
+              const teacher = teachers.find((teacher) => teacher.id === classItem.teacher_id);
+
+              return (
+                <tr key={classItem.id}>
+                 
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{teacher ? teacher.username : "Unknown"}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.description}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.capacity}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.price}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.age}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.time}</td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                    {classItem.image ? (
+                      <img src={classItem.image} alt="Class" className="tw-w-16 tw-h-16 tw-object-cover" />
+                    ) : (
+                      "No image"
+                    )}
+                  </td>
+                  <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">
+                    <button
+                      className="tw-text-blue-600 hover:tw-text-blue-900 tw-mr-3"
+                      onClick={() => handleEditClass(classItem)}
+                    >
+                      <Edit className="tw-w-5 tw-h-5" />
+                    </button>
+                    <button
+                      className="tw-text-red-600 hover:tw-text-red-900"
+                      onClick={() => handleDeleteClass(classItem.id)}
+                    >
+                      <Trash className="tw-w-5 tw-h-5" />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
