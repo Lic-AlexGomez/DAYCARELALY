@@ -11,7 +11,7 @@ const Button = ({ className, children, ...props }) => (
     {children}
   </button>
 )
-// ExclamationTriangleIcon Component
+
 const ExclamationTriangleIcon = (props) => (
     <svg
       {...props}

@@ -2474,7 +2474,7 @@ def reset_password_request():
         db.session.commit()
 
        
-        reset_url = f"{os.getenv('BACKEND_URL')}reset-password/{token}"
+        reset_url = f"{os.getenv('BACKEND_URL')}/reset-password/{token}"
  
     
         msg = Message("Password Reset Request",
