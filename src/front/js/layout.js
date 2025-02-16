@@ -21,7 +21,6 @@ import PreviousEventsPhotos from "./pages/PreviousEventsPhotos.jsx"
 import Gallery from "./pages/Gallery.jsx"
 import Services from "./pages/Services.jsx"
 import AboutUs from "./pages/About_us.jsx"
-import ForgotPasswordReset from "./pages/ForgotPassword.jsx"
 
 // Componentes del Admin Dashboard
 import Sidebar from "./component/admin/Sidebar"
@@ -208,7 +207,6 @@ const MainRoutes = () => {
           <Route path="/confirmattendance" element={<ConfirmAttendance />} />
           <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ForgotPasswordReset />} />
           <Route path="*" element={<Home />} />
           <Route 
             path="/teacher-dashboard/*" 
@@ -236,7 +234,7 @@ const Layout = () => {
   if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />
 
   return (
-    <BrowserRouter basename={basename} future={{ v7_startTransition: true }}>
+    <BrowserRouter basename={basename}>
       <ScrollToTop />
       <MainRoutes />
     </BrowserRouter>
