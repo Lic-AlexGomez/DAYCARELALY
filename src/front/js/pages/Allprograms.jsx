@@ -10,8 +10,6 @@ export const Allprograms = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedProgram, setSelectedProgram] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // Solicita los datos directamente desde la base de datos al montar el componente
     useEffect(() => {
         const fetchPrograms = async () => {
             try {
@@ -28,11 +26,7 @@ export const Allprograms = () => {
         };
         fetchPrograms();
     }, []);
-
-    // Extrae los valores únicos de age_range para el filtro
     const uniqueAges = [...new Set(programs.map((program) => program.age_range))];
-
-    // Filtra los programas según la edad seleccionada (si hay filtro)
     const filteredPrograms = programs.filter((program) =>
         selectedAge ? program.age_range === selectedAge : true
     );
