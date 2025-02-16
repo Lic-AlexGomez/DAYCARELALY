@@ -2519,6 +2519,8 @@ def reset_password(token):
         print("Invalid or expired token.")
         return jsonify({"error": "Invalid or expired token"}), 400
 
+
+
 @api.route("/admin-profile", methods=['GET', 'PUT'])
 @jwt_required()
 def admin_profile():
