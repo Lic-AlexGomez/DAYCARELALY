@@ -13,7 +13,6 @@ const PayPalButton = ({ amount, onSuccess }) => {
         }}
         onApprove={async (data, actions) => {
           const order = await actions.order.capture();
-          console.log("Datos recibidos de PayPal:", order);
           onSuccess(order); 
         }}
       />

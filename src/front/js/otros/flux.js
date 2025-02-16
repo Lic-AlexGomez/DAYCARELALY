@@ -118,7 +118,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			const response = await fetch(process.env.BACKEND_URL + "/api/classes")
 			if (response.ok) {
 			  const data = await response.json()
-			  console.log("Clases obtenidas:", data);
+			//   console.log("Clases obtenidas:", data);
 			  setStore({ classes: data })
 			} else {
 			  console.error("Error fetching classes:", response.status)
@@ -168,7 +168,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			setStore({ user: data.user })
 			return data
 		  } catch (error) {
-			console.log("Error loading message from backend", error)
+			// console.log("Error loading message from backend", error)
 		  }
 		},
   
@@ -467,7 +467,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			const response = await fetch(process.env.BACKEND_URL + "/api/emails")
 			if (response.ok) {
 			  const data = await response.json()
-			  console.log(data)
+			//   console.log(data)
 			  const emails = data.filter((email) => !email.scheduledDate)
 			  const scheduledEmails = data.filter((email) => email.scheduledDate)
 			  setStore({ emails, scheduledEmails })
@@ -811,7 +811,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			}
 		},
 		addClass: async (teacher_id, name, description,capacity, price, age,time,image) => {
-			console.log(teacher_id, name, description,capacity, price, age,time,image)
+			// console.log(teacher_id, name, description,capacity, price, age,time,image)
 			try {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
 				method: "POST",
@@ -889,7 +889,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/events")
 			  if (response.ok) {
 				const data = await response.json()
-				console.log("Eventos obtenidos:", data);
+				// console.log("Eventos obtenidos:", data);
 				setStore({ events: data })
 			  } else {
 				console.error("Error fetching events:", response.status)
@@ -966,7 +966,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/teachers")
 			  if (response.ok) {
 				const data = await response.json()
-				console.log(data)
+				// console.log(data)
 				setStore({ teachers: data })
 				return { success: true, data }
 			  } else {
@@ -983,7 +983,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			  const response = await fetch(process.env.BACKEND_URL + "/api/services")
 			  if (response.ok) {
 				const data = await response.json()
-				console.log(data)
+				// console.log(data)
 				setStore({ services: data })
 				return { success: true, data }
 			  } else {

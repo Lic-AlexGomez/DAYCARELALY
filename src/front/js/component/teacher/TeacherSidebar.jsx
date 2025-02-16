@@ -26,7 +26,7 @@ const TeacherSidebar = () => {
       if(store.teache === false){
         navigate("/login")
       }else{
-        console.log("parent is logged in",store.teache)
+        // console.log("parent is logged in",store.teache)
       }
     }, [store.teache])
   return (

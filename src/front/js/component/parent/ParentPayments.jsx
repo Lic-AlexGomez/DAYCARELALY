@@ -105,7 +105,7 @@ const ParentPayments = () => {
         throw new Error(`Request error: ${response.statusText}`);
 
       const data = await response.json();
-      console.log("Payments saved in the backend:", data);
+      // console.log("Payments saved in the backend:", data);
       selectedPayments.forEach((payment) => {
         const key = getPaymentKey(payment);
         localStorage.setItem(key, Date.now().toString());

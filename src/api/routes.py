@@ -15,6 +15,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError# type: ignore
 from werkzeug.security import generate_password_hash # type: ignore
 from faker import Faker # type: ignore
 import random
+from email_validator import validate_email, EmailNotValidError
 
 
 from flask_mail import Mail, Message
@@ -2447,6 +2448,8 @@ def delete_parent_payment(id):
     return jsonify({"message": "Payment deleted"}), 200
 
 
+
+
 @api.route('/reset-password', methods=['POST'])
 def reset_password_request():
     data = request.json
@@ -2515,7 +2518,6 @@ def reset_password(token):
     else:
         print("Invalid or expired token.")
         return jsonify({"error": "Invalid or expired token"}), 400
-
 
 @api.route("/admin-profile", methods=['GET', 'PUT'])
 @jwt_required()
