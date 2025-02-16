@@ -317,7 +317,7 @@ const VirtualClasses = () => {
                         </tr>
                     </thead>
                     <tbody className="tw-divide-y tw-divide-gray-200">
-                        {console.log(store.virtualClasses)}
+                        {/* {console.log(store.virtualClasses)} */}
                         {store.virtualClasses.map((classItem) => (
                             <tr key={classItem.id}>
                                 <td className="tw-px-6 tw-py-4 tw-whitespace-nowrap">{classItem.name}</td>

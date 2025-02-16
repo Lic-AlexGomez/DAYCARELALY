@@ -133,7 +133,7 @@ const ParentChildren = () => {
         }
 
         const response = await actions.addChild(childData)
-        console.log("response", response)
+        // console.log("response", response)
         if (response == true) {
           setIsAddingChild(false)
           setNewChild({
@@ -162,7 +162,7 @@ const ParentChildren = () => {
       </div>
     )
   }
-console.log(store)
+// console.log(store)
 
 
 

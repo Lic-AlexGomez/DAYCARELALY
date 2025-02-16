@@ -19,7 +19,7 @@ const Header = () => {
 
 useEffect(() => {
   if(store.admin==true){
-    console.log("Admin is logged in")
+    // console.log("Admin is logged in")
     navigate("/login")
   }
 }, [Store])
