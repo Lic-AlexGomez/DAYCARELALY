@@ -252,10 +252,11 @@ class Event(db.Model):
             "id": self.id,
             "name": self.name,
             "description": self.description,
-            "start_time": self.start_time.isoformat(),
-            "end_time": self.end_time.isoformat(),
+            "start_time": self.start_time.strftime('%b %d, %Y %H:%M:%S') if self.start_time else None,
+            "end_time": self.end_time.strftime('%b %d, %Y %H:%M:%S') if self.end_time else None,
             "image": self.image
         }
+
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
