@@ -236,7 +236,7 @@ const Layout = () => {
   if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />
 
   return (
-    <BrowserRouter basename={basename}>
+    <BrowserRouter basename={basename} future={{ v7_startTransition: true }}>
       <ScrollToTop />
       <MainRoutes />
     </BrowserRouter>
