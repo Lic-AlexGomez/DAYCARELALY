@@ -175,7 +175,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
 
           const data = await response.json()
-          // console.log("DATOS RECIBIDOS EN LOGIN:", data)
+          console.log("DATOS RECIBIDOS EN LOGIN:", data)
 
           if (response.ok) {
             localStorage.setItem("token", "")
@@ -188,7 +188,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               parent_id: data.user.parent_id,
             })
 
-            // console.log("TOKEN GUARDADO EN STORE:", getStore().token)
+            console.log("TOKEN GUARDADO EN STORE:", getStore().token)
 
             return data
           } else {
@@ -1351,7 +1351,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const response = await fetch(process.env.BACKEND_URL + "/api/teachers", {
             headers: getActions().getAuthHeaders(),
           })
-          // console.log("RESPONSE FETCH TEACHERS:", response)
+          console.log("RESPONSE FETCH TEACHERS:", response)
           if (response.ok) {
             const data = await response.json()
             setStore({ teachers: data })
@@ -1719,7 +1719,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
 
           const data = await resp.json()
-          // console.log(data)
+          console.log(data)
           setStore({ parentActivities: data })
         } catch (error) {
           console.error("Error fetching parent activities:", error)
@@ -1753,7 +1753,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           if (!resp.ok) throw new Error("Failed to fetch parent settings")
           const data = await resp.json()
-          // console.log(data)
+          console.log(data)
           setStore({ parentSettings: data })
         } catch (error) {
           console.error("Error fetching parent settings:", error)
@@ -1788,7 +1788,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           if (!resp.ok) throw new Error("Failed to fetch parent virtual classes")
           const data = await resp.json()
-          // console.log(data)
+          console.log(data)
           setStore({ parentVirtualClasses: data })
         } catch (error) {
           console.error("Error fetching parent virtual classes:", error)
@@ -1805,7 +1805,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           if (!resp.ok) throw new Error("Failed to fetch messages")
           const data = await resp.json()
-          // console.log(data)
+          console.log(data)
           setStore({ messages: data })
         } catch (error) {
           console.error("Error fetching messages:", error)
@@ -1979,7 +1979,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           if (!resp.ok) throw new Error("Failed to fetch subscriptions")
           const data = await resp.json()
-          // console.log(data)
+          console.log(data)
           setStore({ subscriptions: data })
         } catch (error) {
           console.error("Error fetching subscriptions:", error)
@@ -2024,7 +2024,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
 
           const data = await response.json()
-          // console.log("Clases recibidas:", data)
+          console.log("Clases recibidas:", data)
 
           if (response.ok) {
             setStore({ teacherClasses: data.classes || [] })
@@ -2077,7 +2077,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       enrollInClass: async (classId, child_name) => {
-        // console.log("Enrolling in class:", classId, child_name);
+        console.log("Enrolling in class:", classId, child_name);
     
         try {
             const store = getStore();
@@ -2107,7 +2107,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 return { success: false, error: responseData?.error || "Unknown error" };
             }
     
-            // console.log("Enrollment successful:", responseData);
+            console.log("Enrollment successful:", responseData);
     
             setStore({ enrolledClasses: [...store.enrolledClasses, responseData] });
     
@@ -2225,7 +2225,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             body: JSON.stringify({ email }),
           })
-          // console.log(resp)
           if (!resp.ok) throw new Error("Password reset request failed")
 
           const data = await resp.json()
@@ -2235,30 +2234,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
-      changePassword: async (token, newPassword) => {
-        try {
-          const resp = await fetch(`${process.env.BACKEND_URL}/api/reset-password/${token}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ new_password: newPassword }), // Enviamos el nuevo password
-          });
-    
-          if (!resp.ok) {
-            const errorData = await resp.json();
-            throw new Error(errorData.message || "Password reset failed");
-          }
-    
-          // Si la respuesta es exitosa, esperamos el JSON con el mensaje
-          const data = await resp.json();
-          return { success: true, message: data.message };
-    
-        } catch (error) {
-          console.error("Error in reset password:", error);
-          return { success: false, error: error.message || "Unknown error occurred" };
-        }
-      },
+
       getStudentsByTeacher: async () => {
         const store = getStore();
         const token = store.token || localStorage.getItem("token");
@@ -2269,7 +2245,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
         try {
           const url = `${process.env.BACKEND_URL}/api/teacher/students`;
-          // console.log("Request URL:", url);
+          console.log("Request URL:", url);
           
           const response = await fetch(url, {
             method: "GET",
@@ -2280,7 +2256,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             throw new Error("Error fetching students: " + JSON.stringify(errorData));
           }  
           const data = await response.json();
-          // console.log("Received students data:", data);
+          console.log("Received students data:", data);
           setStore({ teacherStudents: data.students || [] });
         } catch (error) {
           console.error("Error loading students:", error);
@@ -2328,7 +2304,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           if (!response.ok) throw new Error(`Error en la solicitud: ${response.statusText}`);
 
           const data = await response.json();
-          // console.log("Pago guardado en backend:", data);
+          console.log("Pago guardado en backend:", data);
 
           setStore({ parentPayments: [...store.parentPayments, data.payment] });
         } catch (error) {
@@ -2356,7 +2332,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           if (!resp.ok) throw new Error("Failed to fetch admin settings")
           const data = await resp.json()
-          // console.log(data)
+          console.log(data)
           setStore({ adminSettings: data })
         } catch (error) {
           console.error("Error fetching admin settings:", error)
@@ -2370,7 +2346,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(settings),
           })
-          // console.log(resp)
+          console.log(resp)
           if (!resp.ok) throw new Error("Failed to update admin settings")
           const data = await resp.json()
           setStore({ adminSettings: data })
@@ -2401,7 +2377,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           if (!resp.ok) throw new Error("Failed to update admin profile")
           const data = await resp.json()
-          // console.log(data)
+          console.log(data)
           setStore({ adminProfile: data })
         } catch (error) {
           console.error("Error updating admin profile:", error)
@@ -2486,7 +2462,7 @@ const getState = ({ getStore, getActions, setStore }) => {
          
           if (!resp.ok) throw new Error("Failed to delete getintouch message")
           const updatedMessages = getStore().getintouchMessages.filter((msg) => msg.id !== messageId)
-          // console.log(updatedMessages)
+          console.log(updatedMessages)
           setStore({ getintouchMessages: updatedMessages })
         } catch (error) {
           console.error("Error deleting getintouch message:", error)
@@ -2577,15 +2553,14 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
       getPrivate: async (param) => {
-        try {
-          // console.log(param)
+        try {console.log(param)
 
           const resp = await fetch(`${process.env.BACKEND_URL}/api/${param}`, {
             method: "GET",
             headers: getActions().getAuthHeaders(),
           })
 
-          // console.log(resp.status)
+          console.log(resp.status)
 					if (resp.status == 422) {
             if(param == 'admini'){
 						setStore({ admin: false })
