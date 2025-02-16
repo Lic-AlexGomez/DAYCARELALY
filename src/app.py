@@ -29,11 +29,11 @@ else:
 
 
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-app.config['MAIL_PORT'] = 587  # Puerto para TLS
-app.config['MAIL_USE_TLS'] = True  # Activar TLS
-app.config['MAIL_USERNAME'] = 'rainbowdaycare119@gmail.com'
-app.config['MAIL_PASSWORD'] = 'bbpg gcdy tnsw mpns'
-app.config['MAIL_DEFAULT_SENDER'] = 'rainbowdaycare119@gmail.com'
+app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')  # Puerto para TLS
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS')  # Activar TLS
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 
 mail = Mail(app)
 
