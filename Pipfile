@@ -25,6 +25,7 @@ flask-bcrypt = "*"
 faker = "*"
 flask-mail = "*"
 datetime = "*"
+email-validator = "*"
 
 [requires]
 python_version = "3.10"

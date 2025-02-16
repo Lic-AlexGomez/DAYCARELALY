@@ -15,7 +15,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError# type: ignore
 from werkzeug.security import generate_password_hash # type: ignore
 from faker import Faker # type: ignore
 import random
-
+from email_validator import validate_email, EmailNotValidError
 
 from flask_mail import Mail, Message
 
@@ -2475,7 +2475,7 @@ def reset_password_request():
 
        
         reset_url = f"{os.getenv('BACKEND_URL')}reset-password/{token}"
-
+ 
     
         msg = Message("Password Reset Request",
                       sender=current_app.config['MAIL_DEFAULT_SENDER'],
