@@ -53,7 +53,7 @@ export const Classes = () => {
                   {classItem.description}
                 </p>
 
-                <div className="tw-grid tw-grid-cols-3 tw-gap-2 tw-mb-4 tw-text-sm">
+                <div className="tw-grid tw-grid-cols-3 tw-gap-2 tw-mb-4 tw-text-sm tw-mt-4">
                   <div className="tw-text-center tw-border-r tw-border-[#FFC909] tw-px-1">
                     <div className="tw-text-[#FFC909] tw-font-bold">Age:</div>
                     <div className="tw-truncate">{classItem.age}</div>
