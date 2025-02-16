@@ -42,20 +42,20 @@ const MaintenanceView = () => {
 
   const toggleMaintenanceMode = () => {
     setMaintenanceMode(!maintenanceMode);
-    console.log(`Maintenance mode ${!maintenanceMode ? "enabled" : "disabled"}`);
+    // console.log(`Maintenance mode ${!maintenanceMode ? "enabled" : "disabled"}`);
   };
 
   const updateMaintenanceMessage = () => {
-    console.log(`Maintenance message updated to: ${maintenanceMessage}`);
+    // console.log(`Maintenance message updated to: ${maintenanceMessage}`);
   };
 
   const editTask = (id) => {
-    console.log(`Editing task ${id}`);
+    // console.log(`Editing task ${id}`);
   };
 
   const deleteTask = (id) => {
     setMaintenanceTasks(maintenanceTasks.filter((task) => task.id !== id));
-    console.log(`Deleting task ${id}`);
+    // console.log(`Deleting task ${id}`);
   };
 
   const filteredTasks = maintenanceTasks.filter((task) => task.task.toLowerCase().includes(searchTerm.toLowerCase()));

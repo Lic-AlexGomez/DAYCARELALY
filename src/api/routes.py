@@ -15,6 +15,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError# type: ignore
 from werkzeug.security import generate_password_hash # type: ignore
 from faker import Faker # type: ignore
 import random
+from email_validator import validate_email, EmailNotValidError
 
 
 from flask_mail import Mail, Message
@@ -2447,11 +2448,25 @@ def delete_parent_payment(id):
     return jsonify({"message": "Payment deleted"}), 200
 
 
+
+
 @api.route('/reset-password', methods=['POST'])
 def reset_password_request():
     data = request.json
-    user = User.query.filter_by(email=data['email']).first()
+    email = data.get('email')
+    print("Email:", email)
+    print("Data:", data)
+    # Validar formato del email
+    try:
+        validate_email(email)
+    except EmailNotValidError as e:
+        return jsonify({"error": str(e)}), 400
+
+    # Comprobar si el usuario existe
+    user = User.query.filter_by(email=email).first()
+    print("User:", user)
     if user:
+        # Generar token y almacenarlo en la base de datos
         token = secrets.token_urlsafe(32)
         reset = PasswordReset(
             user_id=user.id,
@@ -2461,28 +2476,48 @@ def reset_password_request():
         db.session.add(reset)
         db.session.commit()
 
-        # Send email with reset instructions
-        reset_url = f"{request.host_url}reset-password/{token}"
+       
+        reset_url = f"{'https://sample-service-name-n0ab.onrender.com/'}reset-password/{token}"
+
+    
         msg = Message("Password Reset Request",
                       sender=current_app.config['MAIL_DEFAULT_SENDER'],
                       recipients=[user.email])
         msg.body = f"To reset your password, visit the following link: {reset_url}"
-        mail.send(msg)
+        try:
+            mail.send(msg)
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": "Failed to send reset email. Please try again later."}), 500
 
         return jsonify({"message": "Password reset instructions sent"}), 200
+
     return jsonify({"error": "Email not found"}), 404
+
 
 @api.route('/reset-password/<token>', methods=['POST'])
 def reset_password(token):
+    print(f"Reset token received: {token}")  # Depuración
     reset = PasswordReset.query.filter_by(token=token).first()
+    if reset:
+        print(f"Reset found: {reset}")
+    else:
+        print("No reset found for this token.")
+    if reset.expires_at.tzinfo is None:
+       reset.expires_at = reset.expires_at.replace(tzinfo=timezone.utc)
+
+    # Ahora comparas ambos datetime como objetos 'aware'
     if reset and reset.expires_at > datetime.now(timezone.utc):
+        print("Token is valid.")
         user = User.query.get(reset.user_id)
+        print(f"User found: {user}")
         user.set_password(request.json['new_password'])
         db.session.delete(reset)
         db.session.commit()
         return jsonify({"message": "Password reset successfully"}), 200
-    return jsonify({"error": "Invalid or expired token"}), 400
-
+    else:
+        print("Invalid or expired token.")
+        return jsonify({"error": "Invalid or expired token"}), 400
 
 @api.route("/admin-profile", methods=['GET', 'PUT'])
 @jwt_required()

@@ -184,7 +184,7 @@ function ParentVirtualClassesEnroll() {
         await actions.fetchEnrolledClasses();
         await actions.fetchParentChildren();
         await actions.fetchMyClassesParent();
-        console.log(store)
+        // console.log(store)
         setLoading(false);
       } catch (err) {
         setError("An error occurred while fetching classes. Please try again later.");
@@ -333,7 +333,7 @@ function ParentVirtualClassesEnroll() {
         };
       }
 
-      console.log("Updated formData:", updatedData);
+      // console.log("Updated formData:", updatedData);
       return updatedData;
     });
   }
@@ -353,8 +353,8 @@ function ParentVirtualClassesEnroll() {
       </div>
     );
   }
-  console.log(store.enrolledClasses)
-  console.log(store.classes)
+  // console.log(store.enrolledClasses)
+  // console.log(store.classes)
   return (
     <div className="tw-container tw-mx-auto tw-p-4">
       <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Available Virtual Classes</h1>

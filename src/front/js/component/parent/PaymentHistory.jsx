@@ -7,12 +7,12 @@ const PaymentHistory = () => {
 
   useEffect(() => {
     if (!store.user) {
-      console.log("User not defined in the store.");
+      // console.log("User not defined in the store.");
       return;
     }
 
     const userId = store.user.id;
-    console.log("User ID obtained:", userId);
+    // console.log("User ID obtained:", userId);
 
     const fetchPaymentHistory = async () => {
       try {
@@ -28,7 +28,7 @@ const PaymentHistory = () => {
         if (!response.ok) throw new Error("Error fetching payment history");
 
         const data = await response.json();
-        console.log("Data received from backend:", data);
+        // console.log("Data received from backend:", data);
         setPaymentHistory(data);
       } catch (error) {
         console.error("Error:", error);
