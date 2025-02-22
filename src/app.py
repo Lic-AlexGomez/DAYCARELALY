@@ -20,9 +20,9 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 db_url = os.getenv("DATABASE_URL")
+print(db_url)
 if db_url is not None:
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace(
-        "postgres://", "postgresql://")
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace("postgres://", "postgresql://")
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
 
@@ -72,6 +72,17 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  
     return response
+
+@app.route('/test-db')
+def test_db_connection():
+    try:
+        # Realizar una simple consulta para verificar la conexión
+        result = db.session.execute('SELECT 1')
+        # Extraer el valor del Row (en este caso '1')
+        value = result.scalar()  # scalar() devuelve el primer valor de la primera fila
+        return jsonify({"message": "Connected to the database!", "result": value}), 200
+    except Exception as e:
+        return jsonify({"message": "Error connecting to the database", "error": str(e)}), 500
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
