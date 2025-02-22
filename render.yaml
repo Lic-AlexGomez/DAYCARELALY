@@ -23,5 +23,5 @@ services:
             value: 3.10.6
           - key: DATABASE_URL # Render PostgreSQL database
             fromDatabase:
-                name: postgresql-trapezoidal-42170
+                name: plaury_rbpw_user
                 property: connectionString
