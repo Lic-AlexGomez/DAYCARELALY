@@ -22,6 +22,4 @@ services:
           - key: PYTHON_VERSION
             value: 3.10.6
           - key: DATABASE_URL # Render PostgreSQL database
-            fromDatabase:
-                name: plaury_rbpw_user
-                property: connectionString
+            
