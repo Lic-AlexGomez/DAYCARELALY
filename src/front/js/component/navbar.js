@@ -25,7 +25,7 @@ export const Navbar = () => {
       setData(store.settings)
     }
   }, [store.settings])
-
+console.log(store.settings)
   return (
     <>
       <div className="headerWrapper container-fluid">
@@ -34,12 +34,12 @@ export const Navbar = () => {
             <div className="logoContainer">
               <img src={data.image || logoImage} alt="Logo" className="logo" />
             </div>
-            <div className="searchContainer sm:me-5 sm-tw-mr-10">
+            {/* <div className="searchContainer sm:me-5 sm-tw-mr-10">
               <input type="search" placeholder="Search..." className="searchInput" />
               <button className="searchButton pb-2">
                 <Search />
               </button>
-            </div>
+            </div> */}
             <div className="socialIcons me-4">
               <a
                 href={data.facebook || "https://www.facebook.com/Slime-Factory-110104161303552"}
@@ -76,7 +76,7 @@ export const Navbar = () => {
               <li className="navLink">
                 <Link to="/home">Home</Link>
               </li>
-              <li
+              {/* <li
                 className="navLink dropdown"
                 onMouseEnter={() => setDropdownOpen(true)}
                 onMouseLeave={() => setDropdownOpen(false)}
@@ -89,19 +89,19 @@ export const Navbar = () => {
                     <li className="dropdownItem">All Products</li>
                   </ul>
                 )}
-              </li>
-              <li className="navLink">
+              </li> */}
+              {/* <li className="navLink">
                 <Link to="/services">Services</Link>
-              </li>
+              </li> */}
               <li className="navLink">
                 <Link to="/gallery">Gallery</Link>
               </li>
-              <li className="navLink">
+              {/* <li className="navLink">
                 <Link to="/programs">Programs</Link>
               </li>
               <li className="navLink">
                 <Link to="/events">Events</Link>
-              </li>
+              </li> */}
               <li className="navLink">
                 <Link to="/about_us">About</Link>
               </li>
@@ -109,14 +109,14 @@ export const Navbar = () => {
                 <Link to="/contactus">Contact Us</Link>
               </li>
             </ul>
-            <div className="authButtons sm:tw-mr-5 col-3 tw-flex sm:tw-justify-end tw-justify-center">
-              <Link to="/login">
+            {/* <div className="authButtons sm:tw-mr-5 col-3 tw-flex sm:tw-justify-end tw-justify-center"> */}
+              {/* <Link to="/login">
                 <button className="loginBtn">Log In</button>
-              </Link>
-              <Link to="/signup" className="">
+              </Link> */}
+              {/* <Link to="/signup" className="">
                 <button className="joinBtn">Join Now</button>
-              </Link>
-            </div>
+              </Link> */}
+            {/* </div> */}
           </div>
         </header>
       </div>

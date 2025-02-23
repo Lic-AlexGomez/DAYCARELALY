@@ -1880,7 +1880,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
 
-      updateSettings: async (id, updatedSettings) => {
+      updateSettings: async (updatedSettings) => {
         try {
           
           const store = getStore()
@@ -1890,18 +1890,21 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.error("No token found")
             return
           }
-          const response = await fetch(`${process.env.BACKEND_URL}/api/settings/${id}`, {
+          const response = await fetch(`${process.env.BACKEND_URL}/api/settings/${updatedSettings.id}`, {
             method: "PUT",
             headers: getActions().getAuthHeaders(),
             body: JSON.stringify(updatedSettings),
           })
-
+          console.log("RESPONSE UPDATE SETTINGS:", response)
           if (response.ok) {
             const data = await response.json()
             const store = getStore()
             setStore({
-              settings: store.settings.map((setting) => (setting.id === id ? data : setting)),
-            })
+              settings: Array.isArray(store.settings) 
+                ? store.settings.map((setting) => (setting.id === id ? data : setting))
+                : [], 
+            });
+            
             return true
           } else {
             console.error("Error updating settings:", response.status)
@@ -2604,8 +2607,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error('Error fetching private data:', error);
 				}
       }
+      ,
+      addSettings: async (settingsData) => {
+        console.log(settingsData)
+        try {
+          const store = getStore();
+          const token = store.token || localStorage.getItem("token");
 
-      }
+          if (!token) {
+            console.error("No token found");
+            return;
+          }
+          const response = await fetch(process.env.BACKEND_URL + "/api/settings", {
+            method: "POST",
+            headers: getActions().getAuthHeaders(),
+            body: JSON.stringify(settingsData),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to create settings");
+          }
+
+          const data = await response.json();
+          return { success: true, data };
+        } catch (error) {
+          console.error("Settings Error:", error.message);
+          return { success: false, error: error.message };
+        }
+
+      },
+    }
   }
 }
 
