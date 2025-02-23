@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import "../../../styles/Hero.css";
 import underNav from "../../../img/RectangleBoth.png";
 import image4 from "../../../img/image-4.png"
@@ -7,9 +7,11 @@ import image6 from "../../../img/image-6.png";
 import image7 from "../../../img/image-7.png"
 import { Link } from "react-router-dom";
 import { Context } from "../../store/appContext";
+import es from "../../lang/es-ES.json";
+import en from "../../lang/en-US.json";
 
 const Hero = () => {
-  const { store} = React.useContext(Context);
+  const { store} = useContext(Context);
   const [data, setData] = useState({})
   useEffect(() => {
     if (store.settings !== undefined) {
@@ -22,13 +24,12 @@ const Hero = () => {
         <section className="hero  flex-row justify-content-center align-items-start">
           <div className="hero-content ">
             <div className="styled-text">
-              Welcome to  {data.name_daycare ? data.name_daycare : "Alex"} <br />
-              Rainbow Slime CO.
+             {store.lang = "en"? en.hero.title : es.hero.title }  {data.name_daycare ? data.name_daycare : "Laly"} <br />
+             {store.lang = "en"? en.hero.subtitle : es.hero.subtitle } 
             </div>
-            <p className="styled-text-p">Where Every Child Shines Bright!
-              Our Daycare  provides a nurturing and educational environment for children to grow and thrive. We offer a variety of activities designed to stimulate young minds and encourage creativity. Our experienced staff is dedicated to ensuring each child feels safe, happy, and valued. 
+            <p className="styled-text-p"> {store.lang = "en"? en.hero.description : es.hero.description } 
             </p>
-            <Link to="/signup" className="cta-button ">Enroll Now</Link>
+            <Link to="/signup" className="cta-button ">{store.lang = "en"? en.hero.btn : es.hero.btn }</Link>
           </div>
           <div className="image-container ">
             <div className="row img-row">

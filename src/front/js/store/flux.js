@@ -4,6 +4,7 @@ import { set } from "date-fns/set"
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
+      lang: "en",
       admin: null,
       paren: null,
       teache: null,

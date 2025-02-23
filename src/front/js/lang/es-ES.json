@@ -1,0 +1,34 @@
+{
+    "hero": {
+        "title": "Bienvenido a",
+        "subtitle": "We are a company that offers the best services in the world",
+        "btn": "Learn more"
+    },
+    "nav": {
+        "home": "Home",
+        "about": "About",
+        "services": "Services",
+        "contact": "Contact"
+    },
+    "home": {
+        "title": "Welcome to our website",
+        "subtitle": "We are a company that offers the best services in the world",
+        "btn": "Learn more"
+    },
+    "about": {
+        "title": "About us",
+        "subtitle": "We are a company that offers the best services in the world",
+        "btn": "Learn more"
+    },
+    "services": {
+        "title": "Our services",
+        "subtitle": "We are a company that offers the best services in the world",
+        "btn": "Learn more"
+    },
+    "contact": {
+        "title": "Contact us",
+        "subtitle": "We are a company that offers the best services in the world",
+        "btn": "Learn more"
+    }
+
+}
