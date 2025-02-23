@@ -25,8 +25,8 @@ export const Home = () => {
 		<div className="text-center ">
 
 			<Hero />
-	
 			<ServicesSection />
+			
 			<AboutUs />
 			<Aday />
 			<Classes />
