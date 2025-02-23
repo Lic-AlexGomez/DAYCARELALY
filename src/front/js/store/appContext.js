@@ -23,8 +23,8 @@ const injectContext = PassedComponent => {
 
 		useEffect(() => {
 	
-			// const adminStorage = localStorage.getItem("admin") === "true";
-			// const adminStore = state.store.admin === true || state.store.admin === "true";
+			const adminStorage = localStorage.getItem("admin") === "true";
+		 const adminStore = state.store.admin === true || state.store.admin === "true";
 			
 			if (!adminStorage && !adminStore) {
 			  state.actions.addAdmin();
