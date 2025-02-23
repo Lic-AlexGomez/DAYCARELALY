@@ -33,6 +33,7 @@ console.log(store.settings)
           <div className="topRow">
             <div className="logoContainer">
               <img src={data.image || logoImage} alt="Logo" className="logo" />
+              
             </div>
             {/* <div className="searchContainer sm:me-5 sm-tw-mr-10">
               <input type="search" placeholder="Search..." className="searchInput" />
