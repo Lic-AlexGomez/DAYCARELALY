@@ -30,7 +30,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       subscriptions: [],
       adminProfile: [],
       newsletter: [],
-      virtualClasses:[],
+      virtualClasses: [],
 
       // Parent dashboard store
       parentData: null,
@@ -42,7 +42,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       parentVirtualClasses: [],
       notifications: [],
       enrolledClasses: [],
-      enrolledClasses: [], 
+      enrolledClasses: [],
       filteredClasses: [],
       myClasses: [],
 
@@ -149,7 +149,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       fetchClasses: async () => {
         try {
-        
+
           const response = await fetch(process.env.BACKEND_URL + "/api/classes", {
             headers: getActions().getAuthHeaders(),
           })
@@ -911,14 +911,14 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const store = getStore();
           const token = store.token || localStorage.getItem("token");
-      
+
           if (!token) {
             console.error("No token found");
             return;
           }
-      
+
           const form = new FormData();
-      
+
           for (const key in formData) {
             if (key === "image" && typeof formData[key] === "string") {
               form.append("image", formData[key]);
@@ -928,7 +928,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               form.append(key, formData[key]);
             }
           }
-      
+
           const response = await fetch(process.env.BACKEND_URL + "/api/activities", {
             method: "POST",
             headers: {
@@ -936,7 +936,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             body: form,
           });
-      
+
           if (response.ok) {
             const newActivity = await response.json();
             const store = getStore();
@@ -952,7 +952,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message };
         }
       },
-      
+
 
 
       updateActivity: async (id, activityData) => {
@@ -1075,31 +1075,31 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const store = getStore();
           const token = store.token || localStorage.getItem("token");
-      
+
           if (!token) {
             console.error("No se encontró el token");
             return;
           }
-      
+
           const response = await fetch(process.env.BACKEND_URL + "/api/virtual-classes", {
             method: "POST",
             headers: {
               "Authorization": `Bearer ${token}`, // Agregar el token aquí
               "Content-Type": "application/json", // Especifica que el cuerpo es JSON
             },
-            body: JSON.stringify({ 
-              name, 
-              description, 
-              date, 
-              time, 
-              duration, 
-              teacher, 
-              capacity, 
-              price, 
-              meet_link 
+            body: JSON.stringify({
+              name,
+              description,
+              date,
+              time,
+              duration,
+              teacher,
+              capacity,
+              price,
+              meet_link
             }), // Convertir los datos a JSON
           });
-      
+
           if (response.ok) {
             const newVirtualClass = await response.json();
             const store = getStore();
@@ -1107,7 +1107,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             return { success: true, data: newVirtualClass };
           } else {
             const error = await response.json();
-            console.error("Error en la respuesta:", error); 
+            console.error("Error en la respuesta:", error);
             return { success: false, error: error.error || "Error al crear la clase virtual" };
           }
         } catch (error) {
@@ -1169,7 +1169,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           return { success: false, error: error.message }
         }
       },
-      
+
 
       getVirtualClasses: async () => {
         try {
@@ -1372,7 +1372,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const response = await fetch(process.env.BACKEND_URL + "/api/teachers/classes", {
             headers: getActions().getAuthHeaders(),
           });
-      
+
           if (response.ok) {
             const data = await response.json();
             // Asegurarse de que 'data' sea un array
@@ -1629,7 +1629,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
           localStorage.setItem("parent_id", JSON.stringify(data.id))
           setStore({ parentData: data })
-          
+
         } catch (error) {
           console.error("Error fetching parent data:", error)
         }
@@ -1882,7 +1882,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       updateSettings: async (id, updatedSettings) => {
         try {
-          
+
           const store = getStore()
           const token = store.token || localStorage.getItem("token")
 
@@ -1921,12 +1921,12 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
 
           if (!response.ok) {
-           return false
+            return false
           }
           setStore({ admin: true })
           localStorage.setItem("admin", true)
         } catch (error) {
-        
+
         }
       },
 
@@ -2079,80 +2079,80 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       enrollInClass: async (classId, child_name) => {
         // console.log("Enrolling in class:", classId, child_name);
-    
+
         try {
-            const store = getStore();
-            const token = store.token || localStorage.getItem("token");
-    
-            if (!token) {
-                console.error("No token found");
-                return { success: false, error: "No authentication token found" };
-            }
-    
-            const response = await fetch(`${process.env.BACKEND_URL}/api/enroll`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    classId: classId,
-                    child_name: child_name,
-                }),
-            });
-    
-            const responseData = await response.json().catch(() => null); // 👈 Evita error si la respuesta no es JSON
-    
-            if (!response.ok || !responseData) {
-                console.error("Error enrolling in class:", response.status, responseData?.error || "No response data");
-                return { success: false, error: responseData?.error || "Unknown error" };
-            }
-    
-            // console.log("Enrollment successful:", responseData);
-    
-            setStore({ enrolledClasses: [...store.enrolledClasses, responseData] });
-    
-            await getActions().fetchEnrolledClasses();
-    
-            return { success: true };
-    
+          const store = getStore();
+          const token = store.token || localStorage.getItem("token");
+
+          if (!token) {
+            console.error("No token found");
+            return { success: false, error: "No authentication token found" };
+          }
+
+          const response = await fetch(`${process.env.BACKEND_URL}/api/enroll`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              classId: classId,
+              child_name: child_name,
+            }),
+          });
+
+          const responseData = await response.json().catch(() => null); // 👈 Evita error si la respuesta no es JSON
+
+          if (!response.ok || !responseData) {
+            console.error("Error enrolling in class:", response.status, responseData?.error || "No response data");
+            return { success: false, error: responseData?.error || "Unknown error" };
+          }
+
+          // console.log("Enrollment successful:", responseData);
+
+          setStore({ enrolledClasses: [...store.enrolledClasses, responseData] });
+
+          await getActions().fetchEnrolledClasses();
+
+          return { success: true };
+
         } catch (error) {
-            console.error("Unexpected error enrolling in class:", error);
-            return { success: false, error: "Unexpected error occurred" };
+          console.error("Unexpected error enrolling in class:", error);
+          return { success: false, error: "Unexpected error occurred" };
         }
-    },
-    
-    deleteEnrollment: async (enrollmentId) => {
-      try {
-        const token = localStorage.getItem("token"); // Si necesitas autenticación
-    
-        const response = await fetch(`${process.env.BACKEND_URL}/api/enrollments/${enrollmentId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Solo si es necesario
-          },
-        });
-    
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Error deleting enrollment:", errorData);
-          return { success: false, error: errorData.message || "Failed to delete enrollment" };
+      },
+
+      deleteEnrollment: async (enrollmentId) => {
+        try {
+          const token = localStorage.getItem("token"); // Si necesitas autenticación
+
+          const response = await fetch(`${process.env.BACKEND_URL}/api/enrollments/${enrollmentId}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Solo si es necesario
+            },
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error deleting enrollment:", errorData);
+            return { success: false, error: errorData.message || "Failed to delete enrollment" };
+          }
+
+
+          setStore({
+            enrolledClasses: getStore().enrolledClasses.filter((enrollment) => enrollment.id !== enrollmentId),
+          });
+
+          return { success: true };
+        } catch (error) {
+          console.error("Error in deleteEnrollment action:", error);
+          return { success: false, error: "An error occurred while deleting the enrollment" };
         }
-    
-       
-        setStore({
-          enrolledClasses: getStore().enrolledClasses.filter((enrollment) => enrollment.id !== enrollmentId),
-        });
-    
-        return { success: true };
-      } catch (error) {
-        console.error("Error in deleteEnrollment action:", error);
-        return { success: false, error: "An error occurred while deleting the enrollment" };
       }
-    }
-,    
-    
+      ,
+
       // my-classes
       fetchMyClassesParent: async () => {
         try {
@@ -2245,16 +2245,16 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
             body: JSON.stringify({ new_password: newPassword }), // Enviamos el nuevo password
           });
-    
+
           if (!resp.ok) {
             const errorData = await resp.json();
             throw new Error(errorData.message || "Password reset failed");
           }
-    
+
           // Si la respuesta es exitosa, esperamos el JSON con el mensaje
           const data = await resp.json();
           return { success: true, message: data.message };
-    
+
         } catch (error) {
           console.error("Error in reset password:", error);
           return { success: false, error: error.message || "Unknown error occurred" };
@@ -2263,7 +2263,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       getStudentsByTeacher: async () => {
         const store = getStore();
         const token = store.token || localStorage.getItem("token");
-        
+
         if (!token) {
           console.error("No token found");
           return;
@@ -2271,15 +2271,15 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const url = `${process.env.BACKEND_URL}/api/teacher/students`;
           // console.log("Request URL:", url);
-          
+
           const response = await fetch(url, {
             method: "GET",
-            headers: getActions().getAuthHeaders(), 
-          });         
+            headers: getActions().getAuthHeaders(),
+          });
           if (!response.ok) {
             const errorData = await response.json();
             throw new Error("Error fetching students: " + JSON.stringify(errorData));
-          }  
+          }
           const data = await response.json();
           // console.log("Received students data:", data);
           setStore({ teacherStudents: data.students || [] });
@@ -2308,8 +2308,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
         const paymentData = {
           user_id: store.user.parent_id || store.user.id,
-          child_name: payment.child_name,       
-          class_name: payment.class.name,          
+          child_name: payment.child_name,
+          class_name: payment.class.name,
           amount: payment.class.price,
           concept: "Monthly Payment",
           status: "Paid",
@@ -2344,7 +2344,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
           if (!resp.ok) throw new Error("Failed to fetch admin data")
           const data = await resp.json()
-      
+
           setStore({ adminData: data })
         } catch (error) {
           console.error("Error fetching admin data:", error)
@@ -2393,7 +2393,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       updateAdminProfile: async (profileData) => {
-       
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/admin-profile`, {
             method: "PUT",
@@ -2478,13 +2478,13 @@ const getState = ({ getStore, getActions, setStore }) => {
       },
 
       deleteGetintouchMessage: async (messageId) => {
-      
+
         try {
           const resp = await fetch(`${process.env.BACKEND_URL}/api/getintouch/${messageId}`, {
             method: "DELETE",
             headers: getActions().getAuthHeaders(),
           })
-         
+
           if (!resp.ok) throw new Error("Failed to delete getintouch message")
           const updatedMessages = getStore().getintouchMessages.filter((msg) => msg.id !== messageId)
           // console.log(updatedMessages)
@@ -2548,7 +2548,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const store = getStore();
           const userId = store.user.id;
-  
+
           if (!store.token) {
             console.error("No token found");
             return { success: false, error: "No token found" };
@@ -2568,7 +2568,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await response.json();
           setStore({
             ...store,
-            user: data,  
+            user: data,
           });
           localStorage.setItem("user", JSON.stringify(data));
           return { success: true, data };
@@ -2587,25 +2587,25 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
 
           // console.log(resp.status)
-					if (resp.status == 422) {
-            if(param == 'admini'){
-						setStore({ admin: false })
+          if (resp.status == 422) {
+            if (param == 'admini') {
+              setStore({ admin: false })
             }
-            if(param == 'paren'){
+            if (param == 'paren') {
               setStore({ paren: false })
             }
-            if(param == 'teache'){
+            if (param == 'teache') {
               setStore({ teach: false })
             }
-					} else {
-						
-					}
-				} catch (error) {
-					console.error('Error fetching private data:', error);
-				}
+          } else {
+
+          }
+        } catch (error) {
+          console.error('Error fetching private data:', error);
+        }
       }
 
-      }
+    }
   }
 }
 
