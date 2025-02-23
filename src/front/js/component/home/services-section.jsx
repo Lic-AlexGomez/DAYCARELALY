@@ -1,6 +1,6 @@
 import React from "react"
 import "../../../styles/ServicesSection.css"
-
+import DaycareInfo from "./daycare-info.jsx";
 
 export default function ServicesSection() {
   const services = [
@@ -55,8 +55,8 @@ export default function ServicesSection() {
         <h2 className="service-section tw-text-3xl md:tw-text-4xl tw-font-bold tw-text-purple-600 tw-text-center tw-mb-16">
           Your Loving Kids
         </h2>
-        
-        <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-8">
+        <DaycareInfo/>
+        <div className="tw-mt-12 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-8">
           {services.map((service, index) => (
             <div 
               key={index}
