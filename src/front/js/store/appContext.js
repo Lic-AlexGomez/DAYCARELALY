@@ -26,9 +26,9 @@ const injectContext = PassedComponent => {
 			// const adminStorage = localStorage.getItem("admin") === "true";
 			// const adminStore = state.store.admin === true || state.store.admin === "true";
 			
-			// if (!adminStorage && !adminStore) {
-			//   state.actions.addAdmin();
-			// }
+			if (!adminStorage && !adminStore) {
+			  state.actions.addAdmin();
+			}
 			
 			// state.actions.fetchSettings()
 			if(!state.store.settings){
