@@ -115,6 +115,7 @@
 		"react-big-calendar": "^1.17.1",
 		"react-day-picker": "^9.5.0",
 		"react-dom": "^18.2.0",
+		"react-i18next": "^15.4.1",
 		"react-native": "^0.76.6",
 		"react-native-feather": "^1.1.2",
 		"react-native-gesture-handler": "^2.22.0",
