@@ -61,20 +61,20 @@ const SettingsView = () => {
 
   // Estado inicial combinando valores por defecto con datos del backend
   const [settings, setSettings] = useState(() => {
-    const initialSettings = store.settings || {};
+    const initialSettings = store?.settings || {};
     return {
       id: store.user?.id || "",
-      name_daycare: initialSettings.name_daycare || "",
-      admin_email: initialSettings.admin_email || "",
-      max_capacity: initialSettings.max_capacity ? Number(initialSettings.max_capacity) : 0,
-      phone: initialSettings.phone || "",
-      schedule_attention: initialSettings.schedule_attention || "",
-      facebook: initialSettings.facebook || "",
-      twitter: initialSettings.twitter || "",
-      instagram: initialSettings.instagram || "",
-      linkedin: initialSettings.linkedin || "",
-      image: initialSettings.image || "",
-      address: initialSettings.address || "",
+      name_daycare: initialSettings?.name_daycare || "",
+      admin_email: initialSettings?.admin_email || "",
+      max_capacity: initialSettings?.max_capacity ? Number(initialSettings?.max_capacity) : 0,
+      phone: initialSettings?.phone || "",
+      schedule_attention: initialSettings?.schedule_attention || "",
+      facebook: initialSettings?.facebook || "",
+      twitter: initialSettings?.twitter || "",
+      instagram: initialSettings?.instagram || "",
+      linkedin: initialSettings?.linkedin || "",
+      image: initialSettings?.image || "",
+      address: initialSettings?.address || "",
     };
   });
 
@@ -85,17 +85,18 @@ const SettingsView = () => {
         await actions.fetchSettings();
         await setSettings((prev) => ({
           ...prev,
-          name_daycare: store.settings.name_daycare || "",
-          admin_email: store.settings.admin_email || "",
-          max_capacity: store.settings.max_capacity ? Number(store.settings.max_capacity) : 0,
-          phone: store.settings.phone || "",
-          schedule_attention: store.settings.schedule_attention || "",
-          facebook: store.settings.facebook || "",
-          twitter: store.settings.twitter || "",
-          instagram: store.settings.instagram || "",
-          linkedin: store.settings.linkedin || "",
-          image: store.settings.image || "",
-          address: store.settings.address || "",
+          id: store.settings?.id || "",
+          name_daycare: store.settings?.name_daycare || "",
+          admin_email: store.settings?.admin_email || "",
+          max_capacity: store.settings?.max_capacity ? Number(store.settings?.max_capacity) : 0,
+          phone: store.settings?.phone || "",
+          schedule_attention: store.settings?.schedule_attention || "",
+          facebook: store.settings?.facebook || "",
+          twitter: store.settings?.twitter || "",
+          instagram: store.settings?.instagram || "",
+          linkedin: store.settings?.linkedin || "",
+          image: store.settings?.image || "",
+          address: store.settings?.address || "",
         }));
       } catch (error) {
         setError("Configuration could not be loaded. Please try again later.");
@@ -144,13 +145,20 @@ const SettingsView = () => {
     setError(null);
 
     if (!settings.id) {
-      setError("ID is required");
+      
       setIsLoading(false);
       return;
     }
 
     try {
-      const result = await actions.updateSettings(settings.id, settings);
+      let result = null;
+      if(store.settings === undefined){
+        result= await actions.addSettings(settings);
+      }
+      else{
+        console.log("settings", settings)
+        result = await actions.updateSettings(settings);
+      }
       if (result) {
         await actions.fetchSettings(); // Recargar datos actualizados
         alert("Settings updated successfully!");
