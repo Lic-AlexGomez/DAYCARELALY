@@ -32,7 +32,7 @@ console.log(store.settings)
         <header className="headerContainer container">
           <div className="topRow">
             <div className="logoContainer">
-              <img src={data.image || logoImage} alt="Logo" className="logo" />
+              <img src={data.image || "https://res.cloudinary.com/dac1grfei/image/upload/v1740346706/srzzl0xvyfsjecobdvie.png"} alt="Logo" className="logo" />
               
             </div>
             {/* <div className="searchContainer sm:me-5 sm-tw-mr-10">
@@ -43,7 +43,7 @@ console.log(store.settings)
             </div> */}
             <div className="socialIcons me-4">
               <a
-                href={data.facebook || "https://www.facebook.com/Slime-Factory-110104161303552"}
+                href={data.facebook || "https://www.facebook.com/people/Lalys-Family-Group-Daycare/100063924589279/"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="icon facebook-icon ms-2"
@@ -61,7 +61,7 @@ console.log(store.settings)
                 <img src={instagramIcon || " "} alt="Instagram" />
               </a>
               <a
-                href={data.whatsapp || "https://wa.me/573104000000"}
+                href={data.whatsapp || "https://wa.me/+16469538346"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="icon whatsapp-icon ms-2"

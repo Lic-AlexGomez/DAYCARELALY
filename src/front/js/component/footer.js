@@ -97,10 +97,10 @@ const Footer = () => {
               <a href={data.twitter || "#"} className="tw-text-gray-400 hover:tw-text-white tw-transition-colors">
                 <TwitterIcon />
               </a>
-              <a href={data.facebook || "#"} className="tw-text-gray-400 hover:tw-text-white tw-transition-colors">
+              <a href={data.facebook || "https://www.facebook.com/people/Lalys-Family-Group-Daycare/100063924589279/"} className="tw-text-gray-400 hover:tw-text-white tw-transition-colors">
                 <FacebookIcon />
               </a>
-              <a href={data.instagram || "#"} className="tw-text-gray-400 hover:tw-text-white tw-transition-colors">
+              <a href={data.instagram || "https://www.instagram.com/daycarelaly"} className="tw-text-gray-400 hover:tw-text-white tw-transition-colors">
                 <InstagramIcon />
               </a>
               <a href={data.linkedin || "#"} className="tw-text-gray-400 hover:tw-text-white tw-transition-colors">
@@ -176,15 +176,15 @@ const Footer = () => {
 				 <h3 className="tw-text-white tw-font-bold tw-mb-6">Reach Us</h3>	
               <p className="tw-flex tw-items-center">
                 <span className="tw-mr-2">📞</span>
-                {data.phone || "+1012 3456 789"}
+                {data.phone || "+1 (646) 407-6169"}
               </p>
               <p className="tw-flex tw-items-center">
                 <span className="tw-mr-2">✉️</span>
-                {data.admin_email || "demo@gmail.com"}
+                {data.admin_email || "Daycarelaly@gmail.com"}
               </p>
               <p className="tw-flex tw-items-start">
                 <span className="tw-mr-2">📍</span>
-                {data.address || "132 Dartmouth Street Boston, Massachusetts 02156 United States"}
+                {data.address || "2522 University Ave, Bronx, NY 10468"}
               </p>
             </div>
           
@@ -214,7 +214,7 @@ const Footer = () => {
         </div>
 
         <div className="tw-mt-12 tw-pt-8 tw-border-t tw-border-gray-800 tw-text-center tw-text-sm tw-whitespace-nowrap">
-          <p>@copyright 2024 all rights reserved by AgeeksAcademy</p>
+          <p>@copyright 2024 all rights reserved by Alex Salazar</p>
         </div>
       </div>
     </footer>

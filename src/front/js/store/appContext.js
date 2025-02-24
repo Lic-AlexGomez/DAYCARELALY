@@ -32,8 +32,8 @@ const injectContext = PassedComponent => {
 			
 			// state.actions.fetchSettings()
 			if(!state.store.settings){
-			
 				state.actions.fetchSettings();
+				
 			}
 		}, []);
 
