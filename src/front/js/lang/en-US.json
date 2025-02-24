@@ -32,15 +32,15 @@
     "title_info_contact": "Contact information",
     "subtitle_info_contact": "Say something to start a live chat!",
     "first_name": "first name",
-    "last_name": "last_name",
+    "last_name": "last name",
     "email": "Email",
     "phone": "Phone number",
     "select_subject": "Select Subject?",
-    "opcion1": "General Inquiry",
-    "opcion2": "Technical",
-    "opcion3": "Products",
-    "opcion4": "Commercial Consulting",
-    "mensaje": "Message",
+    "option1": "General Inquiry",
+    "option2": "Technical",
+    "option3": "Products",
+    "option4": "Commercial Consulting",
+    "message": "Message",
     "btn": "Send Message"
   }
 }

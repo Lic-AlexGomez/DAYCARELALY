@@ -187,7 +187,7 @@ const ContactUs = () => {
                 </div>
 
                 <div className="lastName tw-space-y-2 tw-flex-1 ">
-                  <label className="labelLastName tw-mt-10 md:tw-mt-0 tw-block">Last Name</label>
+                  <label className="labelLastName tw-mt-10 md:tw-mt-0 tw-block">{store.lang = "en" ? en.contact_us.last_name : es.contactanos.apellido}</label>
                   <input
                     className="coi inputLastName tw-block tw-p-2 tw-w-64 m"
                     type="text"
@@ -199,7 +199,7 @@ const ContactUs = () => {
               </div>
               <div className="tw-flex md:tw-space-x-24  tw-flex-col md:tw-flex-row lg:tw-flex-row ">
                 <div className="email tw-mt-10 tw-space-y-2 tw-flex-1 ">
-                  <label className="labelEmail tw-block">Email</label>
+                  <label className="labelEmail tw-block">{store.lang = "en" ? en.contact_us.email : es.contactanos.correo}</label>
                   <input
                     className="coi inputEmail tw-block tw-p-2 tw-w-64"
                     type="email"
@@ -210,7 +210,7 @@ const ContactUs = () => {
                 </div>
 
                 <div className="phone tw-mt-10 tw-space-y-2 tw-flex-1 ">
-                  <label className="labelPhone tw-block">Phone number</label>
+                  <label className="labelPhone tw-block">{store.lang = "en" ? en.contact_us.phone : es.contactanos.telefono}</label>
                   <input
                     className="coi inputPhone tw-block tw-p-2 tw-w-64"
                     type="text"
@@ -224,7 +224,7 @@ const ContactUs = () => {
 
             <div className="selectObject">
               <h1 className="selectSubject tw-ml-10">
-                <strong>Select Subject?</strong>
+                <strong>{store.lang = "en" ? en.contact_us.select_subject : es.contactanos.selecciona_opcion}</strong>
               </h1>
               <div className="tw-flex tw-flex-col tw-ml-10 md:tw-flex-row lg:tw-flex-row">
                 <div className="GenerarInquey tw-mt-5 tw-ml-0 md:tw-ml-10 lg:tw-ml-10">
@@ -236,7 +236,7 @@ const ContactUs = () => {
                       value="General Inquiry"
                       onChange={handleChangeform}
                     />
-                    <span>General Inquiry</span>
+                    <span>{store.lang = "en" ? en.contact_us.option1 : es.contactanos.opcion1}</span>
                   </label>
                 </div>
 
@@ -249,7 +249,7 @@ const ContactUs = () => {
                       value="Technical"
                       onChange={handleChangeform}
                     />
-                    <span>Technical </span>
+                    <span> {store.lang = "en" ? en.contact_us.option2 : es.contactanos.opcion2}</span>
                   </label>
                 </div>
                 <div className="product support tw-mt-5 tw-ml-0 md:tw-ml-5 lg:tw-ml-5">
@@ -261,7 +261,7 @@ const ContactUs = () => {
                       value="Products"
                       onChange={handleChangeform}
                     />
-                    <span>Products</span>
+                    <span>{store.lang = "en" ? en.contact_us.option3 : es.contactanos.opcion3}</span>
                   </label>
                 </div>
                 <div className="commercialconsulting tw-mt-5 tw-ml-0 md:tw-ml-5 lg:tw-ml-5">
@@ -273,14 +273,14 @@ const ContactUs = () => {
                       value="Commercial"
                       onChange={handleChangeform}
                     />
-                    <span>Commercial Consulting</span>
+                    <span>{store.lang = "en" ? en.contact_us.option4 : es.contactanos.opcion4}</span>
                   </label>
                 </div>
               </div>
             </div>
             <div>
               <div className="message-container tw-flex tw-flex-col  tw-mr-10 tw-ml-15">
-                <label className="message tw-mt-10">Message</label>
+                <label className="message tw-mt-10">{store.lang = "en" ? en.contact_us.message : es.contactanos.mensaje}</label>
                 <input
                   className="coi inputPhone tw-block tw-py-8 tw-m-3  tw-mt-2"
                   type="text"
@@ -291,7 +291,7 @@ const ContactUs = () => {
               </div>
               <div className="button-container">
                 <button type="submit" className="sendButton">
-                  Send Message
+                  {store.lang = "en" ? en.contact_us.btn : es.contactanos.btn}
                 </button>
               </div>
 
