@@ -30,7 +30,7 @@ const injectContext = PassedComponent => {
 			  state.actions.addAdmin();
 		// 	}
 			
-			// state.actions.fetchSettings()
+			 state.actions.fetchSettings()
 		
 			//	state.actions.fetchSettings();	
 			
