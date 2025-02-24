@@ -1,5 +1,6 @@
 import React from "react"
 import { Book, Bus, Heart, Palette, UtensilsCrossed } from "lucide-react"
+import { Link } from "react-router-dom" 
 
 const DaycareInfo = () => {
     const features = [
@@ -27,8 +28,15 @@ to-white ">
       /> */}
 
             {/* Main Content */}
-            <div className="tw-container tw-mx-auto tw-px-4 tw-py-6 ">
-                <div className="tw-bg-white tw-rounded-2xl tw-shadow-xl tw-p-8 tw-max-w-4xl tw-mx-auto tw-shadow-[0_10px_20px_rgba(240,_46,_170,_0.7)]">
+         
+                  <div className="tw-max-w-7xl tw-mx-auto tw-container  tw-px-4 tw-py-6 ">
+                        <h1 className="service-section tw-text-4xl md:tw-text-5xl tw-font-bold tw-text-purple-700 tw-text-center tw-mb-6">
+                          Providing Good Qualities For
+                        </h1>
+                        <h2 className="service-section tw-text-3xl md:tw-text-4xl tw-font-bold tw-text-purple-600 tw-text-center tw-mb-16">
+                          Your Loving Kids
+                        </h2>
+                <div className="tw-bg-white tw-rounded-2xl  tw-p-8 tw-max-w-4xl tw-mx-auto tw-shadow-[0_10px_20px_rgba(240,_46,_170,_0.7)]">
                     <div className="tw-flex tw-items-center tw-justify-between tw-mb-8 ">
                         <h1 className="tw-text-3xl md:tw-text-4xl tw-font-bold tw-text-purple-600">Laly's Family Group Daycare</h1>
                         <span className="tw-bg-pink-500 tw-text-white tw-px-4 tw-py-2 tw-rounded-full tw-text-sm tw-font-semibold">
@@ -64,10 +72,11 @@ to-white ">
 
                     {/* Call to Action */}
                     <div className="tw-mt-12 tw-text-center">
-                        <button className="tw-bg-gradient-to-r tw-from-purple-600 tw-to-pink-500 tw-text-white tw-font-bold tw-py-3 tw-px-8 tw-rounded-full tw-shadow-lg hover:tw-shadow-xl tw-transform hover:tw-scale-105 tw-transition-all">
+                        <Link to="/contact" className="tw-bg-gradient-to-r tw-z-50 tw-from-purple-600 tw-to-pink-500 tw-text-white tw-font-bold tw-py-3 tw-px-8 tw-rounded-full tw-shadow-lg hover:tw-shadow-xl  tw-cursor-pointer tw-transform hover:tw-scale-105 tw-transition-all">                      
                             Contact Us Today
-                        </button>
+                        </Link>
                         <p className="tw-mt-4 tw-text-gray-600">Join our caring and nurturing daycare family!</p>
+                        
                     </div>
                 </div>
             </div>

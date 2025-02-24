@@ -155,7 +155,7 @@
     z-index: 1;
 }
 .home-container{
-    background-color: rgb(250, 252, 253);
+    /* background-color: rgb(250, 252, 253); */
     background-size: cover;
     background-position: center;
     height: 100vh;
