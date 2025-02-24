@@ -1919,7 +1919,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       addAdmin: async () => {
         try {
-          const response = await fetch(`${process.env.BACKEND_URL}/api/create_admin`, {
+          const response = await fetch(`${process.env.BACKEND_URL}api/create_admin`, {
             method: "POST",
             headers: getActions().getAuthHeaders(),
           })
