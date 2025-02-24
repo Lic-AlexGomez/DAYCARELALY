@@ -3,7 +3,7 @@ const Aday = () => {
     return (
         <>
             <section className="daily-activities" style={{ backgroundColor: "#FAFCFD" }}>
-                <h2>A Day at Daycare  Rainbow</h2>
+                <h2>A Day at Daycare Laly</h2>
                 <div className="timeline">
                     <div className="timeline-item">
                         <div className="timeline-content">
