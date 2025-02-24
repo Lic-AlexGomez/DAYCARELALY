@@ -167,6 +167,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       login: async (email, password) => {
         try {
+         
           const response = await fetch(process.env.BACKEND_URL + "/api/login", {
             method: "POST",
             headers: {
@@ -176,7 +177,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           })
 
           const data = await response.json()
-          // console.log("DATOS RECIBIDOS EN LOGIN:", data)
+      
 
           if (response.ok) {
             localStorage.setItem("token", "")
