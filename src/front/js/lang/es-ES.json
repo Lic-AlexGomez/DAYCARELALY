@@ -1,34 +1,45 @@
 {
-    "hero": {
-        "title": "Bienvenido a",
-        "subtitle": "We are a company that offers the best services in the world",
-        "btn": "Learn more"
-    },
-    "nav": {
-        "home": "Home",
-        "about": "About",
-        "services": "Services",
-        "contact": "Contact"
-    },
-    "home": {
-        "title": "Welcome to our website",
-        "subtitle": "We are a company that offers the best services in the world",
-        "btn": "Learn more"
-    },
-    "about": {
-        "title": "About us",
-        "subtitle": "We are a company that offers the best services in the world",
-        "btn": "Learn more"
-    },
-    "services": {
-        "title": "Our services",
-        "subtitle": "We are a company that offers the best services in the world",
-        "btn": "Learn more"
-    },
-    "contact": {
-        "title": "Contact us",
-        "subtitle": "We are a company that offers the best services in the world",
-        "btn": "Learn more"
-    }
-
+  "hero": {
+    "title": "Bienvenido a",
+    "subtitle": "We are a company that offers the best services in the world",
+    "btn": "Learn more"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "Welcome to our website",
+    "subtitle": "We are a company that offers the best services in the world",
+    "btn": "Learn more"
+  },
+  "about": {
+    "title": "About us",
+    "subtitle": "We are a company that offers the best services in the world",
+    "btn": "Learn more"
+  },
+  "services": {
+    "title": "Our services",
+    "subtitle": "We are a company that offers the best services in the world",
+    "btn": "Learn more"
+  },
+  "contactanos": {
+    "titulo": "Contactanos",
+    "subtitulo": "¿Alguna pregunta o comentario? ¡Solo escríbenos un mensaje!",
+    "titulo_info_contacto": "informacion de Contacto",
+    "subtitulo_info_contacto": "Cuentanos como podemos ayudarte",
+    "nombre": "Nombres",
+    "apellido": "Apellidos",
+    "correo": "Correo electronico",
+    "telefono": "telefono",
+    "selecciona_opcion": "Selecciona una opcion",
+    "opcion1": "Consulta general",
+    "opcion2": "Consulta tecnica",
+    "opcion3": "Productos",
+    "opcion4": "Consulta comercial",
+    "mensaje": "mensaje",
+    "btn": "enviar mensaje"
+  }
 }

@@ -9,6 +9,9 @@ import location from "../../img/location.png";
 import twitter from "../../img/mdi_twitter.png";
 import facebook from "../../img/ic_baseline-facebook.png";
 import instagram from "../../img/mdi_instagram.png";
+import es from "../lang/es-ES.json"
+import en from "../lang/en-US.json";
+
 
 const ContactUs = () => {
   const { actions, store } = useContext(Context);
@@ -21,6 +24,8 @@ const ContactUs = () => {
     message: "",
   });
 
+
+
   const handleChangeform = (e) => {
     const { name, value } = e.target;
     setDataContactUs({ ...dataContactUs, [name]: value });
@@ -29,7 +34,7 @@ const ContactUs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   
+
     if (
       !dataContactUs.first_name ||
       !dataContactUs.last_name ||
@@ -46,7 +51,7 @@ const ContactUs = () => {
       return;
     }
 
-  
+
     const confirmSubmit = await Swal.fire({
       title: "Are you sure?",
       text: "Do you want to send the message?",
@@ -104,17 +109,17 @@ const ContactUs = () => {
 
   return (
     <div className="container-form">
-      <h1 className="contactus tw-text-4xl tw-font-bold tw-pt-10 tw-animate-twinkle tw-mb-4">Contact Us</h1>
+      <h1 className="contactus tw-text-4xl tw-font-bold tw-pt-10 tw-animate-twinkle tw-mb-4">{store.lang = "en" ? en.contact_us.title : es.contactanos.titulo}</h1>
       <p className="anyquestion tw-mx-auto tw-w-70 tw-flex tw-justify-center">
-        Any question or remarks? Just write us a message!
+        {store.lang = "en" ? en.contact_us.subtitle : es.contactanos.subtitulo}
       </p>
       <div className="contactus-container tw-mx-auto tw-w-64 tw-flex tw-justify-start tw-pb-10 md:tw-pb-0 lg:tw-pb-0">
         <div className="contactInfo tw-w-64">
           <h2 className="tw-text-2xl tw-font-bold tw-text-white tw-ml-7 tw-w-max tw-mt-16">
-            Contact information
+            {store.lang = "en" ? en.contact_us.title_info_contact : es.contactanos.titulo_info_contacto}
           </h2>
           <p className="paragraphinfo tw-text-white tw-ml-7 tw-w-max">
-            Say something to start a live chat!
+            {store.lang = "en" ? en.contact_us.subtitle_info_contact : es.contactanos.subtitulo_info_contacto}
           </p>
           <div className="info tw-flex tw-mt-20">
             <ul className="list-reachForm">
@@ -171,7 +176,7 @@ const ContactUs = () => {
             <div className="form-container tw-p-10">
               <div className="tw-flex md:tw-space-x-24  tw-flex-col md:tw-flex-row lg:tw-flex-row ">
                 <div className="firstName tw-space-y-2 tw-flex-1 ">
-                  <label className="labelFirstName tw-block">First Name</label>
+                  <label className="labelFirstName tw-block">{store.lang = "en" ? en.contact_us.first_name : es.contactanos.nombre}</label>
                   <input
                     className="coi inputFirstName tw-block tw-p-2  tw-w-64"
                     type="text"
