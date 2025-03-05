@@ -7,7 +7,7 @@ module.exports = {
   entry: './src/front/js/index.js', // Entry point for the application
   output: {
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'build'), // Output directory
+    path: path.resolve(__dirname, 'public'), // Output directory
     publicPath: '/' // Adjust for deployment if needed
   },
   module: {
