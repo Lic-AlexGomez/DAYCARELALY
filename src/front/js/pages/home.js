@@ -13,7 +13,7 @@ import ServicesSection from "../component/home/services-section.jsx";
 import AboutUs from "../component/home/AboutUs.jsx";
 import EducationalPrograms from "../component/home/EducationalPrograms.jsx";
 import Statistics from "../component/home/Statistics.jsx";
-
+import DaycareInfo from "../component/home/daycare-info.jsx";
 
 
 export const Home = () => {
@@ -25,8 +25,9 @@ export const Home = () => {
 		<div className="text-center ">
 
 			<Hero />
-	
+			<DaycareInfo />
 			<ServicesSection />
+			
 			<AboutUs />
 			<Aday />
 			<Classes />

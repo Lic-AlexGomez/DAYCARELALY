@@ -66,14 +66,14 @@ const AboutUs = () => {
                 Special Care For Your Children
               </h2>
               <p className="tw-text-white/70 tw-text-lg">
-                Formulate innovative web-readiness and installed base ideas. Distinctively integrate high-payoff
-                paradigms without next-generation systems disseminate holistic e-services through customer directed
-                partnerships.
-              </p>
+              This website provides you an overview of our daycare and references program choices. 
+              If you wish to visit the school or receive additional information, simply call us. 
+              Thank you for your interest and consideration in our early childhood programs. 
+              We look forward to sharing our school with you. </p>
             </div>
-            <Link to="/about_us" className="tw-text-white tw-font-medium tw-text-lg tw-flex tw-items-center tw-space-x-2">
+            <Link to="/about_us" className="tw-text-white tw-font-medium tw-text-lg tw-flex tw-items-center tw-space-x-2 tw-mt-4 tw-justify-center">
               <button
-                className="tw-bg-white tw-text-[#710A85] tw-px-8 tw-py-3 tw-rounded-full tw-font-medium 
+                className="tw-bg-white tw-text-[#710A85] tw-px-8 tw-py-3 tw-rounded-full tw-mt-4 tw-font-medium 
               hover:tw-bg-purple-50 tw-transform tw-transition-all hover:tw-scale-105 hover:tw-shadow-lg"
               >
                 Learn more

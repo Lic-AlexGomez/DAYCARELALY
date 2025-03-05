@@ -1,11 +1,13 @@
-/* @tailwind base;
-@tailwind components;
-@tailwind utilities;
 root{
   --primary: #FFC909;
   --secondary: #9C29B2;
 
 }
+
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';

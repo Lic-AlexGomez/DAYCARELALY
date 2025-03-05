@@ -1,6 +1,6 @@
 import React from "react"
 import "../../../styles/ServicesSection.css"
-
+import DaycareInfo from "./daycare-info.jsx";
 
 export default function ServicesSection() {
   const services = [
@@ -48,15 +48,9 @@ export default function ServicesSection() {
 
   return (
     <section className="tw-py-2 tw-px-4 tw-bg-gradient-to-b  tw-to-pink-30 tw-relative tw-mt-0 -tw-z-40" style={{ backgroundColor: "#FAFCFD" }}>
-      <div className="tw-max-w-7xl tw-mx-auto">
-        <h1 className="service-section tw-text-4xl md:tw-text-5xl tw-font-bold tw-text-purple-700 tw-text-center tw-mb-6">
-          Providing Good Qualities For
-        </h1>
-        <h2 className="service-section tw-text-3xl md:tw-text-4xl tw-font-bold tw-text-purple-600 tw-text-center tw-mb-16">
-          Your Loving Kids
-        </h2>
-        
-        <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-8">
+    <div>
+      
+        <div className="tw-mt-12 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-8">
           {services.map((service, index) => (
             <div 
               key={index}
